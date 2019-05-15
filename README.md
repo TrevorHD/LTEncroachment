@@ -8,13 +8,11 @@ This project seeks to create a mathematical model of creosotebush (Larrea triden
 
 **Seed_Drop** *(.csv)* - Spreadsheet containing position and time for each seed drop trial. See the file metadata for more information.
 
-**MD_XXXX-XXXX** *(.txt)* - Five text files containing meteorological data from the Sevilleta NWR. The files are from the following time periods: 1988-1995, 1996-2000, 2001-2005, 2006-2010, and 2011-2015. All of these files are from the data repository for the Sevilleta NWR LTER site and can be found [here](http://sevlter.unm.edu/content/meteorology-data-sevilleta-national-wildlife-refuge-new-mexico-1988-present). The 2011-2015 file was not used because it did not play nice, likely due to an apparent mismatch between the header row and the rest of the data.
-
 **00_RunAll** *(.R)* - Runs scripts 01-07. This process takes a few minutes.
 
 **01_SeedVelocities** *(.R)* - Finds the distribution of seed terminal velocities using data from **Seed_Drop**.
 
-**02_WindSpeeds** *(.R)* - Finds the distribution of wind speeds using wind speed data from the Sevilleta NWR.
+**02_WindSpeeds** *(.R)* - Finds the distribution of wind speeds using wind speed data from the Sevilleta NWR; this data can be found [here](http://sevlter.unm.edu/content/meteorology-data-sevilleta-national-wildlife-refuge-new-mexico-1988-present). The 2011-2015 data was not used because it did not play nice, likely due to an apparent mismatch between the header row and the rest of the data.
 
 **03_Dispersal** *(.R)* - Creates dispersal kernels using the methods from Skarpaas and Shea (2007).
 
