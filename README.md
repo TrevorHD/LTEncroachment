@@ -25,3 +25,5 @@ This project seeks to create a mathematical model of creosotebush (Larrea triden
 **06_SIPM** *(.R)* - Constructs the transition matrix that projects population growth, and combines this with dispersal data to find the speed at which the encroaching shrub wave travels.
 
 **07_MainFigures** *(.R)* - Generates figures on size- and density-dependence, wave speeds and population growth, and dispersal kernels.
+
+**S1_SupportingMaterial** *(.R)* - Code not directly used in the analyses but contributes to our understanding of the data.
