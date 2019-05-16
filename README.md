@@ -4,9 +4,9 @@ This project seeks to create a mathematical model of creosotebush (Larrea triden
 
 # Files
 
-**LT_Data** *(.csv)* - Spreadsheet containing all of the demographic data on the shrubs that were a part of the study. Also contains data on transect length and the transplant experiment. See the file metadata for more information.
+**LT_Data** *(.xlsx)* - Spreadsheet containing all of the demographic data on the shrubs that were a part of the study. Also contains data on transect length and the transplant experiment. See the file metadata for more information.
 
-**Seed_Drop** *(.csv)* - Spreadsheet containing position and time for each seed drop trial. See the file metadata for more information.
+**Seed_Drop** *(.xlsx)* - Spreadsheet containing position and time for each seed drop trial. See the file metadata for more information.
 
 **00_RunAll** *(.R)* - Runs scripts 01-07. This process takes a few minutes.
 
