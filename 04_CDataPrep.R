@@ -4,16 +4,16 @@
 data <- "https://github.com/TrevorHD/LTEncroachment/raw/master/LT_Data.xlsx"
 
 # Read transect densities
-CData.Transects <- read.xlsx(data, 1)
+CData.Transects <- XLSX.Online(data, 1)
 
 # Read longitudinal demography data
-CData.Demography <- read.xlsx(data, 2)
+CData.Demography <- XLSX.Online(data, 2)
 
 # Read transect lengths
-CData.Lengths <- read.xlsx(data, 4)
+CData.Lengths <- XLSX.Online(data, 4)
 
 # Read transplant data
-CData.Transplants <- read.xlsx(data, 5)
+CData.Transplants <- XLSX.Online(data, 5)
 
 
 
