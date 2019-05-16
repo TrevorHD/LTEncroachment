@@ -4,9 +4,13 @@ This project seeks to create a mathematical model of creosotebush (Larrea triden
 
 # Files
 
+## Data
+
 **LT_Data** *(.xlsx)* - Spreadsheet containing all of the demographic data on the shrubs that were a part of the study. Also contains data on transect length and the transplant experiment. See the file metadata for more information.
 
 **Seed_Drop** *(.xlsx)* - Spreadsheet containing position and time for each seed drop trial. See the file metadata for more information.
+
+## Scripts
 
 **00_RunAll** *(.R)* - Runs scripts 01-07. This process takes a few minutes.
 
@@ -25,5 +29,7 @@ This project seeks to create a mathematical model of creosotebush (Larrea triden
 **06_SIPM** *(.R)* - Constructs the transition matrix that projects population growth, and combines this with dispersal data to find the speed at which the encroaching shrub wave travels.
 
 **07_MainFigures** *(.R)* - Generates figures on size- and density-dependence, wave speeds and population growth, and dispersal kernels.
+
+## Supporting Information
 
 **S1_SupportingMaterial** *(.R)* - Code not directly used in the analyses but contributes to our understanding of the data.
