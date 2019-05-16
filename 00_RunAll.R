@@ -35,19 +35,19 @@ XLSX.Online <- function(URL, SheetName){
 
 # "01_SeedVelocities"
 # Calculate terminal velocities of seeds and fit to distributions
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/01_SeedVelocities.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/01_SeedVelocities.R")
 
 # "02_WindSpeeds"
 # Load in wind speeds and fit to distributions
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/02_WindSpeeds.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/02_WindSpeeds.R")
 
 # "03_Dispersal"
 # Construct dispersal kernels for seeds
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/03_Dispersal.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/03_Dispersal.R")
 
 # "04_CDataPrep"
 # Tidy up demography data before creating demography models
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/04_CDataPrep.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 
 
 
@@ -59,11 +59,11 @@ source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/04_CDataPre
 
 # "05_CDataAnalysis_NS"
 # Create demography models for growth, reproduction, survival, etc. under normal circumstances
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/05_CDataAnalysis_NS.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
 
 # "06_SIPM"
 # Spatial integral projection model that calculates wavespeeds
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/06_SIPM.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
 
 # Wavespeeds as function of s; growth as function of density
 c.values <- Wavespeed(200)
@@ -85,11 +85,11 @@ remove(lambda.i, TM, i)
 
 # "05_CDataAnalysis_BS"
 # Replace survival model with one for year with higher survival from above-average rainfall
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/05_CDataAnalysis_BS.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_BS.R")
 
 # "06_SIPM"
 # Spatial integral projection model that calculates wavespeeds
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/06_SIPM.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
 
 # Wavespeeds as function of s; growth as function of density
 c.values.2 <- Wavespeed(200)
@@ -109,5 +109,5 @@ remove(lambda.i, TM, i)
 
 # "07_MainFigures"
 # Generate figures for wavespeeds and population growth, dispersal, and demographic data
-source("C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Code/07_MainFigures.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_MainFigures.R")
 
