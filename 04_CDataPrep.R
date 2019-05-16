@@ -1,23 +1,19 @@
 ##### Initialise Data -------------------------------------------------------------------------------------
 
 # Import dataset
-DATA <- "C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Data/LT_Data.xlsx"
-
-# Same as above, but with Tom's file path instead (desktop and laptop)
-# DATA <- "D:/Dropbox/Trevor Creosote analysis/Data/LT_Data.xlsx"
-# DATA <- "C:/Users/tm9/Dropbox/Trevor Creosote analysis/Data/LT_Data.xlsx"
+data <- "https://github.com/TrevorHD/LTEncroachment/raw/master/LT_Data.xlsx"
 
 # Read transect densities
-CData.Transects <- read.xlsx(DATA, 1)
+CData.Transects <- read.xlsx(data, 1)
 
 # Read longitudinal demography data
-CData.Demography <- read.xlsx(DATA, 2)
+CData.Demography <- read.xlsx(data, 2)
 
 # Read transect lengths
-CData.Lengths <- read.xlsx(DATA, 4)
+CData.Lengths <- read.xlsx(data, 4)
 
 # Read transplant data
-CData.Transplants <- read.xlsx(DATA, 5)
+CData.Transplants <- read.xlsx(data, 5)
 
 
 
@@ -276,5 +272,5 @@ select(CData.Transplants, "site", "transect", "actual.window",
 
 # Remove variables that will no longer be used
 remove(site, plants, i, Windows.FPS, Windows.MOD, Windows.PDC, Windows.SLP,
-       window.i, WBind.FPS, WBind.MOD, WBind.PDC, WBind.SLP, exprs, DATA, seed.mod)
+       window.i, WBind.FPS, WBind.MOD, WBind.PDC, WBind.SLP, exprs, data, seed.mod)
 
