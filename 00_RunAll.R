@@ -17,6 +17,18 @@ library(gridBase)
 
 
 
+##### Create function to read XLSX from GitHub repo -------------------------------------------------------
+
+# Read online XLSX by downloading as temp file
+XLSX.Online <- function(URL, SheetName){
+  temp <- tempfile(fileext = ".xlsx")
+  download.file(url = URL, destfile = temp, mode = "wb", quiet = TRUE)
+  read.xlsx(temp, SheetName)}
+
+
+
+
+
 ##### Run scripts that do not change between the two scenarios --------------------------------------------
 
 # This will take several minutes; be patient
