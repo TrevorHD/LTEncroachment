@@ -165,7 +165,7 @@ CData %>%
          "volume_t1" = log(vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1)),
        
          # Logarithmic annual growth ratio
-         "logGR" = ifelse(is.nan(log(volume_t1/volume_t)) == TRUE, NA, log(volume_t1/volume_t)),
+         "logGR" = ifelse(is.nan(volume_t1 - volume_t) == TRUE, NA, volume_t1 - volume_t),
 
          # Total number of fruits on a given plant before year has elapsed
          "total.fruits_t" = fruits_t*(1/reproductive_fraction_t),
