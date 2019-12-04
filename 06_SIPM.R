@@ -80,7 +80,7 @@ TransMatrix <- function(n, d){
   # Growth from size x to y
   xy.Growth <- function(x, y){
     xb = pmin(pmax(x, Params[29]), Params[30])
-    return(dnorm(y, mean = xb*exp(Params[7] + Params[8]*xb + Params[9]*d + Params[10]*d*xb +
+    return(dnorm(y, mean = xb + (Params[7] + Params[8]*xb + Params[9]*d + Params[10]*d*xb +
                                     Params[11]*(d^2) + Params[12]*(xb*(d^2))), sd = Params[35]))}
   
   # Survival of size x  
