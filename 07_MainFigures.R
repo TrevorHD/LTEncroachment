@@ -239,7 +239,7 @@ G.pred %>%
   geom_line(aes(x = x.d, y = G.mean, colour = as.factor(v.mean)), size = 3) +
   scale_colour_manual(values = c("darkorchid2", "dodgerblue1", "navy", "firebrick2",
                                  "darkorchid2", "dodgerblue1", "navy", "firebrick2")) +
-  scale_y_continuous(breaks = seq(-0.04, 0.12, length.out = 5), limits = c(-0.04, 0.12)) +
+  scale_y_continuous(breaks = seq(0, 1, length.out = 5), limits = c(-0.1, 1)) +
   geom_point(data = G.mean.df, aes(x = d.mean, y = G.mean, 
                                    colour = as.factor(v.bin)), size = 7) +
   labs(x = NULL, y = "Log Annual Growth Ratio") +
@@ -286,7 +286,7 @@ G.pred %>%
   scale_colour_manual(values = c("darkorchid2", "firebrick2", "dodgerblue1", "darkorchid2",
                                  "navy", "firebrick2", "dodgerblue1", "navy")) +
   scale_y_continuous(labels = scales::number_format(accuracy = 0.01), position = "right",
-                     breaks = seq(-0.1, 0.3, length.out = 5), limits = c(-0.1, 0.3)) +
+                     breaks = seq(0, 1, length.out = 5), limits = c(-0.05, 1)) +
   geom_point(data = G.mean.df, aes(x = v.mean, y = G.mean, 
                                    colour = as.factor(d.bin)), size = 7) +
   labs(x = NULL, y = NULL) +
