@@ -60,10 +60,7 @@ Params <- c()
   Params[34] <- sd(CData.Recruits$volume_t1, na.rm = TRUE)
   
   # Growth residual standard deviation
-  Params[35] <- Mod.G.AIC$weight[1] * sigma(Mod.G[[5]]) + 
-                Mod.G.AIC$weight[2] * sigma(Mod.G[[4]]) +
-                Mod.G.AIC$weight[3] * sigma(Mod.G[[8]]) + 
-                Mod.G.AIC$weight[4] * sigma(Mod.G[[7]])
+  Params[35] <- sigma(Mod.G[[7]])
 
 # Yes, I know I could have done this much more succinctly
 # However, this makes it easier to see what each parameter actually is

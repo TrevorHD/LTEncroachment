@@ -49,49 +49,26 @@ Mod.F <- list()
 # Weights interpreted as the proportion of evidence in favour of each
 # To do this, use AICtab(Mod.F, weights = TRUE, sort = TRUE)
 
-# Keep all models in which the weight is greater than 0.001
-Mod.F.AIC <- AICtab(Mod.F[[8]], Mod.F[[5]], Mod.F[[2]], Mod.F[[7]], Mod.F[[4]],
-                    weights = TRUE, sort = FALSE)
-
 # Create vector of average GLM coefficients from the kept models
 Mod.F.avg.cf <- c()
 
   # Intercept
-  Mod.F.avg.cf[1] <- 
-    Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["(Intercept)"] + 
-    Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["(Intercept)"] + 
-    Mod.F.AIC$weight[3] * fixef(Mod.F[[2]])["(Intercept)"] + 
-    Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["(Intercept)"] +
-    Mod.F.AIC$weight[5] * fixef(Mod.F[[4]])["(Intercept)"]
+  Mod.F.avg.cf[1] <- fixef(Mod.F[[8]])["(Intercept)"]
 
   # Volume coefficient
-  Mod.F.avg.cf[2] <- 
-    Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["volume_t"] + 
-    Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["volume_t"] + 
-    Mod.F.AIC$weight[3] * fixef(Mod.F[[2]])["volume_t"] + 
-    Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["volume_t"] +
-    Mod.F.AIC$weight[5] * fixef(Mod.F[[4]])["volume_t"]
+  Mod.F.avg.cf[2] <- fixef(Mod.F[[8]])["volume_t"]
   
   # Density coefficient
-  Mod.F.avg.cf[3] <- 
-    Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["d.stand"] +
-    Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["d.stand"] + 
-    Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["d.stand"] +
-    Mod.F.AIC$weight[5] * fixef(Mod.F[[4]])["d.stand"]
+  Mod.F.avg.cf[3] <- fixef(Mod.F[[8]])["d.stand"]
 
   # Volume and density interaction coefficient
-  Mod.F.avg.cf[4] <- 
-    Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["volume_t:d.stand"] +
-    Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["volume_t:d.stand"]
+  Mod.F.avg.cf[4] <- fixef(Mod.F[[8]])["volume_t:d.stand"]
 
   # Density quadratic coefficient
-  Mod.F.avg.cf[5] <- 
-    Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["I(d.stand^2)"] +
-    Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["I(d.stand^2)"]
+  Mod.F.avg.cf[5] <- fixef(Mod.F[[8]])["I(d.stand^2)"]
 
   # Volume and quadratic density interaction coefficient
-  Mod.F.avg.cf[6] <-
-    Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["volume_t:I(d.stand^2)"]
+  Mod.F.avg.cf[6] <- fixef(Mod.F[[8]])["volume_t:I(d.stand^2)"]
 
   
 
@@ -146,47 +123,26 @@ Mod.G <- list()
 # Weights interpreted as the proportion of evidence in favour of each
 # To do this, use AICtab(Mod.G, weights = TRUE, sort = TRUE)
 
-# Keep all models in which the weight is greater than 0.001
-Mod.G.AIC <- AICtab(Mod.G[[5]], Mod.G[[4]], Mod.G[[8]], Mod.G[[7]],
-                    weights = TRUE, sort = FALSE)
-
 # Create vector of average GLM coefficients from the kept models
 Mod.G.avg.cf <- c()
 
   # Intercept
-  Mod.G.avg.cf[1] <- 
-    Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["(Intercept)"] +
-    Mod.G.AIC$weight[2] * fixef(Mod.G[[4]])["(Intercept)"] +
-    Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["(Intercept)"] + 
-    Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["(Intercept)"]
+  Mod.G.avg.cf[1] <- fixef(Mod.G[[7]])["(Intercept)"]
 
   # Volume coefficient
-  Mod.G.avg.cf[2] <- 
-    Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["volume_t"] +
-    Mod.G.AIC$weight[2] * fixef(Mod.G[[4]])["volume_t"] +
-    Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["volume_t"] + 
-    Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["volume_t"]
+  Mod.G.avg.cf[2] <- fixef(Mod.G[[7]])["volume_t"]
 
   # Density coefficient
-  Mod.G.avg.cf[3] <- 
-    Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["d.stand"] +
-    Mod.G.AIC$weight[2] * fixef(Mod.G[[4]])["d.stand"] +
-    Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["d.stand"] +
-    Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["d.stand"]
+  Mod.G.avg.cf[3] <- fixef(Mod.G[[7]])["d.stand"]
   
   # Volume and density interaction coefficient
-  Mod.G.avg.cf[4] <- 
-    Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["volume_t:d.stand"] +
-    Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["volume_t:d.stand"]
+  Mod.G.avg.cf[4] <- 0
   
   # Density quadratic coefficient
-  Mod.G.avg.cf[5] <- 
-    Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["I(d.stand^2)"] +
-    Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["I(d.stand^2)"]
+  Mod.G.avg.cf[5] <- fixef(Mod.G[[7]])["I(d.stand^2)"]
     
   # Volume and quadratic density interaction coefficient
-  Mod.G.avg.cf[6] <- 
-    Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["volume_t:I(d.stand^2)"]
+  Mod.G.avg.cf[6] <- 0
 
 
 
@@ -242,47 +198,26 @@ Mod.R <- list()
 # Weights interpreted as the proportion of evidence in favour of each
 # To do this, use AICtab(Mod.R,weights = TRUE, sort = TRUE)
 
-# Keep all models in which the weight is greater than 0.001
-Mod.R.AIC <- AICtab(Mod.R[[7]], Mod.R[[8]], Mod.R[[5]], Mod.R[[4]], 
-                    weights = TRUE, sort = FALSE)
-
 # Create vector of average GLM coefficients from the kept models
 Mod.R.avg.cf <- c()
 
 # Intercept
-  Mod.R.avg.cf[1] <- 
-    Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["(Intercept)"] + 
-    Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["(Intercept)"] +
-    Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["(Intercept)"] +
-    Mod.R.AIC$weight[4] * fixef(Mod.R[[4]])["(Intercept)"]
+  Mod.R.avg.cf[1] <- fixef(Mod.R[[7]])["(Intercept)"]
   
   # Volume coefficient
-  Mod.R.avg.cf[2] <- 
-    Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["volume_t"] + 
-    Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["volume_t"] + 
-    Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["volume_t"] +
-    Mod.R.AIC$weight[4] * fixef(Mod.R[[4]])["volume_t"]
+  Mod.R.avg.cf[2] <- fixef(Mod.R[[7]])["volume_t"]
 
   # Density coefficient
-  Mod.R.avg.cf[3] <- 
-    Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["d.stand"] + 
-    Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["d.stand"] + 
-    Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["d.stand"] +
-    Mod.R.AIC$weight[4] * fixef(Mod.R[[4]])["d.stand"]
+  Mod.R.avg.cf[3] <- fixef(Mod.R[[7]])["d.stand"]
 
   # Volume and density interaction coefficient
-  Mod.R.avg.cf[4] <- 
-    Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["volume_t:d.stand"] +
-    Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["volume_t:d.stand"]
+  Mod.R.avg.cf[4] <- 0
 
   # Density quadratic coefficient
-  Mod.R.avg.cf[5] <- 
-    Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["I(d.stand^2)"] +
-    Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["I(d.stand^2)"]
+  Mod.R.avg.cf[5] <- fixef(Mod.R[[7]])["I(d.stand^2)"]
   
   # Volume and quadratic density interaction coefficient
-  Mod.R.avg.cf[6] <- 
-    Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["volume_t:I(d.stand^2)"]
+  Mod.R.avg.cf[6] <- 0
 
 
 
