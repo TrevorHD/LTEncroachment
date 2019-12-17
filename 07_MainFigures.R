@@ -452,7 +452,7 @@ grid.rect(vp = viewport(layout.pos.row = 190:260, layout.pos.col = 1400:1470), g
 grid.rect(vp = viewport(layout.pos.row = 290:360, layout.pos.col = 1400:1470), gp = gpar(fill = "dodgerblue1"))
 grid.rect(vp = viewport(layout.pos.row = 390:460, layout.pos.col = 1400:1470), gp = gpar(fill = "darkorchid2"))
 grid.rect(vp = viewport(layout.pos.row = 490:560, layout.pos.col = 1400:1470), gp = gpar(fill = "firebrick2"))
-grid.text(label = c("[100, 75)", "[75, 50)", "[50, 25)", "[25, 0]"),
+grid.text(label = c("[75, 100]", "[50, 75)", "[25, 50)", "[0, 25)"),
           x = rep(0.580, 4), y = c(0.925, 0.892, 0.858, 0.823), just = "left", gp = gpar(fontsize = 37))
 grid.text(label = c("Volume percentile (left graphs)", "Density percentile (right graphs)"),
           x = rep(0.537, 2), y = c(0.970, 0.952), just = "left", gp = gpar(fontsize = 40))
