@@ -79,3 +79,19 @@ plot(Mod.S.T1)
 Mod.S.T2 <- glmer(spring_survival_t1 ~ num_shrub_t + (1 | unique.transect),
                   data = CData.Transplants.s, family = "binomial")
 summary(Mod.S.T2)
+
+# Also not significant if we try these regressions with bare ground as predictor
+Mod.S.T3 <- glm(spring_survival_t1 ~ num_bare_t, data = CData.Transplants.s, family = "binomial")
+summary(Mod.S.T3)
+anova(Mod.S.T3, test = "Chisq")
+Mod.S.T4 <- glmer(spring_survival_t1 ~ num_bare_t + (1 | unique.transect),
+                  data = CData.Transplants.s, family = "binomial")
+summary(Mod.S.T4)
+
+# Use backwards variable selection
+# Model with the best AIC still has a non-significant term!
+Mod.S.TFull <- glm(spring_survival_t1 ~ num_bare_t + num_shrub_t + total.grass + total.plant, 
+                   data = CData.Transplants.s, family = "binomial")
+step(Mod.S.TFull, direction = "backward", data = data.new)
+summary(glm(spring_survival_t1 ~ num_bare_t + num_shrub_t, family = "binomial", 
+            data = CData.Transplants.s))
