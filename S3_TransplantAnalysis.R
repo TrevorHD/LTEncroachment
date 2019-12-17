@@ -43,7 +43,7 @@ cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", "
 corrplot(cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", "total.grass", "total.plant")]),
          method = "square", type = "upper")
 
-# Multicollinearity between predictors (e.g. bare patches, shurb patches, etc.) may be a problem
+# Multicollinearity between predictors (e.g. bare patches, shrub patches, etc.) may be a problem
 
 
 
@@ -53,7 +53,7 @@ corrplot(cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_sh
 
 # Univariate logistic regression
 # Survival is response variable, shrub cover is predictor variable
-Mod.S.T1 <- glm(falll_survival_t ~ num_shrub_t, data = CData.Transplants.s, family = "binomial")
+Mod.S.T1 <- glm(spring_survival_t1 ~ num_shrub_t, data = CData.Transplants.s, family = "binomial")
 
 # Shrub cover term is not significant
 # Analysis of deviance test confirms this
@@ -66,16 +66,16 @@ DevianceRes <- rstandard(Mod.S.T1)
 PearsonRes <- residuals(Mod.S.T1, "pearson")/sqrt(1 - hatValues)
 par(mfrow = c(1, 2))
 plot(CData.Transplants.s$num_shrub_t, DevianceRes, 
-     ylab = "Standardised Deviance Residual", ylim = c(-2.5, 2.5))
+     ylab = "Standardised Deviance Residual", ylim = c(-1, 4.5))
 abline(h = 0, col = "red")
 plot(CData.Transplants.s$num_shrub_t, PearsonRes, 
-     ylab = "Standardised Pearson Residuals", ylim = c(-2.5, 2.5))
+     ylab = "Standardised Pearson Residuals", ylim = c(-1, 4.5))
 abline(h = 0, col = "red")
 
 # This can also be seen here
 plot(Mod.S.T1)
 
 # Even with mixed effects model, shrub cover term is not significant
-Mod.S.T2 <- glmer(falll_survival_t ~ num_shrub_t + (1 | unique.transect),
+Mod.S.T2 <- glmer(spring_survival_t1 ~ num_shrub_t + (1 | unique.transect),
                   data = CData.Transplants.s, family = "binomial")
 summary(Mod.S.T2)
