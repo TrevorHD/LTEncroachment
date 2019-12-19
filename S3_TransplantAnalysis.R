@@ -1,11 +1,18 @@
 ##### Initialise Data -------------------------------------------------------------------------------------
 
-# Transform density; calculate total grass cover and plant cover
-CData.Transplants.s <- CData.Transplants %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
-         total.grass = num_black_gramma_t + num_blue_gramma_t + num_other_grass_t,
-         total.plant = num_shrub_t + total.grass + num_other_t,
-         unique.transect = interaction(transect, site))
+CData.Transplants.s <- CData.Transplants %>%
+  
+  # # Add additional columns to data, starting with standardised weighted density
+  mutate("d.stand" = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+         
+         # Total number of patches that contain any type of grass
+         "total.grass" = num_black_gramma_t + num_blue_gramma_t + num_other_grass_t,
+         
+         # Total number of patches that contain any type of plant (including shrubs)
+         "total.plant" = num_shrub_t + total.grass + num_other_t,
+         
+         # Unique transect identifier
+         "unique.transect" = interaction(transect, site))
 
 
 
@@ -38,11 +45,13 @@ for(i in 1:4){
 # To see each plot, cycle through plots in the "plots" window
 
 # Check correlation matrix between response (survival) and predictors (cover type)
-cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", "total.grass", "total.plant")])
+cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", 
+                            "total.grass", "total.plant")])
 
 # Same as above, but more visually appealing
 par(mfrow = c(1, 1))
-corrplot(cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", "total.grass", "total.plant")]),
+corrplot(cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", 
+                                     "total.grass", "total.plant")]),
          method = "square", type = "upper")
 
 # Multicollinearity between predictors (e.g. bare patches, shrub patches, etc.) may be a problem
@@ -98,6 +107,8 @@ step(Mod.S.TFull, direction = "backward", data = data.new)
 summary(glm(spring_survival_t1 ~ num_bare_t + num_shrub_t, family = "binomial", 
             data = CData.Transplants.s))
 
+# Shrub cover patches may not be a good predictor of survival
+
 
 
 
@@ -110,7 +121,6 @@ plot(CData.Transplants.s$weighted.dens, CData.Transplants.s$spring_survival_t1)
 # Univariate logistic regression
 # Survival is response variable, weighted density is predictor variable
 Mod.S.T5 <- glm(spring_survival_t1 ~ weighted.dens, data = CData.Transplants.s, family = "binomial")
-summary(Mod.S.T5)
 
 # Weighted density term is not significant at 0.05 level
 # However, analysis of deviance test says it is
@@ -131,3 +141,29 @@ abline(h = 0, col = "red")
 
 # This can also be seen here
 plot(Mod.S.T5)
+
+# Weighted density may not be a good predictor of survival
+# Same goes for standardised weighted density
+
+
+
+
+
+##### Model survival as function of shrub volume ----------------------------------------------------------
+
+# Plot of survival as a function of volume
+plot(CData.Transplants.s$volume_t, CData.Transplants.s$spring_survival_t1)
+
+# Univariate logistic regression
+# Survival is response variable, volume is predictor variable
+Mod.S.T6 <- glm(spring_survival_t1 ~ volume_t, data = CData.Transplants.s, family = "binomial")
+
+# Volume term is not significant
+# Analysis of deviance test confirms this
+summary(Mod.S.T6)
+anova(Mod.S.T6, test = "Chisq")
+
+# We have tried several different models
+# None of them are significant, or residuals are so bad that the model is not valid
+# The most likely case is that survival is always low for transplants and/or small shrubs
+# This is what we found in S1_SupportingMaterial
