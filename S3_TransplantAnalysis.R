@@ -29,7 +29,8 @@ for(i in 1:4){
          xlab = paste0(plots.xlab[i], " Sections"), ylab = paste0("Survival (", plots.ylab[j], ")"))
     mean.probs <- c()
     for(k in 0:max(get(plots.xvar[i], CData.Transplants.s))){
-      mean.probs <- append(mean.probs, mean(get(plots.yvar[j], subset(CData.Transplants.s, get(plots.xvar[i]) == k))))}
+      mean.probs <- append(mean.probs, mean(get(plots.yvar[j], subset(CData.Transplants.s, 
+                                                                      get(plots.xvar[i]) == k))))}
     plot(mean.probs, pch = 19, xlab = paste0(plots.xlab[i], " Sections"), 
          ylab = paste0("Survival Rate (", plots.ylab[j], ")"))}
   assign(paste0("SPlot.", plots.name[i]), recordPlot())}
@@ -40,6 +41,7 @@ for(i in 1:4){
 cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", "total.grass", "total.plant")])
 
 # Same as above, but more visually appealing
+par(mfrow = c(1, 1))
 corrplot(cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_shrub_t", "total.grass", "total.plant")]),
          method = "square", type = "upper")
 
@@ -60,7 +62,7 @@ Mod.S.T1 <- glm(spring_survival_t1 ~ num_shrub_t, data = CData.Transplants.s, fa
 summary(Mod.S.T1)
 anova(Mod.S.T1, test = "Chisq")
 
-# Poor residuals indicate than model is not valid
+# Poor residuals indicate that model is not valid
 hatValues <- influence(Mod.S.T1)$hat
 DevianceRes <- rstandard(Mod.S.T1)
 PearsonRes <- residuals(Mod.S.T1, "pearson")/sqrt(1 - hatValues)
@@ -95,3 +97,37 @@ Mod.S.TFull <- glm(spring_survival_t1 ~ num_bare_t + num_shrub_t + total.grass +
 step(Mod.S.TFull, direction = "backward", data = data.new)
 summary(glm(spring_survival_t1 ~ num_bare_t + num_shrub_t, family = "binomial", 
             data = CData.Transplants.s))
+
+
+
+
+
+##### Model survival as function of weighted density ------------------------------------------------------
+
+# Plot of survival as a function of weighted density
+plot(CData.Transplants.s$weighted.dens, CData.Transplants.s$spring_survival_t1)
+
+# Univariate logistic regression
+# Survival is response variable, weighted density is predictor variable
+Mod.S.T5 <- glm(spring_survival_t1 ~ weighted.dens, data = CData.Transplants.s, family = "binomial")
+summary(Mod.S.T5)
+
+# Weighted density term is not significant at 0.05 level
+# However, analysis of deviance test says it is
+summary(Mod.S.T5)
+anova(Mod.S.T5, test = "Chisq")
+
+# Poor residuals indicate that model is not valid
+hatValues <- influence(Mod.S.T5)$hat
+DevianceRes <- rstandard(Mod.S.T5)
+PearsonRes <- residuals(Mod.S.T5, "pearson")/sqrt(1 - hatValues)
+par(mfrow = c(1, 2))
+plot(CData.Transplants.s$weighted.dens, DevianceRes, 
+     ylab = "Standardised Deviance Residual", ylim = c(-1, 4.5))
+abline(h = 0, col = "red")
+plot(CData.Transplants.s$weighted.dens, PearsonRes, 
+     ylab = "Standardised Pearson Residuals", ylim = c(-1, 4.5))
+abline(h = 0, col = "red")
+
+# This can also be seen here
+plot(Mod.S.T5)
