@@ -103,12 +103,12 @@ v.cut <- CData.s %>%
 d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5)))
 names(d.and.v) <- c("v.mean", "x.d") 
 F.pred <- d.and.v %>% 
-  mutate(F.mean = invlogit(Mod.F.avg.cf[1] + 
-                             Mod.F.avg.cf[2] * v.mean + 
-                             Mod.F.avg.cf[3] * x.d +
-                             Mod.F.avg.cf[4] * v.mean * x.d +
-                             Mod.F.avg.cf[5] * (x.d^2)+
-                             Mod.F.avg.cf[6] * v.mean * (x.d^2)))
+  mutate(F.mean = invlogit(Mod.F.top.cf[1] + 
+                             Mod.F.top.cf[2] * v.mean + 
+                             Mod.F.top.cf[3] * x.d +
+                             Mod.F.top.cf[4] * v.mean * x.d +
+                             Mod.F.top.cf[5] * (x.d^2)+
+                             Mod.F.top.cf[6] * v.mean * (x.d^2)))
 
 # Get binned means of the data with respect to volume and density
 F.mean.df <- CData.s %>% 
@@ -143,7 +143,7 @@ F.pred %>%
         axis.title.y = element_text(size = 43, margin = margin(t = 80, r = 16, b = 0, l = 0)),
         axis.ticks.x = element_line(size = 0.5),
         axis.ticks.y = element_line(size = 0.5),
-        axis.ticks.length = unit(8, "points")) -> Mod.F.avg.dPlot
+        axis.ticks.length = unit(8, "points")) -> Mod.F.top.dPlot
 
 # Do same process as previous 3 steps, but switch density and volume
 # This produces a graph of flowering probability as a function of volume, with 4 density bins
@@ -154,12 +154,12 @@ d.cut <- CData.s %>%
 d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5)))
 names(d.and.v.2) <- c("d.mean", "x.v") 
 F.pred <- d.and.v.2 %>% 
-  mutate(F.mean = invlogit(Mod.F.avg.cf[1] + 
-                             Mod.F.avg.cf[2] * x.v + 
-                             Mod.F.avg.cf[3] * d.mean +
-                             Mod.F.avg.cf[4] * x.v * d.mean +
-                             Mod.F.avg.cf[5] * (d.mean^2) +
-                             Mod.F.avg.cf[6] * x.v * (d.mean^2)))
+  mutate(F.mean = invlogit(Mod.F.top.cf[1] + 
+                             Mod.F.top.cf[2] * x.v + 
+                             Mod.F.top.cf[3] * d.mean +
+                             Mod.F.top.cf[4] * x.v * d.mean +
+                             Mod.F.top.cf[5] * (d.mean^2) +
+                             Mod.F.top.cf[6] * x.v * (d.mean^2)))
 F.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -189,7 +189,7 @@ F.pred %>%
         axis.title.y = element_text(size = 43, margin = margin(t = 80, r = 16, b = 0, l = 0)),
         axis.ticks.x = element_line(size = 0.5),
         axis.ticks.y = element_line(size = 0.5),
-        axis.ticks.length = unit(8, "points")) -> Mod.F.avg.vPlot
+        axis.ticks.length = unit(8, "points")) -> Mod.F.top.vPlot
 
 
 
@@ -217,12 +217,12 @@ v.cut <- CData.s %>%
 d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5)))
 names(d.and.v) <- c("v.mean", "x.d") 
 G.pred <- d.and.v %>% 
-  mutate(G.mean = Mod.G.avg.cf[1] + 
-           Mod.G.avg.cf[2] * v.mean + 
-           Mod.G.avg.cf[3] * x.d +
-           Mod.G.avg.cf[4] * v.mean * x.d +
-           Mod.G.avg.cf[5] * (x.d^2)+
-           Mod.G.avg.cf[6] * v.mean * (x.d^2))
+  mutate(G.mean = Mod.G.top.cf[1] + 
+           Mod.G.top.cf[2] * v.mean + 
+           Mod.G.top.cf[3] * x.d +
+           Mod.G.top.cf[4] * v.mean * x.d +
+           Mod.G.top.cf[5] * (x.d^2)+
+           Mod.G.top.cf[6] * v.mean * (x.d^2))
 
 # Get binned means of the data with respect to volume and density
 G.mean.df <- CData.s %>% 
@@ -256,7 +256,7 @@ G.pred %>%
         axis.title.y = element_text(size = 43, margin = margin(t = 80, r = 16, b = 0, l = 0)),
         axis.ticks.x = element_line(size = 0.5),
         axis.ticks.y = element_line(size = 0.5),
-        axis.ticks.length = unit(8, "points")) -> Mod.G.avg.dPlot
+        axis.ticks.length = unit(8, "points")) -> Mod.G.top.dPlot
 
 # Do same process as previous 3 steps, but switch density and volume
 # This produces a graph of annual growth ratio as a function of volume, with 4 density bins
@@ -267,12 +267,12 @@ d.cut <- CData.s %>%
 d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5)))
 names(d.and.v.2) <- c("d.mean", "x.v") 
 G.pred <- d.and.v.2 %>% 
-  mutate(G.mean = Mod.G.avg.cf[1] + 
-           Mod.G.avg.cf[2] * x.v + 
-           Mod.G.avg.cf[3] * d.mean +
-           Mod.G.avg.cf[4] * x.v * d.mean +
-           Mod.G.avg.cf[5] * (d.mean^2) +
-           Mod.G.avg.cf[6] * x.v * (d.mean^2))
+  mutate(G.mean = Mod.G.top.cf[1] + 
+           Mod.G.top.cf[2] * x.v + 
+           Mod.G.top.cf[3] * d.mean +
+           Mod.G.top.cf[4] * x.v * d.mean +
+           Mod.G.top.cf[5] * (d.mean^2) +
+           Mod.G.top.cf[6] * x.v * (d.mean^2))
 G.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -303,7 +303,7 @@ G.pred %>%
         axis.title.y = element_text(size = 43, margin = margin(t = 80, r = 16, b = 0, l = 0)),
         axis.ticks.x = element_line(size = 0.5),
         axis.ticks.y = element_line(size = 0.5),
-        axis.ticks.length = unit(8, "points")) -> Mod.G.avg.vPlot
+        axis.ticks.length = unit(8, "points")) -> Mod.G.top.vPlot
 
 
 
@@ -332,12 +332,12 @@ v.cut <- CData.s %>%
 d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5)))
 names(d.and.v) <- c("v.mean", "x.d") 
 R.pred <- d.and.v %>% 
-  mutate(R.mean = Mod.R.avg.cf[1] + 
-           Mod.R.avg.cf[2] * v.mean + 
-           Mod.R.avg.cf[3] * x.d +
-           Mod.R.avg.cf[4] * v.mean * x.d +
-           Mod.R.avg.cf[5] * (x.d^2) +
-           Mod.R.avg.cf[6] * v.mean * (x.d^2))
+  mutate(R.mean = Mod.R.top.cf[1] + 
+           Mod.R.top.cf[2] * v.mean + 
+           Mod.R.top.cf[3] * x.d +
+           Mod.R.top.cf[4] * v.mean * x.d +
+           Mod.R.top.cf[5] * (x.d^2) +
+           Mod.R.top.cf[6] * v.mean * (x.d^2))
 
 # Get binned means of the data with respect to volume and density
 R.mean.df <- CData.s %>% 
@@ -372,7 +372,7 @@ R.pred %>%
         axis.title.y = element_text(size = 43, margin = margin(t = 80, r = 16, b = 0, l = 0)),
         axis.ticks.x = element_line(size = 0.5),
         axis.ticks.y = element_line(size = 0.5),
-        axis.ticks.length = unit(8, "points")) -> Mod.R.avg.dPlot
+        axis.ticks.length = unit(8, "points")) -> Mod.R.top.dPlot
 
 # Do same process as previous 3 steps, but switch density and volume
 # This produces a graph of reproductive count as a function of volume, with 4 density bins
@@ -383,12 +383,12 @@ d.cut <- CData.s %>%
 d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5)))
 names(d.and.v.2) <- c("d.mean", "x.v") 
 R.pred <- d.and.v.2 %>% 
-  mutate(R.mean = Mod.R.avg.cf[1] + 
-           Mod.R.avg.cf[2] * x.v + 
-           Mod.R.avg.cf[3] * d.mean +
-           Mod.R.avg.cf[4] * x.v * d.mean +
-           Mod.R.avg.cf[5] * (d.mean^2) +
-           Mod.R.avg.cf[6] * x.v * (d.mean^2))
+  mutate(R.mean = Mod.R.top.cf[1] + 
+           Mod.R.top.cf[2] * x.v + 
+           Mod.R.top.cf[3] * d.mean +
+           Mod.R.top.cf[4] * x.v * d.mean +
+           Mod.R.top.cf[5] * (d.mean^2) +
+           Mod.R.top.cf[6] * x.v * (d.mean^2))
 R.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -420,7 +420,7 @@ R.pred %>%
         axis.title.y = element_text(size = 43, margin = margin(t = 80, r = 16, b = 0, l = 0)),
         axis.ticks.x = element_line(size = 0.5),
         axis.ticks.y = element_line(size = 0.5),
-        axis.ticks.length = unit(8, "points")) -> Mod.R.avg.vPlot
+        axis.ticks.length = unit(8, "points")) -> Mod.R.top.vPlot
 
 
 
@@ -440,12 +440,12 @@ gly <- grid.layout(2950, 2600)
 pushViewport(viewport(layout = gly))
 
 # Place graphs in a grid
-print(Mod.F.avg.dPlot, vp = viewport(layout.pos.row = 1:950, layout.pos.col = 1:1300))
-print(Mod.F.avg.vPlot, vp = viewport(layout.pos.row = 1:950, layout.pos.col = 1300:2600))
-print(Mod.G.avg.dPlot, vp = viewport(layout.pos.row = 1000:1950, layout.pos.col = 1:1300))
-print(Mod.G.avg.vPlot, vp = viewport(layout.pos.row = 1000:1950, layout.pos.col = 1300:2600))
-print(Mod.R.avg.dPlot, vp = viewport(layout.pos.row = 2000:2950, layout.pos.col = 1:1300))
-print(Mod.R.avg.vPlot, vp = viewport(layout.pos.row = 2000:2950, layout.pos.col = 1300:2600))
+print(Mod.F.top.dPlot, vp = viewport(layout.pos.row = 1:950, layout.pos.col = 1:1300))
+print(Mod.F.top.vPlot, vp = viewport(layout.pos.row = 1:950, layout.pos.col = 1300:2600))
+print(Mod.G.top.dPlot, vp = viewport(layout.pos.row = 1000:1950, layout.pos.col = 1:1300))
+print(Mod.G.top.vPlot, vp = viewport(layout.pos.row = 1000:1950, layout.pos.col = 1300:2600))
+print(Mod.R.top.dPlot, vp = viewport(layout.pos.row = 2000:2950, layout.pos.col = 1:1300))
+print(Mod.R.top.vPlot, vp = viewport(layout.pos.row = 2000:2950, layout.pos.col = 1300:2600))
 
 # Create legend
 grid.rect(vp = viewport(layout.pos.row = 190:260, layout.pos.col = 1400:1470), gp = gpar(fill = "navy"))
@@ -463,8 +463,8 @@ dev.off()
 
 # Clean up mess from global environment
 remove(d.and.v, d.and.v.2, d.cut, F.mean.df, F.pred, G.mean.df, G.pred, R.mean.df, R.pred,
-       v.cut, d.range, v.range, Mod.F.avg.dPlot, Mod.F.avg.vPlot, Mod.G.avg.dPlot, 
-       Mod.G.avg.vPlot, Mod.R.avg.dPlot, Mod.R.avg.vPlot, gly)
+       v.cut, d.range, v.range, Mod.F.top.dPlot, Mod.F.top.vPlot, Mod.G.top.dPlot, 
+       Mod.G.top.vPlot, Mod.R.top.dPlot, Mod.R.top.vPlot, gly)
 
 
 

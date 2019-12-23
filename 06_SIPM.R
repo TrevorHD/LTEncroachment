@@ -4,28 +4,28 @@
 Params <- c()
 
   # Flowering probability
-  Params[1] <- Mod.F.avg.cf[1]          # Intercept
-  Params[2] <- Mod.F.avg.cf[2]          # Volume coefficient
-  Params[3] <- Mod.F.avg.cf[3]          # Density coefficient
-  Params[4] <- Mod.F.avg.cf[4]          # Volume and density interaction coefficient
-  Params[5] <- Mod.F.avg.cf[5]          # Density quadratic coefficient
-  Params[6] <- Mod.F.avg.cf[6]          # Volume and quadratic density interaction coefficient
+  Params[1] <- Mod.F.top.cf[1]          # Intercept
+  Params[2] <- Mod.F.top.cf[2]          # Volume coefficient
+  Params[3] <- Mod.F.top.cf[3]          # Density coefficient
+  Params[4] <- Mod.F.top.cf[4]          # Volume and density interaction coefficient
+  Params[5] <- Mod.F.top.cf[5]          # Density quadratic coefficient
+  Params[6] <- Mod.F.top.cf[6]          # Volume and quadratic density interaction coefficient
   
   # Annual growth
-  Params[7] <- Mod.G.avg.cf[1]          # Intercept
-  Params[8] <- Mod.G.avg.cf[2]          # Volume coefficient
-  Params[9] <- Mod.G.avg.cf[3]          # Density coefficient
-  Params[10] <- Mod.G.avg.cf[4]         # Volume and density interaction coefficient
-  Params[11] <- Mod.G.avg.cf[5]         # Density quadratic coefficient
-  Params[12] <- Mod.G.avg.cf[6]         # Volume and quadratic density interaction coefficient
+  Params[7] <- Mod.G.top.cf[1]          # Intercept
+  Params[8] <- Mod.G.top.cf[2]          # Volume coefficient
+  Params[9] <- Mod.G.top.cf[3]          # Density coefficient
+  Params[10] <- Mod.G.top.cf[4]         # Volume and density interaction coefficient
+  Params[11] <- Mod.G.top.cf[5]         # Density quadratic coefficient
+  Params[12] <- Mod.G.top.cf[6]         # Volume and quadratic density interaction coefficient
   
   # Number of reproductive structures
-  Params[13] <- Mod.R.avg.cf[1]         # Intercept
-  Params[14] <- Mod.R.avg.cf[2]         # Volume coefficient
-  Params[15] <- Mod.R.avg.cf[3]         # Density coefficient
-  Params[16] <- Mod.R.avg.cf[4]         # Volume and density interaction coefficient
-  Params[17] <- Mod.R.avg.cf[5]         # Density quadratic coefficient
-  Params[18] <- Mod.R.avg.cf[6]         # Volume and quadratic density interaction coefficient
+  Params[13] <- Mod.R.top.cf[1]         # Intercept
+  Params[14] <- Mod.R.top.cf[2]         # Volume coefficient
+  Params[15] <- Mod.R.top.cf[3]         # Density coefficient
+  Params[16] <- Mod.R.top.cf[4]         # Volume and density interaction coefficient
+  Params[17] <- Mod.R.top.cf[5]         # Density quadratic coefficient
+  Params[18] <- Mod.R.top.cf[6]         # Volume and quadratic density interaction coefficient
   
   # Survival (for volume < 7.294)
   Params[19] <- Mod.S.avg.cf[1]         # Intercept
