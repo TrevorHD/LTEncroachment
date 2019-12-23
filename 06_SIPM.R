@@ -76,13 +76,13 @@ TransMatrix <- function(n, d){
   
   # Growth from size x to y
   xy.Growth <- function(x, y){
-    xb = pmin(pmax(x, Params[29]), Params[30])
+    xb <- pmin(pmax(x, Params[29]), Params[30])
     return(dnorm(y, mean = xb + (Params[7] + Params[8]*xb + Params[9]*d + Params[10]*d*xb +
                                     Params[11]*(d^2) + Params[12]*(xb*(d^2))), sd = Params[35]))}
   
   # Survival of size x  
   x.Survival <- function(x){
-    xb = pmin(pmax(x, Params[29]), Params[30])
+    xb <- pmin(pmax(x, Params[29]), Params[30])
     val <- ifelse(xb < 7.294, invlogit(Params[19] + Params[20]*xb + Params[21]*d + Params[22]*d*xb +
                                          Params[23]*(d^2) + Params[24]*(xb*(d^2))), Params[25])
     return(val)}
@@ -93,13 +93,13 @@ TransMatrix <- function(n, d){
   
   # Probability of flowering for size x
   x.Flowering <- function(x){
-    xb = pmin(pmax(x, Params[29]), Params[30])
+    xb <- pmin(pmax(x, Params[29]), Params[30])
     return(invlogit(Params[1] + Params[2]*xb + Params[3]*d + Params[4]*d*xb +
                       Params[5]*(d^2) + Params[6]*(xb*(d^2))))}
   
   # Number of reproductive structures produced by flowering size x
   x.Reproduction <- function(x){
-    xb = pmin(pmax(x, Params[29]), Params[30])
+    xb <- pmin(pmax(x, Params[29]), Params[30])
     return(exp(Params[13] + Params[14]*xb + Params[15]*d + Params[16]*d*xb +
                  Params[17]*(d^2) + Params[18]*(xb*(d^2))))}
   
