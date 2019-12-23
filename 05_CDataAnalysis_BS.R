@@ -1,5 +1,7 @@
+##### Initialise Data -------------------------------------------------------------------------------------
+
 # Import dataset
-DATA <- "C:\\Users/Trevor Drees/Dropbox/Trevor Creosote analysis/Data/LT_Data.xlsx"
+DATA <- "https://github.com/TrevorHD/LTEncroachment/raw/master/LT_Data.xlsx"
 
 # Read transplant data
 CData.Transplants <- read.xlsx(DATA, 5)
