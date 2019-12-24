@@ -48,8 +48,11 @@ Mod.F <- list()
 # Calculate an AIC table, ranked from best to worst model
 # Weights interpreted as the proportion of evidence in favour of each
 # To do this, use AICtab(Mod.F, weights = TRUE, sort = TRUE)
+  
+# Model 8 has the best AIC
+# For more info, use summary(Mod.F[[8]])
 
-# Create vector of coefficients for model with the best AIC
+# Create vector of coefficients for model with the best AIC (Model 8)
 Mod.F.top.cf <- c()
 
   # Intercept
@@ -123,7 +126,10 @@ Mod.G <- list()
 # Weights interpreted as the proportion of evidence in favour of each
 # To do this, use AICtab(Mod.G, weights = TRUE, sort = TRUE)
 
-# Create vector of coefficients for model with the best AIC
+# Model 7 has the best AIC
+# For more info, use summary(Mod.G[[7]])
+  
+# Create vector of coefficients for model with the best AIC (Model 7)
 Mod.G.top.cf <- c()
 
   # Intercept
@@ -198,7 +204,10 @@ Mod.R <- list()
 # Weights interpreted as the proportion of evidence in favour of each
 # To do this, use AICtab(Mod.R,weights = TRUE, sort = TRUE)
 
-# Create vector of coefficients for model with the best AIC
+# Model 7 has the best AIC
+# For more info, use summary(Mod.R[[7]])
+  
+# Create vector of coefficients for model with the best AIC (Model 7)
 Mod.R.top.cf <- c()
 
 # Intercept
