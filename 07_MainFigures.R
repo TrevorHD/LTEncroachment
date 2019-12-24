@@ -104,11 +104,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 F.pred <- d.and.v %>% 
   mutate(F.mean = invlogit(Mod.F.top.cf[1] + 
-                             Mod.F.top.cf[2] * v.mean + 
-                             Mod.F.top.cf[3] * x.d +
-                             Mod.F.top.cf[4] * v.mean * x.d +
-                             Mod.F.top.cf[5] * (x.d^2)+
-                             Mod.F.top.cf[6] * v.mean * (x.d^2)))
+                           Mod.F.top.cf[2] * v.mean + 
+                           Mod.F.top.cf[3] * x.d +
+                           Mod.F.top.cf[4] * v.mean * x.d +
+                           Mod.F.top.cf[5] * (x.d^2)+
+                           Mod.F.top.cf[6] * v.mean * (x.d^2)))
 
 # Get binned means of the data with respect to volume and density
 F.mean.df <- CData.s %>% 
@@ -155,11 +155,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 F.pred <- d.and.v.2 %>% 
   mutate(F.mean = invlogit(Mod.F.top.cf[1] + 
-                             Mod.F.top.cf[2] * x.v + 
-                             Mod.F.top.cf[3] * d.mean +
-                             Mod.F.top.cf[4] * x.v * d.mean +
-                             Mod.F.top.cf[5] * (d.mean^2) +
-                             Mod.F.top.cf[6] * x.v * (d.mean^2)))
+                           Mod.F.top.cf[2] * x.v + 
+                           Mod.F.top.cf[3] * d.mean +
+                           Mod.F.top.cf[4] * x.v * d.mean +
+                           Mod.F.top.cf[5] * (d.mean^2) +
+                           Mod.F.top.cf[6] * x.v * (d.mean^2)))
 F.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -218,11 +218,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 G.pred <- d.and.v %>% 
   mutate(G.mean = Mod.G.top.cf[1] + 
-           Mod.G.top.cf[2] * v.mean + 
-           Mod.G.top.cf[3] * x.d +
-           Mod.G.top.cf[4] * v.mean * x.d +
-           Mod.G.top.cf[5] * (x.d^2)+
-           Mod.G.top.cf[6] * v.mean * (x.d^2))
+                  Mod.G.top.cf[2] * v.mean + 
+                  Mod.G.top.cf[3] * x.d +
+                  Mod.G.top.cf[4] * v.mean * x.d +
+                  Mod.G.top.cf[5] * (x.d^2)+
+                  Mod.G.top.cf[6] * v.mean * (x.d^2))
 
 # Get binned means of the data with respect to volume and density
 G.mean.df <- CData.s %>% 
@@ -268,11 +268,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 G.pred <- d.and.v.2 %>% 
   mutate(G.mean = Mod.G.top.cf[1] + 
-           Mod.G.top.cf[2] * x.v + 
-           Mod.G.top.cf[3] * d.mean +
-           Mod.G.top.cf[4] * x.v * d.mean +
-           Mod.G.top.cf[5] * (d.mean^2) +
-           Mod.G.top.cf[6] * x.v * (d.mean^2))
+                  Mod.G.top.cf[2] * x.v + 
+                  Mod.G.top.cf[3] * d.mean +
+                  Mod.G.top.cf[4] * x.v * d.mean +
+                  Mod.G.top.cf[5] * (d.mean^2) +
+                  Mod.G.top.cf[6] * x.v * (d.mean^2))
 G.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -333,11 +333,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 R.pred <- d.and.v %>% 
   mutate(R.mean = Mod.R.top.cf[1] + 
-           Mod.R.top.cf[2] * v.mean + 
-           Mod.R.top.cf[3] * x.d +
-           Mod.R.top.cf[4] * v.mean * x.d +
-           Mod.R.top.cf[5] * (x.d^2) +
-           Mod.R.top.cf[6] * v.mean * (x.d^2))
+                  Mod.R.top.cf[2] * v.mean + 
+                  Mod.R.top.cf[3] * x.d +
+                  Mod.R.top.cf[4] * v.mean * x.d +
+                  Mod.R.top.cf[5] * (x.d^2) +
+                  Mod.R.top.cf[6] * v.mean * (x.d^2))
 
 # Get binned means of the data with respect to volume and density
 R.mean.df <- CData.s %>% 
@@ -384,11 +384,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 R.pred <- d.and.v.2 %>% 
   mutate(R.mean = Mod.R.top.cf[1] + 
-           Mod.R.top.cf[2] * x.v + 
-           Mod.R.top.cf[3] * d.mean +
-           Mod.R.top.cf[4] * x.v * d.mean +
-           Mod.R.top.cf[5] * (d.mean^2) +
-           Mod.R.top.cf[6] * x.v * (d.mean^2))
+                  Mod.R.top.cf[2] * x.v + 
+                  Mod.R.top.cf[3] * d.mean +
+                  Mod.R.top.cf[4] * x.v * d.mean +
+                  Mod.R.top.cf[5] * (d.mean^2) +
+                  Mod.R.top.cf[6] * x.v * (d.mean^2))
 R.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
