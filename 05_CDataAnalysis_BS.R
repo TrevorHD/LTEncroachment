@@ -4,7 +4,7 @@
 DATA <- "https://github.com/TrevorHD/LTEncroachment/raw/master/LT_Data.xlsx"
 
 # Read transplant data
-CData.Transplants <- read.xlsx(DATA, 5)
+CData.Transplants <- XLSX.Online(DATA, 5)
 
 
 
