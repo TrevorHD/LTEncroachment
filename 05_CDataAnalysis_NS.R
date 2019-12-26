@@ -232,8 +232,11 @@ Mod.R.top.cf <- c()
 
 
 
-##### Create GLM for survival (transplants included) ------------------------------------------------------
+##### Create GLM for survival (transplants only) ----------------------------------------------------------
 
+# Use models for transplants (small individuals) only
+# Survival for larger individuals is pretty much guaranteed
+  
 # Remove entries for which there is no recorded volume or survival
 # Standardise density; introduce unique transect identifier
 CData.AllSurvival.s <- CData.AllSurvival %>% 
@@ -332,82 +335,6 @@ Mod.S.avg.cf <- c()
   Mod.S.avg.cf[6] <- 
     Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["volume_t:I(d.stand^2)"]
 
-# We already have the models and averaged model
-# The rest of this section is simply visualising the data
-
-# Calculate range of standardised data
-CData.s.surv <- subset(CData.AllSurvival.s, transplant == TRUE)
-v.range <- range(CData.s.surv$volume_t)
-d.range <- range(CData.s.surv$d.stand)
-
-# Calculate predictions for 4 "bins" of volume categories
-v.cut <- CData.s.surv %>% 
-  mutate(v.bin = cut_number(volume_t, n = 4)) %>% 
-  group_by(v.bin) %>% 
-  summarise(v.mean = mean(volume_t))
-d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5)))
-names(d.and.v) <- c("v.mean", "x.d") 
-S.pred <- d.and.v %>% 
-  mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                           Mod.S.avg.cf[2] * v.mean + 
-                           Mod.S.avg.cf[3] * x.d +
-                           Mod.S.avg.cf[4] * v.mean * x.d +
-                           Mod.S.avg.cf[5] * (x.d^2) +
-                           Mod.S.avg.cf[6] * v.mean * (x.d^2)))
-
-# Get binned means of the data with respect to volume and density
-S.mean.df <- CData.s.surv %>% 
-  mutate(v.bin = cut_number(volume_t, n = 4),
-         d.bin = cut_interval(d.stand, n = 6)) %>% 
-  group_by(d.bin, v.bin) %>% 
-  summarise(S.mean = mean(survival_t1),
-            d.mean = mean(d.stand),
-            v.mean = mean(volume_t))
-
-# Generate visualisation; survival as function of density, with 4 volume bins
-S.pred %>% 
-  ggplot() +
-  geom_line(aes(x = x.d, y = S.mean, colour = as.factor(v.mean)), size = 1) +
-  scale_colour_manual(values = c("darkorchid2", "dodgerblue1", "navy", "firebrick2",
-                                 "firebrick2", "darkorchid2", "dodgerblue1", "navy")) +
-  geom_point(data = S.mean.df, aes(x = d.mean, y = S.mean, 
-                                   colour = as.factor(v.bin)), size = 3) +
-  labs(x = "Standardised Weighted Density (d)", y = "Survival") +
-  ylim(-0.01, 0.04) +
-  theme_bw() -> Mod.S.avg.dPlot
-
-# Do same process as previous 3 steps, but switch density and volume
-# This produces a graph of reproductive count as a function of volume, with 4 density bins
-d.cut <- CData.s.surv %>% 
-  mutate(d.bin = cut_interval(d.stand, n = 4)) %>% 
-  group_by(d.bin) %>% 
-  summarise(d.mean = mean(d.stand))
-d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5)))
-names(d.and.v.2) <- c("d.mean", "x.v") 
-S.pred <- d.and.v.2 %>% 
-  mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                           Mod.S.avg.cf[2] * x.v + 
-                           Mod.S.avg.cf[3] * d.mean +
-                           Mod.S.avg.cf[4] * x.v * d.mean +
-                           Mod.S.avg.cf[5] * (d.mean^2) +
-                           Mod.S.avg.cf[6] * x.v * (d.mean^2)))
-S.mean.df <- CData.s.surv %>% 
-  mutate(d.bin = cut_interval(d.stand, n = 4),
-         v.bin = cut_number(volume_t, n = 6)) %>% 
-  group_by(v.bin, d.bin) %>% 
-  summarise(S.mean = mean(survival_t1),
-            d.mean = mean(d.stand),
-            v.mean = mean(volume_t))
-S.pred %>% 
-  ggplot() +
-  geom_line(aes(x = x.v, y = S.mean, colour = as.factor(d.mean)), size = 1) +
-  scale_colour_manual(values = c("firebrick2", "darkorchid2", "dodgerblue1", "navy",
-                                 "firebrick2", "darkorchid2", "dodgerblue1", "navy")) +
-  geom_point(data = S.mean.df, aes(x = v.mean, y = S.mean, 
-                                   colour = as.factor(d.bin)), size = 3) +
-  labs(x = "Log-Volume (v)", y = "Survival") +
-  theme_bw() -> Mod.S.avg.vPlot
-
 
 
 
@@ -427,6 +354,14 @@ CData.s %>%
   summarise(recruit.prob = unique(recruit.prob),
             d.stand = unique(d.stand)) %>% 
   lm(recruit.prob ~ d.stand, data = .) -> Mod.P
+
+# Remove outliers and use logistic regression instead
+# subset(test, recruit.prob < 0.002) %>% 
+#   group_by(site, transect, actual.window, year_t) %>% 
+#   select(recruit.prob, d.stand) %>% 
+#   summarise(recruit.prob = unique(recruit.prob),
+#             d.stand = unique(d.stand)) %>% 
+#   glm(recruit.prob ~ d.stand, data = ., family = "quasibinomial") -> Mod.P
 
 #plot(CData.s$d.stand,CData.s$recruit.prob)
 #abline(coef(Mod.P))
