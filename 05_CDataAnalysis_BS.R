@@ -20,7 +20,7 @@ for(i in 1:nrow(CData.Transplants)){
 
 # Calculate conical volume; use initial volume since most plants die after a year
 # Add variable indicating which plants are transplants
-# To use best-case scenario recruitment, uncomment the PDC line below
+# Highest survival occurs at PDC, so we will use that as the best-case scenario
 CData.Transplants %>% 
   filter(site == "PDC") %>% 
   mutate("volume_t" = log(vol(h = max.ht_t, w = max.w_t, p = perp.w_t)),
@@ -145,13 +145,4 @@ Mod.S.avg.cf[5] <-
 # Volume and quadratic density interaction coefficient
 Mod.S.avg.cf[6] <- 
   Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["volume_t:I(d.stand^2)"]
-
-
-
-
-
-##### Clean up --------------------------------------------------------------------------------------------
-
-# Clean up variables from global environment
-remove(d.and.v, d.and.v.2, d.cut, S.mean.df, S.pred, v.cut, d.range, v.range, i, DATA)
 

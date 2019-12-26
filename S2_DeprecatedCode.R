@@ -365,6 +365,9 @@ S.pred %>%
   labs(x = "Log-Volume (v)", y = "Survival") +
   theme_bw() -> Mod.S.avg.vPlot
 
+# Clean up variables from global environment
+remove(d.and.v, d.and.v.2, d.cut, S.mean.df, S.pred, v.cut, d.range, v.range)
+
 
 
 
@@ -448,3 +451,7 @@ S.pred %>%
                                    colour = as.factor(d.bin)), size = 3) +
   labs(x = "Log-Volume (v)", y = "Survival") +
   theme_bw() -> Mod.S.avg.vPlot
+
+# Clean up variables from global environment
+remove(d.and.v, d.and.v.2, d.cut, S.mean.df, S.pred, v.cut, d.range, v.range, i, DATA)
+

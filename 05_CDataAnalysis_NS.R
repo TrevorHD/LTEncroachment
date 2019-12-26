@@ -378,12 +378,3 @@ Mod.P.cf <- c()
 
 # Less complicated overall compared to the previous models
 
-
-
-
-
-##### Clean up --------------------------------------------------------------------------------------------
-
-# Clean up variables from global environment
-remove(d.and.v, d.and.v.2, d.cut, S.mean.df, S.pred, v.cut, d.range, v.range)
-
