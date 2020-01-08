@@ -345,18 +345,18 @@ Mod.S.avg.cf <- c()
 CData.s <- CData %>%
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE))
 
-# Collapse data to give unique combinations of year, site, transect, and window
+# Collapse data to give unique combinations of site, transect, and window
 # This helps avoid inflation of data
 # Create simple linear model, using the PMod LM for the seed counts used in calculating the probabilities
 CData.s %>% 
-  group_by(site, transect, actual.window, year_t) %>% 
+  group_by(site, transect, actual.window) %>% 
   select(recruit.prob, d.stand) %>% 
   summarise(recruit.prob = unique(recruit.prob),
             d.stand = unique(d.stand)) %>% 
   lm(recruit.prob ~ d.stand, data = .) -> Mod.P
 
 # Remove outliers and use logistic regression instead
-# subset(test, recruit.prob < 0.002) %>% 
+# subset(CData.s, recruit.prob < 0.002) %>% 
 #   group_by(site, transect, actual.window, year_t) %>% 
 #   select(recruit.prob, d.stand) %>% 
 #   summarise(recruit.prob = unique(recruit.prob),
