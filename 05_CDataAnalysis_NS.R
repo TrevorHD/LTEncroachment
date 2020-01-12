@@ -355,7 +355,15 @@ CData.s %>%
             d.stand = unique(d.stand)) %>% 
   lm(recruit.prob ~ d.stand, data = .) -> Mod.P
 
-# Remove outliers and use logistic regression instead
+# Same as above, but with outliers removed
+# subset(CData.s, recruit.prob < 0.002) %>% 
+#   group_by(site, transect, actual.window, year_t) %>% 
+#   select(recruit.prob, d.stand) %>% 
+#   summarise(recruit.prob = unique(recruit.prob),
+#             d.stand = unique(d.stand)) %>% 
+#   glm(recruit.prob ~ d.stand, data = ., family = "quasibinomial") -> Mod.P
+
+# Use logistic regression instead; will have to change 06_SIPM to make this work
 # subset(CData.s, recruit.prob < 0.002) %>% 
 #   group_by(site, transect, actual.window, year_t) %>% 
 #   select(recruit.prob, d.stand) %>% 
