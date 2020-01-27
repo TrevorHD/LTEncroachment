@@ -201,34 +201,7 @@ CData %>%
 
 ##### Find probability of recruitment  --------------------------------------------------------------------
 
-# Create data frame of recruits; will be used for later calculations, but not here
-CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, volume_t1 < 8)
-
-# Calculate total amount of reproduction (empirical) in each 5-m window at time t
-# Note that t is used because seeds at t will become seedlings at t1
-for(i in 1:nrow(CData)){
-  CData$seeds.emp[i] <- sum(CData$total.reproduction_t[CData$actual.window == CData$actual.window[i] &
-                                                       CData$transect == CData$transect[i] &
-                                                       CData$site == CData$site[i]], na.rm = T)}
-
-# Create simple linear model for total reproduction in 5-m window as a function of weighted density  
-seed.mod <- lm(seeds.emp ~ weighted.dens, data = CData)
-
-# FMod: linear model fully used to estimate reproductive count for all windows
-# PMod: linear model used to estimate reproductive count for windows with 0 reproduction
-for(i in 1:nrow(CData)){
-  CData$seeds.FMod[i] <- coef(seed.mod)[1] + coef(seed.mod)[2]*CData$weighted.dens[i]
-  ifelse(CData$seeds.emp[i] == 0,
-         CData$seeds.PMod[i] <- CData$seeds.FMod[i],
-         CData$seeds.PMod[i] <- CData$seeds.emp[i])}
-  
-# Calculate total number of seedlings (recruits) in each 5-m window at t1
-# Calculate recruitment rate per reproductive structure
-for(i in 1:nrow(CData)){
-  CData$recruits[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-                                              CData$transect == CData$transect[i] &
-                                              CData$site == CData$site[i]], na.rm = T)
-  CData$recruit.prob[i] <- CData$recruits[i]/CData$seeds.PMod[i]}
+# Placeholder for new code (coming soon)
 
 
 
