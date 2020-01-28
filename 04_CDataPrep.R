@@ -261,5 +261,5 @@ select(CData.Transplants, "site", "transect", "actual.window",
 
 # Remove variables that will no longer be used
 remove(site, plants, i, Windows.FPS, Windows.MOD, Windows.PDC, Windows.SLP,
-       window.i, WBind.FPS, WBind.MOD, WBind.PDC, WBind.SLP, exprs, data, seed.mod)
+       window.i, WBind.FPS, WBind.MOD, WBind.PDC, WBind.SLP, exprs, data)
 
