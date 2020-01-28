@@ -341,19 +341,58 @@ Mod.S.avg.cf <- c()
 
 ##### Create LM for probability of recruitment from seed --------------------------------------------------
 
+# Here we will use the baseline plants whose reproduction does not change each year
+# This is much more stable and has fewer pitfalls than using yearly seed production from demography data
+  
+# Merge windows in baseline transect data with their respective weighted densities
+CData.Recruitment <- merge(CData.Transects, Windows, 
+                           by.x = c("site", "transect", "window"),
+                           by.y = c("site", "transect", "window"))
+  
+# Use the reproduction model to calculate number of reproductive structures in a single year for each plant
+mutate(CData.Recruitment,
+       d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+       seeds = exp(Mod.R.top.cf[1] + Mod.R.top.cf[2]*volume + Mod.R.top.cf[3]*d.stand + 
+                   Mod.R.top.cf[5]*(d.stand^2))) -> CData.Recruitment
+
+# Calculate number of seeds in a single year for each 5-m window
+for(i in 1:nrow(CData.Recruitment)){
+  CData.Recruitment$seeds.new[i] <- sum(CData.Recruitment$seeds[CData.Recruitment$window == CData.Recruitment$window[i] &
+                                                                  CData.Recruitment$transect == CData.Recruitment$transect[i] &
+                                                                  CData.Recruitment$site == CData.Recruitment$site[i]], na.rm = T)}
+
+# Select only one instance of each unique combination of site, transect, and window, then merge with CData
+# We're doing this because we're interested in total seeds in each window, not seeds per plant in each window
+distinct(select(CData.Recruitment, "site", "transect", "window", "seeds.new")) %>% 
+  merge(CData, ., by.x = c("site", "transect", "actual.window"),
+        by.y = c("site", "transect", "window")) -> CData.Recruitment
+
+CData.Recruitment <- mutate(CData.Recruitment, recruit.prob.1y = recruits.1y/(seeds.new),
+                                               recruit.prob.4y = recruits.4y/(4*seeds.new))
+
+CData.Recruitment %>% 
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE)) %>% 
+  group_by(site, transect, actual.window, year_t1) %>% 
+  select(recruit.prob.1y, recruit.prob.4y, d.stand) %>% 
+  summarise(recruit.prob.1y = unique(recruit.prob.1y),
+            recruit.prob.4y = unique(recruit.prob.4y),
+            d.stand = unique(d.stand)) -> CData3
+
+plot(CData3$d.stand, CData3$recruit.prob.1y)
+  
 # Restore CData.s since we deleted stuff earlier, then standardise density
-CData.s <- CData %>%
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE))
+# CData.s <- CData %>%
+  # mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE))
 
 # Collapse data to give unique combinations of site, transect, and window
 # This helps avoid inflation of data
 # Create simple linear model, using the PMod LM for the seed counts used in calculating the probabilities
-CData.s %>% 
-  group_by(site, transect, actual.window) %>% 
-  select(recruit.prob, d.stand) %>% 
-  summarise(recruit.prob = unique(recruit.prob),
-            d.stand = unique(d.stand)) %>% 
-  lm(recruit.prob ~ d.stand, data = .) -> Mod.P
+# CData.s %>% 
+  # group_by(site, transect, actual.window) %>% 
+  # select(recruit.prob, d.stand) %>% 
+  # summarise(recruit.prob = unique(recruit.prob),
+  #           d.stand = unique(d.stand)) %>% 
+  # lm(recruit.prob ~ d.stand, data = .) -> Mod.P
 
 # Same as above, but with outliers removed
 # subset(CData.s, recruit.prob < 0.002) %>% 
@@ -376,13 +415,13 @@ CData.s %>%
 #anova(Mod.P)
 
 # Create vector of coefficients for this model
-Mod.P.cf <- c()
+# Mod.P.cf <- c()
   
   # Intercept
-  Mod.P.cf[1] <- coef(Mod.P)[1]
+  # Mod.P.cf[1] <- coef(Mod.P)[1]
   
   # Volume coefficient
-  Mod.P.cf[2] <- coef(Mod.P)[2]
+  # Mod.P.cf[2] <- coef(Mod.P)[2]
 
 # Less complicated overall compared to the previous models
 
