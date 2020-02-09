@@ -41,9 +41,9 @@ Params <- c()
   # Number of seeds per fruit
   Params[26] <- 5
   
-  # Probability of seed recruitment
-  Params[27] <- Mod.P.cf[1]             # Intercept
-  Params[28] <- Mod.P.cf[2]             # Density coefficient
+  # Per-seed recruitment probability
+  Params[27] <- as.numeric(invlogit(fixef(Mod.P1[[1]])["(Intercept)"]))         # Intercept
+  Params[28] <- 0                                                               # Density coefficient
   
   # Minimum and maximum shrub sizes
   Params[29] <- min(CData.s$volume_t, na.rm = TRUE)
@@ -106,8 +106,8 @@ TransMatrix <- function(n, d){
   # Production of y-sized recruits from x-sized adults
   xy.Recruitment <- function(x, y){
     return(x.Flowering(x) * x.Reproduction(x) * Params[26] * 
-             (Params[27] + Params[28]*d) * dtruncnorm(y, a = Params[29], b = Params[30], 
-                                                      mean = Params[33], sd = Params[34]))}
+           Params[27] * dtruncnorm(y, a = Params[29], b = Params[30], 
+                                   mean = Params[33], sd = Params[34]))}
   
   # Set upper and lower boundaries slightly beyond data range
   L <- Params[29]*0.9
