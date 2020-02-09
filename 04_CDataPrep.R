@@ -207,15 +207,15 @@ CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, volume_t1 
 # Calculate total number of seedlings (recruits) in a single year for each 5-m window
 for(i in 1:nrow(CData)){
   CData$recruits.1y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-                                                   CData$transect == CData$transect[i] &
-                                                   CData$site == CData$site[i] &
-                                                   CData$year_t1 == CData$year_t1[i]], na.rm = T)}
+                                                 CData$transect == CData$transect[i] &
+                                                 CData$site == CData$site[i] &
+                                                 CData$year_t1 == CData$year_t1[i]], na.rm = T)}
 
 # Calculate total number of seedlings (recruits) across all years for each 5-m window
 for(i in 1:nrow(CData)){
   CData$recruits.4y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-                                                   CData$transect == CData$transect[i] &
-                                                   CData$site == CData$site[i]], na.rm = T)}
+                                                 CData$transect == CData$transect[i] &
+                                                 CData$site == CData$site[i]], na.rm = T)}
 
 # Per-seed recruitment rates are calculated in 05_CDataAnalysis
 
