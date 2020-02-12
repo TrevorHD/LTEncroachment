@@ -1,0 +1,67 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\usepackage[round]{natbib}
+\usepackage{graphicx}
+\geometry{a4paper}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage[running]{lineno}
+\usepackage{setspace}
+\usepackage{amsfonts,amssymb,amsmath,graphicx,hyperref}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{hyperref}
+\doublespacing
+
+%-------------------------------------------------------------------------
+
+\title{Spatial integral projection models predict slow creosotebush encroachment between episodes of rapid expansion}
+
+\author{Trevor Drees}
+\author{Brad M. Ochocki}
+\author{Scott L. Collins}
+\author{Tom E.X. Miller$^{1}$}
+
+%-------------------------------------------------------------------------
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+
+
+%-------------------------------------------------------------------------
+\newpage
+\section*{Abstract}
+\linenumbers
+
+%-------------------------------------------------------------------------
+\section*{Keywords}
+
+%--------------------------------------------------------------------
+\newpage
+\section*{Introduction}
+
+
+%--------------------------------------------------------------------
+\section*{Materials and methods}
+
+%--------------------------------------------------------------------
+\section*{Results}
+
+%--------------------------------------------------------------------
+\section*{Discussion}
+%--------------------------------------------------------------------
+\section*{Acknowledgements}
+
+\section*{Author contributions}
+
+\section*{Data accessibility}
+
+%--------------------------------------------------------------------
+\bibliographystyle{ecology}
+
+
+
+\end{document}
