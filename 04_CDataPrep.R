@@ -15,8 +15,12 @@ CData.Lengths <- XLSX.Online(data, 4)
 # Read transplant data
 CData.Transplants <- XLSX.Online(data, 5)
 
-
-
+## Tom has a different read-in process, but same data
+data <- "C:/Users/tm9/Desktop/git local/CreosoteEncroachment/LT_Data.xlsx"
+CData.Transects <- read_excel(data, sheet = "transect data")
+CData.Demography <- read_excel(data, sheet="demography data")
+CData.Lengths <- read_excel(data,sheet="transect lengths")
+CData.Transplants <- read_excel(data, sheet="Transplant exp")
 
 
 ##### Calculate densities for each 5-m window -------------------------------------------------------------
