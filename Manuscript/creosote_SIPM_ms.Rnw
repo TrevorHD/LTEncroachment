@@ -20,14 +20,17 @@
 
 \title{Spatial integral projection models predict slow creosotebush encroachment between episodes of rapid expansion}
 
-\author{Trevor Drees}
-\author{Brad M. Ochocki}
-\author{Scott L. Collins}
-\author{Tom E.X. Miller$^{1}$}
+\author[a,b]{Trevor Drees\thanks{thd5066@psu.edu}}
+\author[b]{Brad M. Ochocki}
+\author[c]{Scott L. Collins}
+\author[b]{Tom E.X. Miller}
+\affil[a]{Department of Biology, Penn State University, State College, PA USA}
+\affil[b]{Program in Ecology and Evolutionary Biology, Department of BioSciences, Rice University, Houston, TX USA}
+\affil[c]{Department of Biology, University of New Mexico, Albuquerque, NM USA}
 
 %-------------------------------------------------------------------------
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+%\SweaveOpts{concordance=TRUE}
 \maketitle
 
 
@@ -42,13 +45,33 @@
 %--------------------------------------------------------------------
 \newpage
 \section*{Introduction}
-
+%It is a good habit to create line breaks after sentences, otherwise git does not track changes in individual sentences. 
+The encroachment of shrubs and other woody plants into adjacent grasslands has been the focus of an increasing number of studies in recent years, likely in response to increasingly visible vegetation and landscape changes in ecosystems where this process takes place. 
+This process of encroachment generally involves increases in number and/or density of woody shrub-like plants in a given area \citep{van2000shrub}, which can displace other species and alter the local ecosystem. 
 
 %--------------------------------------------------------------------
 \section*{Materials and methods}
+<<example,echo=F>>=
+n <- nrow(cars)
+d <- mean(cars$dist)
+@
+The real power of knitr is that you can dynamically populate your paper with values derived from data. 
+For example, we could say that sample size for this study was \Sexpr{n} and mean plant height was \Sexpr{d} cm.
+Those values come from a built-in data set, just as a toy example. 
+
 
 %--------------------------------------------------------------------
 \section*{Results}
+Here is how you can insert and reference figures (Fig. \ref{fig:wavespeed}).
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/Figure1}
+  \caption{Here is an example of inserting a figure.}
+  \label{fig:wavespeed}
+  \end{center}
+\end{figure}
+
 
 %--------------------------------------------------------------------
 \section*{Discussion}
@@ -61,7 +84,7 @@
 
 %--------------------------------------------------------------------
 \bibliographystyle{ecology}
-
+\bibliography{creosote_SIPM}
 
 
 \end{document}
