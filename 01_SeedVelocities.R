@@ -1,7 +1,7 @@
 ##### Calculate terminal velocities -----------------------------------------------------------------------
 
 # Load data file with seed positions and times
-file <- "https://github.com/TrevorHD/LTEncroachment/raw/master/Seed_Drop.xlsx"
+file <- "https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"
 
 # Create empty vector to populate with terminal velocities
 tv.raw <- c()
@@ -14,7 +14,7 @@ for(i in 13:62){
   
   # Load each column of positions
   TX <- paste0("T", i, ".y")
-  data <- XLSX.Online(file, "Trials") %>% 
+  data <- read.csv(file) %>% 
     select("Time", TX) %>% 
     rename(t = "Time", y = TX) %>% 
     na.omit()
