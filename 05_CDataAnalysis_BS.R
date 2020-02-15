@@ -1,12 +1,9 @@
 ##### Initialise Data -------------------------------------------------------------------------------------
 
-# Import dataset
-# DATA <- "https://github.com/TrevorHD/LTEncroachment/raw/master/LT_Data.xlsx"
-
 # Read transplant data
-# CData.Transplants <- XLSX.Online(DATA, 5)
 CData.Transplants <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransplantExp.csv")
 CData.Transplants <- rename(CData.Transplants, site = ï..site)
+
 
 
 

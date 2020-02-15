@@ -1,7 +1,6 @@
 ##### Load required packages for all scripts --------------------------------------------------------------
 
 # Load packages in this order
-library(xlsx)
 library(minpack.lm)
 library(MASS)
 library(tidyverse)
@@ -13,18 +12,6 @@ library(truncnorm)
 library(grid)
 library(gridBase)
 library(corrplot)
-#library(readxl)
-
-
-
-
-##### Create function to read XLSX from GitHub repo -------------------------------------------------------
-
-# Read online XLSX by downloading as temp file
-XLSX.Online <- function(URL, SheetName){
-  temp <- tempfile(fileext = ".xlsx")
-  download.file(url = URL, destfile = temp, mode = "wb", quiet = TRUE)
-  read.xlsx(temp, SheetName)}
 
 
 

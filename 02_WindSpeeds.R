@@ -73,3 +73,4 @@ ws.fits <- c()
 
 # Clean up variables from global environment
 remove(ws.ln, ws.gm, df, i, url, years, ws.1, ws.2, ws.3, ws.4)
+

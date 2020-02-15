@@ -1,33 +1,22 @@
 ##### Initialise Data -------------------------------------------------------------------------------------
 
-# Import dataset
-data <- "https://github.com/TrevorHD/LTEncroachment/raw/master/LT_Data.xlsx"
-
 # Read transect densities
-# CData.Transects <- XLSX.Online(data, 1)
 CData.Transects <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectData.csv")
 CData.Transects <- rename(CData.Transects, site = ï..site)
 
 # Read longitudinal demography data
-# CData.Demography <- XLSX.Online(data, 2)
 CData.Demography <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_DemographyData.csv")
 CData.Demography <- rename(CData.Demography, site = ï..site)
 
 # Read transect lengths
-# CData.Lengths <- XLSX.Online(data, 4)
 CData.Lengths <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectLengths.csv")
 
 # Read transplant data
-# CData.Transplants <- XLSX.Online(data, 5)
 CData.Transplants <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransplantExp.csv")
 CData.Transplants <- rename(CData.Transplants, site = ï..site)
 
-## Tom has a different read-in process, but same data
-data <- "C:/Users/tm9/Desktop/git local/CreosoteEncroachment/LT_Data.xlsx"
-CData.Transects <- read_excel(data, sheet = "transect data")
-CData.Demography <- read_excel(data, sheet="demography data")
-CData.Lengths <- read_excel(data,sheet="transect lengths")
-CData.Transplants <- read_excel(data, sheet="Transplant exp")
+
+
 
 
 ##### Calculate densities for each 5-m window -------------------------------------------------------------

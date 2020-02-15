@@ -69,3 +69,4 @@ tv.fits <- c()
 
 # Clean up variables from global environment
 remove(v, y.0, g, TX, i, data, nlslrc, tv.ln, tv.gm, file)
+
