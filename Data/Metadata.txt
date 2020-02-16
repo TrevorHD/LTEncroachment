@@ -1,0 +1,127 @@
+
+LT_DemographyData
+##############################################################################################################
+
+site								One of four different sites: PDC, MOD, FPS, or SLP
+transect							One of 3 transects at a given site
+designated window					50-m resolution location on transect (m)
+actual window						5-m resolution location on transect (m)
+plant								Unique plant number in a given window
+ID									Unique ID consisting of transect, window, and plant
+year_t								Time of measurement, before one year has elapsed
+max.ht_t							Height of the shrub at the tallest point, at time t (cm)
+max.w_t								Width of the shrub at the widest point, at time t (cm)
+perp.w_t							Width of the shrub in the direction perpendicular to the above measurement, at time t (cm)
+max.ht_dead							Height of the shrub at the tallest point, at time t, including defoliated branches (cm)
+max.w_dead							Width of the shrub at the widest point, at time t, including defoliated branches (cm)
+perp.w_dead							Width of the shrub in the direction perpendicular to the above measurement, at time t, including defoliated branches (cm)
+flowers_t							Number of flowers counted, at time t
+fruits_t							Number of fruits counted, at time t
+reproductive_fraction_t				Fraction of the plant on which flowers and fruits were counted, at time t
+node.galls_t
+stem.galls_t
+bagworms_t
+notes_t								Additional observations at time t
+year_t1								Time of measurement, after one year has elapsed
+new.plant_t1						Boolean stating if plant was added to the study
+seedling_t1							Boolean stating if plant was a seedling at t1
+newplant.meter						Location of new plant on the transect (m)
+survival_t1							Boolean stating if plant was alive at t1
+max.ht_t1							Height of the shrub at the tallest point, at time t1 (cm)
+max.w_t1							Width of the shrub at the widest point, at time t1 (cm)
+perp.w_t1							Width of the shrub in the direction perpendicular to the above measurement, at time t1 (cm)
+flowers_t1							Number of flowers counted, at time t1
+fruits_t1							Number of fruits counted, at time t1
+reproductive_fraction				Fraction of the plant on which flowers and fruits were counted, at time t1
+notes_t1							Additional observations at time t1
+
+
+
+
+
+LT_TransectData
+##############################################################################################################
+
+site								One of four different sites: PDC, MOD, FPS, or SLP
+transect							One of 3 transects at a given site
+GIS_id
+demog_id
+window								Location on transect (5-m resolution)
+max.ht								Height of the shrub at the tallest point, at beginning of study (cm)
+max.w								Width of the shrub at the widest point, at beginning of study (cm)
+perp.w								Width of the shrub in the direction perpendicular to the above measurement, at beginning of study (cm)
+max.ht.dead							Height of the shrub at the tallest point, at beginning of study, including defoliated branches (cm)
+max.w.dead							Width of the shrub at the widest point, at beginning of study, including defoliated branches (cm)
+perp.w.dead							Width of the shrub in the direction perpendicular to the above measurement, at beginning of study, including defoliated branches (cm)
+notes								Additional observations at beginning of study
+outwindow							Location on transect (5-m resolution), but shrub is > 1 m from transect
+
+
+
+
+
+LT_TransectLengths
+##############################################################################################################
+
+Site								One of four different sites: PDC, MOD, FPS, or SLP
+Transect							One of 3 transects at a given site
+Length_m							Transect length (m)
+
+
+
+
+
+LT_TransplantExp
+##############################################################################################################
+
+site								One of four different sites: PDC, MOD, FPS, or SLP
+transect							One of 3 transects at a given site
+plot								One of 12 plots in a given transect
+subplot								One of 4 sub-plots in a given plot, numbered from left to right and top to bottom; each had one plant;
+plot_location						Location of the plot on the transect (m)
+year_t								Time of measurement, before one year has elapsed
+num_bare_t							Number of the nine 16.67 mm x 16.67 mm squares in each subplot that were bare
+num_shrub_t							Number of the nine 16.67 mm x 16.67 mm squares in each subplot that were creosotebush
+num_black_gramma_t					Number of the nine 16.67 mm x 16.67 mm squares in each subplot that were black gramma
+num_blue_gramma_t					Number of the nine 16.67 mm x 16.67 mm squares in each subplot that were blue gramma
+num_other_grass_t					Number of the nine 16.67 mm x 16.67 mm squares in each subplot that were other grasses
+num_other_t							Number of the nine 16.67 mm x 16.67 mm squares in each subplot that were other plants or ground cover
+Cover_notes							Notes pertaining to ground cover records
+max.ht_t							Height of the shrub at the tallest point, at time t (cm)
+max.w_t								Width of the shrub at the widest point, at time t (cm)
+perp.w_t							Width of the shrub in the direction perpendicular to the above measurement, at time t (cm)
+name								Name if the plant received one (as a joke)
+notes								Notes pertaining to the plot
+falll_survival_t					Boolean stating if plant was alive at the fall census				
+fall_survival_notes					Notes regarding the fall survival census
+spring_survival_t1					Boolean stating if plant was alive at the spring census
+max.ht_t1							Height of the shrub at the tallest point, at time t1 (cm)
+max.w_t1							Width of the shrub at the widest point, at time t1 (cm)
+perp.w_t1							Width of the shrub in the direction perpendicular to the above measurement, at time t1 (cm)
+flowers_t1							Number of flowers counted, at time t1
+fruits_t1							Number of fruits counted, at time t1
+reproductive_fraction				Fraction of the plant on which flowers and fruits were counted, at time t1
+
+
+
+
+
+SD_Summary
+##############################################################################################################
+
+Trial								Trial number
+SMBP								Seed mass (g) before addition of fluorescent powder
+SMAP								Seed mass (g) after addition of fluorescent powder
+Notes								Additional notes about a particular entry
+DH									Drop height (m) above ground
+
+
+
+
+
+SD_Trials
+##############################################################################################################
+
+Frame								Frame number in video
+Time								Real time (s) corresponding to frame and object position; in increments of 1/240 since camera framerate is 240 FPS
+TXX.y								Vertical position as a function of time for trial XX
