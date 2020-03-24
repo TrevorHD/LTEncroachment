@@ -30,6 +30,7 @@
 
 %-------------------------------------------------------------------------
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 %\SweaveOpts{concordance=TRUE}
 \maketitle
 
@@ -45,20 +46,151 @@
 %--------------------------------------------------------------------
 \newpage
 \section*{Introduction}
-%It is a good habit to create line breaks after sentences, otherwise git does not track changes in individual sentences. 
-The encroachment of shrubs and other woody plants into adjacent grasslands has been the focus of an increasing number of studies in recent years, likely in response to increasingly visible vegetation and landscape changes in ecosystems where this process takes place. 
-This process of encroachment generally involves increases in number and/or density of woody shrub-like plants in a given area \citep{van2000shrub}, which can displace other species and alter the local ecosystem. 
+%It is a good habit to create line breaks after sentences, otherwise git does not track changes in individual sentences.
+The encroachment of shrubs and other woody plants into adjacent grasslands has been the focus of an increasing number of studies in recent years, likely in response to increasingly visible vegetation and landscape changes in ecosystems where this process takes place.
+This process of encroachment generally involves increases in number and/or density of woody shrub-like plants in a given area \citep{van2000shrub}, which can displace other species and alter the local ecosystem.
+Woody plant encroachment has been observed across many of the arid and semi-arid regions across the world, such as the grasslands of the southwestern United States (Van Auken 2000, 2009; Goslee et al. 2003; Gibbens et al. 2005) and southern South America (Parizek et al. 2002; Cabral et al. 2003), savannas of southern Africa (Trollope et al. 1989; Roques et al. 2001), and Asian steppes (Peng et al. 2013; Chen et al. 2015).
+These shrub invasions are often regarded as ecological issues in the places where they occur, with the increasing shrub biomass and dispersal being considered as strong drivers of ecosystem degradation and/or desertification (Schlesinger et al. 1990; Ravi et al. 2009) due to how these plants alter the distribution of soil resources (Schlesinger and Pilmanis 1998; Knapp et al. 2008).
+In other places, ecosystem function and dynamics may be altered in ways that are significantly different and depend on the traits of the invading shrubs (Eldridge et al. 2011).
+Other adverse effects of encroachment include changes in ecosystem services (Reed et al. 2015; Kelleway et al. 2017), declines in biodiversity (Ratajczak et al. 2012; Sirami and Monadjem, 2012; Brandt et al. 2013), and economic losses in areas where the proliferation of shrubs adversely affects grazing land and pastoral production (Mugasi et al. 2000; Oba et al. 2000).
+
+The encroachment of woody plants into adjacent grasslands involves the movement of shrub-grass ecotones, and this kind of expansion can be modelled as a propagating wave that is a gradient of conspecific density varying in both space and time (Kot et al. 1996; Neubert and Caswell 2000; Wang et al. 2002; Pan and Lin 2012).
+The movement of these waves is dependent upon two major factors: dispersal of propagules and demographic processes within the population.
+Movement itself is driven by the spatial dispersal of propagules produced by the plants; without such dispersal, expansion does not occur.
+The speed at which these waves move is highly dependent upon the dispersal kernel shape, especially regarding the frequency of long-distance dispersal events at the tail of the distribution (Skarpaas and Shea 2007).
+Though dispersal plays a role in where the new recruits that drive the wave's movement are likely to be found, demographic processes are important as well since survival, growth, reproduction, and recruitment rates in the parent plant ultimately affect the number of propagules produced and their fate after release.
+These demographic processes can strongly affect how waves move, and structured populations in which rates vary between age, size, or life stage can be sensitive to demographic changes that may alter patterns of expansion (Neubert and Caswell 2000).
+
+Given that these waves are gradients of conspecific density, the effects of density dependence on demographic rates and population growth are important to consider.
+Not only does the density of plants influence the strength of resource competition amongst them and thus the extent to which they survive, grow and reproduce, but it also can determine whether a dispersed propagule will germinate and grow or if its competitors will prevent it from becoming established.
+Since intraspecific competition governs the performance of individuals within the population, the part of the population responsible for wave movement is strongly tied to how demographic rates and population growth vary with changes in conspecific density.
+If population growth has a negative and monotonic relationship with density such that highest rates of growth tend to be found at the lowest densities, then the invading wave is pulled forward by the plants at the low-density vanguard (Kot et al. 1996).
+However, if Allee effects result in reduced fitness at low densities, then the wave is instead pushed forward by the plants behind the front edge (Kot et al. 1996; Taylor and Hastings 2005; Sullivan et al. 2017).
+Such Allee effects can greatly limit population growth at the front of the wave, slowing or halting its movement (Lewis and Kareiva 1993; Veit and Lewis 1996; Keitt et al. 2001).
+
+Ecological theory for invasion waves as described above provides a tool that can be used to better understand and manage woody encroachment, with many sites of shrub expansion around the world providing opportunities to do so.
+One particular site of interest is the Chihuahuan Desert of the southwestern United States, where extensive documentation of shrub encroachment already exists.
+Here, populations of the creosotebush Larrea tridentata have been expanding into nearby grasslands for approximately 150 years and have decreased the cover of grasses such as Bouteloua eriopoda (Gardner 1951; Buffington and Herbel 1965; Gibbens et al. 2005).
+This encroachment leads to ecotones marking a transition from dense shrubland with numerous dry patches to open grassland, with a transition zone in between where larger shrubs can often be found interspersed among their grassy competitors.
+Historically, long-term creosotebush encroachment into grasslands is believed to have been driven by a combination of factors including overgrazing, drought and variability in rainfall, and suppression of fire regimes (Moreno-de las Heras et al. 2016).
+These shrubs are also thought to further facilitate their own encroachment through positive feedback (Grover and Musick 1990; D'Odorico et al. 2012) by modifying various aspects of their surroundings that could favour continued growth and dispersal, such as local climate (D'Odorico et al. 2010) and rates of soil erosion (Turnbull et al. 2010).
+Such positive feedback also occurs as herbaceous competitors are eliminated, reducing competition as well as the amount of flammable biomass used to fuel the fires that keep creosotebush growth in check (Van Auken 2000).
+
+In addition to these large-scale observations of encroachment, some demographic data on creosotebush are also present and may prove useful in connecting encroachment observations to mathematical models of propagating population wave fronts.
+Several studies have shown a negative relationship between size and conspecific density in Larrea tridentata (Yeaton et al. 1977; Phillips and MacMahon 1981; Miller and Huenneke 2000), indicating that density dependence likely regulates resource intake and controls growth in competing shrubs.
+There is also evidence for a negative relationship between number of fruits and conspecific density (Miller and Huenneke 2000), suggesting that creosotebush fecundity is higher in areas with fewer conspecific neighbours.
+Overall though, the amount of literature investigating density dependence of demographic rates and population growth in creosotebush is still rather limited.
+There is also relatively little understanding of how density-dependent demography and population growth facilitate creosotebush expansion, as well as a dearth of data regarding population dynamics at the vanguard of expanding creosotebush populations.
+Without better knowledge on all of these, it becomes rather difficult to mathematically model creosotebush encroachment, as doing so requires knowledge of the mechanisms occurring at these grass-shrub boundaries.
+Such gaps in knowledge make it difficult to make estimates of encroachment rates that extend beyond what can be gathered from vegetation surveys.
+
+This research aims to fill these knowledge gaps by not only collecting better data on demographic rates and dispersal in Larrea tridentata, but also by connecting it to the mathematical models that portray encroaching populations as propagating waves through space and time.
+These investigations are novel in the sense that they will be some of the first to apply the aforementioned mathematical model to ecotones of Larrea tridentata and its grassy competitors, using density-dependent demographic rates and recruitment to describe the dynamics of ecotone movement in this specific system.
+First, we quantify how demographic rates such as survival, annual growth, and reproduction vary across both the distribution of shrub sizes as well as a gradient of conspecific density.
+These demographic data allow us to analyse the pattern of density dependence to see whether this density dependence is strictly monotonic and population growth is maximised at the lowest conspecific density or if Allee effects are present.
+This will also let us understand if the invasion wave is pulled by the individuals at the front or instead pushed by the individuals behind it.
+Second, we use a fluid dynamics model to investigate wind dispersal capabilities in this species and construct dispersal kernels to estimate the probability of propagules travelling a given distance.
+Finally, we combine our data on demographic rates and dispersal, using a spatial integral projection model to obtain estimates for the approximate speed at which the wave advances. 
 
 %--------------------------------------------------------------------
 \section*{Materials and methods}
-<<example,echo=F>>=
-n <- nrow(cars)
-d <- mean(cars$dist)
-@
-The real power of knitr is that you can dynamically populate your paper with values derived from data. 
-For example, we could say that sample size for this study was \Sexpr{n} and mean plant height was \Sexpr{d} cm.
-Those values come from a built-in data set, just as a toy example. 
 
+\textit{Demographic rates}
+
+Collection of creosotebush demographic data occurred during the early summer of every year from 2013-2017, at the Sevilleta National Wildlife Refuge LTER site in central New Mexico.
+Four different sampling sites in the eastern part of the reserve were designated, with each of the sites containing 3 different transects.
+Lengths of these transects varied from 200 to 600 m, and no two sites had identical compositions of transect lengths.
+Transect length was determined by the strength of vegetation transition, as areas where shrubland more quickly transitions to grassland do not need as long of a transect to capture the gradient of densities as a more gradual transition does.
+All transects were placed longitudinally along the shrubland-grassland ecotone so a full range of shrub densities could be captured; each transect spanned shrub-dense "core" areas as well as grasslands with few shrubs and the transition zones in between. 
+
+Only plants within a metre of the transect on either side were considered when determining baseline shrub densities.
+These densities were calculated using initial measurements from 2013 and were assumed to remain relatively static over the course of the study; each density was recorded as the weighted total amount of shrub volume per 5-m transect subsection.
+The per-shrub volume was calculated as that of an elliptic cone, as this was found to be the figure most closely matching the plant's morphology, using the formula $V_{i} = \pi lwh/3$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
+Maximum length and width were measured so that they were always perpendicular to each other, and height was measured from the base of the woody stem at the soil surface to the highest part of the shrub.
+All three of these dimensional measurements were mutually orthogonal and were inclusive only of living parts of the shrub; dead wood and non-foliated outer sections were not included in measurements.
+The total weighted density for the window was then expressed as the sum of log-transformed volumes of each individual shrub contained within.
+Such a weighted density was chosen because density of individuals alone can often fail to be a useful measurement in environments where large size differences between plants of the same species exist.
+Different-sized plants may vary greatly in their ability to extract resources from the environment around them and may thus differ greatly in their degree of competitiveness (Weiner 1990; Hara 1993).
+By using a weighted density in terms of shrub volume, we were able to account for the extra competitiveness of larger shrubs and thus have a more accurate measurement of conspecific presence that is more suitable for a study population containing significant heterogeneity in size.
+
+A subset of the shrubs used to calculate the baseline densities were tagged, with each plant given a unique identifier that allowed it to be recognised based on sampling site, transect number, and location within 50-m and 5-m subsections.
+These tagged shrubs then had various demographic measurements recorded on an annual basis.
+Maximum width, length, and height on each shrub were measured in order to calculate conical volume, using the formula given earlier.
+Survival status of the shrubs was also recorded, with dead individuals being noted and excluded from measurements in subsequent years.
+Counts of flowers and fruits on each shrub were recorded as well.
+In instances where shrubs had large numbers of reproductive structures that would prove difficult to reliably count, estimates were made, with a more accurate count on a fraction of the shrub being extrapolated to the entire individual.
+The position of each shrub along the transect was noted to a resolution of 5 m so that it could be matched with the baseline density of its corresponding subsection.
+For shrubs in which a given 5-m subsection was not recorded, their position was estimated to the nearest 50 m; however, compared to the number of finer-resolution 5-m subsections, this occurred relatively infrequently. 
+Establishment of recruits was also accounted for, with new recruits observed within the study area tagged and measured.
+
+Collected demography data were then examined to investigate how weighted density and shrub volume affected four different demographic variables: survival, probability of flowering (i.e. producing at least one flower or fruit), annual growth, and number of reproductive structures.
+Each of these demographic variables was fit to a different mixed-effects model through maximum likelihood.
+Both survival and probability of flowering were each fit to generalised linear mixed-effects models using a binomial response and a logit link function. Annual growth was defined as $\ln(V_{t+1} / V_{t})$ where $V_{t+1}$ and $V_{t}$ are the shrub volumes in the current and previous years, respectively, and was then fit to a linear mixed-effects model. 
+The number of reproductive structures was defined as the natural logarithm of the sum of fruits and flowers on the entire shrub and was fit to a linear mixed-effects model as well.
+To construct these models, all of the equations listed in Table 1 were first fit to each of the four demographic variables, with each equation using volume and standardised density as predictors while also treating the unique transect in which each shrub was located as a random effect.
+After these equations were fit to the data, all eight equations for each demographic variable were ranked based on their value of the Akaike information criterion (AIC) and weighted based on their quality so that better-fitting models had a higher weight.
+Then, coefficients of the same type were averaged between all eight models for each demographic variable using a weighted mean corresponding to model quality in order to generate an average model.
+All four average models have the general form \begin{equation} R = \beta_{1}v + \beta_{2}d + \beta_{3}d^2 + \beta_{4}vd + \beta_{5}vd^2 + \epsilon \end{equation} where $R$ is the response variable, $v$ and $d$ are the volume and density, $\epsilon$ is a random transect effect, and $\beta$ is the coefficient for each type of term.
+
+The effect of density dependence on the probability of recruitment from seeds was also modelled.
+For every year, the sum of seeds produced the prior year was calculated for each 5-m subsection, and then probability of recruitment was calculated as the number of recruits observed in each 5-m subsection divided by that number of seeds.
+For any subsection in which seeds were not found, a count of seeds was estimated based on the number of seeds in a subsection of similar weighted density; this was done to avoid creating any undefined values of recruitment probability.
+Both linear and quadratic models using only weighted density as a predictor were fit to the distribution of recruitment probabilities, though the linear model was ultimately used because it had a higher AIC value.
+
+\textit{Seed dispersal}
+
+Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
+The WALD model, which is largely based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels (Katul et al. 2005; Skarpaas and Shea 2007) and may be used when empirical dispersal data is not readily available.
+Under the assumptions that wind turbulence is low, wind flow is vertically homogenous, and terminal velocity is achieved immediately upon seed release, the WALD model simplifies a Lagrangian stochastic model to create a dispersal kernel that estimates the likelihood a propagule will travel a given distance (Katul et al. 2005).
+This dispersal kernel takes the form of the inverse Gaussian distribution \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} that is a slight adaptation from equation 5b in Katul et al. (2005), using $r$ to denote dispersal distance.
+Here, $\lambda'$ is the location parameter and $\mu'$ is the scale parameter, which depend on environmental and plant-specific properties of the study system.
+The location and scale parameters are defined as $\lambda' = (H/\sigma)^2$ and $\mu' = HU/F$; these are functions of the height $H$ of seed release, wind speed $U$ at seed release height, seed terminal velocity $F$, and the turbulent flow parameter $\sigma$ that depends on both wind speed and local vegetation roughness.
+
+In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} given in Bullock et al. (2012) equation 6, with the notation slightly modified. 
+Here, $z$ is the height above the ground, $K$ is the von Karman constant, and $u^*$ is the friction velocity.
+The zero-plane displacement $d$ and roughness length $z_{0}$ are surface roughness parameters that, for a grass canopy height $h$ above the ground, are  approximated by $d \approx 0.7h$ and $z_{0} \approx 0.1h$.
+These estimates are from Raupach (1994) for a canopy area index $\Lambda = 1$ in which the sum of grass canopy elements is equal to the unit area being measured.
+A 0.15 m grass height at the study site gives $d = 0.105$ and $z_{0}$, which are suitable approximations for grassland (Wiernga 1993).
+Calculations of $u^*$ were done using equation A2 from Skarpaas and Shea (2007), in which \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
+Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by Skarpaas and Shea (2007) in their equation A4, where \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} and $C_{0}$ is the Kolmogorov constant.
+$A_{w}$ is a constant that relates vertical turbulence to friction velocity and is approximately equal to 1.3 under the assumptions of above-canopy flow made by Skarpaas and Shea (2007), based off calculations from Hsieh and Katul (2005).
+In addition, the assumption that $z = H$ was made in order to make the calculation of $\sigma$ more feasible.
+
+The values from the previous three equations give us the necessary information to calculate $\mu'$ and $\lambda'$, thus allowing us to create the WALD distribution $p(r)$.
+However, the base WALD model does not take into account variation in wind speeds or seed terminal velocities, which limits its applicability in systems where such variation is present.
+In order to account for this variation, we integrate the WALD model over distributions these two variables using the same method as Skarpaas and Shea (2007).
+The WALD model assumes seed release from a single point source, though, which is not realistic for a shrub; because seeds are released across the entire height of the shrub rather than from a point source, $p(r)$ was also integrated across the uniform distribution from the grass canopy height to the shrub height.
+Thus, under the assumptions that the height at which a seed is located does not affect its probability of being released and that seeds are evenly distributed throughout the shrub, this gives the dispersal kernel $K(r)$, where \begin{equation} K(r) = \iiint p(F)p(U)p(z)p(r) \,dF\,dU\,dz \end{equation} and $p(F)$ and $p(U)$ are the PDFs of the terminal velocity $F$ and wind speed $U$, respectively, and $p(z)$ is the uniform distribution from $h$ to $H$.
+
+The distribution $p(F)$ in the integral above was constructed using experimentally determined seed terminal velocities.
+This was done by using a high-speed camera and motion tracking software to determine position as a function of time, and then using the Levenberg-Marquardt algorithm to solve a quadratic-drag equation of motion for $F$. 
+Before seeds were released, they were dried and then dyed with yellow fluorescent powder, and then put against a black background to improve visibility and make tracking easier.
+While the powder added mass to the seeds, this added mass only yielded an approximately 2.5\% increase and was thus negligible, likely having little effect on their terminal velocities.
+Measurements were conducted for 48 seeds that were randomly chosen from a seed pool derived from different plants, and then an empirical PDF of terminal velocities was constructed using the data.
+Constructing $p(U)$ involved creating an empirical PDF of hourly wind speeds at Five Points, the site closest to the 12 transects being used, that were obtained from meteorological data collected at the Sevilleta National Wildlife Refuge from 1988 to 2010.
+We did not weight $p(U)$ and assumed that the probability seed release from the shrub is the same regardless of wind speed. 
+
+\textit{Wave model using spatial integral projection models}
+
+Given that the shrub population at this site is approximately homogeneous perpendicular to the direction of encroachment, expansion is modelled as a wave moving in one dimension.
+A spatial integral projection model (SIPM) is used to estimate the speed at which encroachment occurs; such a model incorporates the effects of variation in traits like plant size that stage-structured models, such as those described in Neubert and Caswell (2000), do not capture.
+According to Jonjegans et al. (2011), a general SIPM can be formulated as \begin{equation} \mathbf{n} (x_{2}, z_{2}, t + 1) = \iint \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) \mathbf{n} (x_{1}, z_{1}, t) \,dx_{1}\,dz_{1} \end{equation} where $x_{1}$ and $x_{2}$ are locations of individuals of a particular size before and after one unit of time, and $z_{1}$ and $z_{2}$ are the respective sizes.
+The vector $\mathbf{n}$ indicates the population density of each size, and $\tilde{K}$ is a kernel that combines dispersal with demography.
+Though this SIPM represents a continuous spectrum of shrub sizes and densities, it was implemented by discretising the above integral with a 200 x 200 matrix, as this makes calculations significantly more tractable.
+
+Movement of the wave is determined by the components of the combined dispersaldemography kernel $\tilde{K}$, which is of the same form as that used in Jonjegans et al. (2011).
+Here, \begin{equation} \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) = K(x_{2} - x_{1}) Q(z_{2} - z_{1}) + \delta(x_{2} - x_{1}) G(z_{2} - z_{1}) \end{equation} and $K$ is the dispersal kernel, $Q$ a reproduction function, $G$ a growth function, and $\delta$ the Dirac delta function.
+$G$ is derived from the model for annual growth ratio, and $Q$ is derived from the reproductive structures model as well as other factors including number of seeds per reproductive structure, probability of recruitment from seed, and recruit size.
+Both $G$ and $Q$ give the probability of transition between sizes; in the case of $G$, this is the probability of growing from one specific size to another, and in the case of $Q$ the probability that an individual of a specific size produces a recruit of a specific size.
+The product of $K$ and $Q$ represents the production and dispersal of motile propagules, while the product of $G$ and $\delta$ represents the growth of sessile individuals.
+
+Given growth function $G$ and the reproduction function $Q$, the speed of the moving wave can be calculated as \begin{equation} c^* = \min_{s > 0} \left[\frac{1}{s}\ln(\rho_{s})\right] \end{equation} where $s$ is the wave shape parameter and $\rho_{s}$ is the dominant eigenvalue of the kernel $\mathbf{H_{S}}$ (Jonjegans et al. 2011). 
+This estimate for the wavespeed is valid under the assumption that population growth decreases monotonically as conspecific density increases, with the highest rates of growth occurring at the lowest population densities (Lewis et al. 2006).
+The kernel $\mathbf{H_{S}}$ is defined as \begin{equation} \mathbf{H_{S}} = M(s) Q(z_{2} - z_{1}) + G(z_{2} - z_{1}) \end{equation} where $M(s)$ is the moment-generating function of the dispersal kernel (Jonjegans et al. 2011). 
+For one-dimensional dispersal, this moment-generating function can be estimated as \begin{equation} M(s) = \frac{1}{N} \sum_{i=1}^{n} I_{0}(sr_{i}) \end{equation} where $r$ is the dispersal distance for each observation, and $I_{0}$ is the modified Bessel function of the first kind and zeroth order (Skarpaas and Shea 2007).
+In order to obtain $M$, numerous dispersal distances were simulated from the dispersal kernel $K(r)$ described in the previous section, with over 2000 replications for each shrub height increment of 1 cm.
+This was performed over the range from the lowest possible dispersal height to the maximum shrub height.
+Once $M(s)$ was obtained for dispersal at each shrub height, $\mathbf{H_{S}}$ and $c^*$ were calculated for each value of $s$; this was done for values of $s$ ranging from 0 to 2, as it is this range in which $c^*$ occurs.
 
 %--------------------------------------------------------------------
 \section*{Results}
