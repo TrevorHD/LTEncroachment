@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage{geometry}
 \usepackage[round]{natbib}
 \usepackage{graphicx}
@@ -137,7 +137,9 @@ For every year, the sum of seeds produced the prior year was calculated for each
 For any subsection in which seeds were not found, a count of seeds was estimated based on the number of seeds in a subsection of similar weighted density; this was done to avoid creating any undefined values of recruitment probability.
 Both linear and quadratic models using only weighted density as a predictor were fit to the distribution of recruitment probabilities, though the linear model was ultimately used because it had a higher AIC value.
 
-\textit{Seed dispersal}
+\bigskip
+
+\noindent\textit{Seed dispersal}
 
 Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
 The WALD model, which is largely based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels (Katul et al. 2005; Skarpaas and Shea 2007) and may be used when empirical dispersal data is not readily available.
@@ -168,9 +170,11 @@ Before seeds were released, they were dried and then dyed with yellow fluorescen
 While the powder added mass to the seeds, this added mass only yielded an approximately 2.5\% increase and was thus negligible, likely having little effect on their terminal velocities.
 Measurements were conducted for 48 seeds that were randomly chosen from a seed pool derived from different plants, and then an empirical PDF of terminal velocities was constructed using the data.
 Constructing $p(U)$ involved creating an empirical PDF of hourly wind speeds at Five Points, the site closest to the 12 transects being used, that were obtained from meteorological data collected at the Sevilleta National Wildlife Refuge from 1988 to 2010.
-We did not weight $p(U)$ and assumed that the probability seed release from the shrub is the same regardless of wind speed. 
+We did not weight $p(U)$ and assumed that the probability seed release from the shrub is the same regardless of wind speed.
 
-\textit{Wave model using spatial integral projection models}
+\bigskip
+
+\noindent\textit{Wave model using spatial integral projection models}
 
 Given that the shrub population at this site is approximately homogeneous perpendicular to the direction of encroachment, expansion is modelled as a wave moving in one dimension.
 A spatial integral projection model (SIPM) is used to estimate the speed at which encroachment occurs; such a model incorporates the effects of variation in traits like plant size that stage-structured models, such as those described in Neubert and Caswell (2000), do not capture.
@@ -194,6 +198,35 @@ Once $M(s)$ was obtained for dispersal at each shrub height, $\mathbf{H_{S}}$ an
 
 %--------------------------------------------------------------------
 \section*{Results}
+
+The speed of encroachment at the study site as estimated by the SIPM is rather slow; as can be seen in Figure 1, the low-density wavefront moves at approximately 0.5 cm/yr under normal conditions and at 1 cm/yr under the best seedling survival conditions observed in the dataset.
+These improved conditions were observed due to above-average rainfall that occurred after greenhouse-grown seedlings were transplanted to the site.
+Population growth in this low-density region of the moving wave is also low, with a geometric growth rate of $\lambda \approx 1.006$ and even lower rates of growth the higher-density regions behind; in the higher-survival scenario the maximum rate increases to $\lambda \approx 1.013$, with growth still decreasing as density increases.
+For both scenarios, the decrease in population growth rate with increasing density was monotonic across the range of observed standardised densities, as is shown in Figure 1.
+This suggests that an Allee effect is likely not present in this population, as the highest rate of population growth is found at the lowest density vanguard of the encroaching population.
+Thus, the conditions necessary for equation 9 to be valid are satisfied, and these wavespeeds are applicable for a pulled-wave scenario in which no Allee effects are present.
+
+As the speed of encroachment is quite limited, so is the extent of wind dispersal.
+Long distance dispersal events, while more common for taller shrubs than their shorter counterparts, are still uncommon overall.
+For the tallest shrub height of 1.98 m, only 0.32\% of propagules exceed a dispersal distance of 5 m, and 0.02\% exceed 10 m.
+At 1 m, or approximately half the tallest shrub height, long distance dispersal is even less likely, with 0.0046\% of propagules exceeding a dispersal distance of 5 m and 0.0009\% exceeding 10 m.
+Given that the median shrub height is only 0.64 m, the occurrence of long-distance wind dispersal in most of the shrub population is highly improbable, and the few instances in which it occurs will only be limited to the tallest shrubs.
+Thus, as Figure 2 demonstrates, shorter dispersal distances dominate; even for the tallest shrub, 81\% of seeds fall within only a metre of the plant, and this percentage increases as shrub height decreases.
+Dispersal kernels have their highest probability density at dispersal distances between 2 and 8 cm from the shrub; here, as shrub height increases, the most probable dispersal distance slightly increases while maximum probability density decreases.
+Regardless of the shrub height, most dispersal will occur very close to the plant, though increases in shrub height dramatically increase the likelihood of dispersal at longer distances.
+It is clear that the shape of the height-dependent dispersal kernel $K(r)$ varies greatly among the shrub population given the large range of shrub heights observed; shrubs at lower heights have more slender kernels with most of the seeds dispersing closer to the plant, while taller shrubs have kernels with much fatter tails and are more capable of longer-distance dispersal.
+
+Density and size dependence are evident in all 4 of the demographic rates, with coefficients for each model displayed in Table 2.
+For growth, reproduction, and survival, density dependence is mostly negative and monotonic; this is not the case for probability of flowering, where shrub size seems to be more important than the effects of density alone and suggests that larger shrubs have a higher probability of flowering than their smaller counterparts.
+This, along with size and density dependence in growth and reproduction, is shown in Figure 3.
+Size dependence is positive for reproduction, as would be expected since larger plants typically produce more flowers and fruits.
+However, annual growth decreases as size increases; this could be in part due to the annual growth in this study being quantified as a proportion relative to the shrub's initial size.
+While larger shrubs may produce more plant material over a year in terms of absolute volume, smaller shrubs produce less but can still have higher annual growth in terms of the percentage of volume added relative to their initial volume.
+When compared to density, shrub size is a much stronger predictor of survival, with significant differences in mortality rates depending on shrub size.
+For small shrubs, mortality is exceptionally high, and increases in volume for these shrubs only slightly increase the likelihood of survival.
+However, after shrubs reach a logarithmic volume of approximately 7.3, they are almost guaranteed to survive, with survival rates near 100\% persisting regardless of any further size increases.
+Interestingly, though most recruits were found at lower densities, the probability of recruitment from seed displays positive density dependence; the probability of recruitment was still very low, though, with a baseline rate of approximately 2 recruits per 10,000 seeds. 
+
 Here is how you can insert and reference figures (Fig. \ref{fig:wavespeed}).
 
 \begin{figure}[H]
@@ -207,6 +240,39 @@ Here is how you can insert and reference figures (Fig. \ref{fig:wavespeed}).
 
 %--------------------------------------------------------------------
 \section*{Discussion}
+
+The slow movement of the encroaching creosotebush wave at the Sevilleta LTER site can likely be contributed to a combination of three factors: short dispersal distances with extremely limited long-distance dispersal events, very low probability of recruitment from seed, and high seedling mortality.
+These three barriers, when combined, form a formidable challenge to the establishment of new shrubs at the low-density front of the wave.
+First, a seed must travel far enough to avoid competition with the parent shrub, which is unlikely given the dispersal kernels shown in Figure 2.
+Even if the seed manages to be dispersed this far, its chances of becoming a seedling are low.
+Caching and consumption by seed-eaters such as a variety of seed-harvesting ants (Whitford et al. 1978, 1980; Lei 1999) and the kangaroo rat Dipodomys merriami (Chew and Chew 1970) decreases the amount of seeds available for germination.
+However, reduction in germination caused by destruction of seeds may be partly mitigated by the more favourable germination conditions that these seeds can experience when cached underground (Chew and Chew 1970).
+Many of the remaining seeds will still fail to germinate, and in the unlikely event that germination does occur, seedlings will likely die given the high rates of mortality observed in smaller shrubs.
+Such high rates of creosotebush seedling mortality have been observed in other studies as well (Boyd and Brum 1983; Bowers et al. 2004), probably due to a combination of herbivory, competition, and abiotic stresses. 
+
+However, as low as they are, the wavespeed estimates given in this paper are still conservative estimates for reasons mostly related to dispersal.
+First, it is important to note that the dispersal kernels used here, while they account for variation in factors such as wind speed and terminal velocity, may underestimate the distances that shrub propagules travel.
+Because the WALD model assumes that terminal velocity is reached immediately upon seed release, seeds in the estimate thus take a shorter time to fall and have less time to be transported by wind, and the true frequency of long-distance dispersal events may thus be greater than what is estimated here.
+Second, dispersal at the study site could occur through additional mechanisms other than wind.
+For example, secondary dispersal through runoff from significant rainfall events can transport seeds (Thompson et al. 2014), and given that long-distance dispersal by bird and subsequent species divergence is thought to be responsible for creosotebush being in North America in the first place (Wells and Hunziker 1976), short-distance dispersal by other animals at the study site likely occurs.
+As mentioned above, seeds are transported by seed-harvesting ants and granivorous mammals, where they are often stored in caches that can be appreciable distances from the parent shrubs.
+Whether transportation occurs via ant or rodent, creosotebush seeds can be moved significantly further than wind alone can, though many of these seeds are eventually consumed.
+
+Despite the more conservative estimates our model yields, the estimated rate of dispersal in creosotebush populations at the Sevilleta National Wildlife Refuge is consistent with observations from the past 50-60 years, as creosotebush expansion during this time has been minimal (Moreno-de las Heras et al. 2016).
+However, it cannot explain the long-term increases in creosotebush cover at the study site, as total encroachment over the past 150 years is much greater than what would be expected given the encroachment rates derived by our models.
+Such a discrepancy is likely due to much of the expansion occurring in an episodic fashion, with short times during which rapid encroachment occurs due to favourable environmental conditions.
+This could be due in part to seedling recruitment, which is a factor that strongly limits creosotebush expansion, being rare and episodic.
+For example, Allen et al. (2008) estimate that a major recruitment event occurred at this site in the 1950s, which is supported by photographic evidence from Milne et al. (2003) of a drought-driven expansion during this time.
+Moreno-de las Heras et al. (2016) estimate that after this expansion, several smaller creosotebush recruitment events occurred in decadal episodes.
+However, such events can be highly localised and may not necessarily occur at the low-density front of encroachment, which could explain how these recruitment events can still coexist with lack of encroachment in the recent past.
+
+Overall, our observations and model highlight three aspects of creosotebush encroachment that should be the focus of future studies seeking to obtain better estimates of encroachment rates.
+First, negative density dependence in survival, growth, and reproduction is demonstrated, along with size dependence. The clear dependence on size and conspecific density suggests that they both should be considered when estimating creosotebush expansion and quantifying the demographic variation that contributes to it.
+Second, wind dispersal in these shrubs is quite limited; though the dispersal kernels seen here are typical in the sense that they are characterised by high near-plant dispersal and exceptionally low long-distance dispersal, the scale across which such dispersal occurs is small, with most seeds landing within only 1 m of the shrub.
+Wind dispersal alone may be an underestimate of the true amount of dispersal occurring, and future work should seek to incorporate the effects of dispersal by runoff and animals so that a more representative model of total dispersal can be obtained.
+Finally, encroachment is slow or even stagnates, but only most of the time.
+Though our encroachment speed estimates are representative of creosotebush populations for most years, the significant expansion seen over larger time scales suggests that there is episodic expansion in other years; while our model is consistent with the recent stagnation in creosotebush encroachment at the Sevilleta LTER site, a model that also includes interannual variability in factors such as survival and recruitment would be able to better account for instances of episodic population expansion that are characteristic of this location.
+
 %--------------------------------------------------------------------
 \section*{Acknowledgements}
 
