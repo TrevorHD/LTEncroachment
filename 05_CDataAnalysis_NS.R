@@ -245,6 +245,11 @@ CData.AllSurvival.s <- CData.AllSurvival %>%
          unique.transect = interaction(transect, site),
          survival_t1 = as.numeric(survival_t1))
   
+## how much mortality was there just among the naturally occurring plants?
+table(CData.AllSurvival.s$survival_t1[CData.AllSurvival.s$transplant==F])
+## why is there no natural mortality? there are natural deaths in the original data frame
+table(CData.Demography$survival_t1)
+
 # Create a list of possible survival models
 Mod.S <- list()
 
