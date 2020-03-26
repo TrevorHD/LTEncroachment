@@ -33,15 +33,24 @@
 \SweaveOpts{concordance=TRUE}
 %\SweaveOpts{concordance=TRUE}
 \maketitle
-
+\linenumbers
 
 %-------------------------------------------------------------------------
 \newpage
 \section*{Abstract}
-\linenumbers
+
+Encroachment of shrubs into adjacent grasslands has become an increasingly reported phenomenon across the world, and such encroachment is either pulled forward by high population growth at the low-density encroachment front or pushed forward by higher-density areas behind the front.
+However, at sites such as Sevilleta National Wildlife Refuge in central New Mexico, little is known about whether encroachment is pushed or pulled, and the dynamics of encroachment are not well-understood.
+Here, long-term encroachment of creosotebush (Larrea tridentata), a native perennial shrub, stands in stark contrast with the stagnation in encroachment observed in recent decades. 
+In order to better understand creosotebush encroachment at this site, we quantify it using a spatially structured population model where a wave of individuals travels at a speed governed by both dispersal and density-dependence.
+Results indicate that population growth rates generally increase with decreasing density, suggesting that encroachment is pulled by individuals at the low-density wave front, and the spatial population model predicts an encroachment rate of less than 2 cm per year.
+While the predicted rate of encroachment is consistent with observations over recent decades, it does not explain long-term creosotebush encroachment at the study site, suggesting that this process may occur in pulses when recruitment, seedling survival, or dispersal significantly exceed typical rates.
+Overall, our work demonstrates that individuals at low densities are likely the biggest contributors to creosotebush encroachment at this site, and that this encroachment is likely a process that occurs in large but infrequent bursts rather than at a steady pace.
 
 %-------------------------------------------------------------------------
 \section*{Keywords}
+
+density-dependence, ecotones, woody encroachment, shrubs, integral projection model, grassland
 
 %--------------------------------------------------------------------
 \newpage
@@ -130,7 +139,7 @@ The number of reproductive structures was defined as the natural logarithm of th
 To construct these models, all of the equations listed in Table 1 were first fit to each of the four demographic variables, with each equation using volume and standardised density as predictors while also treating the unique transect in which each shrub was located as a random effect.
 After these equations were fit to the data, all eight equations for each demographic variable were ranked based on their value of the Akaike information criterion (AIC) and weighted based on their quality so that better-fitting models had a higher weight.
 Then, coefficients of the same type were averaged between all eight models for each demographic variable using a weighted mean corresponding to model quality in order to generate an average model.
-All four average models have the general form \begin{equation} R = \beta_{1}v + \beta_{2}d + \beta_{3}d^2 + \beta_{4}vd + \beta_{5}vd^2 + \epsilon \end{equation} where $R$ is the response variable, $v$ and $d$ are the volume and density, $\epsilon$ is a random transect effect, and $\beta$ is the coefficient for each type of term.
+All four average models have the general form \begin{linenomath*} \begin{equation} R = \beta_{1}v + \beta_{2}d + \beta_{3}d^2 + \beta_{4}vd + \beta_{5}vd^2 + \epsilon \end{equation} \end{linenomath*} where $R$ is the response variable, $v$ and $d$ are the volume and density, $\epsilon$ is a random transect effect, and $\beta$ is the coefficient for each type of term.
 
 The effect of density dependence on the probability of recruitment from seeds was also modelled.
 For every year, the sum of seeds produced the prior year was calculated for each 5-m subsection, and then probability of recruitment was calculated as the number of recruits observed in each 5-m subsection divided by that number of seeds.
@@ -144,17 +153,17 @@ Both linear and quadratic models using only weighted density as a predictor were
 Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
 The WALD model, which is largely based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels (Katul et al. 2005; Skarpaas and Shea 2007) and may be used when empirical dispersal data is not readily available.
 Under the assumptions that wind turbulence is low, wind flow is vertically homogenous, and terminal velocity is achieved immediately upon seed release, the WALD model simplifies a Lagrangian stochastic model to create a dispersal kernel that estimates the likelihood a propagule will travel a given distance (Katul et al. 2005).
-This dispersal kernel takes the form of the inverse Gaussian distribution \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} that is a slight adaptation from equation 5b in Katul et al. (2005), using $r$ to denote dispersal distance.
+This dispersal kernel takes the form of the inverse Gaussian distribution \begin{linenomath*} \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} \end{linenomath*} that is a slight adaptation from equation 5b in Katul et al. (2005), using $r$ to denote dispersal distance.
 Here, $\lambda'$ is the location parameter and $\mu'$ is the scale parameter, which depend on environmental and plant-specific properties of the study system.
 The location and scale parameters are defined as $\lambda' = (H/\sigma)^2$ and $\mu' = HU/F$; these are functions of the height $H$ of seed release, wind speed $U$ at seed release height, seed terminal velocity $F$, and the turbulent flow parameter $\sigma$ that depends on both wind speed and local vegetation roughness.
 
-In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} given in Bullock et al. (2012) equation 6, with the notation slightly modified. 
+In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \begin{linenomath*} \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} \end{linenomath*} given in Bullock et al. (2012) equation 6, with the notation slightly modified. 
 Here, $z$ is the height above the ground, $K$ is the von Karman constant, and $u^*$ is the friction velocity.
 The zero-plane displacement $d$ and roughness length $z_{0}$ are surface roughness parameters that, for a grass canopy height $h$ above the ground, are  approximated by $d \approx 0.7h$ and $z_{0} \approx 0.1h$.
 These estimates are from Raupach (1994) for a canopy area index $\Lambda = 1$ in which the sum of grass canopy elements is equal to the unit area being measured.
 A 0.15 m grass height at the study site gives $d = 0.105$ and $z_{0}$, which are suitable approximations for grassland (Wiernga 1993).
-Calculations of $u^*$ were done using equation A2 from Skarpaas and Shea (2007), in which \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
-Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by Skarpaas and Shea (2007) in their equation A4, where \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} and $C_{0}$ is the Kolmogorov constant.
+Calculations of $u^*$ were done using equation A2 from Skarpaas and Shea (2007), in which \begin{linenomath*} \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} \end{linenomath*} and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
+Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by Skarpaas and Shea (2007) in their equation A4, where \begin{linenomath*} \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} \end{linenomath*} and $C_{0}$ is the Kolmogorov constant.
 $A_{w}$ is a constant that relates vertical turbulence to friction velocity and is approximately equal to 1.3 under the assumptions of above-canopy flow made by Skarpaas and Shea (2007), based off calculations from Hsieh and Katul (2005).
 In addition, the assumption that $z = H$ was made in order to make the calculation of $\sigma$ more feasible.
 
@@ -162,7 +171,7 @@ The values from the previous three equations give us the necessary information t
 However, the base WALD model does not take into account variation in wind speeds or seed terminal velocities, which limits its applicability in systems where such variation is present.
 In order to account for this variation, we integrate the WALD model over distributions these two variables using the same method as Skarpaas and Shea (2007).
 The WALD model assumes seed release from a single point source, though, which is not realistic for a shrub; because seeds are released across the entire height of the shrub rather than from a point source, $p(r)$ was also integrated across the uniform distribution from the grass canopy height to the shrub height.
-Thus, under the assumptions that the height at which a seed is located does not affect its probability of being released and that seeds are evenly distributed throughout the shrub, this gives the dispersal kernel $K(r)$, where \begin{equation} K(r) = \iiint p(F)p(U)p(z)p(r) \,dF\,dU\,dz \end{equation} and $p(F)$ and $p(U)$ are the PDFs of the terminal velocity $F$ and wind speed $U$, respectively, and $p(z)$ is the uniform distribution from $h$ to $H$.
+Thus, under the assumptions that the height at which a seed is located does not affect its probability of being released and that seeds are evenly distributed throughout the shrub, this gives the dispersal kernel $K(r)$, where \begin{linenomath*} \begin{equation} K(r) = \iiint p(F)p(U)p(z)p(r) \,dF\,dU\,dz \end{equation} \end{linenomath*} and $p(F)$ and $p(U)$ are the PDFs of the terminal velocity $F$ and wind speed $U$, respectively, and $p(z)$ is the uniform distribution from $h$ to $H$.
 
 The distribution $p(F)$ in the integral above was constructed using experimentally determined seed terminal velocities.
 This was done by using a high-speed camera and motion tracking software to determine position as a function of time, and then using the Levenberg-Marquardt algorithm to solve a quadratic-drag equation of motion for $F$. 
@@ -178,20 +187,20 @@ We did not weight $p(U)$ and assumed that the probability seed release from the 
 
 Given that the shrub population at this site is approximately homogeneous perpendicular to the direction of encroachment, expansion is modelled as a wave moving in one dimension.
 A spatial integral projection model (SIPM) is used to estimate the speed at which encroachment occurs; such a model incorporates the effects of variation in traits like plant size that stage-structured models, such as those described in Neubert and Caswell (2000), do not capture.
-According to Jonjegans et al. (2011), a general SIPM can be formulated as \begin{equation} \mathbf{n} (x_{2}, z_{2}, t + 1) = \iint \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) \mathbf{n} (x_{1}, z_{1}, t) \,dx_{1}\,dz_{1} \end{equation} where $x_{1}$ and $x_{2}$ are locations of individuals of a particular size before and after one unit of time, and $z_{1}$ and $z_{2}$ are the respective sizes.
+According to Jonjegans et al. (2011), a general SIPM can be formulated as \begin{linenomath*} \begin{equation} \mathbf{n} (x_{2}, z_{2}, t + 1) = \iint \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) \mathbf{n} (x_{1}, z_{1}, t) \,dx_{1}\,dz_{1} \end{equation} \end{linenomath*} where $x_{1}$ and $x_{2}$ are locations of individuals of a particular size before and after one unit of time, and $z_{1}$ and $z_{2}$ are the respective sizes.
 The vector $\mathbf{n}$ indicates the population density of each size, and $\tilde{K}$ is a kernel that combines dispersal with demography.
 Though this SIPM represents a continuous spectrum of shrub sizes and densities, it was implemented by discretising the above integral with a 200 x 200 matrix, as this makes calculations significantly more tractable.
 
 Movement of the wave is determined by the components of the combined dispersaldemography kernel $\tilde{K}$, which is of the same form as that used in Jonjegans et al. (2011).
-Here, \begin{equation} \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) = K(x_{2} - x_{1}) Q(z_{2} - z_{1}) + \delta(x_{2} - x_{1}) G(z_{2} - z_{1}) \end{equation} and $K$ is the dispersal kernel, $Q$ a reproduction function, $G$ a growth function, and $\delta$ the Dirac delta function.
+Here, \begin{linenomath*} \begin{equation} \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) = K(x_{2} - x_{1}) Q(z_{2} - z_{1}) + \delta(x_{2} - x_{1}) G(z_{2} - z_{1}) \end{equation} \end{linenomath*} and $K$ is the dispersal kernel, $Q$ a reproduction function, $G$ a growth function, and $\delta$ the Dirac delta function.
 $G$ is derived from the model for annual growth ratio, and $Q$ is derived from the reproductive structures model as well as other factors including number of seeds per reproductive structure, probability of recruitment from seed, and recruit size.
 Both $G$ and $Q$ give the probability of transition between sizes; in the case of $G$, this is the probability of growing from one specific size to another, and in the case of $Q$ the probability that an individual of a specific size produces a recruit of a specific size.
 The product of $K$ and $Q$ represents the production and dispersal of motile propagules, while the product of $G$ and $\delta$ represents the growth of sessile individuals.
 
-Given growth function $G$ and the reproduction function $Q$, the speed of the moving wave can be calculated as \begin{equation} c^* = \min_{s > 0} \left[\frac{1}{s}\ln(\rho_{s})\right] \end{equation} where $s$ is the wave shape parameter and $\rho_{s}$ is the dominant eigenvalue of the kernel $\mathbf{H_{S}}$ (Jonjegans et al. 2011). 
+Given growth function $G$ and the reproduction function $Q$, the speed of the moving wave can be calculated as \begin{linenomath*} \begin{equation} c^* = \min_{s > 0} \left[\frac{1}{s}\ln(\rho_{s})\right] \end{equation} \end{linenomath*} where $s$ is the wave shape parameter and $\rho_{s}$ is the dominant eigenvalue of the kernel $\mathbf{H_{S}}$ (Jonjegans et al. 2011). 
 This estimate for the wavespeed is valid under the assumption that population growth decreases monotonically as conspecific density increases, with the highest rates of growth occurring at the lowest population densities (Lewis et al. 2006).
-The kernel $\mathbf{H_{S}}$ is defined as \begin{equation} \mathbf{H_{S}} = M(s) Q(z_{2} - z_{1}) + G(z_{2} - z_{1}) \end{equation} where $M(s)$ is the moment-generating function of the dispersal kernel (Jonjegans et al. 2011). 
-For one-dimensional dispersal, this moment-generating function can be estimated as \begin{equation} M(s) = \frac{1}{N} \sum_{i=1}^{n} I_{0}(sr_{i}) \end{equation} where $r$ is the dispersal distance for each observation, and $I_{0}$ is the modified Bessel function of the first kind and zeroth order (Skarpaas and Shea 2007).
+The kernel $\mathbf{H_{S}}$ is defined as \begin{linenomath*} \begin{equation} \mathbf{H_{S}} = M(s) Q(z_{2} - z_{1}) + G(z_{2} - z_{1}) \end{equation} \end{linenomath*} where $M(s)$ is the moment-generating function of the dispersal kernel (Jonjegans et al. 2011). 
+For one-dimensional dispersal, this moment-generating function can be estimated as \begin{linenomath*} \begin{equation} M(s) = \frac{1}{N} \sum_{i=1}^{n} I_{0}(sr_{i}) \end{equation} \end{linenomath*} where $r$ is the dispersal distance for each observation, and $I_{0}$ is the modified Bessel function of the first kind and zeroth order (Skarpaas and Shea 2007).
 In order to obtain $M$, numerous dispersal distances were simulated from the dispersal kernel $K(r)$ described in the previous section, with over 2000 replications for each shrub height increment of 1 cm.
 This was performed over the range from the lowest possible dispersal height to the maximum shrub height.
 Once $M(s)$ was obtained for dispersal at each shrub height, $\mathbf{H_{S}}$ and $c^*$ were calculated for each value of $s$; this was done for values of $s$ ranging from 0 to 2, as it is this range in which $c^*$ occurs.
@@ -199,26 +208,42 @@ Once $M(s)$ was obtained for dispersal at each shrub height, $\mathbf{H_{S}}$ an
 %--------------------------------------------------------------------
 \section*{Results}
 
-The speed of encroachment at the study site as estimated by the SIPM is rather slow; as can be seen in Figure 1, the low-density wavefront moves at approximately 0.5 cm/yr under normal conditions and at 1 cm/yr under the best seedling survival conditions observed in the dataset.
+The speed of encroachment at the study site as estimated by the SIPM is rather slow; as can be seen in Figure \ref{fig:wavespeed}, the low-density wavefront moves at approximately 0.5 cm/yr under normal conditions and at 1 cm/yr under the best seedling survival conditions observed in the dataset.
 These improved conditions were observed due to above-average rainfall that occurred after greenhouse-grown seedlings were transplanted to the site.
 Population growth in this low-density region of the moving wave is also low, with a geometric growth rate of $\lambda \approx 1.006$ and even lower rates of growth the higher-density regions behind; in the higher-survival scenario the maximum rate increases to $\lambda \approx 1.013$, with growth still decreasing as density increases.
-For both scenarios, the decrease in population growth rate with increasing density was monotonic across the range of observed standardised densities, as is shown in Figure 1.
+For both scenarios, the decrease in population growth rate with increasing density was monotonic across the range of observed standardised densities, as is shown in Figure \ref{fig:wavespeed}.
 This suggests that an Allee effect is likely not present in this population, as the highest rate of population growth is found at the lowest density vanguard of the encroaching population.
 Thus, the conditions necessary for equation 9 to be valid are satisfied, and these wavespeeds are applicable for a pulled-wave scenario in which no Allee effects are present.
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/Figure1}
+  \caption{Estimated encroachment wave speeds (left) and geometric rates of population growth (right) for higher             post-rainfall seedling survival and normal conditions.}
+  \label{fig:wavespeed}
+  \end{center}
+\end{figure}
 
 As the speed of encroachment is quite limited, so is the extent of wind dispersal.
 Long distance dispersal events, while more common for taller shrubs than their shorter counterparts, are still uncommon overall.
 For the tallest shrub height of 1.98 m, only 0.32\% of propagules exceed a dispersal distance of 5 m, and 0.02\% exceed 10 m.
 At 1 m, or approximately half the tallest shrub height, long distance dispersal is even less likely, with 0.0046\% of propagules exceeding a dispersal distance of 5 m and 0.0009\% exceeding 10 m.
 Given that the median shrub height is only 0.64 m, the occurrence of long-distance wind dispersal in most of the shrub population is highly improbable, and the few instances in which it occurs will only be limited to the tallest shrubs.
-Thus, as Figure 2 demonstrates, shorter dispersal distances dominate; even for the tallest shrub, 81\% of seeds fall within only a metre of the plant, and this percentage increases as shrub height decreases.
+Thus, as Figure \ref{fig:dispersal} demonstrates, shorter dispersal distances dominate; even for the tallest shrub, 81\% of seeds fall within only a metre of the plant, and this percentage increases as shrub height decreases.
 Dispersal kernels have their highest probability density at dispersal distances between 2 and 8 cm from the shrub; here, as shrub height increases, the most probable dispersal distance slightly increases while maximum probability density decreases.
 Regardless of the shrub height, most dispersal will occur very close to the plant, though increases in shrub height dramatically increase the likelihood of dispersal at longer distances.
 It is clear that the shape of the height-dependent dispersal kernel $K(r)$ varies greatly among the shrub population given the large range of shrub heights observed; shrubs at lower heights have more slender kernels with most of the seeds dispersing closer to the plant, while taller shrubs have kernels with much fatter tails and are more capable of longer-distance dispersal.
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/Figure2}
+  \caption{Dispersal kernels, with each colour representing a selected shrub height. The inset plot is the same              as the large plot, though with a logarithmic x-axis to more easily show differences in dispersal                  probability at smaller distances.}
+  \label{fig:dispersal}
+  \end{center}
+\end{figure}
+
 Density and size dependence are evident in all 4 of the demographic rates, with coefficients for each model displayed in Table 2.
 For growth, reproduction, and survival, density dependence is mostly negative and monotonic; this is not the case for probability of flowering, where shrub size seems to be more important than the effects of density alone and suggests that larger shrubs have a higher probability of flowering than their smaller counterparts.
-This, along with size and density dependence in growth and reproduction, is shown in Figure 3.
+This, along with size and density dependence in growth and reproduction, is shown in Figure \ref{fig:demog}.
 Size dependence is positive for reproduction, as would be expected since larger plants typically produce more flowers and fruits.
 However, annual growth decreases as size increases; this could be in part due to the annual growth in this study being quantified as a proportion relative to the shrub's initial size.
 While larger shrubs may produce more plant material over a year in terms of absolute volume, smaller shrubs produce less but can still have higher annual growth in terms of the percentage of volume added relative to their initial volume.
@@ -227,15 +252,15 @@ For small shrubs, mortality is exceptionally high, and increases in volume for t
 However, after shrubs reach a logarithmic volume of approximately 7.3, they are almost guaranteed to survive, with survival rates near 100\% persisting regardless of any further size increases.
 Interestingly, though most recruits were found at lower densities, the probability of recruitment from seed displays positive density dependence; the probability of recruitment was still very low, though, with a baseline rate of approximately 2 recruits per 10,000 seeds. 
 
-Here is how you can insert and reference figures (Fig. \ref{fig:wavespeed}).
-
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Figures/Figure1}
-  \caption{Here is an example of inserting a figure.}
-  \label{fig:wavespeed}
+    \includegraphics[width=\linewidth]{Figures/Figure3}
+  \caption{Flowering probability (top row), log annual growth ratio (centre row), and log reproductive structure             count (bottom row) at all four sampling sites. In the left column of graphs, the three response                   variables are shown as a function of density for each of four volume quartiles, with each quartile                containing six density bins; in the right column, the opposite occurs, with response variables shown as            functions of four volume quartiles that each contain six density bins. Graphs quantifying the number of            reproductive structures include data only on plants that flowered. }
+  \label{fig:demog}
   \end{center}
 \end{figure}
+
+
 
 
 %--------------------------------------------------------------------
