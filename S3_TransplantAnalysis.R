@@ -12,7 +12,11 @@ CData.Transplants.s <- CData.Transplants %>%
          "total.plant" = num_shrub_t + total.grass + num_other_t,
          
          # Unique transect identifier
-         "unique.transect" = interaction(transect, site))
+         "unique.transect" = interaction(transect, site),
+         
+         "volume_t1" = log(vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1)),
+         
+         "logGR" = volume_t1 - volume_t)
 
 
 
@@ -26,6 +30,8 @@ plots.xlab <- c("Shrub-Covered", "Bare", "Grass-Covered", "Plant-Covered")
 plots.yvar <- c("falll_survival_t", "spring_survival_t1")
 plots.ylab <- c("Fall", "Spring")
 plots.name <- c("Shrub", "Bare", "Grass", "AllPlants")
+
+
 
 # Plot survival (0 or 1) and survival rate for each cover type
 par(mfrow = c(2, 2))
@@ -167,3 +173,103 @@ anova(Mod.S.T6, test = "Chisq")
 # None of them are significant, or residuals are so bad that the model is not valid
 # The most likely case is that survival is always low for transplants and/or small shrubs
 # This is what we found in S1_SupportingMaterial
+
+
+# transplant growth -------------------------------------------------------
+## only 20 spring survivors, so not much we can do with growth
+sum(!is.na(CData.Transplants.s$logGR))
+
+plot(CData.Transplants.s$d.stand,CData.Transplants.s$logGR)
+plot(CData.Transplants.s$num_bare_t,CData.Transplants.s$logGR)
+
+
+# Tom's survival analysis -------------------------------------------------
+## I think all the local cover counts are too correlated with each other to include in the same model
+## I will try models with bare, shrub, and grass at the smaller scale, and also\
+## weighted density at the window scale to test vegetation predictors
+## also going to use fall survival (more data to analyze)
+
+## first try no random effects, since the PDC planting makes the transects so different
+fall_surv_glm <- list()
+## null model
+fall_surv_glm[[1]] <- glm(falll_survival_t ~ 1, family="binomial", data=CData.Transplants.s)
+## window-scale density effect
+fall_surv_glm[[2]] <- glm(falll_survival_t ~ d.stand, family="binomial", data=CData.Transplants.s)
+## plot scale bare
+fall_surv_glm[[3]] <- glm(falll_survival_t ~ num_bare_t, family="binomial", data=CData.Transplants.s)
+## plot scale grass
+fall_surv_glm[[4]] <- glm(falll_survival_t ~ total.grass, family="binomial", data=CData.Transplants.s)
+## plot scale shrub
+fall_surv_glm[[5]] <- glm(falll_survival_t ~ num_shrub_t, family="binomial", data=CData.Transplants.s)
+
+AICctab(fall_surv_glm,weights=T)
+## support for model 2 - visualize with binned means
+
+fallsurv_viz_bin <- CData.Transplants.s %>% 
+  mutate(dens_bin = as.integer(cut_interval(d.stand,5))) %>% 
+  group_by(dens_bin) %>% 
+  summarise(mean_dens = mean(d.stand),
+            mean_surv = mean(falll_survival_t),
+            bin_n = n())
+
+plot(CData.Transplants.s$d.stand,CData.Transplants.s$falll_survival_t,pch="|",col="gray",
+     xlab="Weighted shrub density",ylab="Survival")
+points(fallsurv_viz_bin$mean_dens,fallsurv_viz_bin$mean_surv,pch=16,cex=2)
+lines(seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100),
+      invlogit(coef(fall_surv_glm[[2]])[1] + coef(fall_surv_glm[[2]])[2] * seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100)),
+      lwd=2)
+
+## see if this holds up with spring survival (fewer overall survivors)
+spring_surv_glm <- list()
+spring_surv_glm[[1]] <- glm(spring_survival_t1 ~ 1, family="binomial", data=CData.Transplants.s)
+spring_surv_glm[[2]] <- glm(spring_survival_t1 ~ d.stand, family="binomial", data=CData.Transplants.s)
+spring_surv_glm[[3]] <- glm(spring_survival_t1 ~ num_bare_t, family="binomial", data=CData.Transplants.s)
+spring_surv_glm[[4]] <- glm(spring_survival_t1 ~ total.grass, family="binomial", data=CData.Transplants.s)
+spring_surv_glm[[5]] <- glm(spring_survival_t1 ~ num_shrub_t, family="binomial", data=CData.Transplants.s)
+AICctab(spring_surv_glm,weights=T)
+## still support for model 2 
+
+springsurv_viz_bin <- CData.Transplants.s %>% 
+  mutate(dens_bin = as.integer(cut_interval(d.stand,5))) %>% 
+  group_by(dens_bin) %>% 
+  summarise(mean_dens = mean(d.stand),
+            mean_surv = mean(spring_survival_t1),
+            bin_n = n())
+
+plot(CData.Transplants.s$d.stand,CData.Transplants.s$spring_survival_t1,pch="|",col="gray",
+     xlab="Weighted shrub density",ylab="Survival")
+points(springsurv_viz_bin$mean_dens,springsurv_viz_bin$mean_surv,pch=16,cex=2)
+lines(seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100),
+      invlogit(coef(spring_surv_glm[[2]])[1] + coef(spring_surv_glm[[2]])[2] * seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100)),
+      lwd=2)
+
+## can I fit model with random effects, and are results the same?
+fall_surv_rfx <- list()
+fall_surv_rfx[[1]] <- glmer(falll_survival_t ~ 1 + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+fall_surv_rfx[[2]] <- glmer(falll_survival_t ~ d.stand + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+fall_surv_rfx[[3]] <- glmer(falll_survival_t ~ num_bare_t + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+fall_surv_rfx[[4]] <- glmer(falll_survival_t ~ total.grass + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+fall_surv_rfx[[5]] <- glmer(falll_survival_t ~ num_shrub_t + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+AICctab(fall_surv_rfx,weights=T)
+
+plot(CData.Transplants.s$d.stand,CData.Transplants.s$falll_survival_t,pch="|",col="gray",
+     xlab="Weighted shrub density",ylab="Survival")
+points(fallsurv_viz_bin$mean_dens,fallsurv_viz_bin$mean_surv,pch=16,cex=2)
+lines(seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100),
+      invlogit(fixef(fall_surv_rfx[[2]])[1] + fixef(fall_surv_rfx[[2]])[2] * seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100)),
+      lwd=2)
+## note that mean survival is much lower in the mixed model, and this is good because it means
+## the migh survival at PDC is being attributed to random effects, such that the overall
+## survival probablility at an average site is reduced
+
+## finally, spring survival with rfx
+spring_surv_rfx <- list()
+spring_surv_rfx[[1]] <- glmer(spring_survival_t1 ~ 1 + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+spring_surv_rfx[[2]] <- glmer(spring_survival_t1 ~ d.stand + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+spring_surv_rfx[[3]] <- glmer(spring_survival_t1 ~ num_bare_t + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+spring_surv_rfx[[4]] <- glmer(spring_survival_t1 ~ total.grass + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+spring_surv_rfx[[5]] <- glmer(spring_survival_t1 ~ num_shrub_t + (1|unique.transect), family="binomial", data=CData.Transplants.s)
+AICctab(spring_surv_rfx,weights=T)
+## interestingly, these rankings provide mixed support for models 3,4,2
+## 3 has a negative effect of bare ground, 4 has a positive effect of grass,
+## and 2 has a negative effect of weighted shrub density at the window scale
