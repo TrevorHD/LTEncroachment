@@ -30,7 +30,6 @@
 
 %-------------------------------------------------------------------------
 \begin{document}
-\SweaveOpts{concordance=TRUE}
 %\SweaveOpts{concordance=TRUE}
 \maketitle
 \linenumbers
