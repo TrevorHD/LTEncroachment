@@ -2,18 +2,18 @@
 
 # Read transect densities
 CData.Transects <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectData.csv")
-CData.Transects <- rename(CData.Transects, site = ï..site)
+CData.Transects <- rename(CData.Transects, site = ?..site)
 
 # Read longitudinal demography data
 CData.Demography <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_DemographyData.csv")
-CData.Demography <- rename(CData.Demography, site = ï..site)
+CData.Demography <- rename(CData.Demography, site = ?..site)
 
 # Read transect lengths
 CData.Lengths <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectLengths.csv")
 
 # Read transplant data
 CData.Transplants <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransplantExp.csv")
-CData.Transplants <- rename(CData.Transplants, site = ï..site)
+CData.Transplants <- rename(CData.Transplants, site = ?..site)
 
 
 
@@ -202,6 +202,8 @@ CData %>%
 ##### Quantify total recruitment  -------------------------------------------------------------------------
 
 # Create data frame of recruits; will be used for later calculations, but not here
+## tom: we'll need to report this criterion for designating a recruit (log vol < 8)
+## also, 8 is pretty big in log(vol). did you mean log(8)?
 CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, volume_t1 < 8)
 
 # Calculate total number of seedlings (recruits) in a single year for each 5-m window
