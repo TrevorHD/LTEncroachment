@@ -1,4 +1,4 @@
-﻿site,transect,designated window,actual window,plant,ID,year_t,max.ht_t,max.w_t,perp.w_t,max.ht.dead,max.w.dea,perp.w.dead,flowers_t,fruits_t,reproductive_fraction_t,node.galls_t,stem.galls_t,bagworms_t,notes_t,year_t1,new.plant_t1,seedling_t1,newplant.meter,survival_t1,max.ht_t1,max.w_t1,perp.w_t1,flowers_t1,fruits_t1,reproductive_fraction,notes_t1
+﻿site,transect,designated.window,actual.window,plant,ID,year_t,max.ht_t,max.w_t,perp.w_t,max.ht.dead,max.w.dea,perp.w.dead,flowers_t,fruits_t,reproductive_fraction_t,node.galls_t,stem.galls_t,bagworms_t,notes_t,year_t1,new.plant_t1,seedling_t1,newplant.meter,survival_t1,max.ht_t1,max.w_t1,perp.w_t1,flowers_t1,fruits_t1,reproductive_fraction,notes_t1
 FPS,1,0,0,1,1-0-1,2013,49,54,27,48,85,68,0,5,1,0,0,0,NaN,2014,0,,,1,60,61,43,0,0,1,behind the starting point of the transect
 FPS,1,0,0,2,1-0-2,2013,95,180,123,87,187,165,0,23,1,2,0,0,cobweb leaf tie,2014,0,,,1,96,164,127,0,244,1,
 FPS,1,0,,3,1-0-3,2013,11,18,7,14,19,17,0,0,1,0,0,0,NaN,2014,0,,,1,16,23,13,0,0,1,
