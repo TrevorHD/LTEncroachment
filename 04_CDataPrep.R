@@ -2,18 +2,22 @@
 
 # Read transect densities
 CData.Transects <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectData.csv")
-CData.Transects <- rename(CData.Transects, site = ?..site)
+#CData.Transects <- rename(CData.Transects, site = ?..site)
+names(CData.Transects)[1] <- "site"
 
 # Read longitudinal demography data
 CData.Demography <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_DemographyData.csv")
-CData.Demography <- rename(CData.Demography, site = ?..site)
+#CData.Demography <- rename(CData.Demography, site = ?..site)
+names(CData.Demography)[1] <- "site"
+
 
 # Read transect lengths
 CData.Lengths <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectLengths.csv")
 
 # Read transplant data
 CData.Transplants <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransplantExp.csv")
-CData.Transplants <- rename(CData.Transplants, site = ?..site)
+#CData.Transplants <- rename(CData.Transplants, site = ?..site)
+names(CData.Transplants)[1] <- "site"
 
 
 
