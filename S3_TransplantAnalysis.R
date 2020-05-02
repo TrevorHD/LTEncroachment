@@ -188,6 +188,7 @@ plot(CData.Transplants.s$num_bare_t,CData.Transplants.s$logGR)
 ## I will try models with bare, shrub, and grass at the smaller scale, and also\
 ## weighted density at the window scale to test vegetation predictors
 ## also going to use fall survival (more data to analyze)
+invlogit<-function(x){exp(x)/(1+exp(x))}
 
 ## first try no random effects, since the PDC planting makes the transects so different
 fall_surv_glm <- list()
@@ -212,12 +213,13 @@ fallsurv_viz_bin <- CData.Transplants.s %>%
             mean_surv = mean(falll_survival_t),
             bin_n = n())
 
+
 plot(CData.Transplants.s$d.stand,CData.Transplants.s$falll_survival_t,pch="|",col="gray",
      xlab="Weighted shrub density",ylab="Survival")
-points(fallsurv_viz_bin$mean_dens,fallsurv_viz_bin$mean_surv,pch=16,cex=2)
+#points(fallsurv_viz_bin$mean_dens,fallsurv_viz_bin$mean_surv,pch=16,cex=2)
 lines(seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100),
       invlogit(coef(fall_surv_glm[[2]])[1] + coef(fall_surv_glm[[2]])[2] * seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand),length.out = 100)),
-      lwd=2)
+      lwd=4)
 
 ## see if this holds up with spring survival (fewer overall survivors)
 spring_surv_glm <- list()
