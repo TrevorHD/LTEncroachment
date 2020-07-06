@@ -114,23 +114,17 @@ To answer these questions, we use a spatial integral projection model that combi
 
 \subsection*{Study system}
 
+\textit{Paragraph about creosotebush at the SEV. [WIP] Creosotebush is a woody perennial native that is extremely drought-resistant and has a typical lifespan of __ years. These shrubs are extremely efficient at absorbing water from the soil and tend to create large patches of barren soil where nothing else can grow. Creosotebush reproduces both asexually and sexually. Shrubs can contain numerous small, yellow flowers that eventually give rise to highly pubescent seeds. Seeds are dispersed from the parent plant by gravity and wind, and can experience secondary dispersal by kangaroo rats. Here, we examine the encroachment of creosotebush at the Sevilleta National Wildlife Refuge in central New Mexico. This area receives approximately __ of rainfall per yea andr consists of lowland shrub-grass ecotones as well as mountainous areas with juniper and pinon pine. While there is a history of creosotebush encroachment at the SEV, it seems to have stagnated over the past few decades; the reasons for this are largely unknown.}
+
 \subsection*{Encroachment re-surveys}
 We recorded shrub percent cover along two permanent 1000-m transects that spanned the shrub-grass ecotone, from high to low to near-zero shrub density. 
 These surveys were conduced in summer 2001 and again in summer 2013 to document  change in the spatial extent of shrub encroachment. 
 At every 10 meters, shrub cover was recorded in nine cover classes (<1\%, 1--4\%, 5--10\%, 10--25\%, 25--33\%, 33--50\%, 50--75\%, 75--95\%, >95\%). 
 For analysis, we visually assessed midpoint values of these cover classes at each meter location for both transects and years. 
 
-\subsection*{Demographic data collection}
+\subsection*{Annual censuses}
 
-\subsubsection*{Observational surveys}
-
-\subsubsection*{Transplant experiment}
-
-\subsection*{Demographic data analysis}
-
-\subsubsection*{Observational surveys}
-
-\subsubsection*{Transplant experiment}
+\subsubsection*{Demographic data collection}
 
 Collection of creosotebush demographic data occurred during the early summer of every year from 2013-2017, at the Sevilleta National Wildlife Refuge LTER site in central New Mexico.
 Four different sampling sites in the eastern part of the reserve were designated, with each of the sites containing 3 different transects.
@@ -158,6 +152,8 @@ The position of each shrub along the transect was noted to a resolution of 5 m s
 For shrubs in which a given 5-m subsection was not recorded, their position was estimated to the nearest 50 m; however, compared to the number of finer-resolution 5-m subsections, this occurred relatively infrequently. 
 Establishment of recruits was also accounted for, with new recruits observed within the study area tagged and measured.
 
+\subsubsection*{Demographic data analysis}
+
 Collected demography data were then examined to investigate how weighted density and shrub volume affected four different demographic variables: survival, probability of flowering (i.e. producing at least one flower or fruit), annual growth, and number of reproductive structures.
 Each of these demographic variables was fit to a different mixed-effects model through maximum likelihood.
 Both survival and probability of flowering were each fit to generalised linear mixed-effects models using a binomial response and a logit link function. Annual growth was defined as $\ln(V_{t+1} / V_{t})$ where $V_{t+1}$ and $V_{t}$ are the shrub volumes in the current and previous years, respectively, and was then fit to a linear mixed-effects model. 
@@ -172,9 +168,13 @@ For every year, the sum of seeds produced the prior year was calculated for each
 For any subsection in which seeds were not found, a count of seeds was estimated based on the number of seeds in a subsection of similar weighted density; this was done to avoid creating any undefined values of recruitment probability.
 Both linear and quadratic models using only weighted density as a predictor were fit to the distribution of recruitment probabilities, though the linear model was ultimately used because it had a higher AIC value.
 
-\bigskip
+\subsection*{Transplant experiment}
 
-\noindent\textit{Seed dispersal}
+\subsubsection*{Transplant data collection}
+
+\subsubsection*{Transplant data analysis}
+
+\subsection*{Dispersal modelling}
 
 Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
 The WALD model, which is largely based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels \citep{katul2005mechanistic, skarpaas2007dispersal} and may be used when empirical dispersal data is not readily available.
@@ -207,9 +207,7 @@ Measurements were conducted for 48 seeds that were randomly chosen from a seed p
 Constructing $p(U)$ involved creating an empirical PDF of hourly wind speeds at Five Points, the site closest to the 12 transects being used, that were obtained from meteorological data collected at the Sevilleta National Wildlife Refuge from 1988 to 2010.
 We did not weight $p(U)$ and assumed that the probability seed release from the shrub is the same regardless of wind speed.
 
-\bigskip
-
-\noindent\textit{Wave model using spatial integral projection models}
+\subsection*{Spatial integral projection model}
 
 Given that the shrub population at this site is approximately homogeneous perpendicular to the direction of encroachment, expansion is modelled as a wave moving in one dimension.
 A spatial integral projection model (SIPM) is used to estimate the speed at which encroachment occurs; such a model incorporates the effects of variation in traits like plant size that stage-structured models, such as those described in Neubert and Caswell (2000), do not capture.
