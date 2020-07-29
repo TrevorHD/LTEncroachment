@@ -29,8 +29,8 @@ names(CData.Transplants)[1] <- "site"
 vol <- function(h, w, p){(1/3)*pi*h*(sqrt((w*p))/2)^2}
 
 # Apply calculations to transects data frame
-CData.Transects$volume <- log(vol(h = CData.Transects$max.ht, w = CData.Transects$max.w,
-                                  p = CData.Transects$perp.w))
+CData.Transects$volume <- vol(h = CData.Transects$max.ht, w = CData.Transects$max.w,
+                                  p = CData.Transects$perp.w)
 # Define study sites
 site <- c("FPS", "SLP", "PDC", "MOD")
 
@@ -163,13 +163,13 @@ CData %>%
   rename("reproductive_fraction_t1" = "reproductive_fraction") %>% 
 
   # Add additional columns to data, starting with initial volume of plant before year has elapsed
-  mutate("volume_t" = log(vol(h = max.ht_t, w = max.w_t, p = perp.w_t)),
+  mutate("volume_t" = vol(h = max.ht_t, w = max.w_t, p = perp.w_t),
        
          # Final conical volume of plant after year of growth
-         "volume_t1" = log(vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1)),
+         "volume_t1" = vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1),
        
          # Logarithmic annual growth ratio
-         "logGR" = ifelse(is.nan(volume_t1 - volume_t) == TRUE, NA, volume_t1 - volume_t),
+         "logGR" = ifelse(is.nan(volume_t1 - volume_t) == TRUE, NA, log(volume_t1) - log(volume_t)),
 
          # Total number of fruits on a given plant before year has elapsed
          "total.fruits_t" = fruits_t*(1/reproductive_fraction_t),
@@ -209,7 +209,7 @@ CData %>%
 # Create data frame of recruits; will be used for later calculations, but not here
 ## tom: we'll need to report this criterion for designating a recruit (log vol < 8)
 ## also, 8 is pretty big in log(vol). did you mean log(8)?
-CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, volume_t1 < 8)
+CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, log(volume_t1) < 8)
 
 # Calculate total number of seedlings (recruits) in a single year for each 5-m window
 for(i in 1:nrow(CData)){
@@ -241,7 +241,7 @@ for(i in 1:nrow(CData.Transplants)){
 # Calculate conical volume; use initial volume since most plants die after a year
 # Add variable indicating which plants are transplants
 CData.Transplants %>% 
-  mutate("volume_t" = log(vol(h = max.ht_t, w = max.w_t, p = perp.w_t)),
+  mutate("volume_t" = vol(h = max.ht_t, w = max.w_t, p = perp.w_t),
          "transplant" = TRUE) %>% 
     
 # Rename "plot_location" to "actual.window"
