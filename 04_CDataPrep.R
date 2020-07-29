@@ -199,7 +199,8 @@ CData %>%
          # Variable indicating these are not transplants
          "transplant" = FALSE) -> CData
 
-
+## write CData to .csv, for Tom to use in growth modeling (see https://github.com/texmiller/IPM_size_transitions/tree/master/creosote)
+# write.csv(CData,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/creosote_growth_density.csv")
 
 
 
