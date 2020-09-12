@@ -38,6 +38,7 @@ library(tidyverse)
 
 %-------------------------------------------------------------------------
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 %\SweaveOpts{concordance=TRUE}
 
 \maketitle
@@ -237,7 +238,7 @@ Once $M(s)$ was obtained for dispersal at each shrub height, $\mathbf{H_{S}}$ an
 Figure \ref{fig:transect_resurv}.
 
 <<transect_resurv,echo=F,fig.dim=c(8,4),fig.cap="Re-surveys of shrub cover along two permanent trasects (A,B) surveyed in 2001 and 2013.">>=
-resurv <- read.csv("../Data/creosote_transect_resurvey.csv")
+resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
 par(mfrow=c(1,2),mar=c(4,4,1,1))
 plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="East"],
      resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="East"],
