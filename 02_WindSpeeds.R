@@ -37,6 +37,7 @@ for(i in 1:4){
 ws.raw <- c(ws.1, ws.2, ws.3, ws.4)
   
 # Remove (negative) markers for missing values
+# Also remove zero wind speeds, as we will assume no seed release occurs in absence of wind
 ws.raw <- ws.raw[ws.raw > 0]
 
 
