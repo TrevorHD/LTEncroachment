@@ -2,21 +2,17 @@
 
 # Read transect densities
 CData.Transects <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectData.csv")
-#CData.Transects <- rename(CData.Transects, site = ?..site)
 names(CData.Transects)[1] <- "site"
 
 # Read longitudinal demography data
 CData.Demography <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_DemographyData.csv")
-#CData.Demography <- rename(CData.Demography, site = ?..site)
 names(CData.Demography)[1] <- "site"
-
 
 # Read transect lengths
 CData.Lengths <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectLengths.csv")
 
 # Read transplant data
 CData.Transplants <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransplantExp.csv")
-#CData.Transplants <- rename(CData.Transplants, site = ?..site)
 names(CData.Transplants)[1] <- "site"
 
 
@@ -199,8 +195,7 @@ CData %>%
          # Variable indicating these are not transplants
          "transplant" = FALSE) -> CData
 
-## write CData to .csv, for Tom to use in growth modeling (see https://github.com/texmiller/IPM_size_transitions/tree/master/creosote)
-# write.csv(CData,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/creosote_growth_density.csv")
+
 
 
 
@@ -251,14 +246,6 @@ rename("actual.window" = "plot_location") %>%
 merge(Windows, 
       by.x = c("site", "transect", "actual.window"),
       by.y = c("site", "transect", "window")) -> CData.Transplants
-
-# Combine transplants with large shrubs for later survival analysis
-# Keep only location info, survival, volume, and density
-select(CData.Transplants, "site", "transect", "actual.window", 
-       "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
-  rename("survival_t1" = "spring_survival_t1") %>% 
-  rbind(select(CData, "site", "transect", "actual.window", 
-               "survival_t1", "volume_t", "weighted.dens", "transplant")) -> CData.AllSurvival
 
 
 

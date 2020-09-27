@@ -234,6 +234,14 @@ Mod.R.top.cf <- c()
 
 ##### Create GLM for survival (transplants only) ----------------------------------------------------------
 
+# Combine transplants with large shrubs for survival analysis
+# Keep only location info, survival, volume, and density
+select(CData.Transplants, "site", "transect", "actual.window", 
+       "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
+  rename("survival_t1" = "spring_survival_t1") %>% 
+  rbind(select(CData, "site", "transect", "actual.window", 
+              "survival_t1", "volume_t", "weighted.dens", "transplant")) -> CData.AllSurvival
+  
 # Use models for transplants (small individuals) only
 # Survival for larger individuals is pretty much guaranteed
   
@@ -357,7 +365,7 @@ CData.Recruitment <- merge(CData.Transects, Windows,
 # Use the reproduction model to calculate number of reproductive structures in a single year for each plant
 mutate(CData.Recruitment,
        d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
-       seeds = exp(Mod.R.top.cf[1] + Mod.R.top.cf[2]*volume + Mod.R.top.cf[3]*d.stand + 
+       seeds = exp(Mod.R.top.cf[1] + Mod.R.top.cf[2]*log(volume) + Mod.R.top.cf[3]*d.stand + 
                    Mod.R.top.cf[5]*(d.stand^2))) -> CData.Recruitment
 
 # Calculate number of seeds in a single year for each 5-m window
