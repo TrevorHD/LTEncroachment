@@ -162,11 +162,11 @@ CData %>%
   # Rename "reproductive_fraction" to "reproductive_fraction_t1" to avoid confusion
   rename("reproductive_fraction_t1" = "reproductive_fraction") %>% 
 
-  # Add additional columns to data, starting with initial volume of plant before year has elapsed
-  mutate("volume_t" = vol(h = max.ht_t, w = max.w_t, p = perp.w_t),
+  # Add additional columns to data, starting with log initial volume of plant before year has elapsed
+  mutate("volume_t" = log(vol(h = max.ht_t, w = max.w_t, p = perp.w_t)),
        
-         # Final conical volume of plant after year of growth
-         "volume_t1" = vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1),
+         # Final log conical volume of plant after year of growth
+         "volume_t1" = log(vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1)),
        
          # Logarithmic annual growth ratio
          "logGR" = ifelse(is.nan(volume_t1 - volume_t) == TRUE, NA, log(volume_t1) - log(volume_t)),
