@@ -46,11 +46,11 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDat
 # Determine resampling proportion; that is, the proportion of individuals selected each interation
 # Should be in the interval (0, 1), exclusive
 # Warning: setting this number very low may adversely affect model behaviour
-boot.prop <- 0.95
+boot.prop <- 0.75
 
 # Set number of bootstrap iterations
 # Please note: one iteration takes a long time (~30 minutes), so choose this number wisely
-boot.num <- 2
+boot.num <- 3
 
 # Create empty vectors to populate with wavespeeds for normal and higher survival scenarios
 boot.cv1 <- c()
