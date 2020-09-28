@@ -28,7 +28,7 @@ boot.ws.PDF <- density(boot.ws.raw, from = 0, to = 15)
 boot.CData <- CData[sample(1:nrow(CData), round(nrow(CData)*boot.prop), replace = FALSE), ]
 
 # Sample transplants
-boot.CData.Transplants <- CData[sample(1:nrow(CData.Transplants), round(nrow(CData.Transplants)*boot.prop), 
+boot.CData.Transplants <- CData.Transplants[sample(1:nrow(CData.Transplants), round(nrow(CData.Transplants)*boot.prop), 
                                        replace = FALSE), ]
 
 # Note: in scripts 03-07, replace "CData" with "boot.CData" and "CData.Transplants" with "boot.CData.Transplants"
