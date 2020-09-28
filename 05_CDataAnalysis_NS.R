@@ -240,21 +240,21 @@ select(boot.CData.Transplants, "site", "transect", "actual.window",
        "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
   rename("survival_t1" = "spring_survival_t1") %>% 
   rbind(select(boot.CData, "site", "transect", "actual.window", 
-              "survival_t1", "volume_t", "weighted.dens", "transplant")) -> CData.AllSurvival
+              "survival_t1", "volume_t", "weighted.dens", "transplant")) -> boot.CData.AllSurvival
   
 # Use models for transplants (small individuals) only
 # Survival for larger individuals is pretty much guaranteed
   
 # Remove entries for which there is no recorded volume or survival
 # Standardise density; introduce unique transect identifier
-CData.AllSurvival.s <- CData.AllSurvival %>% 
+boot.CData.AllSurvival.s <- boot.CData.AllSurvival %>% 
   drop_na(volume_t, survival_t1) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site),
          survival_t1 = as.numeric(survival_t1))
   
 ## how much mortality was there just among the naturally occurring plants?
-table(CData.AllSurvival.s$survival_t1[CData.AllSurvival.s$transplant==F])
+table(boot.CData.AllSurvival.s$survival_t1[boot.CData.AllSurvival.s$transplant==F])
 ## why is there no natural mortality? there are natural deaths in the original data frame
 table(CData.Demography$survival_t1)
 
@@ -263,35 +263,35 @@ Mod.S <- list()
 
   # "Null" model; only random effects of site and transect within site
   Mod.S[[1]] <- glmer(survival_t1 ~ (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
   # Size-only model
   Mod.S[[2]] <- glmer(survival_t1 ~ volume_t + (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
   # Density-only model
   Mod.S[[3]] <- glmer(survival_t1 ~ d.stand + (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
   # Size and density (additive)
   Mod.S[[4]] <- glmer(survival_t1 ~ volume_t + d.stand + (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
   # Size and density (interactive)
   Mod.S[[5]] <- glmer(survival_t1 ~ volume_t * d.stand + (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
   # Density-only model (quadratic)
   Mod.S[[6]] <- glmer(survival_t1 ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
   # Size (linear) and density (quadratic)
   Mod.S[[7]] <- glmer(survival_t1 ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
   # Size and density (interactive, quadratic)
   Mod.S[[8]] <- glmer(survival_t1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                      data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Calculate an AIC table, ranked from best to worst model
 # Weights interpreted as the proportion of evidence in favour of each
@@ -358,35 +358,35 @@ Mod.S.avg.cf <- c()
 # This is much more stable and has fewer pitfalls than using yearly seed production from demography data
   
 # Merge windows in baseline transect data with their respective weighted densities
-CData.Recruitment <- merge(CData.Transects, Windows, 
+boot.CData.Recruitment <- merge(CData.Transects, Windows, 
                            by.x = c("site", "transect", "window"),
                            by.y = c("site", "transect", "window"))
   
 # Use the reproduction model to calculate number of reproductive structures in a single year for each plant
-mutate(CData.Recruitment,
+mutate(boot.CData.Recruitment,
        d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
        seeds = exp(Mod.R.top.cf[1] + Mod.R.top.cf[2]*log(volume) + Mod.R.top.cf[3]*d.stand + 
-                   Mod.R.top.cf[5]*(d.stand^2))) -> CData.Recruitment
+                   Mod.R.top.cf[5]*(d.stand^2))) -> boot.CData.Recruitment
 
 # Calculate number of seeds in a single year for each 5-m window
-for(i in 1:nrow(CData.Recruitment)){
-  CData.Recruitment$seeds.win[i] <- sum(CData.Recruitment$seeds[CData.Recruitment$window == CData.Recruitment$window[i] &
-                                                                CData.Recruitment$transect == CData.Recruitment$transect[i] &
-                                                                CData.Recruitment$site == CData.Recruitment$site[i]], na.rm = T)}
+for(i in 1:nrow(boot.CData.Recruitment)){
+  boot.CData.Recruitment$seeds.win[i] <- sum(boot.CData.Recruitment$seeds[boot.CData.Recruitment$window == boot.CData.Recruitment$window[i] &
+                                                                boot.CData.Recruitment$transect == boot.CData.Recruitment$transect[i] &
+                                                                boot.CData.Recruitment$site == boot.CData.Recruitment$site[i]], na.rm = T)}
 
 # Select only one instance of each unique combination of site, transect, and window, then merge with CData
 # We're doing this because we're interested in total seeds in each window, not seeds per plant in each window
-distinct(select(CData.Recruitment, "site", "transect", "window", "seeds.win")) %>% 
+distinct(select(boot.CData.Recruitment, "site", "transect", "window", "seeds.win")) %>% 
   merge(boot.CData, ., by.x = c("site", "transect", "actual.window"),
-        by.y = c("site", "transect", "window")) -> CData.Recruitment
+        by.y = c("site", "transect", "window")) -> boot.CData.Recruitment
 
 # Calculate recruitment rates for each 5-m window over 1- and 4-year periods
-CData.Recruitment <- mutate(CData.Recruitment, recruit.prob.1y = recruits.1y/(seeds.win),
+boot.CData.Recruitment <- mutate(boot.CData.Recruitment, recruit.prob.1y = recruits.1y/(seeds.win),
                                                recruit.prob.4y = recruits.4y/(4*seeds.win))
 
 # Select only one instance of each unique combination of site, transect, window, and year
 # Duplicate instances of these unique combinations will inflate the data, which we don't want
-CData.Recruitment %>% 
+boot.CData.Recruitment %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE)) %>% 
   group_by(site, transect, actual.window, year_t1) %>% 
   select(d.stand, seeds.win, recruits.1y, recruits.4y, recruit.prob.1y, recruit.prob.4y) %>% 
@@ -396,35 +396,35 @@ CData.Recruitment %>%
             recruits.4y = unique(recruits.4y),
             recruit.prob.1y = unique(recruit.prob.1y),
             recruit.prob.4y = unique(recruit.prob.4y)) %>% 
-  mutate(unique.transect = interaction(transect, site)) -> CData.Recruitment
+  mutate(unique.transect = interaction(transect, site)) -> boot.CData.Recruitment
 
 # Create a list of possible per-seed recruitment models using 1-year rates
 Mod.P1 <- list()
 
   # "Null" model; only random effects of site and transect within site
   Mod.P1[[1]] <- glmer(cbind(recruits.1y, seeds.win - recruits.1y) ~ (1 | unique.transect), 
-                       data = CData.Recruitment, family = "binomial")
+                       data = boot.CData.Recruitment, family = "binomial")
 
   # Density-only model
   Mod.P1[[2]] <- glmer(cbind(recruits.1y, seeds.win - recruits.1y) ~ d.stand  + (1 | unique.transect), 
-                       data = CData.Recruitment, family = "binomial")
+                       data = boot.CData.Recruitment, family = "binomial")
   
   # Density-only model (quadratic)
   Mod.P1[[3]] <- glmer(cbind(recruits.1y, seeds.win - recruits.1y) ~ d.stand + I(d.stand^2) + (1 | unique.transect), 
-                       data = CData.Recruitment, family = "binomial")
+                       data = boot.CData.Recruitment, family = "binomial")
 
 # Create a list of possible per-seed recruitment models using 4-year rates
 Mod.P4 <- list()
   
   # "Null" model; only random effects of site and transect within site
   Mod.P4[[1]] <- glmer(cbind(recruits.4y, seeds.win - recruits.4y) ~ (1 | unique.transect), 
-                       data = CData.Recruitment, family = "binomial")
+                       data = boot.CData.Recruitment, family = "binomial")
   
   # Density-only model
   Mod.P4[[2]] <- glmer(cbind(recruits.4y, seeds.win - recruits.4y) ~ d.stand  + (1 | unique.transect), 
-                       data = CData.Recruitment, family = "binomial")
+                       data = boot.CData.Recruitment, family = "binomial")
   
   # Density-only model (quadratic)
   Mod.P4[[3]] <- glmer(cbind(recruits.4y, seeds.win - recruits.4y) ~ d.stand + I(d.stand^2) + (1 | unique.transect), 
-                       data = CData.Recruitment, family = "binomial")
+                       data = boot.CData.Recruitment, family = "binomial")
 

@@ -14,7 +14,7 @@ select(boot.CData.Transplants, "site", "transect", "actual.window",
        "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
   rename("survival_t1" = "spring_survival_t1") %>% 
   rbind(select(boot.CData, "site", "transect", "actual.window", 
-               "survival_t1", "volume_t", "weighted.dens", "transplant")) -> CData.AllSurvival
+               "survival_t1", "volume_t", "weighted.dens", "transplant")) -> boot.CData.AllSurvival
 
 
 
@@ -24,7 +24,7 @@ select(boot.CData.Transplants, "site", "transect", "actual.window",
 
 # Remove entries for which there is no recorded volume or survival
 # Standardise density; introduce unique transect identifier
-CData.AllSurvival.s <- CData.AllSurvival %>% 
+boot.CData.AllSurvival.s <- boot.CData.AllSurvival %>% 
   drop_na(volume_t, survival_t1) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site),
@@ -35,35 +35,35 @@ Mod.S <- list()
 
 # "Null" model; only random effects of site and transect within site
 Mod.S[[1]] <- glmer(survival_t1 ~ (1 | unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size-only model
 Mod.S[[2]] <- glmer(survival_t1 ~ volume_t + (1|unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Density-only model
 Mod.S[[3]] <- glmer(survival_t1 ~ d.stand + (1|unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size and density (additive)
 Mod.S[[4]] <- glmer(survival_t1 ~ volume_t + d.stand + (1|unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size and density (interactive)
 Mod.S[[5]] <- glmer(survival_t1 ~ volume_t * d.stand + (1|unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Density-only model (quadratic)
 Mod.S[[6]] <- glmer(survival_t1 ~ d.stand + I(d.stand^2) + (1|unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size (linear) and density (quadratic)
 Mod.S[[7]] <- glmer(survival_t1 ~ volume_t + d.stand + I(d.stand^2) + (1|unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size and density (interactive, quadratic)
 Mod.S[[8]] <- glmer(survival_t1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1|unique.transect),
-                    data = subset(CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+                    data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Calculate an AIC table, ranked from best to worst model
 # Weights interpreted as the proportion of evidence in favour of each
