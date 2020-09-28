@@ -110,8 +110,13 @@ for(i in 1:boot.num){
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/00_BootRes.R")
   
+  # "05_CDataAnalysis_NS"
+  # Create demography models for growth, reproduction, survival, etc. under normal circumstances
+  # Must run this before 05_CDataAnalysis_BS since it contains all of the demography models
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
+  
   # "05_CDataAnalysis_BS"
-  # Replace survival model with one for year with higher survival from above-average rainfall
+  # Replace survival model in 05_CDataAnalysis_NS with higher survival from above-average rainfall
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_BS.R")
   
   # "06_SIPM"
@@ -133,13 +138,4 @@ for(i in 1:boot.num){
   
   # Clean up
   remove(lambda.i, TM, i)}
-
-
-
-
-
-
-
-
-
 
