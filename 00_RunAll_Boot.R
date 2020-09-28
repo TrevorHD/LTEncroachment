@@ -46,7 +46,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDat
 # Determine resampling proportion; that is, the proportion of individuals selected each interation
 # Should be in the interval (0, 1), exclusive
 # Warning: setting this number very low may adversely affect model behaviour
-boot.prop <- 0.8
+boot.prop <- 0.95
 
 # Set number of bootstrap iterations
 # Please note: one iteration takes a long time (~30 minutes), so choose this number wisely

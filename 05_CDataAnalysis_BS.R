@@ -1,43 +1,19 @@
-##### Initialise Data -------------------------------------------------------------------------------------
-
-# Read transplant data
-CData.Transplants <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransplantExp.csv")
-CData.Transplants <- rename(CData.Transplants, site = ï..site)
-
-
-
-
-
 ##### Tidy up transplant data for survival analysis -------------------------------------------------------
 
-# Locations are multiples of 2.5 m, but our density data are in 5-m windows
-# Therefore, we will round locations up to nearest 5-m window
-for(i in 1:nrow(CData.Transplants)){
-  if(CData.Transplants$plot_location[i] %% 2.5 == 0){
-    CData.Transplants$plot_location[i] <- CData.Transplants$plot_location[i] + 2.5}}
+
 
 # Calculate conical volume; use initial volume since most plants die after a year
 # Add variable indicating which plants are transplants
 # Highest survival occurs at PDC, so we will use that as the best-case scenario
-CData.Transplants %>% 
-  filter(site == "PDC") %>% 
-  mutate("volume_t" = log(vol(h = max.ht_t, w = max.w_t, p = perp.w_t)),
-         "transplant" = TRUE) %>% 
-  
-  # Rename "plot_location" to "actual.window"
-  rename("actual.window" = "plot_location") %>% 
-  
-  # Merge with demography data
-  merge(Windows, 
-        by.x = c("site", "transect", "actual.window"),
-        by.y = c("site", "transect", "window")) -> CData.Transplants
+boot.CData.Transplants %>% 
+  filter(site == "PDC") -> boot.CData.Transplants
 
 # Combine transplants with large shrubs for later survival analysis
 # Keep only location info, survival, volume, and density
-select(CData.Transplants, "site", "transect", "actual.window", 
+select(boot.CData.Transplants, "site", "transect", "actual.window", 
        "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
   rename("survival_t1" = "spring_survival_t1") %>% 
-  rbind(select(CData, "site", "transect", "actual.window", 
+  rbind(select(boot.CData, "site", "transect", "actual.window", 
                "survival_t1", "volume_t", "weighted.dens", "transplant")) -> CData.AllSurvival
 
 

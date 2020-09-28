@@ -5,7 +5,7 @@ invlogit <- function(x){exp(x)/(1 + exp(x))}
 
 # Remove entries for which there is no recorded volume
 # Then standardise density and introduce unique transect identifier
-CData.s <- CData %>% 
+CData.s <- boot.CData %>% 
   drop_na(volume_t) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
@@ -82,7 +82,7 @@ Mod.F.top.cf <- c()
 # Restore CData.s since we deleted stuff earlier
 # Remove entries for which there is no recorded volume and log growth is NA
 # Then standardise density and introduce unique transect identifier
-CData.s <- CData %>% 
+CData.s <- boot.CData %>% 
   drop_na(volume_t, logGR) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
@@ -159,7 +159,7 @@ Mod.G.top.cf <- c()
 # Restore CData.s since we deleted stuff earlier
 # Remove entries for which there is no recorded volume or that did not flower
 # Then standardise density and introduce unique transect identifier
-CData.s <- CData %>%
+CData.s <- boot.CData %>%
   drop_na(volume_t) %>%
   filter(did.flower == 1) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
@@ -236,10 +236,10 @@ Mod.R.top.cf <- c()
 
 # Combine transplants with large shrubs for survival analysis
 # Keep only location info, survival, volume, and density
-select(CData.Transplants, "site", "transect", "actual.window", 
+select(boot.CData.Transplants, "site", "transect", "actual.window", 
        "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
   rename("survival_t1" = "spring_survival_t1") %>% 
-  rbind(select(CData, "site", "transect", "actual.window", 
+  rbind(select(boot.CData, "site", "transect", "actual.window", 
               "survival_t1", "volume_t", "weighted.dens", "transplant")) -> CData.AllSurvival
   
 # Use models for transplants (small individuals) only
@@ -377,7 +377,7 @@ for(i in 1:nrow(CData.Recruitment)){
 # Select only one instance of each unique combination of site, transect, and window, then merge with CData
 # We're doing this because we're interested in total seeds in each window, not seeds per plant in each window
 distinct(select(CData.Recruitment, "site", "transect", "window", "seeds.win")) %>% 
-  merge(CData, ., by.x = c("site", "transect", "actual.window"),
+  merge(boot.CData, ., by.x = c("site", "transect", "actual.window"),
         by.y = c("site", "transect", "window")) -> CData.Recruitment
 
 # Calculate recruitment rates for each 5-m window over 1- and 4-year periods

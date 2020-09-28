@@ -19,10 +19,10 @@ WALD.b <- function(n, H){
   # Let H be the seed release height
   
   # Find mean wind speed
-  Um <- mean(ws.raw)
+  Um <- mean(boot.ws.raw)
   
   # Find mean terminal velocity
-  f <- mean(tv.raw)
+  f <- mean(boot.tv.raw)
   
   # Calculate ustar, the friction velocity
   ustar <- K*Um*(log((zm - d)/z0))^(-1)
@@ -71,10 +71,10 @@ WALD.f.e <- function(n, H){
   # Let H be the seed release height
   
   # Simulate wind speeds from empirical distribution of wind speeds
-  Um <- rnorm(n, sample(ws.raw, size = n, replace = TRUE), ws.PDF$bw)
+  Um <- rnorm(n, sample(boot.ws.raw, size = n, replace = TRUE), boot.ws.PDF$bw)
   
   # Simulate terminal velocities from empirical distribution of terminal velocities
-  f <- rnorm(n, sample(tv.raw, size = n, replace = TRUE), tv.PDF$bw)
+  f <- rnorm(n, sample(boot.tv.raw, size = n, replace = TRUE), boot.tv.PDF$bw)
   
   # Calculate ustar, the friction velocity
   ustar <- K*Um*(log((zm - d)/z0))^(-1)
