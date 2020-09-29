@@ -82,7 +82,7 @@ for(i in 1:boot.num){
   # Wavespeeds as function of s; growth as function of density
   c.values <- Wavespeed(200)
   lambda <- c()
-  for(i in seq(-1.3, max(CData.s$d.stand), length.out = 100)){
+  for(i in seq(-1.3, max(boot.CData.s$d.stand), length.out = 100)){
     lambda.i <- TransMatrix(n = 200, d = i)
     lambda <- append(lambda, Re(eigen(lambda.i$matrix)$values[1]))}
   
@@ -126,7 +126,7 @@ for(i in 1:boot.num){
   # Wavespeeds as function of s; growth as function of density
   c.values.2 <- Wavespeed(200)
   lambda.2 <- c()
-  for(i in seq(-1.3, max(CData.s$d.stand), length.out = 100)){
+  for(i in seq(-1.3, max(boot.CData.s$d.stand), length.out = 100)){
     lambda.i <- TransMatrix(n = 200, d = i)
     lambda.2 <- append(lambda.2, Re(eigen(lambda.i$matrix)$values[1]))}
   
