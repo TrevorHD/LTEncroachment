@@ -46,12 +46,12 @@ Params <- c()
   Params[28] <- 0                                                               # Density coefficient
   
   # Minimum and maximum shrub sizes
-  Params[29] <- min(CData.s$volume_t, na.rm = TRUE)
-  Params[30] <- max(CData.s$volume_t, na.rm = TRUE)
+  Params[29] <- min(boot.CData.s$volume_t, na.rm = TRUE)
+  Params[30] <- max(boot.CData.s$volume_t, na.rm = TRUE)
   
   # Minimum and maximum shrub density
-  Params[31] <- min(CData.s$d.stand)
-  Params[32] <- max(CData.s$d.stand)
+  Params[31] <- min(boot.CData.s$d.stand)
+  Params[32] <- max(boot.CData.s$d.stand)
   
   # Mean recruit size
   Params[33] <- mean(CData.Recruits$volume_t1, na.rm = TRUE)

@@ -5,7 +5,7 @@ invlogit <- function(x){exp(x)/(1 + exp(x))}
 
 # Remove entries for which there is no recorded volume
 # Then standardise density and introduce unique transect identifier
-CData.s <- boot.CData %>% 
+boot.CData.s <- boot.CData %>% 
   drop_na(volume_t) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
@@ -15,35 +15,35 @@ Mod.F <- list()
 
   # "Null" model; only random effects of site and transect within site
   Mod.F[[1]] <- glmer(did.flower ~ (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
   
   # Size-only model
   Mod.F[[2]] <- glmer(did.flower ~ volume_t + (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
   
   # Density-only model
   Mod.F[[3]] <- glmer(did.flower ~ d.stand + (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
   
   # Size and density (additive)
   Mod.F[[4]] <- glmer(did.flower ~ volume_t + d.stand + (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
   
   # Size and density (interactive)
   Mod.F[[5]] <- glmer(did.flower ~ volume_t * d.stand + (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
   
   # Density-only model (quadratic)
   Mod.F[[6]] <- glmer(did.flower ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
   
   # Size (linear) and density (quadratic)
   Mod.F[[7]] <- glmer(did.flower ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
   
   # Size and density (interactive, quadratic)
   Mod.F[[8]] <- glmer(did.flower ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                      data = CData.s, family = "binomial")
+                      data = boot.CData.s, family = "binomial")
 
 # Calculate an AIC table, ranked from best to worst model
 # Weights interpreted as the proportion of evidence in favour of each
@@ -79,10 +79,10 @@ Mod.F.top.cf <- c()
 
 ##### Create GLM for growth ratio -------------------------------------------------------------------------
 
-# Restore CData.s since we deleted stuff earlier
+# Restore boot.CData.s since we deleted stuff earlier
 # Remove entries for which there is no recorded volume and log growth is NA
 # Then standardise density and introduce unique transect identifier
-CData.s <- boot.CData %>% 
+boot.CData.s <- boot.CData %>% 
   drop_na(volume_t, logGR) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
@@ -92,35 +92,35 @@ Mod.G <- list()
 
   # "Null" model; only random effects of site and transect within site
   Mod.G[[1]] <- lmer(logGR ~ (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size-only model
   Mod.G[[2]] <- lmer(logGR ~ volume_t + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Density-only model
   Mod.G[[3]] <- lmer(logGR ~ d.stand + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size and density (additive)
   Mod.G[[4]] <- lmer(logGR ~ volume_t + d.stand + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size and density (interactive)
   Mod.G[[5]] <- lmer(logGR ~ volume_t * d.stand + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Density-only model (quadratic)
   Mod.G[[6]] <- lmer(logGR ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size (linear) and density (quadratic)
   Mod.G[[7]] <- lmer(logGR ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size and density (interactive, quadratic)
   Mod.G[[8]] <- lmer(logGR ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
 # Calculate an AIC table, ranked from best to worst model
 # Weights interpreted as the proportion of evidence in favour of each
@@ -156,10 +156,10 @@ Mod.G.top.cf <- c()
 
 ##### Create GLM for number of reproductive structures ----------------------------------------------------
 
-# Restore CData.s since we deleted stuff earlier
+# Restore boot.CData.s since we deleted stuff earlier
 # Remove entries for which there is no recorded volume or that did not flower
 # Then standardise density and introduce unique transect identifier
-CData.s <- boot.CData %>%
+boot.CData.s <- boot.CData %>%
   drop_na(volume_t) %>%
   filter(did.flower == 1) %>% 
   mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
@@ -170,35 +170,35 @@ Mod.R <- list()
 
   # "Null" model; only random effects of site and transect within site
   Mod.R[[1]] <- lmer(logTR1 ~ (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size-only model
   Mod.R[[2]] <- lmer(logTR1 ~ volume_t + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Density-only model
   Mod.R[[3]] <- lmer(logTR1 ~ d.stand + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size and density (additive)
   Mod.R[[4]] <- lmer(logTR1 ~ volume_t + d.stand + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size and density (interactive)
   Mod.R[[5]] <- lmer(logTR1 ~ volume_t * d.stand + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Density-only model (quadratic)
   Mod.R[[6]] <- lmer(logTR1 ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size (linear) and density (quadratic)
   Mod.R[[7]] <- lmer(logTR1 ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
   # Size and density (interactive, quadratic)
   Mod.R[[8]] <- lmer(logTR1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                     data = CData.s, REML = FALSE)
+                     data = boot.CData.s, REML = FALSE)
 
 # Calculate an AIC table, ranked from best to worst model
 # Weights interpreted as the proportion of evidence in favour of each
