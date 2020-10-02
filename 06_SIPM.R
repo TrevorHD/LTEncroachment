@@ -130,7 +130,7 @@ TransMatrix <- function(n, d){
               Bmatrix = B))}
 
 # Evaluate the matrix for n subdivisions at the lowest density
-TM <- TransMatrix(n = 200, d = -1.3)
+TM <- TransMatrix(n = 100, d = -1.3)
 
 # Use Re(eigen(TM$matrix)$values[1]) for geometric growth rate (dominant eigenvalue of TM)
 
