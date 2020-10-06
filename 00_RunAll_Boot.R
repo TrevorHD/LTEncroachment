@@ -81,10 +81,10 @@ for(i in 1:boot.num){
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
   
   # Wavespeeds as function of s; growth as function of density
-  c.values <- Wavespeed(200)
+  c.values <- Wavespeed(100)
   lambda <- c()
   for(i in seq(-1.3, max(boot.CData.s$d.stand), length.out = 100)){
-    lambda.i <- TransMatrix(n = 200, d = i)
+    lambda.i <- TransMatrix(n = 100, d = i)
     lambda <- append(lambda, Re(eigen(lambda.i$matrix)$values[1]))}
   
   # Calculate minimum wavespeed
@@ -131,10 +131,10 @@ for(i in 1:boot.num){
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
   
   # Wavespeeds as function of s; growth as function of density
-  c.values.2 <- Wavespeed(200)
+  c.values.2 <- Wavespeed(100)
   lambda.2 <- c()
   for(i in seq(-1.3, max(boot.CData.s$d.stand), length.out = 100)){
-    lambda.i <- TransMatrix(n = 200, d = i)
+    lambda.i <- TransMatrix(n = 100, d = i)
     lambda.2 <- append(lambda.2, Re(eigen(lambda.i$matrix)$values[1]))}
   
   # Calculate minimum wavespeed
