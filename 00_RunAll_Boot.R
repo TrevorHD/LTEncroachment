@@ -98,7 +98,7 @@ for(i in 1:boot.num){
 
 # Get procedure time
 time.end <- Sys.time()
-time.start - time.end
+time.end - time.start
 remove(time.start, time.end)
 
 
