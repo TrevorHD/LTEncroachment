@@ -1,7 +1,5 @@
 ##### Tidy up transplant data for survival analysis -------------------------------------------------------
 
-
-
 # Calculate conical volume; use initial volume since most plants die after a year
 # Add variable indicating which plants are transplants
 # Highest survival occurs at PDC, so we will use that as the best-case scenario

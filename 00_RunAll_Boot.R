@@ -50,7 +50,7 @@ boot.prop <- 0.75
 
 # Set number of bootstrap iterations
 # Please note: one iteration takes a long time (~30 minutes), so choose this number wisely
-boot.num <- 5
+boot.num <- 10
 
 # Create empty vectors to populate with wavespeeds for normal and higher survival scenarios
 boot.cv1 <- c()
@@ -148,6 +148,6 @@ for(i in 1:boot.num){
 
 # Get procedure time
 time.end <- Sys.time()
-time.start - time.end
+time.end - time.start
 remove(time.start, time.end)
 
