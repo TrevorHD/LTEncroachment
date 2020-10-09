@@ -1,6 +1,6 @@
 # Overview
 
-This project seeks to create a mathematical model of creosotebush (Larrea tridentata) encroachment at the Sevilleta National Wildlife Refuge in central New Mexico. Here, we use dispersal kernels and density dependent demography to model encroachment as a moving wave, and then combine the two to generate this model.
+A combination of statistical and mechanistic models used to quantify creosotebush (Larrea tridentata) encroachment at the Sevilleta National Wildlife Refuge in central New Mexico. Here, we use dispersal kernels as well as size- and density-dependent demography to model encroachment as a moving wave pulled forward by individuals at teh low-density vanguard. Data used here are collected annual demographic surveys over the course of several years, a transplant experiment to assess the survival rates of seedlings, and seed velocity data gathered from experiments in a laboratory setting.
 
 # Files
 
