@@ -248,7 +248,8 @@ merge(Windows,
       by.y = c("site", "transect", "window")) -> CData.Transplants
 
 
-
+## write out transplant data for Tom to use elsewhere
+#write.csv(CData.Transplants,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/CData.Transplants.csv")
 
 
 ##### Clean up global environment -------------------------------------------------------------------------
