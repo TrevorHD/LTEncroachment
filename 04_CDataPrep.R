@@ -88,10 +88,11 @@ for(i in 1:nrow(Windows)){
 ##### Remove entries that are invalid or missing data -----------------------------------------------------
 
 # Remove entries missing reproductive fraction and/or data, including plants that died
-CData <- CData.Demography[complete.cases(CData.Demography[ , 31]), ]
+# This part will likely be deprecated
+# CData <- CData.Demography[complete.cases(CData.Demography[ , 31]), ]
 
 # Remove entries with reproductive fractions greater than 1 (this would be the result of typos)
-CData <- subset(CData, reproductive_fraction <= 1)
+CData <- subset(CData.Demography, reproductive_fraction <= 1 | is.na(reproductive_fraction) == TRUE)
 
 # Remove other invalid entries
 # FPS 1-0-4, t1=2016, CDataV2 entry 651 (2 plants were accidentally measured as 1)
