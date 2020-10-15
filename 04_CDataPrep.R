@@ -94,6 +94,10 @@ for(i in 1:nrow(Windows)){
 # Remove entries with reproductive fractions greater than 1 (this would be the result of typos)
 CData <- subset(CData.Demography, reproductive_fraction <= 1 | is.na(reproductive_fraction) == TRUE)
 
+# Fix entry where "." in survival should be a "0"; drop "." factor
+CData[which(CData$survival_t1 == "."), "survival_t1"] <- 0
+CData$survival_t1 <- droplevels.factor(CData$survival_t1)
+
 # Remove other invalid entries
 # FPS 1-0-4, t1=2016, CDataV2 entry 651 (2 plants were accidentally measured as 1)
 # FPS 1-0-6, t1=2016, CDataV2 entry 653 (2 plants were accidentally measured as 1)
