@@ -83,43 +83,48 @@ for(i in 1:nrow(Windows)){
 # Final result is a list of 5-m windows and their densities for each transect at each site
 
 
-
-
 # Data QA/QC --------------------------------------------------------------
 ## most of the issues will be with demography data
-## are there plants that did not have a reproductive fraction recorded?
-
-
-# Remove entries missing reproductive fraction and/or data, including plants that died
-# This part will likely be deprecated
-# CData <- CData.Demography[complete.cases(CData.Demography[ , 31]), ]
-
-# Remove entries with reproductive fractions greater than 1 (this would be the result of typos)
-CData <- subset(CData.Demography, reproductive_fraction <= 1 | is.na(reproductive_fraction) == TRUE)
-
-# Fix entry where "." in survival should be a "0"; drop "." factor
+## the variable reproductive_fraction should be reproductive_fraction_t1 because it is recorded at the end of the transition year
+## starting a new data frame (CData) that will edit and update original CData.Demography
+CData <- CData.Demography %>% rename(reproductive_fraction_t1=reproductive_fraction)
+# check variable types
+#str(CData)
+# looks like there were data entry problems in survival
+#levels(CData$survival_t1)
+CData$survival_t1[CData$survival_t1==""]<-NA
+## there is a ".", we went back and checked the original data and this plant was dead
 CData[which(CData$survival_t1 == "."), "survival_t1"] <- 0
-CData$survival_t1 <- droplevels.factor(CData$survival_t1)
+## now clean up this factor
+CData$survival_t1 <- as.integer(as.character(droplevels.factor(CData$survival_t1)))
 
-# Remove other invalid entries
-# FPS 1-0-4, t1=2016, CDataV2 entry 651 (2 plants were accidentally measured as 1)
-# FPS 1-0-6, t1=2016, CDataV2 entry 653 (2 plants were accidentally measured as 1)
-# FPS 2-150-12, t1=2017, CDataV2 entry 1245 (large loss likely indicates measurement error)
-# SLP 3-100-8, t1=2017, CDataV2 entry 1443 (large loss likely indicates measurement error)
-# PDC 3-0-8, t1=2017, CDataV2 entry 1519 (large gain likely indicates measurement error)
-# MOD 1-150-1, t1=2017, CDataV2 entry 1574 (large loss likely indicates measurement error)
-# MOD 2-50-3, t1=2017, CDataV2 entry 1593 (large loss likely indicates measurement error)
-# MOD 3-200-1, t1=2017, CDataV2 entry 1633 (large loss likely indicates measurement error)
-CData <- CData[-c(1610, 1570, 1552, 1497, 1421, 1225, 643, 641), ]
-
-# Note that entry position =! row number (due to previous deletions)
-# Might change if original spreadsheet or previous code is modified!
+## there are also some issues with reproductive fraction
+# filter(CData,reproductive_fraction_t > 1 | reproductive_fraction_t1 > 1) 
+## this is a typo, should be 1
+CData$reproductive_fraction_t[CData$reproductive_fraction_t>1]<-1
+CData$reproductive_fraction_t1[CData$reproductive_fraction_t1>1]<-1
 
 ## Find implausible / incorrect size transitions and remove these observations
 ## check height changes below the 2.5th and about the 97.5th percentile
 CData %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>% 
   filter(height_change > quantile(height_change,0.975,na.rm=T) | height_change < quantile(height_change,0.025,na.rm=T)) %>% 
-  select(site,transect,designated.window,plant,year_t,max.ht_t,max.ht_t1)
+  select(site,transect,designated.window,plant,year_t,max.ht_t,max.w_t,perp.w_t,max.ht_t1,max.w_t1,perp.w_t1) %>% 
+  arrange(site,transect,designated.window,plant,year_t)
+
+## I will go through these line by line and pull out the plant-years that I think are problems and should be dropped
+problems <- tibble(site=NA,transect=NA,designated.window=NA,plant=NA,year=NA)
+## these are plants with inexplicable and unbelievable size changes that cannot be verified or corrected with raw data
+problems[1,] <- c("FPS",1,150,2,2013)
+## FPS-2-0 4,5,6 got mixed up a bunch
+problems[2,] <- c("FPS",2,0,4,2014)
+problems[3,] <- c("FPS",2,0,5,2014)
+problems[4,] <- c("FPS",2,0,5,2015)
+## I think 12s was recorded instead of 12
+problems[5,] <- c("FPS",2,150,12,2016)
+## problems at FPS-3-100
+
+
+
 drop_row <-c()
 #     site transect designated.window plant year_t max.ht_t max.ht_t1
 # 17  FPS        2               150    12   2016     47.0       7.0 
