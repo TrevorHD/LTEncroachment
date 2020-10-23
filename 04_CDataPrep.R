@@ -84,15 +84,7 @@ for(i in 1:nrow(Windows)){
 
 
 
-
-##### Remove entries that are invalid or missing data -----------------------------------------------------
-
-# Remove entries missing reproductive fraction and/or data, including plants that died
-# This part will likely be deprecated
-# CData <- CData.Demography[complete.cases(CData.Demography[ , 31]), ]
-
-# Remove entries with reproductive fractions greater than 1 (this would be the result of typos)
-CData <- subset(CData.Demography, reproductive_fraction <= 1 | is.na(reproductive_fraction) == TRUE)
+# Data QA/QC --------------------------------------------------------------
 
 # Fix entry where "." in survival should be a "0"; drop "." factor
 CData[which(CData$survival_t1 == "."), "survival_t1"] <- 0
@@ -112,10 +104,38 @@ CData <- CData[-c(1610, 1570, 1552, 1497, 1421, 1225, 643, 641), ]
 # Note that entry position =! row number (due to previous deletions)
 # Might change if original spreadsheet or previous code is modified!
 
+## Find implausible / incorrect size transitions and remove these observations
+## check height changes below the 2.5th and about the 97.5th percentile
+CData %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>% 
+  filter(height_change > quantile(height_change,0.975,na.rm=T) | height_change < quantile(height_change,0.025,na.rm=T)) %>% 
+  select(site,transect,designated.window,plant,year_t,max.ht_t,max.ht_t1)
+drop_row <-c()
+#     site transect designated.window plant year_t max.ht_t max.ht_t1
+# 17  FPS        2               150    12   2016     47.0       7.0 
+## checked data sheets and this appears to be a field error -- DROP
+drop_row <- c(drop_row,17)
+# 29  FPS        3               100     9   2013    126.0      42.0
+## there are field notes that FPS-3-100 8,9, and 10 may be connected, so I am going to drop these since there was likely confusion
+drop_row <- c(drop_row,29)
+# 32  FPS        3               100     4   2014     58.0     109.0
+## field data were entered correctly but this size change can't be right, dropping
+drop_row <- c(drop_row,32)
+# 34  FPS        3               100     7   2016      8.0      36.0
+# 35  FPS        3               100     7   2015     35.0       8.0
+## data entry error: the 8's should be 38's
+CData$max.ht_t[CData$site=="FPS"&CData$transect==3&CData$designated.window==100&CData$plant==7&CData$year_t==2016]<-
+CData$max.ht_t1[CData$site=="FPS"&CData$transect==3&CData$designated.window==100&CData$plant==7&CData$year_t==2015]<-38
+# 45  FPS        3               500     1   2014     95.0      45.0
+# 46  FPS        3               500     1   2013     38.0      95.0
+# 47  FPS        3               500     2   2014     37.0     105.0
+# 48  FPS        3               500     2   2013     83.0      37.0
+## It looks like FPS-3-500 1 and 2 were mixed up for field data collection in 2014 only - swap these observations
 
-
-
-
+# 51  MOD        3                 0     9   2015     16.0      67.0
+# 52  MOD        3                 0     9   2014     60.0      16.0
+# 58  PDC        1               200     2   2014     30.0      21.0
+# 59  PDC        1               200     2   2015     21.0      35.0
+# 80  SLP        3               100     8   2016     83.0      41.0
 ##### Fix window-related issues ---------------------------------------------------------------------------
 
 # Identify entries that lack an actual window (5-m resolution)
@@ -200,7 +220,8 @@ CData %>%
          # Variable indicating these are not transplants
          "transplant" = FALSE) -> CData
 
-
+## write out CData for Tom to use elsewhere
+#write.csv(CData,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/CData.csv")
 
 
 
