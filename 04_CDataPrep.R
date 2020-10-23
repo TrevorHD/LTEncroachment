@@ -74,10 +74,11 @@ for(i in 1:nrow(Windows)){
   # Add density to data frame
   Windows$density[i] <- length(plants)
   
-  # Add weighted density (amount of volume per window) to data frame
-  Windows$weighted.dens[i] <- sum(CData.Transects$volume[CData.Transects$window == Windows$window[i] &
+  # Add weighted density (sum of log volume per window) to data frame
+  Windows$weighted.dens[i] <- sum(log(CData.Transects$volume[CData.Transects$window == Windows$window[i] &
                                                          CData.Transects$transect == Windows$transect[i] &
-                                                         CData.Transects$site == Windows$site[i]], na.rm = T)}
+                                                         CData.Transects$site == Windows$site[i]]), na.rm = T)
+  }
 
 # Final result is a list of 5-m windows and their densities for each transect at each site
 
@@ -85,6 +86,16 @@ for(i in 1:nrow(Windows)){
 
 
 # Data QA/QC --------------------------------------------------------------
+## most of the issues will be with demography data
+## are there plants that did not have a reproductive fraction recorded?
+
+
+# Remove entries missing reproductive fraction and/or data, including plants that died
+# This part will likely be deprecated
+# CData <- CData.Demography[complete.cases(CData.Demography[ , 31]), ]
+
+# Remove entries with reproductive fractions greater than 1 (this would be the result of typos)
+CData <- subset(CData.Demography, reproductive_fraction <= 1 | is.na(reproductive_fraction) == TRUE)
 
 # Fix entry where "." in survival should be a "0"; drop "." factor
 CData[which(CData$survival_t1 == "."), "survival_t1"] <- 0
