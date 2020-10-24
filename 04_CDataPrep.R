@@ -114,6 +114,7 @@ CData %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>%
 ## I will go through these line by line and pull out the plant-years that I think are problems and should be dropped
 problems <- tibble(site=NA,transect=NA,designated.window=NA,plant=NA,year=NA)
 ## these are plants with inexplicable and unbelievable size changes that cannot be verified or corrected with raw data
+## but keep in mind that height changes (esp reductions) are sensitive to single branches dying back, which we count as "real"
 problems[1,] <- c("FPS",1,150,2,2013)
 ## FPS-2-0 4,5,6 got mixed up a bunch
 problems[2,] <- c("FPS",2,0,4,2014)
@@ -122,36 +123,44 @@ problems[4,] <- c("FPS",2,0,5,2015)
 ## I think 12s was recorded instead of 12
 problems[5,] <- c("FPS",2,150,12,2016)
 ## problems at FPS-3-100
+# FPS 3-100-7 has a data entry problem (I checked data sheets)
+CData$max.ht_t1[CData$site=="FPS" & CData$transect==3 & CData$designated.window==100 & CData$plant==7 & CData$year_t==2015] <- 38
+CData$max.ht_t[CData$site=="FPS" & CData$transect==3 & CData$designated.window==100 & CData$plant==7 & CData$year_t==2016] <- 38
+# FPS 3 plants 4 and 6 seem like they were mixed up or perhaps growing on top of each other...dropping these for all years
+problems[6,] <- c("FPS",3,100,4,2013)
+problems[7,] <- c("FPS",3,100,4,2014)
+problems[8,] <- c("FPS",3,100,4,2015)
+problems[9,] <- c("FPS",3,100,4,2016)
+problems[10,] <- c("FPS",3,100,6,2013)
+problems[11,] <- c("FPS",3,100,6,2014)
+problems[12,] <- c("FPS",3,100,6,2015)
+problems[13,] <- c("FPS",3,100,6,2016)
+## this one can't be right and I think the 2013 measurement of 126 should be 26 but I'm not certain so I'm dropping
+problems[14,] <- c("FPS",3,100,9,2013)
+# FPS-3-200-8 has some strange size changes, might have gotten mixed up with another plant, dropping these observations
+problems[15,] <- c("FPS",3,200,8,2013)
+problems[16,] <- c("FPS",3,200,8,2014)
+problems[17,] <- c("FPS",3,200,8,2015)
+problems[18,] <- c("FPS",3,200,8,2016)
+## I think FPS-3-500 1 and 2 got mixed up in 2013-2014
+problems[19,] <- c("FPS",3,500,1,2013)
+problems[20,] <- c("FPS",3,500,1,2014)
+problems[21,] <- c("FPS",3,500,2,2013)
+problems[22,] <- c("FPS",3,500,2,2014)
+## this change is not believable
+problems[23,] <- c("MOD",1,150,1,2016)
+## not believable and I can't find a problem in the raw data
+problems[24,] <- c("MOD",2,50,3,2014)
+## these dimensions are not believale...some probably said "60" and someone wrote "16". Anyway, dropping...
+problems[25,] <- c("MOD",3,0,9,2014)
+problems[26,] <- c("MOD",3,0,9,2015)
+## this one is fishy and I can't find the 2015 data to verify
+problems[27,] <- c("PDC",1,200,2,2014)
+problems[28,] <- c("PDC",1,200,2,2015)
+## this one has a note that it was untagged but we thought it was right...it wasn't
+problems[29,] <- c("SLP",3,100,8,201)
 
 
-
-drop_row <-c()
-#     site transect designated.window plant year_t max.ht_t max.ht_t1
-# 17  FPS        2               150    12   2016     47.0       7.0 
-## checked data sheets and this appears to be a field error -- DROP
-drop_row <- c(drop_row,17)
-# 29  FPS        3               100     9   2013    126.0      42.0
-## there are field notes that FPS-3-100 8,9, and 10 may be connected, so I am going to drop these since there was likely confusion
-drop_row <- c(drop_row,29)
-# 32  FPS        3               100     4   2014     58.0     109.0
-## field data were entered correctly but this size change can't be right, dropping
-drop_row <- c(drop_row,32)
-# 34  FPS        3               100     7   2016      8.0      36.0
-# 35  FPS        3               100     7   2015     35.0       8.0
-## data entry error: the 8's should be 38's
-CData$max.ht_t[CData$site=="FPS"&CData$transect==3&CData$designated.window==100&CData$plant==7&CData$year_t==2016]<-
-CData$max.ht_t1[CData$site=="FPS"&CData$transect==3&CData$designated.window==100&CData$plant==7&CData$year_t==2015]<-38
-# 45  FPS        3               500     1   2014     95.0      45.0
-# 46  FPS        3               500     1   2013     38.0      95.0
-# 47  FPS        3               500     2   2014     37.0     105.0
-# 48  FPS        3               500     2   2013     83.0      37.0
-## It looks like FPS-3-500 1 and 2 were mixed up for field data collection in 2014 only - swap these observations
-
-# 51  MOD        3                 0     9   2015     16.0      67.0
-# 52  MOD        3                 0     9   2014     60.0      16.0
-# 58  PDC        1               200     2   2014     30.0      21.0
-# 59  PDC        1               200     2   2015     21.0      35.0
-# 80  SLP        3               100     8   2016     83.0      41.0
 ##### Fix window-related issues ---------------------------------------------------------------------------
 
 # Identify entries that lack an actual window (5-m resolution)
@@ -168,9 +177,6 @@ CData <- CData[complete.cases(CData[ , 3]), ]
 # Use designated window for sites that don't have an actual window
 CData$actual.window[is.na(CData$actual.window)] <- 
   CData$designated.window[is.na(CData$actual.window)]
-
-
-
 
 
 ##### Remove unnecessary columns and merge densities with demography data ---------------------------------
