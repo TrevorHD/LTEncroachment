@@ -184,14 +184,17 @@ nrow(CData)-nrow(CData.Demography) # nailed it
 
 # Identify entries that lack an actual window (5-m resolution)
 subset(CData, is.na(actual.window)) %>% 
-  select("site", "transect", "designated.window", "plant") %>% 
+  select("site", "transect", "designated.window", "plant", "year_t") %>% 
   unique() -> CData.MissingWindow
 
 # Check why actual Windows are not present
 # See "Missing Windows" file for more information
 
-# Eliminate recruits missing a designated window (50-m resolution)
-CData <- CData[complete.cases(CData[ , 3]), ]
+# check whether any designated windows are missing
+CData %>% filter(is.na(designated.window))
+## two SLP recruits but the notes place them under specified plants
+CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$plant=="10s"&CData$year_t==2016]<-CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$designated.window==150&CData$plant=="7"][1]
+CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$plant=="11s"&CData$year_t==2016]<-CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$designated.window==150&CData$plant=="5"][1]
 
 # Use designated window for sites that don't have an actual window
 CData$actual.window[is.na(CData$actual.window)] <- 
@@ -222,13 +225,13 @@ merge(Windows,
 CData %>%
   
   # Add additional columns to data, starting with log initial volume of plant before year has elapsed
-  mutate("volume_t" = log(vol(h = max.ht_t, w = max.w_t, p = perp.w_t)),
+  mutate("volume_t" = vol(h = max.ht_t, w = max.w_t, p = perp.w_t),
        
          # Final log conical volume of plant after year of growth
-         "volume_t1" = log(vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1)),
+         "volume_t1" = vol(h = max.ht_t1, w = max.w_t1, p = perp.w_t1),
        
          # Logarithmic annual growth ratio
-         "logGR" = ifelse(is.nan(volume_t1 - volume_t) == TRUE, NA, log(volume_t1) - log(volume_t)),
+         "logGR" = log(volume_t1) - log(volume_t),
 
          # Total number of fruits on a given plant before year has elapsed
          "total.fruits_t" = fruits_t*(1/reproductive_fraction_t),
@@ -248,12 +251,8 @@ CData %>%
          # Total number of reproductive structures on a given plant after year has elapsed
          "total.reproduction_t1" = total.fruits_t1 + total.flowers_t1,
        
-         # Log of total t1 reproduction
-         # Plants with no reproduction get -Inf, so we simply treat this as a NA
-         "logTR1" = ifelse(log(total.reproduction_t1) == -Inf, NA, log(total.reproduction_t1)),
-       
          # Boolean stating whether or not the plant flowered in t1
-         "did.flower" = ifelse(total.fruits_t1 > 0 | total.flowers_t1 > 0, 1, 0),
+         "did.flower" = total.reproduction_t1 > 0,
        
          # Variable indicating these are not transplants
          "transplant" = FALSE) -> CData
