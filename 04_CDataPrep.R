@@ -82,37 +82,44 @@ for(i in 1:nrow(Windows)){
 
 # Final result is a list of 5-m windows and their densities for each transect at each site
 
-
 # Data QA/QC --------------------------------------------------------------
 ## most of the issues will be with demography data
+# check variable types
+#str(CData.Demography)
+## it's showing five site levels because there are a few entries with a space after FPS
+CData.Demography$site[CData.Demography$site=="FPS "] <- "FPS"
+
 ## the variable reproductive_fraction should be reproductive_fraction_t1 because it is recorded at the end of the transition year
 ## starting a new data frame (CData) that will edit and update original CData.Demography
-CData <- CData.Demography %>% rename(reproductive_fraction_t1=reproductive_fraction)
-# check variable types
-#str(CData)
+CData.Demography %>% 
+  rename(reproductive_fraction_t1=reproductive_fraction) %>% 
+  mutate(transect=as.integer(transect),
+         site=droplevels(site))-> CData.Demography
+
+
 # looks like there were data entry problems in survival
-#levels(CData$survival_t1)
-CData$survival_t1[CData$survival_t1==""]<-NA
+#levels(CData.Demography$survival_t1)
+CData.Demography$survival_t1[CData.Demography$survival_t1==""]<-NA
 ## there is a ".", we went back and checked the original data and this plant was dead
-CData[which(CData$survival_t1 == "."), "survival_t1"] <- 0
+CData.Demography[which(CData.Demography$survival_t1 == "."), "survival_t1"] <- 0
 ## now clean up this factor
-CData$survival_t1 <- as.integer(as.character(droplevels.factor(CData$survival_t1)))
+CData.Demography$survival_t1 <- as.integer(as.character(droplevels.factor(CData.Demography$survival_t1)))
 
 ## there are also some issues with reproductive fraction
 # filter(CData,reproductive_fraction_t > 1 | reproductive_fraction_t1 > 1) 
 ## this is a typo, should be 1
-CData$reproductive_fraction_t[CData$reproductive_fraction_t>1]<-1
-CData$reproductive_fraction_t1[CData$reproductive_fraction_t1>1]<-1
+CData.Demography$reproductive_fraction_t[CData.Demography$reproductive_fraction_t>1]<-1
+CData.Demography$reproductive_fraction_t1[CData.Demography$reproductive_fraction_t1>1]<-1
 
 ## Find implausible / incorrect size transitions and remove these observations
 ## check height changes below the 2.5th and about the 97.5th percentile
-CData %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>% 
+CData.Demography %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>% 
   filter(height_change > quantile(height_change,0.975,na.rm=T) | height_change < quantile(height_change,0.025,na.rm=T)) %>% 
   select(site,transect,designated.window,plant,year_t,max.ht_t,max.w_t,perp.w_t,max.ht_t1,max.w_t1,perp.w_t1) %>% 
   arrange(site,transect,designated.window,plant,year_t)
 
 ## I will go through these line by line and pull out the plant-years that I think are problems and should be dropped
-problems <- tibble(site=NA,transect=NA,designated.window=NA,plant=NA,year=NA)
+problems <- tibble(site=factor(NA,levels=c("FPS","MOD","PDC","SLP")),transect=NA,designated.window=NA,plant=NA,year_t=NA)
 ## these are plants with inexplicable and unbelievable size changes that cannot be verified or corrected with raw data
 ## but keep in mind that height changes (esp reductions) are sensitive to single branches dying back, which we count as "real"
 problems[1,] <- c("FPS",1,150,2,2013)
@@ -124,8 +131,8 @@ problems[4,] <- c("FPS",2,0,5,2015)
 problems[5,] <- c("FPS",2,150,12,2016)
 ## problems at FPS-3-100
 # FPS 3-100-7 has a data entry problem (I checked data sheets)
-CData$max.ht_t1[CData$site=="FPS" & CData$transect==3 & CData$designated.window==100 & CData$plant==7 & CData$year_t==2015] <- 38
-CData$max.ht_t[CData$site=="FPS" & CData$transect==3 & CData$designated.window==100 & CData$plant==7 & CData$year_t==2016] <- 38
+CData.Demography$max.ht_t1[CData.Demography$site=="FPS" & CData.Demography$transect==3 & CData.Demography$designated.window==100 & CData.Demography$plant==7 & CData.Demography$year_t==2015] <- 38
+CData.Demography$max.ht_t[CData.Demography$site=="FPS" & CData.Demography$transect==3 & CData.Demography$designated.window==100 & CData.Demography$plant==7 & CData.Demography$year_t==2016] <- 38
 # FPS 3 plants 4 and 6 seem like they were mixed up or perhaps growing on top of each other...dropping these for all years
 problems[6,] <- c("FPS",3,100,4,2013)
 problems[7,] <- c("FPS",3,100,4,2014)
@@ -158,7 +165,19 @@ problems[26,] <- c("MOD",3,0,9,2015)
 problems[27,] <- c("PDC",1,200,2,2014)
 problems[28,] <- c("PDC",1,200,2,2015)
 ## this one has a note that it was untagged but we thought it was right...it wasn't
-problems[29,] <- c("SLP",3,100,8,201)
+problems[29,] <- c("SLP",3,100,8,2016)
+
+problems %>% 
+  mutate(transect = as.integer(transect),
+         designated.window = as.integer(designated.window),
+         plant = as.factor(plant),
+         year_t = as.integer(year_t)) -> problems
+
+## Here we go
+CData <- anti_join(CData.Demography,problems,by=c("site","transect","designated.window","plant","year_t"))
+## if this worked as intended, the new df should have 29 (nrow(problems)) fewer rows than the original
+nrow(CData)-nrow(CData.Demography) # nailed it
+
 
 
 ##### Fix window-related issues ---------------------------------------------------------------------------
@@ -185,7 +204,7 @@ CData$actual.window[is.na(CData$actual.window)] <-
 select(CData, "site", "transect", "designated.window", "actual.window", "plant", "year_t",
        "max.ht_t", "max.w_t", "perp.w_t", "flowers_t", "fruits_t", "reproductive_fraction_t", 
        "year_t1", "new.plant_t1", "seedling_t1", "survival_t1", "max.ht_t1", "max.w_t1", 
-       "perp.w_t1", "flowers_t1", "fruits_t1", "reproductive_fraction") %>% 
+       "perp.w_t1", "flowers_t1", "fruits_t1", "reproductive_fraction_t1") %>% 
 
 # Merge with demography data
 merge(Windows, 
@@ -199,12 +218,9 @@ merge(Windows,
 
 
 ##### Calculate quantities that will be used in analyses --------------------------------------------------
-
+## TOM 10/25: pick up here and fix log(log(volume)) problems
 CData %>%
   
-  # Rename "reproductive_fraction" to "reproductive_fraction_t1" to avoid confusion
-  rename("reproductive_fraction_t1" = "reproductive_fraction") %>% 
-
   # Add additional columns to data, starting with log initial volume of plant before year has elapsed
   mutate("volume_t" = log(vol(h = max.ht_t, w = max.w_t, p = perp.w_t)),
        
