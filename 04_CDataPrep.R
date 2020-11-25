@@ -282,7 +282,8 @@ for(i in 1:nrow(CData)){
                                                  CData$transect == CData$transect[i] &
                                                  CData$site == CData$site[i]], na.rm = T)}
 
-# Per-seed recruitment rates are calculated in 05_CDataAnalysis
+## write out transect data for Tom to use elsewhere for estimating recruitment per seed
+#write.csv(Windows should have what I need)
 
 
 
