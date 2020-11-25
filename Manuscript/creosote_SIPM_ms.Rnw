@@ -18,6 +18,7 @@
 \newcommand{\tom}[2]{{\color{red}{#1}}\footnote{\textit{\color{red}{#2}}}}
 
 \doublespacing
+%\bibliography{creosote_SIPM}
 
 <<setup,echo=F, message=F, warning=F>>=
 knitr::opts_chunk$set(fig.pos = 'H')
@@ -38,7 +39,7 @@ library(tidyverse)
 
 %-------------------------------------------------------------------------
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+%\SweaveOpts{concordance=TRUE}
 %\SweaveOpts{concordance=TRUE}
 
 \maketitle
@@ -180,23 +181,23 @@ Both linear and quadratic models using only weighted density as a predictor were
 Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
 The WALD model, which is largely based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels \citep{katul2005mechanistic, skarpaas2007dispersal} and may be used when empirical dispersal data is not readily available.
 Under the assumptions that wind turbulence is low, wind flow is vertically homogenous, and terminal velocity is achieved immediately upon seed release, the WALD model simplifies a Lagrangian stochastic model to create a dispersal kernel that estimates the likelihood a propagule will travel a given distance \citep{katul2005mechanistic}.
-This dispersal kernel takes the form of the inverse Gaussian distribution \begin{linenomath*} \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} \end{linenomath*} that is a slight adaptation from equation 5b in Katul et al. (2005), using $r$ to denote dispersal distance.
+This dispersal kernel takes the form of the inverse Gaussian distribution \begin{linenomath*} \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} \end{linenomath*} that is a slight adaptation from equation 5b in \citet{katul2005mechanistic}, using $r$ to denote dispersal distance.
 Here, $\lambda'$ is the location parameter and $\mu'$ is the scale parameter, which depend on environmental and plant-specific properties of the study system.
 The location and scale parameters are defined as $\lambda' = (H/\sigma)^2$ and $\mu' = HU/F$; these are functions of the height $H$ of seed release, wind speed $U$ at seed release height, seed terminal velocity $F$, and the turbulent flow parameter $\sigma$ that depends on both wind speed and local vegetation roughness.
 
-In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \begin{linenomath*} \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} \end{linenomath*} given in Bullock et al. (2012) equation 6, with the notation slightly modified. 
+In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \begin{linenomath*} \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} \end{linenomath*} given in \citet{bullock2012modelling} equation 6, with the notation slightly modified. 
 Here, $z$ is the height above the ground, $K$ is the von Karman constant, and $u^*$ is the friction velocity.
 The zero-plane displacement $d$ and roughness length $z_{0}$ are surface roughness parameters that, for a grass canopy height $h$ above the ground, are  approximated by $d \approx 0.7h$ and $z_{0} \approx 0.1h$.
-These estimates are from Raupach (1994) for a canopy area index $\Lambda = 1$ in which the sum of grass canopy elements is equal to the unit area being measured.
+These estimates are from \citet{raupach1994simplified} for a canopy area index $\Lambda = 1$ in which the sum of grass canopy elements is equal to the unit area being measured.
 A 0.15 m grass height at the study site gives $d = 0.105$ and $z_{0}$, which are suitable approximations for grassland \citep{wiernga1993representative}.
-Calculations of $u^*$ were done using equation A2 from Skarpaas and Shea (2007), in which \begin{linenomath*} \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} \end{linenomath*} and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
-Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by Skarpaas and Shea (2007) in their equation A4, where \begin{linenomath*} \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} \end{linenomath*} and $C_{0}$ is the Kolmogorov constant.
-$A_{w}$ is a constant that relates vertical turbulence to friction velocity and is approximately equal to 1.3 under the assumptions of above-canopy flow made by Skarpaas and Shea (2007), based off calculations from Hsieh and Katul (2005).
+Calculations of $u^*$ were done using equation A2 from \citet{skarpaas2007dispersal}, in which \begin{linenomath*} \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} \end{linenomath*} and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
+Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by \citet{skarpaas2007dispersal} in their equation A4, where \begin{linenomath*} \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} \end{linenomath*} and $C_{0}$ is the Kolmogorov constant.
+$A_{w}$ is a constant that relates vertical turbulence to friction velocity and is approximately equal to 1.3 under the assumptions of above-canopy flow made by \citet{skarpaas2007dispersal}, based off calculations from \citet{hsieh1997dissipation}.
 In addition, the assumption that $z = H$ was made in order to make the calculation of $\sigma$ more feasible.
 
 The values from the previous three equations give us the necessary information to calculate $\mu'$ and $\lambda'$, thus allowing us to create the WALD distribution $p(r)$.
 However, the base WALD model does not take into account variation in wind speeds or seed terminal velocities, which limits its applicability in systems where such variation is present.
-In order to account for this variation, we integrate the WALD model over distributions these two variables using the same method as Skarpaas and Shea (2007).
+In order to account for this variation, we integrate the WALD model over distributions these two variables using the same method as \citet{skarpaas2007dispersal}.
 The WALD model assumes seed release from a single point source, though, which is not realistic for a shrub; because seeds are released across the entire height of the shrub rather than from a point source, $p(r)$ was also integrated across the uniform distribution from the grass canopy height to the shrub height.
 Thus, under the assumptions that the height at which a seed is located does not affect its probability of being released and that seeds are evenly distributed throughout the shrub, this gives the dispersal kernel $K(r)$, where \begin{linenomath*} \begin{equation} K(r) = \iiint p(F)p(U)p(z)p(r) \,dF\,dU\,dz \end{equation} \end{linenomath*} and $p(F)$ and $p(U)$ are the PDFs of the terminal velocity $F$ and wind speed $U$, respectively, and $p(z)$ is the uniform distribution from $h$ to $H$.
 
@@ -211,12 +212,12 @@ We did not weight $p(U)$ and assumed that the probability seed release from the 
 \subsection*{Spatial integral projection model}
 
 Given that the shrub population at this site is approximately homogeneous perpendicular to the direction of encroachment, expansion is modelled as a wave moving in one dimension.
-A spatial integral projection model (SIPM) is used to estimate the speed at which encroachment occurs; such a model incorporates the effects of variation in traits like plant size that stage-structured models, such as those described in Neubert and Caswell (2000), do not capture.
-According to Jonjegans et al. (2011), a general SIPM can be formulated as \begin{linenomath*} \begin{equation} \mathbf{n} (x_{2}, z_{2}, t + 1) = \iint \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) \mathbf{n} (x_{1}, z_{1}, t) \,dx_{1}\,dz_{1} \end{equation} \end{linenomath*} where $x_{1}$ and $x_{2}$ are locations of individuals of a particular size before and after one unit of time, and $z_{1}$ and $z_{2}$ are the respective sizes.
+A spatial integral projection model (SIPM) is used to estimate the speed at which encroachment occurs; such a model incorporates the effects of variation in traits like plant size that stage-structured models, such as those described in \citet{neubert2000demography}, do not capture.
+According to \citet{jongejans2011importance}, a general SIPM can be formulated as \begin{linenomath*} \begin{equation} \mathbf{n} (x_{2}, z_{2}, t + 1) = \iint \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) \mathbf{n} (x_{1}, z_{1}, t) \,dx_{1}\,dz_{1} \end{equation} \end{linenomath*} where $x_{1}$ and $x_{2}$ are locations of individuals of a particular size before and after one unit of time, and $z_{1}$ and $z_{2}$ are the respective sizes.
 The vector $\mathbf{n}$ indicates the population density of each size, and $\tilde{K}$ is a kernel that combines dispersal with demography.
 Though this SIPM represents a continuous spectrum of shrub sizes and densities, it was implemented by discretising the above integral with a 200 x 200 matrix, as this makes calculations significantly more tractable.
 
-Movement of the wave is determined by the components of the combined dispersaldemography kernel $\tilde{K}$, which is of the same form as that used in Jonjegans et al. (2011).
+Movement of the wave is determined by the components of the combined dispersal/demography kernel $\tilde{K}$, which is of the same form as that used in Jonjegans et al. (2011).
 Here, \begin{linenomath*} \begin{equation} \tilde{K}(x_{2}, x_{1}, z_{2}, z_{1}) = K(x_{2} - x_{1}) Q(z_{2} - z_{1}) + \delta(x_{2} - x_{1}) G(z_{2} - z_{1}) \end{equation} \end{linenomath*} and $K$ is the dispersal kernel, $Q$ a reproduction function, $G$ a growth function, and $\delta$ the Dirac delta function.
 $G$ is derived from the model for annual growth ratio, and $Q$ is derived from the reproductive structures model as well as other factors including number of seeds per reproductive structure, probability of recruitment from seed, and recruit size.
 Both $G$ and $Q$ give the probability of transition between sizes; in the case of $G$, this is the probability of growing from one specific size to another, and in the case of $Q$ the probability that an individual of a specific size produces a recruit of a specific size.
@@ -356,8 +357,8 @@ Despite the more conservative estimates our model yields, the estimated rate of 
 However, it cannot explain the long-term increases in creosotebush cover at the study site, as total encroachment over the past 150 years is much greater than what would be expected given the encroachment rates derived by our models.
 Such a discrepancy is likely due to much of the expansion occurring in an episodic fashion, with short times during which rapid encroachment occurs due to favourable environmental conditions.
 This could be due in part to seedling recruitment, which is a factor that strongly limits creosotebush expansion, being rare and episodic.
-For example, Allen et al. (2008) estimate that a major recruitment event occurred at this site in the 1950s, which is supported by photographic evidence from Milne et al. (2003) of a drought-driven expansion during this time.
-Moreno-de las Heras et al. (2016) estimate that after this expansion, several smaller creosotebush recruitment events occurred in decadal episodes.
+For example, \citet{allen2008allometry} estimate that a major recruitment event occurred at this site in the 1950s, which is supported by photographic evidence from \citet{milne2003multidecadal} of a drought-driven expansion during this time.
+\citet{moreno2016seed} estimate that after this expansion, several smaller creosotebush recruitment events occurred in decadal episodes.
 However, such events can be highly localised and may not necessarily occur at the low-density front of encroachment, which could explain how these recruitment events can still coexist with lack of encroachment in the recent past.
 
 Overall, our observations and model highlight three aspects of creosotebush encroachment that should be the focus of future studies seeking to obtain better estimates of encroachment rates.
