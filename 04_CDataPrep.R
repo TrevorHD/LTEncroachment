@@ -119,7 +119,7 @@ CData.Demography %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>%
   arrange(site,transect,designated.window,plant,year_t)
 
 ## I will go through these line by line and pull out the plant-years that I think are problems and should be dropped
-problems <- tibble(site=factor(NA,levels=c("FPS","MOD","PDC","SLP")),transect=NA,designated.window=NA,plant=NA,year_t=NA)
+problems <- data.frame(site=factor(NA,levels=c("FPS","MOD","PDC","SLP")),transect=NA,designated.window=NA,plant=NA,year_t=NA)
 ## these are plants with inexplicable and unbelievable size changes that cannot be verified or corrected with raw data
 ## but keep in mind that height changes (esp reductions) are sensitive to single branches dying back, which we count as "real"
 problems[1,] <- c("FPS",1,150,2,2013)
@@ -176,6 +176,7 @@ problems %>%
 ## Here we go
 CData <- anti_join(CData.Demography,problems,by=c("site","transect","designated.window","plant","year_t"))
 ## if this worked as intended, the new df should have 29 (nrow(problems)) fewer rows than the original
+nrow(problems)
 nrow(CData)-nrow(CData.Demography) # nailed it
 
 
