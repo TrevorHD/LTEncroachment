@@ -283,9 +283,11 @@ for(i in 1:nrow(CData)){
                                                  CData$site == CData$site[i]], na.rm = T)}
 
 ## write out transect data for Tom to use elsewhere for estimating recruitment per seed
-#write.csv(Windows should have what I need)
-
-
+## I will need a data frame with plant sizes and window densities for all transects and windows...so merge Windows and Cdata.Transects
+left_join(CData.Transects,Windows,by=c("site","transect","window")) %>% 
+  select(site,transect,window,volume,weighted.dens) -> Cdata.Transects.Windows
+## write out Cdata.Transects.Windows for Tom to use elsewhere
+#write.csv(Cdata.Transects.Windows,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/Cdata.Transects.Windows.csv")
 
 
 
