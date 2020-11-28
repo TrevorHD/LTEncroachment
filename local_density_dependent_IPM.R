@@ -208,7 +208,7 @@ size_means_fruit <- LATR_fruits_dat_plot %>% group_by(size_bin) %>% summarise(me
 LATR_fruit_pred <- data.frame(
   weighted.dens = rep(seq(min(LATR_fruits_dat$weighted.dens),max(LATR_fruits_dat$weighted.dens),length.out = 20),times=n_cuts_size),
   log_volume_t = rep(size_means_fruit$mean_size,each=20),
-  unique.transect=1,
+  unique.transect="1.FPS",
   size_bin = rep(size_means_fruit$size_bin,each=20)
 )
 LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best,newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
@@ -284,7 +284,7 @@ size_means_surv_nat <- LATR_surv_nat_plot %>% group_by(size_bin) %>% summarise(m
 LATR_surv_nat_pred <- data.frame(
   weighted.dens = rep(seq(min(LATR_surv_nat_plot$mean_density),max(LATR_surv_nat_plot$mean_density),length.out = 20),times=n_cuts_size),
   log_volume_t = rep(size_means_surv_nat$mean_size,each=20),
-  unique.transect=1,
+  unique.transect="1.FPS",
   transplant=F,
   size_bin = rep(size_means_surv_nat$size_bin,each=20)
 )
@@ -313,7 +313,7 @@ LATR_surv_dat %>%
 LATR_surv_exp_pred <- data.frame(
   weighted.dens = seq(min(LATR_surv_exp_plot$mean_density),max(LATR_surv_exp_plot$mean_density),length.out = 20),
   log_volume_t = LATR_surv_exp_plot$mean_size[1],
-  unique.transect=1,
+  unique.transect="1.FPS",
   transplant=T
 )
 LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best,newdata = LATR_surv_exp_pred, exclude = "s(unique.transect)")
