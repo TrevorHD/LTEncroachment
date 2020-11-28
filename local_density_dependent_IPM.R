@@ -80,6 +80,9 @@ LATR_grow$pred = predict.gam(LATR_grow_best,newdata = LATR_grow, exclude = "s(un
 plot(LATR_grow$log_volume_t,LATR_grow_fitted_terms[,"s(log_volume_t)"]) 
 #### effect of density on growth 
 plot(LATR_grow$weighted.dens,LATR_grow_fitted_terms[,"s(weighted.dens)"]) 
+## effect of size and density on sd(future size)
+plot(LATR_grow$log_volume_t,LATR_grow_fitted_terms[,"s.1(log_volume_t)"]) 
+plot(LATR_grow$weighted.dens,LATR_grow_fitted_terms[,"s.1(weighted.dens)"]) 
 
 ############################################################################
 ##2. Flowering probability
@@ -124,14 +127,20 @@ LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
 LATR_flower_fitted_terms = predict(LATR_flower_best,type="terms") 
 LATR_flow_dat$pred = predict.gam(LATR_flower_best,newdata = LATR_flow_dat, exclude = "s(unique.transect)")
 
+## Tom's practice bootstrap
+#for(b in 1:n.boot){
+#  LATR_flower_best <- gam(total.reproduction_t>0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t  + s(unique.transect,bs="re"),
+#                         data=LATR_flow_dat_boot[[b]], gamma=1.4, family="binomial")
+#}
+
 ##### effect of size on pr(flower)
 plot(LATR_flow_dat$log_volume_t,LATR_flower_fitted_terms[,"s(log_volume_t)"]) 
 #### effect of density on pr(flower)
 plot(LATR_flow_dat$weighted.dens,LATR_flower_fitted_terms[,"s(weighted.dens)"]) 
 
 ## visualize data + model
-n_cuts_dens <- 6
-n_cuts_size <- 4
+n_cuts_dens <- 3
+n_cuts_size <- 5
 LATR_flow_dat %>% 
   mutate(size_bin = as.integer(cut_number(log_volume_t,n_cuts_size)),
          dens_bin = as.integer(cut_number(weighted.dens,n_cuts_dens))) %>% 
@@ -147,7 +156,7 @@ size_means_flow <- LATR_flow_dat_plot %>% group_by(size_bin) %>% summarise(mean_
 LATR_flow_pred <- data.frame(
   weighted.dens = rep(seq(min(LATR_flow_dat$weighted.dens),max(LATR_flow_dat$weighted.dens),length.out = 20),times=n_cuts_size),
   log_volume_t = rep(size_means_flow$mean_size,each=20),
-  unique.transect=1,
+  unique.transect="1.FPS",
   size_bin = rep(size_means_flow$size_bin,each=20)
 )
 LATR_flow_pred$pred <- predict.gam(LATR_flower_best,newdata = LATR_flow_pred, exclude = "s(unique.transect)")
@@ -285,8 +294,8 @@ plot(LATR_surv_nat_plot$mean_density,LATR_surv_nat_plot$mean_surv,type="n",ylim=
      xlab="Weighted density",ylab="Pr(Survival)")
 for(i in 1:n_cuts_size){
   points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin==i],
-         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin==i],pch=16,col=i,
-         cex=(LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin==i]/max(LATR_surv_nat_plot$bin_n))*3)
+         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin==i],pch=16,col=i,cex=2)
+         #cex=(LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin==i]/max(LATR_surv_nat_plot$bin_n))*3)
   lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin==i],
         invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin==i]),col=i)
 }
@@ -328,7 +337,7 @@ LATR_transects <- Cdata.Transects.Windows %>%
   mutate(unique.transect = interaction(transect, site),
          log_volume_t = log(volume))
 LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best,newdata = LATR_transects)) * 
-                                 exp(predict.gam(LATR_fruits_best,newdata = LATR_transects))) 
+                                 6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects))) ## note hard-coded # seeds per fruit
 LATR_transects %>% 
   group_by(unique.transect,window) %>% 
   summarise(total_seeds=sum(seeds),
@@ -504,7 +513,7 @@ bigmatrix<-function(lower.extension = -8, ## needs a large lower extension becau
 ##9. IPM analysis
 ############################################################################
 ## lambda over density variation
-density_dummy <- seq(min(LATR_full$weighted.dens,na.rm=T),max(LATR_full$weighted.dens,na.rm=T),length.out = 30)
+density_dummy <- seq(min(LATR_full$weighted.dens,na.rm=T),max(LATR_full$weighted.dens,na.rm=T),length.out = 10)
 lambda_density <- c()
 for(d in 1:length(density_dummy)){
   print(d)
