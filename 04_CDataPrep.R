@@ -26,7 +26,7 @@ vol <- function(h, w, p){(1/3)*pi*h*(sqrt((w*p))/2)^2}
 
 # Apply calculations to transects data frame
 CData.Transects$volume <- vol(h = CData.Transects$max.ht, w = CData.Transects$max.w,
-                                  p = CData.Transects$perp.w)
+                              p = CData.Transects$perp.w)
 # Define study sites
 site <- c("FPS", "SLP", "PDC", "MOD")
 
@@ -76,108 +76,125 @@ for(i in 1:nrow(Windows)){
   
   # Add weighted density (sum of log volume per window) to data frame
   Windows$weighted.dens[i] <- sum(log(CData.Transects$volume[CData.Transects$window == Windows$window[i] &
-                                                         CData.Transects$transect == Windows$transect[i] &
-                                                         CData.Transects$site == Windows$site[i]]), na.rm = T)
-  }
+                                                             CData.Transects$transect == Windows$transect[i] &
+                                                             CData.Transects$site == Windows$site[i]]), na.rm = T)}
 
 # Final result is a list of 5-m windows and their densities for each transect at each site
 
-# Data QA/QC --------------------------------------------------------------
-## most of the issues will be with demography data
-# check variable types
-#str(CData.Demography)
-## it's showing five site levels because there are a few entries with a space after FPS
-CData.Demography$site[CData.Demography$site=="FPS "] <- "FPS"
 
-## the variable reproductive_fraction should be reproductive_fraction_t1 because it is recorded at the end of the transition year
-## starting a new data frame (CData) that will edit and update original CData.Demography
+
+
+
+##### Demography data QA/QC -------------------------------------------------------------------------------
+
+# Remove extra site level, since it is just a duplicate with a space after it
+CData.Demography$site[CData.Demography$site == "FPS "] <- "FPS"
+
+# Rename "reproductive_fraction" to "reproductive_fraction_t1"
+# This should be done because it is recorded at the end of the transition year
 CData.Demography %>% 
-  rename(reproductive_fraction_t1=reproductive_fraction) %>% 
-  mutate(transect=as.integer(transect),
-         site=droplevels(site))-> CData.Demography
+  rename(reproductive_fraction_t1 = reproductive_fraction) %>% 
+  mutate(transect = as.integer(transect),
+         site = droplevels(site)) -> CData.Demography
 
+# Blanks in survival should be converted to NA
+CData.Demography$survival_t1[CData.Demography$survival_t1 == ""] <- NA
 
-# looks like there were data entry problems in survival
-#levels(CData.Demography$survival_t1)
-CData.Demography$survival_t1[CData.Demography$survival_t1==""]<-NA
-## there is a ".", we went back and checked the original data and this plant was dead
+# There is a "." for one survival entry; original data indicate this plant was dead
 CData.Demography[which(CData.Demography$survival_t1 == "."), "survival_t1"] <- 0
-## now clean up this factor
+
+# Clean up survival factor
 CData.Demography$survival_t1 <- as.integer(as.character(droplevels.factor(CData.Demography$survival_t1)))
 
-## there are also some issues with reproductive fraction
-# filter(CData,reproductive_fraction_t > 1 | reproductive_fraction_t1 > 1) 
-## this is a typo, should be 1
-CData.Demography$reproductive_fraction_t[CData.Demography$reproductive_fraction_t>1]<-1
-CData.Demography$reproductive_fraction_t1[CData.Demography$reproductive_fraction_t1>1]<-1
+# Fix entries whose reproductive fraction should be 1
+CData.Demography$reproductive_fraction_t[CData.Demography$reproductive_fraction_t > 1] <- 1
+CData.Demography$reproductive_fraction_t1[CData.Demography$reproductive_fraction_t1 > 1] <- 1
 
-## Find implausible / incorrect size transitions and remove these observations
-## check height changes below the 2.5th and about the 97.5th percentile
+# Find implausible/incorrect size transitions and remove these observations
+# Check height changes below the 2.5th and about the 97.5th percentile
 CData.Demography %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>% 
-  filter(height_change > quantile(height_change,0.975,na.rm=T) | height_change < quantile(height_change,0.025,na.rm=T)) %>% 
-  select(site,transect,designated.window,plant,year_t,max.ht_t,max.w_t,perp.w_t,max.ht_t1,max.w_t1,perp.w_t1) %>% 
-  arrange(site,transect,designated.window,plant,year_t)
+  filter(height_change > quantile(height_change, 0.975, na.rm = T) | height_change < quantile(height_change, 0.025, na.rm = T)) %>% 
+  select(site, transect, designated.window, plant, year_t, max.ht_t, 
+         max.w_t, perp.w_t, max.ht_t1, max.w_t1, perp.w_t1) %>% 
+  arrange(site, transect, designated.window, plant, year_t)
 
-## I will go through these line by line and pull out the plant-years that I think are problems and should be dropped
-problems <- data.frame(site=factor(NA,levels=c("FPS","MOD","PDC","SLP")),transect=NA,designated.window=NA,plant=NA,year_t=NA)
-## these are plants with inexplicable and unbelievable size changes that cannot be verified or corrected with raw data
-## but keep in mind that height changes (esp reductions) are sensitive to single branches dying back, which we count as "real"
-problems[1,] <- c("FPS",1,150,2,2013)
-## FPS-2-0 4,5,6 got mixed up a bunch
-problems[2,] <- c("FPS",2,0,4,2014)
-problems[3,] <- c("FPS",2,0,5,2014)
-problems[4,] <- c("FPS",2,0,5,2015)
-## I think 12s was recorded instead of 12
-problems[5,] <- c("FPS",2,150,12,2016)
-## problems at FPS-3-100
-# FPS 3-100-7 has a data entry problem (I checked data sheets)
-CData.Demography$max.ht_t1[CData.Demography$site=="FPS" & CData.Demography$transect==3 & CData.Demography$designated.window==100 & CData.Demography$plant==7 & CData.Demography$year_t==2015] <- 38
-CData.Demography$max.ht_t[CData.Demography$site=="FPS" & CData.Demography$transect==3 & CData.Demography$designated.window==100 & CData.Demography$plant==7 & CData.Demography$year_t==2016] <- 38
-# FPS 3 plants 4 and 6 seem like they were mixed up or perhaps growing on top of each other...dropping these for all years
-problems[6,] <- c("FPS",3,100,4,2013)
-problems[7,] <- c("FPS",3,100,4,2014)
-problems[8,] <- c("FPS",3,100,4,2015)
-problems[9,] <- c("FPS",3,100,4,2016)
-problems[10,] <- c("FPS",3,100,6,2013)
-problems[11,] <- c("FPS",3,100,6,2014)
-problems[12,] <- c("FPS",3,100,6,2015)
-problems[13,] <- c("FPS",3,100,6,2016)
-## this one can't be right and I think the 2013 measurement of 126 should be 26 but I'm not certain so I'm dropping
-problems[14,] <- c("FPS",3,100,9,2013)
-# FPS-3-200-8 has some strange size changes, might have gotten mixed up with another plant, dropping these observations
-problems[15,] <- c("FPS",3,200,8,2013)
-problems[16,] <- c("FPS",3,200,8,2014)
-problems[17,] <- c("FPS",3,200,8,2015)
-problems[18,] <- c("FPS",3,200,8,2016)
-## I think FPS-3-500 1 and 2 got mixed up in 2013-2014
-problems[19,] <- c("FPS",3,500,1,2013)
-problems[20,] <- c("FPS",3,500,1,2014)
-problems[21,] <- c("FPS",3,500,2,2013)
-problems[22,] <- c("FPS",3,500,2,2014)
-## this change is not believable
-problems[23,] <- c("MOD",1,150,1,2016)
-## not believable and I can't find a problem in the raw data
-problems[24,] <- c("MOD",2,50,3,2014)
-## these dimensions are not believale...some probably said "60" and someone wrote "16". Anyway, dropping...
-problems[25,] <- c("MOD",3,0,9,2014)
-problems[26,] <- c("MOD",3,0,9,2015)
-## this one is fishy and I can't find the 2015 data to verify
-problems[27,] <- c("PDC",1,200,2,2014)
-problems[28,] <- c("PDC",1,200,2,2015)
-## this one has a note that it was untagged but we thought it was right...it wasn't
-problems[29,] <- c("SLP",3,100,8,2016)
+# Go through line by line and pull out the plant-years are problems and should be dropped
+# These plants have inexplicable/unbelievable size changes that cannot be verified or corrected with raw data
+# Note: height changes (esp. reductions) are sensitive to single branches dying back, which we count as "real"
+problems <- data.frame(site = factor(NA, levels = c("FPS", "MOD", "PDC", "SLP")), 
+                       transect = NA, designated.window = NA, plant = NA, year_t = NA)
 
+problems[1,] <- c("FPS", 1, 150, 2, 2013)
+
+# FPS 2-0 plants 4,5,6 were likely in a bunch and mixed up
+problems[2,] <- c("FPS", 2, 0, 4, 2014)
+problems[3,] <- c("FPS", 2, 0, 5, 2014)
+problems[4,] <- c("FPS", 2, 0, 5, 2015)
+
+# FPS 2-150-12 was recorded using data from 12s instead of 12
+problems[5,] <- c("FPS", 2, 150, 12, 2016)
+
+# FPS 3-100-7 has a data entry problem (confirmed after checking data sheets)
+CData.Demography$max.ht_t1[CData.Demography$site == "FPS" & CData.Demography$transect == 3 & CData.Demography$designated.window == 100 & CData.Demography$plant == 7 & CData.Demography$year_t == 2015] <- 38
+CData.Demography$max.ht_t[CData.Demography$site == "FPS" & CData.Demography$transect == 3 & CData.Demography$designated.window == 100 & CData.Demography$plant == 7 & CData.Demography$year_t == 2016] <- 38
+
+# FPS 3-100 plants 4 and 6 seem like they were mixed up or perhaps growing on top of each other
+# Dropping these for all years
+problems[6,] <- c("FPS", 3, 100, 4, 2013)
+problems[7,] <- c("FPS", 3, 100, 4, 2014)
+problems[8,] <- c("FPS", 3, 100, 4, 2015)
+problems[9,] <- c("FPS", 3, 100, 4, 2016)
+problems[10,] <- c("FPS", 3, 100, 6, 2013)
+problems[11,] <- c("FPS", 3, 100, 6, 2014)
+problems[12,] <- c("FPS", 3, 100, 6, 2015)
+problems[13,] <- c("FPS", 3, 100, 6, 2016)
+
+# This one can't be right; 2013 measurement of 126 should be 26 but dropping due to uncertainty
+problems[14,] <- c("FPS", 3, 100, 9, 2013)
+
+# FPS 3-200-8 has some strange size changes, might have gotten mixed up with another plant
+# Dropping these observations
+problems[15,] <- c("FPS", 3, 200, 8, 2013)
+problems[16,] <- c("FPS", 3, 200, 8, 2014)
+problems[17,] <- c("FPS", 3, 200, 8, 2015)
+problems[18,] <- c("FPS", 3, 200, 8, 2016)
+
+# FPS-3-500 1 and 2 likely got mixed up in 2013-2014
+problems[19,] <- c("FPS", 3, 500, 1, 2013)
+problems[20,] <- c("FPS", 3, 500, 1, 2014)
+problems[21,] <- c("FPS", 3, 500, 2, 2013)
+problems[22,] <- c("FPS", 3, 500, 2, 2014)
+
+# This change is not believable
+problems[23,] <- c("MOD", 1, 150, 1, 2016)
+
+# This change is not believable; no apparent problem in raw data
+problems[24,] <- c("MOD", 2, 50, 3, 2014)
+
+# These dimensions are not believale... someone probably said "60" and someone wrote "16"; dropping
+problems[25,] <- c("MOD", 3, 0, 9, 2014)
+problems[26,] <- c("MOD", 3, 0 ,9, 2015)
+
+# This one is not believable; can't find the 2015 data to verify
+problems[27,] <- c("PDC", 1, 200, 2, 2014)
+problems[28,] <- c("PDC", 1, 200, 2, 2015)
+
+# This one has a note that it was untagged and we thought it was right... it wasn't
+problems[29,] <- c("SLP", 3, 100, 8, 2016)
+
+# Ensure data types are correct before removing problem entries
 problems %>% 
   mutate(transect = as.integer(transect),
          designated.window = as.integer(designated.window),
          plant = as.factor(plant),
          year_t = as.integer(year_t)) -> problems
 
-## Here we go
-CData <- anti_join(CData.Demography,problems,by=c("site","transect","designated.window","plant","year_t"))
-## if this worked as intended, the new df should have 29 (nrow(problems)) fewer rows than the original
-nrow(problems)
-nrow(CData)-nrow(CData.Demography) # nailed it
+# Remove problematic entries and create new CData set
+CData <- anti_join(CData.Demography,problems, by = c("site", "transect", "designated.window", "plant", "year_t"))
+
+# The new set should have 29 fewer rows; compare nrow(problems) to nrow(CData)-nrow(CData.Demography)
+
+
 
 
 
@@ -193,13 +210,19 @@ subset(CData, is.na(actual.window)) %>%
 
 # check whether any designated windows are missing
 CData %>% filter(is.na(designated.window))
-## two SLP recruits but the notes place them under specified plants
-CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$plant=="10s"&CData$year_t==2016]<-CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$designated.window==150&CData$plant=="7"][1]
-CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$plant=="11s"&CData$year_t==2016]<-CData$designated.window[CData$site=="SLP"&CData$transect==3&CData$designated.window==150&CData$plant=="5"][1]
+
+# Two SLP recruits are missing designated windows, but the notes place them under specified plants
+CData$designated.window[CData$site == "SLP"&CData$transect == 3&CData$plant == "10s"&CData$year_t==2016] <- 
+  CData$designated.window[CData$site == "SLP"&CData$transect == 3 & CData$designated.window == 150 & CData$plant == "7"][1]
+CData$designated.window[CData$site == "SLP"&CData$transect == 3&CData$plant == "11s"&CData$year_t==2016] <- 
+  CData$designated.window[CData$site == "SLP"&CData$transect == 3 & CData$designated.window == 150 & CData$plant == "5"][1]
 
 # Use designated window for sites that don't have an actual window
 CData$actual.window[is.na(CData$actual.window)] <- 
   CData$designated.window[is.na(CData$actual.window)]
+
+
+
 
 
 ##### Remove unnecessary columns and merge densities with demography data ---------------------------------
@@ -222,10 +245,9 @@ merge(Windows,
 
 
 ##### Calculate quantities that will be used in analyses --------------------------------------------------
-## TOM 10/25: pick up here and fix log(log(volume)) problems
+
+# Add additional columns to data, starting with log initial volume of plant before year has elapsed
 CData %>%
-  
-  # Add additional columns to data, starting with log initial volume of plant before year has elapsed
   mutate("volume_t" = vol(h = max.ht_t, w = max.w_t, p = perp.w_t),
        
          # Final log conical volume of plant after year of growth
@@ -258,37 +280,36 @@ CData %>%
          # Variable indicating these are not transplants
          "transplant" = FALSE) -> CData
 
-## write out CData for Tom to use elsewhere
-#write.csv(CData,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/CData.csv")
+
 
 
 
 ##### Quantify total recruitment  -------------------------------------------------------------------------
 
 # Create data frame of recruits; will be used for later calculations, but not here
-## tom: we'll need to report this criterion for designating a recruit (log vol < 8)
-## also, 8 is pretty big in log(vol). did you mean log(8)?
+# We'll need to report this criterion for designating a recruit (log vol < 8)
 CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, log(volume_t1) < 8)
 
+# The code below will likely be deprecated
 # Calculate total number of seedlings (recruits) in a single year for each 5-m window
-for(i in 1:nrow(CData)){
-  CData$recruits.1y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-                                                 CData$transect == CData$transect[i] &
-                                                 CData$site == CData$site[i] &
-                                                 CData$year_t1 == CData$year_t1[i]], na.rm = T)}
+# for(i in 1:nrow(CData)){
+#  CData$recruits.1y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
+#                                                 CData$transect == CData$transect[i] &
+#                                                 CData$site == CData$site[i] &
+#                                                 CData$year_t1 == CData$year_t1[i]], na.rm = T)}
 
 # Calculate total number of seedlings (recruits) across all years for each 5-m window
-for(i in 1:nrow(CData)){
-  CData$recruits.4y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-                                                 CData$transect == CData$transect[i] &
-                                                 CData$site == CData$site[i]], na.rm = T)}
+# for(i in 1:nrow(CData)){
+#  CData$recruits.4y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
+#                                                 CData$transect == CData$transect[i] &
+#                                                 CData$site == CData$site[i]], na.rm = T)}
 
-## write out transect data for Tom to use elsewhere for estimating recruitment per seed
-## I will need a data frame with plant sizes and window densities for all transects and windows...so merge Windows and Cdata.Transects
+# Write transect data to use elsewhere for estimating recruitment per seed; merge Windows and Cdata.Transects
+# Create data frame with plant sizes and window densities for all transects and windows
 left_join(CData.Transects,Windows,by=c("site","transect","window")) %>% 
   select(site,transect,window,volume,weighted.dens) -> Cdata.Transects.Windows
-## write out Cdata.Transects.Windows for Tom to use elsewhere
-#write.csv(Cdata.Transects.Windows,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/Cdata.Transects.Windows.csv")
+
+
 
 
 
@@ -315,8 +336,7 @@ merge(Windows,
       by.y = c("site", "transect", "window")) -> CData.Transplants
 
 
-## write out transplant data for Tom to use elsewhere
-#write.csv(CData.Transplants,"C:/Users/tm9/Desktop/git local/IPM_size_transitions/creosote/CData.Transplants.csv")
+
 
 
 ##### Clean up global environment -------------------------------------------------------------------------
