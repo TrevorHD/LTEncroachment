@@ -1,4 +1,4 @@
-##### Collect all necessary parameters --------------------------------------------------------------------
+##### Collect all necessary parameters [OLD] --------------------------------------------------------------
 
 # Create list of coefficients for demography models
 Params <- c()
@@ -69,7 +69,7 @@ Params <- c()
 
 
 
-##### Construct IPM Kernel --------------------------------------------------------------------------------
+##### Construct IPM Kernel [OLD] --------------------------------------------------------------------------
 
 # Construct transition matrix
 TransMatrix <- function(n, d){
@@ -133,6 +133,139 @@ TransMatrix <- function(n, d){
 TM <- TransMatrix(n = 100, d = -1.3)
 
 # Use Re(eigen(TM$matrix)$values[1]) for geometric growth rate (dominant eigenvalue of TM)
+
+
+
+
+
+##### IPM functions ---------------------------------------------------------------------------------------
+
+# Growth -- Gaussian using best GAM
+growth_fn <- function(x, y, d){
+  xb = pmin(pmax(x,LATR_size_bounds$min_size), LATR_size_bounds$max_size)
+  lpmat <- predict.gam(LATR_grow_best,
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
+                       exclude = "s(unique.transect)")
+  # Linear predictor for mean and log sigma 
+  # Need to update so these indices are not hard-coded but for now they work
+  grow_mu <- lpmat[, 1:19] %*% coef(LATR_grow_best)[1:19]
+  grow_sigma <- exp(lpmat[, 32:50] %*% coef(LATR_grow_best)[32:50])
+  return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
+
+# Survival -- prediction from naturally occuring plants (transplant = FALSE)
+survival_fn <- function(x, d){
+  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
+  lpmat <- predict.gam(LATR_surv_best,
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            transplant = FALSE,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
+                       exclude = "s(unique.transect)")
+  pred <- lpmat[, 1:21] %*% coef(LATR_surv_best)[1:21]
+  return(invlogit(pred))}
+
+# Combined growth and survival
+pxy <- function(x, y, d){
+  survival_fn(x, d) * growth_fn(x, y, d)}
+
+# Flowering
+flower_fn <- function(x, d){
+  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
+  lpmat <- predict.gam(LATR_flower_best,
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
+                       exclude = "s(unique.transect)")
+  pred <- lpmat[, 1:20] %*% coef(LATR_flower_best)[1:20]
+  return(invlogit(pred))}
+
+# Seed production (fruits * seeds/fruit)
+# Note: we assume 6 seeds per fruit
+seeds_fn <- function(x, d, seeds.per.fruit = 6){
+  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
+  lpmat <- predict.gam(LATR_fruits_best,
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
+                       exclude = "s(unique.transect)")
+  pred <- lpmat[, 1:19] %*% coef(LATR_fruits_best)[1:19]
+  return(exp(pred)*seeds.per.fruit)}
+
+# Seed-to-Seedling recruitment probability
+recruitment_fn <- function(d){
+  lpmat <- predict.gam(LATR_recruit_best,
+                       newdata = data.frame(weighted.dens = d,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
+                       exclude = "s(unique.transect)")
+  pred <- lpmat[, 1] %*% coef(LATR_recruit_best)[1]
+  return(invlogit(pred[[1]]))}
+
+# Recruit size distribution
+recruit_size <- function(y){
+  dnorm(x = y, mean = LATR_recruit_size$recruit_mean, sd = LATR_recruit_size$recruit_sd)}
+
+# Combined flowering, fertility, and recruitment
+fxy <- function(x, y, d){
+  flower_fn(x, d) * seeds_fn(x, d) * recruitment_fn(d) * recruit_size(y)}
+
+# Put it all together; projection matrix is a function of weighted density (dens)
+# We need a large lower extension because growth variance (gaussian) is greater for smaller plants
+bigmatrix<-function(lower.extension = -8, 
+                    upper.extension = 2,
+                    min.size = LATR_size_bounds$min_size,
+                    max.size = LATR_size_bounds$max_size,
+                    mat.size = 200,
+                    dens){
+  
+  # Matrix size and size extensions (upper and lower integration limits)
+  n <- mat.size
+  L <- min.size + lower.extension
+  U <- max.size + upper.extension
+  
+  # Bin size
+  h <- (U - L)/n
+  
+  # Lower boundaries of bins 
+  b <- L + c(0:n)*h
+  
+  # Bin midpoints
+  y<-0.5*(b[1:n] + b[2:(n + 1)])
+  
+  # Growth/Survival matrix
+  Pmat <- t(outer(y, y, pxy, d = dens)) * h 
+  
+  # Fertility/Recruiment matrix
+  Fmat <- t(outer(y, y, fxy, d = dens)) * h 
+  
+  # Put it all together
+  IPMmat <- Pmat + Fmat
+  
+  #and transition matrix
+  return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
+
+
+
+
+
+##### IPM analysis ----------------------------------------------------------------------------------------
+
+# Calculate lambda across a range of densities
+density_dummy <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 10)
+lambda_density <- c()
+for(d in 1:length(density_dummy)){
+  print(d)
+  lambda_density[d] <- lambda(bigmatrix(dens=density_dummy[d], mat.size = 200)$IPMmat)}
+
+# Plot lambda across a range of densities
+plot(density_dummy, lambda_density, type = "l", lwd = 3, xlab = "Weighted density", ylab = "lambda")
+abline(h = 1, lty = 3)
 
 
 
