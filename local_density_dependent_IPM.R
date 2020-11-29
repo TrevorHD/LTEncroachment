@@ -1,126 +1,151 @@
-## Author: Tom Miller
-## Purpose: This script builds a local (non-spatial) density-dependent IPM, which is the foundation for the SIPM
-## This code requires objects create in script 04_CDataPrep.R (this could be sourced here, but for now I have just run that script manually)
+##### Prepare data for analysis ---------------------------------------------------------------------------
 
-# misc functions
-invlogit <- function(x){exp(x)/(1+exp(x))}
+# Script authored by Tom, with some changes from Trevor
 
-## Full demography data frame
+# Define inverse logit function for later use
+invlogit <- function(x){exp(x)/(1 + exp(x))}
+
+## Create unique transect as interaction of transect and site
 LATR_full <- CData %>% 
-  mutate(
-    #create unique transect as interaction of transect and site
-    unique.transect = interaction(transect, site))
+  mutate( unique.transect = interaction(transect, site))
 
-############################################################################
-##1. Growth
-############################################################################
 
-## prep a data subset for growth that drops rows missing either t or t1 size data
-LATR_grow <- LATR_full  %>% drop_na(volume_t,volume_t1) %>% 
-  ## also create log_volume as a new variable because gam doesn't like functions of variables as variables
+
+
+
+##### Growth model ----------------------------------------------------------------------------------------
+
+# Prepare a data subset for growth that drops rows missing either t or t1 size data
+# Also create log_volume as a new variable because gam doesn't like functions of variables as variables
+LATR_grow <- LATR_full  %>% drop_na(volume_t,volume_t1) %>%
   mutate(log_volume_t = log(volume_t),
          log_volume_t1 = log(volume_t1))
 
-## three candidate models for the mean: size only, size + density, or size, density, and size:density
-## three candidates for variance: size only, size+density, fitted value (all the covariates plus rfx)
+# Create empty list to populate with model results
 LATR_gam_models=list()
-## Pilot fits, where sigma depends on initial size only
-LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs="re"), ~s(log_volume_t)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())
-LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect,bs="re"), ~s(log_volume_t)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())                
-LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs="re"), ~s(log_volume_t)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())  
-## Fits where sigma depends on both initial size and density
-LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs="re"), ~s(log_volume_t) + s(weighted.dens)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())
-LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect,bs="re"), ~s(log_volume_t) + s(weighted.dens)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())                
-LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs="re"), ~s(log_volume_t) + s(weighted.dens)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss()) 
-## these models will be iterated to fit sigma as f(fitted value)
+
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+# Three candidates for variance: size only, size + density, fitted value (all the covariates plus rfx)
+
+# Pilot fits, where sigma depends on initial size only
+LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())
+LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())                
+LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss()) 
+
+# Fits where sigma depends on both initial size and density
+LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())
+LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())                
+LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss()) 
+
+# These models will be iterated to fit sigma as f(fitted value)
 LATR_grow$fitted_vals = LATR_grow$log_volume_t 
-LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs="re"), ~s(fitted_vals)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())
-LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect,bs="re"), ~s(fitted_vals)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())                
-LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs="re"), ~s(fitted_vals)), 
-                            data=LATR_grow, gamma=1.4, family=gaulss())  
-for(mod in 7:9) {
+LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())
+LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())                
+LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())  
+
+# Fit sigma as f(fitted value) for models 7-9
+# The "weights" here are 1/sigma values; see ?gaulss for details.
+for(mod in 7:9){
   fitGAU = LATR_gam_models[[mod]]
-  fitted_all = predict(fitGAU,type="response",data=LATR);                  
-  fitted_vals = new_fitted_vals = fitted_all[,1]; 
-  weights = fitted_all[,2]; # what I call "weights" here are 1/sigma values; see ?gaulss for details.
-  
-  err=100; k=0; 
-  while(err>10^(-6)) {
+  fitted_all = predict(fitGAU, type = "response", data = LATR);                  
+  fitted_vals = new_fitted_vals = fitted_all[, 1]; 
+  weights = fitted_all[, 2];
+  err = 100; k = 0; 
+  while(err > 10^(-6)){
     LATR_grow$fitted_vals = new_fitted_vals; 
     fitGAU <- update(fitGAU); 
-    fitted_all = predict(fitGAU,type="response",data=LATR_grow);   
-    new_fitted_vals = fitted_all[,1]; new_weights = fitted_all[,2];
-    err = weights - new_weights; err=sqrt(mean(err^2)); 
+    fitted_all = predict(fitGAU, type = "response", data = LATR_grow);   
+    new_fitted_vals = fitted_all[, 1]; new_weights = fitted_all[, 2];
+    err = weights - new_weights; err = sqrt(mean(err^2)); 
     weights = new_weights; 
-    k=k+1; cat(k,err,"\n"); 
-  }   
-  LATR_gam_models[[mod]] =  fitGAU;
-}
+    k = k + 1; cat(k, err, "\n");}   
+  LATR_gam_models[[mod]] =  fitGAU;}
 
-grow_aic <- AICtab(LATR_gam_models,base=T,sort=F) 
-## Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
-## define models 5 as our best Gaussian model
+# Collect model AICs into a single table
+grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE) 
+
+# Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
+# Define models 5 as our best Gaussian model
 LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
-LATR_grow_fitted_terms = predict(LATR_grow_best,type="terms") 
-LATR_grow$pred = predict.gam(LATR_grow_best,newdata = LATR_grow, exclude = "s(unique.transect)")
-##### effect of size on future size -- obviously linear
-plot(LATR_grow$log_volume_t,LATR_grow_fitted_terms[,"s(log_volume_t)"]) 
-#### effect of density on growth 
-plot(LATR_grow$weighted.dens,LATR_grow_fitted_terms[,"s(weighted.dens)"]) 
-## effect of size and density on sd(future size)
-plot(LATR_grow$log_volume_t,LATR_grow_fitted_terms[,"s.1(log_volume_t)"]) 
-plot(LATR_grow$weighted.dens,LATR_grow_fitted_terms[,"s.1(weighted.dens)"]) 
+LATR_grow_fitted_terms = predict(LATR_grow_best, type = "terms") 
+LATR_grow$pred = predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
 
-############################################################################
-##2. Flowering probability
-############################################################################
-# populate year t of 2017-2018 transition year (there are no 2018 data but this way we get all four years in the reproduction models)
-# I'll do this by creating the 2017-18 data as a stand-alone df then bind rows
-LATR_dat_201718 <- LATR_full[LATR_full$year_t==2016 & LATR_full$survival_t1==1,]
-## these are the 2017 survivors. Make their year t demography last year's data
-LATR_dat_201718$year_t<-2017;LATR_dat_201718$year_t1<-2018
-LATR_dat_201718$max.ht_t<-LATR_dat_201718$max.ht_t1
-LATR_dat_201718$max.w_t<-LATR_dat_201718$max.w_t1
-LATR_dat_201718$volume_t<-LATR_dat_201718$volume_t1
-LATR_dat_201718$perp.w_t<-LATR_dat_201718$perp.w_t1
-LATR_dat_201718$flowers_t<-LATR_dat_201718$flowers_t1
-LATR_dat_201718$fruits_t<-LATR_dat_201718$fruits_t1
-LATR_dat_201718$reproductive_fraction_t<-LATR_dat_201718$reproductive_fraction_t1
-LATR_dat_201718$total.reproduction_t<-LATR_dat_201718$total.reproduction_t1
-## now set all the t1 data to NA
-LATR_dat_201718$max.ht_t1<-NA
-LATR_dat_201718$max.w_t1<-NA
-LATR_dat_201718$volume_t1<-NA
-LATR_dat_201718$perp.w_t1<-NA
-LATR_dat_201718$flowers_t1<-NA
-LATR_dat_201718$fruits_t1<-NA
-LATR_dat_201718$reproductive_fraction_t1<-NA
-LATR_dat_201718$total.reproduction_t1<-NA
-## bind rows
+# Plot of effect of size on future size -- obviously linear
+plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s(log_volume_t)"]) 
+
+# Plot of effect of density on growth 
+plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s(weighted.dens)"]) 
+
+#Plots of effect of size and density on sd(future size)
+plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s.1(log_volume_t)"]) 
+plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s.1(weighted.dens)"]) 
+
+
+
+
+
+##### Flowering probability model -------------------------------------------------------------------------
+
+# populate year t of 2017-2018 transition year
+# There are no 2018 data but this way we get all four years in the reproduction models
+# Do this by creating the 2017-18 data as a stand-alone df then bind rows
+LATR_dat_201718 <- LATR_full[LATR_full$year_t == 2016 & LATR_full$survival_t1 == 1, ]
+
+# These are the 2017 survivors; make their year t demography last year's data
+LATR_dat_201718$year_t <- 2017
+LATR_dat_201718$year_t1 <- 2018
+LATR_dat_201718$max.ht_t <- LATR_dat_201718$max.ht_t1
+LATR_dat_201718$max.w_t <- LATR_dat_201718$max.w_t1
+LATR_dat_201718$volume_t <- LATR_dat_201718$volume_t1
+LATR_dat_201718$perp.w_t <- LATR_dat_201718$perp.w_t1
+LATR_dat_201718$flowers_t <- LATR_dat_201718$flowers_t1
+LATR_dat_201718$fruits_t <- LATR_dat_201718$fruits_t1
+LATR_dat_201718$reproductive_fraction_t <- LATR_dat_201718$reproductive_fraction_t1
+LATR_dat_201718$total.reproduction_t <- LATR_dat_201718$total.reproduction_t1
+
+# Now set all the t1 data to NA
+LATR_dat_201718$max.ht_t1 <- NA
+LATR_dat_201718$max.w_t1 <- NA
+LATR_dat_201718$volume_t1 <- NA
+LATR_dat_201718$perp.w_t1 <- NA
+LATR_dat_201718$flowers_t1 <- NA
+LATR_dat_201718$fruits_t1 <- NA
+LATR_dat_201718$reproductive_fraction_t1 <- NA
+LATR_dat_201718$total.reproduction_t1 <- NA
+
+# Bind rows and create log_vol as new variables (easier for gams)
 LATR_flow_dat <- bind_rows(LATR_full,LATR_dat_201718) %>% 
   select(unique.transect,volume_t,total.reproduction_t,weighted.dens) %>% drop_na()
-## create log_vol as new variables (easier for gams)
 LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
 
+# Create empty list to populate with model results
 LATR_flower <- list()
-LATR_flower[[1]] <-  gam(total.reproduction_t>0 ~ s(log_volume_t) + s(unique.transect,bs="re"),
-                         data=LATR_flow_dat, gamma=1.4, family="binomial")
-LATR_flower[[2]] <-  gam(total.reproduction_t>0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect,bs="re"),
-                         data=LATR_flow_dat, gamma=1.4, family="binomial")
-LATR_flower[[3]] <-  gam(total.reproduction_t>0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t  + s(unique.transect,bs="re"),
-                         data=LATR_flow_dat, gamma=1.4, family="binomial")
-flower_aic<-AICtab(LATR_flower,base=T,sort=F)
+
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+LATR_flower[[1]] <-  gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.transect, bs = "re"),
+                         data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+LATR_flower[[2]] <-  gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                         data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+LATR_flower[[3]] <-  gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t  + s(unique.transect, bs = "re"),
+                         data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+
+# Collect model AICs into a single table
+flower_aic<-AICtab(LATR_flower, base = T, sort = F)
+
+# Model 3 is the winner: mean ~ s(size) + s(density) + size:density
+# Define models 3 as our best 
 LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
-LATR_flower_fitted_terms = predict(LATR_flower_best,type="terms") 
-LATR_flow_dat$pred = predict.gam(LATR_flower_best,newdata = LATR_flow_dat, exclude = "s(unique.transect)")
+LATR_flower_fitted_terms = predict(LATR_flower_best, type = "terms") 
+LATR_flow_dat$pred = predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
 
 ## Tom's practice bootstrap
 #for(b in 1:n.boot){
@@ -128,14 +153,15 @@ LATR_flow_dat$pred = predict.gam(LATR_flower_best,newdata = LATR_flow_dat, exclu
 #                         data=LATR_flow_dat_boot[[b]], gamma=1.4, family="binomial")
 #}
 
-##### effect of size on pr(flower)
-plot(LATR_flow_dat$log_volume_t,LATR_flower_fitted_terms[,"s(log_volume_t)"]) 
-#### effect of density on pr(flower)
-plot(LATR_flow_dat$weighted.dens,LATR_flower_fitted_terms[,"s(weighted.dens)"]) 
+# Plot effect of size on pr(flower)
+plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"]) 
 
-## visualize data + model
+# Plot effect of density on pr(flower)
+plot(LATR_flow_dat$weighted.dens, LATR_flower_fitted_terms[, "s(weighted.dens)"]) 
+
+# Visualize data and model
 n_cuts_dens <- 3
-n_cuts_size <- 5
+n_cuts_size <- 4
 LATR_flow_dat %>% 
   mutate(size_bin = as.integer(cut_number(log_volume_t,n_cuts_size)),
          dens_bin = as.integer(cut_number(weighted.dens,n_cuts_dens))) %>% 
@@ -146,30 +172,31 @@ LATR_flow_dat %>%
             pred_flower = mean(pred),
             bin_n = n()) -> LATR_flow_dat_plot
 
-## generate predictions for plotting
+# Generate predictions for plotting
 size_means_flow <- LATR_flow_dat_plot %>% group_by(size_bin) %>% summarise(mean_size=mean(mean_size))
 LATR_flow_pred <- data.frame(
-  weighted.dens = rep(seq(min(LATR_flow_dat$weighted.dens),max(LATR_flow_dat$weighted.dens),length.out = 20),times=n_cuts_size),
-  log_volume_t = rep(size_means_flow$mean_size,each=20),
-  unique.transect="1.FPS",
-  size_bin = rep(size_means_flow$size_bin,each=20)
-)
-LATR_flow_pred$pred <- predict.gam(LATR_flower_best,newdata = LATR_flow_pred, exclude = "s(unique.transect)")
+  weighted.dens = rep(seq(min(LATR_flow_dat$weighted.dens), max(LATR_flow_dat$weighted.dens), length.out = 20), times = n_cuts_size),
+  log_volume_t = rep(size_means_flow$mean_size,each = 20),
+  unique.transect = "1.FPS",
+  size_bin = rep(size_means_flow$size_bin, each = 20))
+LATR_flow_pred$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_pred, exclude = "s(unique.transect)")
 
-plot(LATR_flow_dat_plot$mean_density,LATR_flow_dat_plot$mean_flower,type="n",ylim=c(0,1),
-     xlab="Weighted density",ylab="Pr(Flowering)")
+# Plot data
+plot(LATR_flow_dat_plot$mean_density, LATR_flow_dat_plot$mean_flower, type = "n", ylim = c(0, 1),
+     xlab = "Weighted density", ylab = "Pr(Flowering)")
 for(i in 1:n_cuts_size){
-  points(LATR_flow_dat_plot$mean_density[LATR_flow_dat_plot$size_bin==i],
-         LATR_flow_dat_plot$mean_flower[LATR_flow_dat_plot$size_bin==i],pch=16,col=i,
-         cex=(LATR_flow_dat_plot$bin_n[LATR_flow_dat_plot$size_bin==i]/max(LATR_flow_dat_plot$bin_n))*3)
-  lines(LATR_flow_pred$weighted.dens[LATR_flow_pred$size_bin==i],
-        invlogit(LATR_flow_pred$pred[LATR_flow_pred$size_bin==i]),col=i)
-}
+  points(LATR_flow_dat_plot$mean_density[LATR_flow_dat_plot$size_bin == i],
+         LATR_flow_dat_plot$mean_flower[LATR_flow_dat_plot$size_bin == i], pch = 16, col = i,
+         cex = (LATR_flow_dat_plot$bin_n[LATR_flow_dat_plot$size_bin == i]/max(LATR_flow_dat_plot$bin_n))*3)
+  lines(LATR_flow_pred$weighted.dens[LATR_flow_pred$size_bin == i],
+        invlogit(LATR_flow_pred$pred[LATR_flow_pred$size_bin == i]), col = i)}
 
 
-############################################################################
-##3. Fruit production
-############################################################################
+
+
+
+##### Fruit production model ------------------------------------------------------------------------------
+
 LATR_fruits_dat <- subset(LATR_flow_dat,total.reproduction_t>0)
 LATR_fruits <- list()
 LATR_fruits[[1]] <-  gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transect,bs="re"),
