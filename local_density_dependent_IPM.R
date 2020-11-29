@@ -16,13 +16,13 @@ LATR_full <- CData %>%
 ##### Growth model ----------------------------------------------------------------------------------------
 
 # Prepare a data subset for growth that drops rows missing either t or t1 size data
-# Also create log_volume as a new variable because gam doesn't like functions of variables as variables
+# Also create log_volume as a new variable because GAM doesn't like functions of variables as variables
 LATR_grow <- LATR_full  %>% drop_na(volume_t,volume_t1) %>%
   mutate(log_volume_t = log(volume_t),
          log_volume_t1 = log(volume_t1))
 
 # Create empty list to populate with model results
-LATR_gam_models=list()
+LATR_gam_models <- list()
 
 # Three candidate models for the mean: size only, size + density, or size, density, and size:density
 # Three candidates for variance: size only, size + density, fitted value (all the covariates plus rfx)
@@ -122,7 +122,7 @@ LATR_dat_201718$fruits_t1 <- NA
 LATR_dat_201718$reproductive_fraction_t1 <- NA
 LATR_dat_201718$total.reproduction_t1 <- NA
 
-# Bind rows and create log_vol as new variables (easier for gams)
+# Bind rows and create log_vol as new variables (easier for GAMs)
 LATR_flow_dat <- bind_rows(LATR_full,LATR_dat_201718) %>% 
   select(unique.transect,volume_t,total.reproduction_t,weighted.dens) %>% drop_na()
 LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
@@ -380,11 +380,12 @@ LATR_recruits <- LATR_full %>%
 
 # Estimate total seeds produced in each window
 # This is computed using the known plant sizes and the fitted flowering and fruiting models
+# Note: we assume 6 seeds per fruit
 LATR_transects <- Cdata.Transects.Windows %>% 
   mutate(unique.transect = interaction(transect, site),
          log_volume_t = log(volume))
 LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best,newdata = LATR_transects))* 
-                               6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects))) ## note hard-coded # seeds per fruit
+                               6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects)))
 LATR_transects %>% 
   group_by(unique.transect,window) %>% 
   summarise(total_seeds = sum(seeds),
@@ -452,6 +453,7 @@ LATR_recruit_size <- data.frame(recruit_mean = mean(LATR_recruit_size$log_volume
 
 ##### Integration limits (size bounds) --------------------------------------------------------------------
 
+# Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
                                max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
 
@@ -459,137 +461,132 @@ LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$
 
 
 
-############################################################################
-##8. IPM functions
-############################################################################
+##### IPM functions ---------------------------------------------------------------------------------------
 
-## Growth -- Gaussian using best gam
-growth_fn <- function(x,y,d){
-  xb=pmin(pmax(x,LATR_size_bounds$min_size),LATR_size_bounds$max_size)
+# Growth -- Gaussian using best GAM
+growth_fn <- function(x, y, d){
+  xb = pmin(pmax(x,LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_grow_best,
-                       newdata = data.frame(
-                         weighted.dens = d,
-                         log_volume_t = xb,
-                         unique.transect="1.FPS"),
-                       type="lpmatrix",
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  ## linear predictor for mean and log sigma -- need to update so these indices are not hard-coded but for now they work
-  grow_mu <- lpmat[,1:19]%*%coef(LATR_grow_best)[1:19]
-  grow_sigma <- exp(lpmat[,32:50]%*%coef(LATR_grow_best)[32:50])
-  return(dnorm(y,mean=grow_mu,sd=grow_sigma))
-}
+  # Linear predictor for mean and log sigma 
+  # Need to update so these indices are not hard-coded but for now they work
+  grow_mu <- lpmat[, 1:19] %*% coef(LATR_grow_best)[1:19]
+  grow_sigma <- exp(lpmat[, 32:50] %*% coef(LATR_grow_best)[32:50])
+  return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
 
-## Survival-- prediction from naturally occuring plants (transplant=F)
-survival_fn <- function(x,d){
-  xb=pmin(pmax(x,LATR_size_bounds$min_size),LATR_size_bounds$max_size)
+# Survival -- prediction from naturally occuring plants (transplant = FALSE)
+survival_fn <- function(x, d){
+  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_surv_best,
-                       newdata = data.frame(
-                         weighted.dens = d,
-                         log_volume_t = xb,
-                         transplant=F,
-                         unique.transect="1.FPS"),
-                       type="lpmatrix",
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            transplant = FALSE,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[,1:21]%*%coef(LATR_surv_best)[1:21]
-  return(invlogit(pred))
-}
+  pred <- lpmat[, 1:21] %*% coef(LATR_surv_best)[1:21]
+  return(invlogit(pred))}
 
-## combined growth and survival
-pxy <- function(x,y,d){
-  survival_fn(x,d) * growth_fn(x,y,d)
-}
+# Combined growth and survival
+pxy <- function(x, y, d){
+  survival_fn(x, d) * growth_fn(x, y, d)}
 
-## Flowering
-flower_fn <- function(x,d){
-  xb=pmin(pmax(x,LATR_size_bounds$min_size),LATR_size_bounds$max_size)
+# Flowering
+flower_fn <- function(x, d){
+  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_flower_best,
-                       newdata = data.frame(
-                         weighted.dens = d,
-                         log_volume_t = xb,
-                         unique.transect="1.FPS"),
-                       type="lpmatrix",
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[,1:20]%*%coef(LATR_flower_best)[1:20]
-  return(invlogit(pred))
-}
+  pred <- lpmat[, 1:20] %*% coef(LATR_flower_best)[1:20]
+  return(invlogit(pred))}
 
-## seed production (fruits * seeds/fruit)
-seeds_fn <- function(x,d,seeds.per.fruit=6){
-  xb=pmin(pmax(x,LATR_size_bounds$min_size),LATR_size_bounds$max_size)
+# Seed production (fruits * seeds/fruit)
+# Note: we assume 6 seeds per fruit
+seeds_fn <- function(x, d, seeds.per.fruit = 6){
+  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_fruits_best,
-                       newdata = data.frame(
-                         weighted.dens = d,
-                         log_volume_t = xb,
-                         unique.transect="1.FPS"),
-                       type="lpmatrix",
+                       newdata = data.frame(weighted.dens = d,
+                                            log_volume_t = xb,
+                                            unique.transect = "1.FPS"),
+                       type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[,1:19]%*%coef(LATR_fruits_best)[1:19]
-  return(exp(pred)*seeds.per.fruit)
-}
+  pred <- lpmat[, 1:19] %*% coef(LATR_fruits_best)[1:19]
+  return(exp(pred)*seeds.per.fruit)}
 
-## Seed-to-Seedling recruitment probability
+# Seed-to-Seedling recruitment probability
 recruitment_fn <- function(d){
   lpmat <- predict.gam(LATR_recruit_best,
-                       newdata = data.frame(
-                         weighted.dens = d,
-                         unique.transect="1.FPS"),
-                       type="lpmatrix",
+                       newdata = data.frame(weighted.dens = d,
+                                            unique.transect = "1.FPS"),
+                                            type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[,1]%*%coef(LATR_recruit_best)[1]
-  return(invlogit(pred[[1]]))
-}
+  pred <- lpmat[, 1] %*% coef(LATR_recruit_best)[1]
+  return(invlogit(pred[[1]]))}
 
-## Recruit size distribution
-recruit_size<-function(y){
-  dnorm(x=y,mean=LATR_recruit_size$recruit_mean,sd=LATR_recruit_size$recruit_sd)
-}
+# Recruit size distribution
+recruit_size <- function(y){
+  dnorm(x = y, mean = LATR_recruit_size$recruit_mean, sd = LATR_recruit_size$recruit_sd)}
 
-## combined flowering, fertility, and recruitment
-fxy <- function(x,y,d){
-  flower_fn(x,d) * seeds_fn(x,d) * recruitment_fn(d) * recruit_size(y)
-}
+# Combined flowering, fertility, and recruitment
+fxy <- function(x, y, d){
+  flower_fn(x, d) * seeds_fn(x, d) * recruitment_fn(d) * recruit_size(y)}
 
-#PUT IT ALL TOGETHER
-## projection matrix is a function of weighted density (dens)
-bigmatrix<-function(lower.extension = -8, ## needs a large lower extension because growth variance (gaussian) is greater for smaller plants 
+# Put it all together; projection matrix is a function of weighted density (dens)
+# We need a large lower extension because growth variance (gaussian) is greater for smaller plants
+bigmatrix<-function(lower.extension = -8, 
                     upper.extension = 2,
                     min.size = LATR_size_bounds$min_size,
                     max.size = LATR_size_bounds$max_size,
                     mat.size = 200,
                     dens){
   
-  n<-mat.size
-  L<-min.size + lower.extension
-  U<-max.size + upper.extension
-  #these are the upper and lower integration limits
-  h<-(U-L)/n                   #Bin size
-  b<-L+c(0:n)*h;               #Lower boundaries of bins 
-  y<-0.5*(b[1:n]+b[2:(n+1)]);  #Bin midpoints
+  # Matrix size and size extensions (upper and lower integration limits)
+  n <- mat.size
+  L <- min.size + lower.extension
+  U <- max.size + upper.extension
+  
+  # Bin size
+  h <- (U - L)/n
+  
+  # Lower boundaries of bins 
+  b <- L + c(0:n)*h
+  
+  # Bin midpoints
+  y<-0.5*(b[1:n] + b[2:(n + 1)])
   
   # Growth/Survival matrix
-  Pmat<-t(outer(y,y,pxy,d=dens)) * h 
+  Pmat <- t(outer(y, y, pxy, d = dens)) * h 
   
   # Fertility/Recruiment matrix
-  Fmat<-t(outer(y,y,fxy,d=dens)) * h 
+  Fmat <- t(outer(y, y, fxy, d = dens)) * h 
   
   # Put it all together
-  IPMmat<-Pmat+Fmat
+  IPMmat <- Pmat + Fmat
   
   #and transition matrix
-  return(list(IPMmat=IPMmat,Fmat=Fmat,Pmat=Pmat,meshpts=y))
-}
+  return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
 
-############################################################################
-##9. IPM analysis
-############################################################################
-## lambda over density variation
-density_dummy <- seq(min(LATR_full$weighted.dens,na.rm=T),max(LATR_full$weighted.dens,na.rm=T),length.out = 10)
+
+
+
+
+##### IPM analysis ----------------------------------------------------------------------------------------
+
+# Calculate lambda across a range of densities
+density_dummy <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 10)
 lambda_density <- c()
 for(d in 1:length(density_dummy)){
   print(d)
-  lambda_density[d] <- lambda(bigmatrix(dens=density_dummy[d], mat.size=200)$IPMmat)
-}
+  lambda_density[d] <- lambda(bigmatrix(dens=density_dummy[d], mat.size = 200)$IPMmat)}
 
-plot(density_dummy,lambda_density,type="l",lwd=3,xlab="Weighted density",ylab="lambda")
-abline(h=1,lty=3)
+# Plot lambda across a range of densities
+plot(density_dummy, lambda_density, type = "l", lwd = 3, xlab = "Weighted density", ylab = "lambda")
+abline(h = 1, lty = 3)
 
