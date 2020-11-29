@@ -12,6 +12,9 @@ library(truncnorm)
 library(grid)
 library(gridBase)
 library(corrplot)
+library(mgcv)
+library(popbio)
+library(bbmle)
 
 
 

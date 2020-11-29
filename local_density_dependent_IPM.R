@@ -2,11 +2,6 @@
 ## Purpose: This script builds a local (non-spatial) density-dependent IPM, which is the foundation for the SIPM
 ## This code requires objects create in script 04_CDataPrep.R (this could be sourced here, but for now I have just run that script manually)
 
-library(tidyverse)
-library(mgcv)
-library(popbio)
-library(bbmle)
-
 # misc functions
 invlogit <- function(x){exp(x)/(1+exp(x))}
 
