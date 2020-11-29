@@ -424,10 +424,10 @@ LATR_recruitment$pred = predict.gam(LATR_recruit_best, newdata = LATR_recruitmen
 points(LATR_recruitment$weighted.dens, invlogit(LATR_recruitment$pred), col = "red", pch = ".")
 
 # Just out of curiosity, the density-dependent model is a very close second... what does this look like?
-LATR_recruit_fitted_terms = predict(LATR_recruit[[2]],type="terms") 
+LATR_recruit_fitted_terms = predict(LATR_recruit[[2]], type = "terms") 
 
 # Plot effect of density on pr(seedling recruitment); negative density dependence
-plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[,"s(weighted.dens)"])
+plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens)"])
 
 
 
