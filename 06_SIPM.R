@@ -273,16 +273,23 @@ abline(h = 1, lty = 3)
 
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 
+# Placeholders until bootstrapping is ready
+TM <- bigmatrix(mat.size = 100, dens = -1.3)
+boot.ws.raw <- ws.raw
+boot.ws.PDF <- ws.PDF
+boot.tv.raw <- tv.raw
+boot.tv.PDF <- tv.PDF
+
 # Function to calculate the minimum wavespeed across a range of s
 Wavespeed <- function(n){
   
   # Fit equation to convert volume to height for dispersal kernel use
-  CData %>%
+  LATR_full %>%
     select(max.ht_t, volume_t) %>% 
     drop_na(max.ht_t, volume_t) %>% 
     rename("h" = max.ht_t, "v" = volume_t) %>% 
     arrange(v) %>% 
-    nlsLM(h ~ A*(exp(v)^(1/3)),
+    nlsLM(h ~ A*v^(1/3),
           start = list(A = 0), data = .) %>% 
     coef() %>% 
     as.numeric() -> A
@@ -292,11 +299,12 @@ Wavespeed <- function(n){
   
   # Function converting volume to height
   vol.to.height <- function(v){
-    h <- A*(exp(v)^(1/3))
+    h <- A*v^(1/3)
     return(h)}
   
   # Vector of n heights across which dispersal kernel will be evaluated
-  z.list <- sapply(seq(0.9*Params[29], 1.1*Params[30], length.out = n), vol.to.height)/100
+  z.list <- sapply(seq(exp(LATR_size_bounds$min_size - 8), exp(LATR_size_bounds$max_size + 2), length.out = n), 
+                   vol.to.height)/100
   
   # List of simulated dispersal distances for each height
   r.list <- as.list(sapply(z.list[z.list >= 0.15], WALD.f.e.h))
@@ -327,7 +335,7 @@ Wavespeed <- function(n){
   
   # Define function to calculate wavespeed for each value of s
   ws.calc <- function(m, s){
-    H <- as.vector(m)*TM$Bmatrix + TM$Pmatrix
+    H <- as.vector(m)*TM$Fmat + TM$Pmat
     rho <- Re(eigen(H)$values[1])
     (1/s)*log(rho)}
   
