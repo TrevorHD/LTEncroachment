@@ -107,7 +107,7 @@ d.test <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), max(LATR_full$weighted
 lambda_density <- c()
 for(d in 1:length(d.test)){
   print(d)
-  lambda_density[d] <- lambda(bigmatrix(dens=d.test[d], mat.size = 200)$IPMmat)}
+  lambda_density[d] <- lambda(TransMatrix(dens = d.test[d], mat.size = 200)$IPMmat)}
 
 # Plot lambda across a range of densities
 plot(d.test, lambda_density, type = "l", lwd = 3, xlab = "Weighted density", ylab = "lambda")
