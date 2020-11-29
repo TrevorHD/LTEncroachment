@@ -74,7 +74,7 @@ for(mod in 7:9){
 grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE) 
 
 # Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
-# Define models 5 as our best Gaussian model
+# Define model 5 as our best Gaussian model
 LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
 LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
 LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
@@ -142,7 +142,7 @@ LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.
 flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
-# Define models 3 as our best 
+# Define model 3 as our best 
 LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
 LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
 LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
@@ -215,7 +215,7 @@ LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens
 fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
 
 # Model 2 is the winner: mean ~ s(size) + s(density)
-# Define models 2 as our best 
+# Define model 2 as our best 
 LATR_fruits_best <- LATR_fruits[[which.min(fruits_aic$AIC)]]
 LATR_fruits_fitted_terms <- predict(LATR_fruits_best, type = "terms") 
 LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat, exclude = "s(unique.transect)")
@@ -293,7 +293,12 @@ LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens)  + transp
                       data = LATR_surv_dat, gamma = 1.4, family = "binomial")
 LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transplant + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+
+# Collect model AICs into a single table
 surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)
+
+# Model 3 is the winner: mean ~ s(size) + s(density) + size:density
+# Define model 3 as our best 
 LATR_surv_best <- LATR_surv[[which.min(surv_aic$AIC)]]
 LATR_surv_fitted_terms <- predict(LATR_surv_best, type = "terms") 
 LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclude = "s(unique.transect)")
@@ -324,7 +329,7 @@ LATR_surv_nat_pred <- data.frame(
   weighted.dens = rep(seq(min(LATR_surv_nat_plot$mean_density), max(LATR_surv_nat_plot$mean_density), length.out = 20), times = n_cuts_size),
   log_volume_t = rep(size_means_surv_nat$mean_size, each = 20),
   unique.transect = "1.FPS",
-  transplant=FALSE,
+  transplant = FALSE,
   size_bin = rep(size_means_surv_nat$size_bin, each = 20))
 LATR_surv_nat_pred$pred <- predict.gam(LATR_surv_best,newdata = LATR_surv_nat_pred, exclude = "s(unique.transect)")
 
@@ -365,70 +370,94 @@ lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty =
 
 ##### Per-seed recruitment probability model --------------------------------------------------------------
 
-
+# Create subset df of recruits
 LATR_recruits <- LATR_full %>% 
   mutate(unique.transect = interaction(transect, site)) %>% 
-  group_by(year_t1,unique.transect,actual.window) %>% 
-  filter(seedling_t1==1) %>% 
+  group_by(year_t1, unique.transect, actual.window) %>% 
+  filter(seedling_t1 == 1) %>% 
   summarise(recruits = n()) %>% 
-  rename(window=actual.window)
+  rename(window = actual.window)
 
-## now estimate total seeds produced in each window using the known plant sizes and the fitted flowering and fruiting models
+# Estimate total seeds produced in each window
+# This is computed using the known plant sizes and the fitted flowering and fruiting models
 LATR_transects <- Cdata.Transects.Windows %>% 
   mutate(unique.transect = interaction(transect, site),
          log_volume_t = log(volume))
-LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best,newdata = LATR_transects)) * 
-                                 6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects))) ## note hard-coded # seeds per fruit
+LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best,newdata = LATR_transects))* 
+                               6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects))) ## note hard-coded # seeds per fruit
 LATR_transects %>% 
   group_by(unique.transect,window) %>% 
-  summarise(total_seeds=sum(seeds),
+  summarise(total_seeds = sum(seeds),
             weighted.dens = unique(weighted.dens)) -> LATR_transects
 
-## now do something weird. take three copies of this df, assigning each one to a different year and assigning recruits to zero (for now)
-LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect=="1.FPS"|unique.transect=="2.FPS"|unique.transect=="3.FPS") %>% 
-                                mutate(year_t1=2014,recruits=0), ## only FPS for 2013-2014
-                              LATR_transects %>% mutate(year_t1=2015,recruits=0),
-                              LATR_transects %>% mutate(year_t1=2016,recruits=0),
-                              LATR_transects %>% mutate(year_t1=2017,recruits=0)) %>% 
-  left_join(.,LATR_recruits,by=c("year_t1","unique.transect","window")) %>% 
-  mutate(recruits.y=replace_na(recruits.y,0),
-         recruits = pmax(recruits.x,recruits.y,na.rm=T)) %>% 
+# Take three copies of this df, assigning each one to a different year and assigning recruits to zero (for now)
+LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FPS" | unique.transect == "2.FPS" | unique.transect == "3.FPS") %>% 
+                                mutate(year_t1 = 2014, recruits = 0), ## only FPS for 2013-2014
+                              LATR_transects %>% mutate(year_t1 = 2015, recruits = 0),
+                              LATR_transects %>% mutate(year_t1 = 2016, recruits = 0),
+                              LATR_transects %>% mutate(year_t1 = 2017, recruits = 0)) %>% 
+  left_join(., LATR_recruits, by = c("year_t1", "unique.transect", "window")) %>% 
+  mutate(recruits.y = replace_na(recruits.y, 0),
+         recruits = pmax(recruits.x, recruits.y, na.rm = T)) %>% 
   drop_na()
 
+# Create empty list to populate with model results
 LATR_recruit <- list()
-LATR_recruit[[1]] <-  gam(cbind(recruits,total_seeds-recruits) ~ s(unique.transect,bs="re"),
-                          data=LATR_recruitment, gamma=1.4, family="binomial")
-LATR_recruit[[2]] <-  gam(cbind(recruits,total_seeds-recruits) ~ s(weighted.dens) + s(unique.transect,bs="re"),
-                          data=LATR_recruitment, gamma=1.4, family="binomial")
-recruit_aic<-AICtab(LATR_recruit,base=T,sort=F)
+
+# Two candidate models for the mean: no effect, or size only
+LATR_recruit[[1]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),
+                         data = LATR_recruitment, gamma = 1.4, family = "binomial")
+LATR_recruit[[2]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(weighted.dens) + s(unique.transect, bs = "re"),
+                         data = LATR_recruitment, gamma = 1.4, family = "binomial")
+
+# Collect model AICs into a single table
+recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)
+
+# Null model (no effect) seems to be the best model
 LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
 
-plot(LATR_recruitment$weighted.dens,LATR_recruitment$recruits/LATR_recruitment$total_seeds)
-LATR_recruitment$pred = predict.gam(LATR_recruit_best,newdata = LATR_recruitment,exclude="s(unique.transect)")
-points(LATR_recruitment$weighted.dens,invlogit(LATR_recruitment$pred),col="red",pch=".")
-## no evidence for density dependence in recruitment, just a really low overall recruitment rate
+# Plot null model
+# No evidence for density dependence in recruitment, just a really low overall recruitment rate
+plot(LATR_recruitment$weighted.dens, LATR_recruitment$recruits/LATR_recruitment$total_seeds)
+LATR_recruitment$pred = predict.gam(LATR_recruit_best, newdata = LATR_recruitment, exclude = "s(unique.transect)")
+points(LATR_recruitment$weighted.dens, invlogit(LATR_recruitment$pred), col = "red", pch = ".")
 
-## just out of curiosity, the density-dependent model is a very close second...what does this look like?
+# Just out of curiosity, the density-dependent model is a very close second... what does this look like?
 LATR_recruit_fitted_terms = predict(LATR_recruit[[2]],type="terms") 
-#### effect of density on pr(seedling recruitment) -- negative DD
-plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[,"s(weighted.dens)"]) 
 
-############################################################################
-##6. Seedling size distribution 
-############################################################################
+# Plot effect of density on pr(seedling recruitment); negative density dependence
+plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[,"s(weighted.dens)"])
+
+
+
+
+
+##### Seedling size distribution --------------------------------------------------------------------------
+
+# Filter out seedlings and get their sizes
 LATR_recruit_size <- LATR_full %>% 
-  filter(seedling_t1==1) %>% 
+  filter(seedling_t1 == 1) %>% 
   mutate(log_volume = log(volume_t1))
 
+# Plot distribution of recruit sizes
 hist(LATR_recruit_size$log_volume)
-LATR_recruit_size <- data.frame(recruit_mean = mean(LATR_recruit_size$log_volume),
-                   recruit_sd = sd(LATR_recruit_size$log_volume))
 
-############################################################################
-##7. Integration limits (size bounds)
-############################################################################
-LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t,LATR_full$volume_t1[LATR_full$transplant==F],na.rm=T)),
-                   max_size = log(max(LATR_full$volume_t,LATR_full$volume_t1[LATR_full$transplant==F],na.rm=T)))
+# Create df of recruit sizes
+LATR_recruit_size <- data.frame(recruit_mean = mean(LATR_recruit_size$log_volume),
+                                recruit_sd = sd(LATR_recruit_size$log_volume))
+
+
+
+
+
+##### Integration limits (size bounds) --------------------------------------------------------------------
+
+LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
+                               max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
+
+
+
+
 
 ############################################################################
 ##8. IPM functions
