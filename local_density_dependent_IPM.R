@@ -76,8 +76,8 @@ grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
 # Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
 # Define models 5 as our best Gaussian model
 LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
-LATR_grow_fitted_terms = predict(LATR_grow_best, type = "terms") 
-LATR_grow$pred = predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
+LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
+LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
 
 # Plot of effect of size on future size -- obviously linear
 plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s(log_volume_t)"]) 
@@ -131,21 +131,21 @@ LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
 LATR_flower <- list()
 
 # Three candidate models for the mean: size only, size + density, or size, density, and size:density
-LATR_flower[[1]] <-  gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.transect, bs = "re"),
-                         data = LATR_flow_dat, gamma = 1.4, family = "binomial")
-LATR_flower[[2]] <-  gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
-                         data = LATR_flow_dat, gamma = 1.4, family = "binomial")
-LATR_flower[[3]] <-  gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t  + s(unique.transect, bs = "re"),
-                         data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+LATR_flower[[1]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.transect, bs = "re"),
+                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+LATR_flower[[2]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
 
 # Collect model AICs into a single table
-flower_aic<-AICtab(LATR_flower, base = T, sort = F)
+flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
 # Define models 3 as our best 
 LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
-LATR_flower_fitted_terms = predict(LATR_flower_best, type = "terms") 
-LATR_flow_dat$pred = predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
+LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
+LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
 
 ## Tom's practice bootstrap
 #for(b in 1:n.boot){
@@ -160,11 +160,11 @@ plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"])
 plot(LATR_flow_dat$weighted.dens, LATR_flower_fitted_terms[, "s(weighted.dens)"]) 
 
 # Visualize data and model
-n_cuts_dens <- 3
+n_cuts_dens <- 4
 n_cuts_size <- 4
 LATR_flow_dat %>% 
-  mutate(size_bin = as.integer(cut_number(log_volume_t,n_cuts_size)),
-         dens_bin = as.integer(cut_number(weighted.dens,n_cuts_dens))) %>% 
+  mutate(size_bin = as.integer(cut_number(log_volume_t, n_cuts_size)),
+         dens_bin = as.integer(cut_number(weighted.dens, n_cuts_dens))) %>% 
   group_by(size_bin,dens_bin) %>% 
   summarise(mean_size = mean(log_volume_t),
             mean_density = mean(weighted.dens),
@@ -197,58 +197,71 @@ for(i in 1:n_cuts_size){
 
 ##### Fruit production model ------------------------------------------------------------------------------
 
-LATR_fruits_dat <- subset(LATR_flow_dat,total.reproduction_t>0)
+# Create new df with plants that have produced at least one reproductive structure
+LATR_fruits_dat <- subset(LATR_flow_dat, total.reproduction_t > 0)
+
+# Create empty list to populate with model results
 LATR_fruits <- list()
-LATR_fruits[[1]] <-  gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transect,bs="re"),
-                         data=LATR_fruits_dat, gamma=1.4, family="nb")
-LATR_fruits[[2]] <-  gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect,bs="re"),
-                         data=LATR_fruits_dat, gamma=1.4, family="nb")
-LATR_fruits[[3]] <-  gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t  + s(unique.transect,bs="re"),
-                         data=LATR_fruits_dat, gamma=1.4, family="nb")
-fruits_aic<-AICtab(LATR_fruits,base=T,sort=F)
+
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+LATR_fruits[[1]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transect, bs = "re"),
+                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+LATR_fruits[[2]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+
+# Collect model AICs into a single table
+fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
+
+# Model 2 is the winner: mean ~ s(size) + s(density)
+# Define models 2 as our best 
 LATR_fruits_best <- LATR_fruits[[which.min(fruits_aic$AIC)]]
-LATR_fruits_fitted_terms = predict(LATR_fruits_best,type="terms") 
-LATR_fruits_dat$pred = predict.gam(LATR_fruits_best,newdata = LATR_fruits_dat,exclude="s(unique.transect)")
+LATR_fruits_fitted_terms <- predict(LATR_fruits_best, type = "terms") 
+LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat, exclude = "s(unique.transect)")
 
-##### effect of size on fruits
-plot(LATR_fruits_dat$log_volume_t,LATR_fruits_fitted_terms[,"s(log_volume_t)"]) 
-#### effect of density on fruits 
-plot(LATR_fruits_dat$weighted.dens,LATR_fruits_fitted_terms[,"s(weighted.dens)"]) 
+# Plot effect of size on fruits
+plot(LATR_fruits_dat$log_volume_t, LATR_fruits_fitted_terms[, "s(log_volume_t)"]) 
 
+# Plot effect of density on fruits 
+plot(LATR_fruits_dat$weighted.dens, LATR_fruits_fitted_terms[, "s(weighted.dens)"]) 
+
+# Visualize data and model
 LATR_fruits_dat %>% 
-  mutate(size_bin = as.integer(cut_number(log_volume_t,n_cuts_size)),
-         dens_bin = as.integer(cut_number(weighted.dens,n_cuts_dens))) %>% 
-  group_by(size_bin,dens_bin) %>% 
+  mutate(size_bin = as.integer(cut_number(log_volume_t, n_cuts_size)),
+         dens_bin = as.integer(cut_number(weighted.dens, n_cuts_dens))) %>% 
+  group_by(size_bin, dens_bin) %>% 
   summarise(mean_size = mean(log_volume_t),
             mean_density = mean(weighted.dens),
             mean_fruits = mean(total.reproduction_t),
             pred_fruits = mean(pred),
             bin_n = n()) -> LATR_fruits_dat_plot
 
-## new data set for gam prediction
-size_means_fruit <- LATR_fruits_dat_plot %>% group_by(size_bin) %>% summarise(mean_size=mean(mean_size))
+# Generate data for prediction
+size_means_fruit <- LATR_fruits_dat_plot %>% group_by(size_bin) %>% summarise(mean_size = mean(mean_size))
 LATR_fruit_pred <- data.frame(
-  weighted.dens = rep(seq(min(LATR_fruits_dat$weighted.dens),max(LATR_fruits_dat$weighted.dens),length.out = 20),times=n_cuts_size),
-  log_volume_t = rep(size_means_fruit$mean_size,each=20),
-  unique.transect="1.FPS",
-  size_bin = rep(size_means_fruit$size_bin,each=20)
-)
-LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best,newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
+  weighted.dens = rep(seq(min(LATR_fruits_dat$weighted.dens),max(LATR_fruits_dat$weighted.dens),length.out = 20), times = n_cuts_size),
+  log_volume_t = rep(size_means_fruit$mean_size, each = 20),
+  unique.transect = "1.FPS",
+  size_bin = rep(size_means_fruit$size_bin, each = 20))
+LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
 
 
-plot(LATR_fruits_dat_plot$mean_density,LATR_fruits_dat_plot$mean_fruits,type="n",
-     xlab="Weighted density",ylab="Flowers and Fruits")
+plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n",
+     xlab = "Weighted density", ylab = "Flowers and Fruits")
 for(i in 1:n_cuts_size){
-  points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin==i],
-         LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin==i],pch=16,col=i,
-         cex=(LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin==i]/max(LATR_fruits_dat_plot$bin_n))*3)
-  lines(LATR_fruit_pred$weighted.dens[LATR_fruit_pred$size_bin==i],
-        exp(LATR_fruit_pred$pred[LATR_fruit_pred$size_bin==i]),col=i)
-}
+  points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin == i],
+         LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin == i], pch = 16, col = i,
+         cex = (LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin == i]/max(LATR_fruits_dat_plot$bin_n))*3)
+  lines(LATR_fruit_pred$weighted.dens[LATR_fruit_pred$size_bin == i],
+        exp(LATR_fruit_pred$pred[LATR_fruit_pred$size_bin == i]), col = i)}
 
-############################################################################
-##4. Survival
-############################################################################
+
+
+
+
+##### Survival model --------------------------------------------------------------------------------------
+
 # Combine transplants with large shrubs
 # Keep only location info, survival, volume, and density
 CData.Transplants %>% 
