@@ -119,12 +119,6 @@ abline(h = 1, lty = 3)
 
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 
-# Placeholders until bootstrapping is ready
-boot.ws.raw <- ws.raw
-boot.ws.PDF <- ws.PDF
-boot.tv.raw <- tv.raw
-boot.tv.PDF <- tv.PDF
-
 # Function to calculate the minimum wavespeed across a range of s
 Wavespeed <- function(n){
   
