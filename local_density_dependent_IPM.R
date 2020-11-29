@@ -246,7 +246,7 @@ LATR_fruit_pred <- data.frame(
   size_bin = rep(size_means_fruit$size_bin, each = 20))
 LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
 
-
+# Plot data
 plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n",
      xlab = "Weighted density", ylab = "Flowers and Fruits")
 for(i in 1:n_cuts_size){
@@ -262,8 +262,7 @@ for(i in 1:n_cuts_size){
 
 ##### Survival model --------------------------------------------------------------------------------------
 
-# Combine transplants with large shrubs
-# Keep only location info, survival, volume, and density
+# Combine transplants with large shrubs; keep only location info, survival, volume, and density
 CData.Transplants %>% 
   select("site", "transect", "actual.window", 
          "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
@@ -272,41 +271,46 @@ CData.Transplants %>%
   rbind(select(LATR_full, "site", "transect", "actual.window", 
                "survival_t1", "volume_t", "weighted.dens", "transplant","unique.transect")) %>% 
   mutate(log_volume_t = log(volume_t)) %>% 
-  drop_na()-> LATR_surv_dat
+  drop_na() -> LATR_surv_dat
 
-## how much size overlap do we have between transplant experiment and observational census?
-hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant==F]))
-hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant==T]),add=T,col=alpha("gray",0.5))
+# Investigate size overlap between transplant experiment and observational census
+hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]), breaks = 25)
+hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]), breaks = 10, add = TRUE, col = alpha("gray", 0.5))
 
-plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant==F]),
-     LATR_surv_dat$survival_t1[LATR_surv_dat$transplant==F])
-points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant==T]),
-       LATR_surv_dat$survival_t1[LATR_surv_dat$transplant==T]-0.025,pch=2)
+# Plot survival against volume, grouped by transplant status
+plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
+     LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == FALSE])
+points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
+       LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
 
+# Create empty list to populate with model results
 LATR_surv <- list()
-LATR_surv[[1]] <-  gam(survival_t1 ~ s(log_volume_t) + transplant + s(unique.transect,bs="re"),
-                       data=LATR_surv_dat, gamma=1.4, family="binomial")
-LATR_surv[[2]] <-  gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens)  + transplant + s(unique.transect,bs="re"),
-                       data=LATR_surv_dat, gamma=1.4, family="binomial")
-LATR_surv[[3]] <-  gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transplant + weighted.dens:log_volume_t + s(unique.transect,bs="re"),
-                       data=LATR_surv_dat, gamma=1.4, family="binomial")
-surv_aic<-AICtab(LATR_surv,base=T,sort=F)
+
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t) + transplant + s(unique.transect, bs = "re"),
+                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens)  + transplant + s(unique.transect, bs = "re"),
+                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transplant + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)
 LATR_surv_best <- LATR_surv[[which.min(surv_aic$AIC)]]
-LATR_surv_fitted_terms = predict(LATR_surv_best,type="terms") 
-LATR_surv_dat$pred = predict.gam(LATR_surv_best,newdata = LATR_surv_dat,exclude="s(unique.transect)")
+LATR_surv_fitted_terms <- predict(LATR_surv_best, type = "terms") 
+LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclude = "s(unique.transect)")
 
-##### effect of size on pr(survival)
-plot(LATR_surv_dat$log_volume_t,LATR_surv_fitted_terms[,"s(log_volume_t)"]) 
-#### effect of density on pr(survival)
-plot(LATR_surv_dat$weighted.dens,LATR_surv_fitted_terms[,"s(weighted.dens)"]) 
+# Plot effect of size on pr(survival)
+plot(LATR_surv_dat$log_volume_t, LATR_surv_fitted_terms[, "s(log_volume_t)"]) 
 
-## visualize data + model -- this is for the natural census
+# Plot effect of density on pr(survival)
+plot(LATR_surv_dat$weighted.dens, LATR_surv_fitted_terms[, "s(weighted.dens)"]) 
+
+# Visualize data and model for the natural census
 n_cuts_dens <- 4
 n_cuts_size <- 4
 LATR_surv_dat %>% 
-  filter(transplant==F) %>% 
-  mutate(size_bin = as.integer(cut_interval(log_volume_t,n_cuts_size)),
-         dens_bin = as.integer(cut_interval(weighted.dens,n_cuts_dens))) %>% 
+  filter(transplant == FALSE) %>% 
+  mutate(size_bin = as.integer(cut_interval(log_volume_t, n_cuts_size)),
+         dens_bin = as.integer(cut_interval(weighted.dens, n_cuts_dens))) %>% 
   group_by(size_bin,dens_bin) %>% 
   summarise(mean_size = mean(log_volume_t),
             mean_density = mean(weighted.dens),
@@ -314,31 +318,30 @@ LATR_surv_dat %>%
             pred_surv = mean(pred),
             bin_n = n()) -> LATR_surv_nat_plot
 
-## generate predictions for plotting
-size_means_surv_nat <- LATR_surv_nat_plot %>% group_by(size_bin) %>% summarise(mean_size=mean(mean_size))
+# Generate predictions for natural census plotting
+size_means_surv_nat <- LATR_surv_nat_plot %>% group_by(size_bin) %>% summarise(mean_size = mean(mean_size))
 LATR_surv_nat_pred <- data.frame(
-  weighted.dens = rep(seq(min(LATR_surv_nat_plot$mean_density),max(LATR_surv_nat_plot$mean_density),length.out = 20),times=n_cuts_size),
-  log_volume_t = rep(size_means_surv_nat$mean_size,each=20),
-  unique.transect="1.FPS",
-  transplant=F,
-  size_bin = rep(size_means_surv_nat$size_bin,each=20)
-)
+  weighted.dens = rep(seq(min(LATR_surv_nat_plot$mean_density), max(LATR_surv_nat_plot$mean_density), length.out = 20), times = n_cuts_size),
+  log_volume_t = rep(size_means_surv_nat$mean_size, each = 20),
+  unique.transect = "1.FPS",
+  transplant=FALSE,
+  size_bin = rep(size_means_surv_nat$size_bin, each = 20))
 LATR_surv_nat_pred$pred <- predict.gam(LATR_surv_best,newdata = LATR_surv_nat_pred, exclude = "s(unique.transect)")
 
-plot(LATR_surv_nat_plot$mean_density,LATR_surv_nat_plot$mean_surv,type="n",ylim=c(0,1),
-     xlab="Weighted density",ylab="Pr(Survival)")
+# Plot natural census data
+plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n", ylim = c(0, 1),
+     xlab = "Weighted density", ylab = "Pr(Survival)")
 for(i in 1:n_cuts_size){
-  points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin==i],
-         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin==i],pch=16,col=i,cex=2)
-         #cex=(LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin==i]/max(LATR_surv_nat_plot$bin_n))*3)
-  lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin==i],
-        invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin==i]),col=i)
-}
+  points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
+         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = i, cex = 2)
+         #cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*3)
+  lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
+        invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]),col = i)}
 
-## now transplants
+# Generate predictions for transplant plotting
 LATR_surv_dat %>% 
-  filter(transplant==T) %>% 
-  mutate(dens_bin = as.integer(cut_interval(weighted.dens,n_cuts_dens)),
+  filter(transplant == TRUE) %>% 
+  mutate(dens_bin = as.integer(cut_interval(weighted.dens, n_cuts_dens)),
          mean_size = mean(log_volume_t)) %>% 
   group_by(dens_bin) %>% 
   summarise(mean_size = unique(mean_size),
@@ -346,19 +349,22 @@ LATR_surv_dat %>%
             mean_surv = mean(survival_t1),
             bin_n = n()) -> LATR_surv_exp_plot
 LATR_surv_exp_pred <- data.frame(
-  weighted.dens = seq(min(LATR_surv_exp_plot$mean_density),max(LATR_surv_exp_plot$mean_density),length.out = 20),
+  weighted.dens = seq(min(LATR_surv_exp_plot$mean_density), max(LATR_surv_exp_plot$mean_density), length.out = 20),
   log_volume_t = LATR_surv_exp_plot$mean_size[1],
-  unique.transect="1.FPS",
-  transplant=T
-)
-LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best,newdata = LATR_surv_exp_pred, exclude = "s(unique.transect)")
+  unique.transect = "1.FPS",
+  transplant = TRUE)
+LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_exp_pred, exclude = "s(unique.transect)")
 
-points(LATR_surv_exp_plot$mean_density,LATR_surv_exp_plot$mean_surv,ylim=c(0,1),pch=2)
-lines(LATR_surv_exp_pred$weighted.dens,invlogit(LATR_surv_exp_pred$pred),lty=2)
+# Plot transplant data on top of natural census data
+points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2)
+lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty = 2)
 
-############################################################################
-##5. Per-seed recruitment probability
-############################################################################
+
+
+
+
+##### Per-seed recruitment probability model --------------------------------------------------------------
+
 
 LATR_recruits <- LATR_full %>% 
   mutate(unique.transect = interaction(transect, site)) %>% 
