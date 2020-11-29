@@ -1,152 +1,10 @@
-##### Collect all necessary parameters [OLD] --------------------------------------------------------------
-
-# Create list of coefficients for demography models
-Params <- c()
-
-  # Flowering probability
-  Params[1] <- Mod.F.top.cf[1]          # Intercept
-  Params[2] <- Mod.F.top.cf[2]          # Volume coefficient
-  Params[3] <- Mod.F.top.cf[3]          # Density coefficient
-  Params[4] <- Mod.F.top.cf[4]          # Volume and density interaction coefficient
-  Params[5] <- Mod.F.top.cf[5]          # Density quadratic coefficient
-  Params[6] <- Mod.F.top.cf[6]          # Volume and quadratic density interaction coefficient
-  
-  # Annual growth
-  Params[7] <- Mod.G.top.cf[1]          # Intercept
-  Params[8] <- Mod.G.top.cf[2]          # Volume coefficient
-  Params[9] <- Mod.G.top.cf[3]          # Density coefficient
-  Params[10] <- Mod.G.top.cf[4]         # Volume and density interaction coefficient
-  Params[11] <- Mod.G.top.cf[5]         # Density quadratic coefficient
-  Params[12] <- Mod.G.top.cf[6]         # Volume and quadratic density interaction coefficient
-  
-  # Number of reproductive structures
-  Params[13] <- Mod.R.top.cf[1]         # Intercept
-  Params[14] <- Mod.R.top.cf[2]         # Volume coefficient
-  Params[15] <- Mod.R.top.cf[3]         # Density coefficient
-  Params[16] <- Mod.R.top.cf[4]         # Volume and density interaction coefficient
-  Params[17] <- Mod.R.top.cf[5]         # Density quadratic coefficient
-  Params[18] <- Mod.R.top.cf[6]         # Volume and quadratic density interaction coefficient
-  
-  # Survival (for volume < 7.294)
-  Params[19] <- Mod.S.avg.cf[1]         # Intercept
-  Params[20] <- Mod.S.avg.cf[2]         # Volume coefficient
-  Params[21] <- Mod.S.avg.cf[3]         # Density coefficient
-  Params[22] <- Mod.S.avg.cf[4]         # Volume and density interaction coefficient
-  Params[23] <- Mod.S.avg.cf[5]         # Density quadratic coefficient
-  Params[24] <- Mod.S.avg.cf[6]         # Volume and quadratic density interaction coefficient
-  
-  # Survival (for volume >= 7.294)
-  Params[25] <- 1
-  
-  # Number of seeds per fruit
-  Params[26] <- 5
-  
-  # Per-seed recruitment probability
-  Params[27] <- as.numeric(invlogit(fixef(Mod.P1[[1]])["(Intercept)"]))         # Intercept
-  Params[28] <- 0                                                               # Density coefficient
-  
-  # Minimum and maximum shrub sizes
-  Params[29] <- min(boot.CData.s$volume_t, na.rm = TRUE)
-  Params[30] <- max(boot.CData.s$volume_t, na.rm = TRUE)
-  
-  # Minimum and maximum shrub density
-  Params[31] <- min(boot.CData.s$d.stand)
-  Params[32] <- max(boot.CData.s$d.stand)
-  
-  # Mean recruit size
-  Params[33] <- mean(CData.Recruits$volume_t1, na.rm = TRUE)
-  
-  # Standard deviation of recruit size
-  Params[34] <- sd(CData.Recruits$volume_t1, na.rm = TRUE)
-  
-  # Growth residual standard deviation
-  Params[35] <- sigma(Mod.G[[7]])
-
-# Yes, I know I could have done this much more succinctly
-# However, this makes it easier to see what each parameter actually is
-
-
-
-
-
-##### Construct IPM Kernel [OLD] --------------------------------------------------------------------------
-
-# Construct transition matrix
-TransMatrix <- function(n, d){
-  
-  # Growth from size x to y
-  xy.Growth <- function(x, y){
-    xb <- pmin(pmax(x, Params[29]), Params[30])
-    return(dnorm(y, mean = xb + (Params[7] + Params[8]*xb + Params[9]*d + Params[10]*d*xb +
-                                 Params[11]*(d^2) + Params[12]*(xb*(d^2))), sd = Params[35]))}
-  
-  # Survival of size x  
-  x.Survival <- function(x){
-    xb <- pmin(pmax(x, Params[29]), Params[30])
-    val <- ifelse(xb < 7.294, invlogit(Params[19] + Params[20]*xb + Params[21]*d + Params[22]*d*xb +
-                                       Params[23]*(d^2) + Params[24]*(xb*(d^2))), Params[25])
-    return(val)}
-  
-  # Growth from size x to y and subsequent survival
-  xy.GrowSurv <- function(x, y){
-    return(x.Survival(x) * xy.Growth(x, y))}
-  
-  # Probability of flowering for size x
-  x.Flowering <- function(x){
-    xb <- pmin(pmax(x, Params[29]), Params[30])
-    return(invlogit(Params[1] + Params[2]*xb + Params[3]*d + Params[4]*d*xb +
-                    Params[5]*(d^2) + Params[6]*(xb*(d^2))))}
-  
-  # Number of reproductive structures produced by flowering size x
-  x.Reproduction <- function(x){
-    xb <- pmin(pmax(x, Params[29]), Params[30])
-    return(exp(Params[13] + Params[14]*xb + Params[15]*d + Params[16]*d*xb +
-               Params[17]*(d^2) + Params[18]*(xb*(d^2))))}
-  
-  # Production of y-sized recruits from x-sized adults
-  xy.Recruitment <- function(x, y){
-    return(x.Flowering(x) * x.Reproduction(x) * Params[26] * 
-           Params[27] * dtruncnorm(y, a = Params[29], b = Params[30], 
-                                   mean = Params[33], sd = Params[34]))}
-  
-  # Set upper and lower boundaries slightly beyond data range
-  L <- Params[29]*0.9
-  U <- Params[30]*1.1
-  
-  # Create n bins
-  b <- L + c(0:n)*(U - L)/n
-  
-  # Create midpoints in each bin at which functions are evaluated
-  y <- 0.5*(b[1:n] + b[2:(n + 1)])
-  
-  # Evaluate midpoints to construct matrix
-  P <- t(outer(y, y, xy.GrowSurv))	
-  B <- t(outer(y, y, xy.Recruitment))
-  M <- P + B
-  M <- (U - L)*M/n
-  P <- (U - L)*P/n
-  B <- (U - L)*B/n
-  return(list(matrix = M, meshpts = y, Pmatrix = P,
-              Bmatrix = B))}
-
-# Evaluate the matrix for n subdivisions at the lowest density
-TM <- TransMatrix(n = 100, d = -1.3)
-
-# Use Re(eigen(TM$matrix)$values[1]) for geometric growth rate (dominant eigenvalue of TM)
-
-
-
-
-
 ##### IPM functions ---------------------------------------------------------------------------------------
 
-# Growth -- Gaussian using best GAM
+# Growth from size x to y at density d, using best GAM
 growth_fn <- function(x, y, d){
   xb = pmin(pmax(x,LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_grow_best,
-                       newdata = data.frame(weighted.dens = d,
-                                            log_volume_t = xb,
-                                            unique.transect = "1.FPS"),
+                       newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   # Linear predictor for mean and log sigma 
@@ -155,59 +13,53 @@ growth_fn <- function(x, y, d){
   grow_sigma <- exp(lpmat[, 32:50] %*% coef(LATR_grow_best)[32:50])
   return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
 
-# Survival -- prediction from naturally occuring plants (transplant = FALSE)
+# Survival of size x at density d using best GAM
+# For nnaturally occuring plants (transplant = FALSE)
 survival_fn <- function(x, d){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_surv_best,
-                       newdata = data.frame(weighted.dens = d,
-                                            log_volume_t = xb,
-                                            transplant = FALSE,
+                       newdata = data.frame(weighted.dens = d, log_volume_t = xb, transplant = FALSE,
                                             unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   pred <- lpmat[, 1:21] %*% coef(LATR_surv_best)[1:21]
   return(invlogit(pred))}
 
-# Combined growth and survival
+# Combined growth and survival at density d
 pxy <- function(x, y, d){
   survival_fn(x, d) * growth_fn(x, y, d)}
 
-# Flowering
+# Flowering at size x and density d using best GAM
 flower_fn <- function(x, d){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_flower_best,
-                       newdata = data.frame(weighted.dens = d,
-                                            log_volume_t = xb,
-                                            unique.transect = "1.FPS"),
+                       newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   pred <- lpmat[, 1:20] %*% coef(LATR_flower_best)[1:20]
   return(invlogit(pred))}
 
-# Seed production (fruits * seeds/fruit)
-# Note: we assume 6 seeds per fruit
+# Seed production (fruits * seeds/fruit) at size x and density d using best GAM
+# Note: we assume 6 seeds per fruit, and best GAM is actually not density dependent
 seeds_fn <- function(x, d, seeds.per.fruit = 6){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_fruits_best,
-                       newdata = data.frame(weighted.dens = d,
-                                            log_volume_t = xb,
-                                            unique.transect = "1.FPS"),
+                       newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   pred <- lpmat[, 1:19] %*% coef(LATR_fruits_best)[1:19]
   return(exp(pred)*seeds.per.fruit)}
 
-# Seed-to-Seedling recruitment probability
+# Seed-to-Seedling recruitment probability at density d
 recruitment_fn <- function(d){
   lpmat <- predict.gam(LATR_recruit_best,
-                       newdata = data.frame(weighted.dens = d,
-                                            unique.transect = "1.FPS"),
+                       newdata = data.frame(weighted.dens = d, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   pred <- lpmat[, 1] %*% coef(LATR_recruit_best)[1]
   return(invlogit(pred[[1]]))}
 
-# Recruit size distribution
+# Recruit size distribution at size y
 recruit_size <- function(y){
   dnorm(x = y, mean = LATR_recruit_size$recruit_mean, sd = LATR_recruit_size$recruit_sd)}
 
@@ -217,26 +69,23 @@ fxy <- function(x, y, d){
 
 # Put it all together; projection matrix is a function of weighted density (dens)
 # We need a large lower extension because growth variance (gaussian) is greater for smaller plants
-bigmatrix<-function(lower.extension = -8, 
-                    upper.extension = 2,
-                    min.size = LATR_size_bounds$min_size,
-                    max.size = LATR_size_bounds$max_size,
-                    mat.size = 200,
-                    dens){
+TransMatrix <- function(lower.extension = -8, upper.extension = 2,
+                        min.size = LATR_size_bounds$min_size, max.size = LATR_size_bounds$max_size,
+                        mat.size = 200, dens){
   
   # Matrix size and size extensions (upper and lower integration limits)
   n <- mat.size
   L <- min.size + lower.extension
   U <- max.size + upper.extension
   
-  # Bin size
+  # Bin size for n bins
   h <- (U - L)/n
   
   # Lower boundaries of bins 
   b <- L + c(0:n)*h
   
   # Bin midpoints
-  y<-0.5*(b[1:n] + b[2:(n + 1)])
+  y <- 0.5*(b[1:n] + b[2:(n + 1)])
   
   # Growth/Survival matrix
   Pmat <- t(outer(y, y, pxy, d = dens)) * h 
@@ -250,21 +99,18 @@ bigmatrix<-function(lower.extension = -8,
   #and transition matrix
   return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
 
-
-
-
-
-##### IPM analysis ----------------------------------------------------------------------------------------
+# Construct transition matrix
+TM <- TransMatrix(mat.size = 100, dens = -1.3)
 
 # Calculate lambda across a range of densities
-density_dummy <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 10)
+d.test <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 10)
 lambda_density <- c()
-for(d in 1:length(density_dummy)){
+for(d in 1:length(d.test)){
   print(d)
-  lambda_density[d] <- lambda(bigmatrix(dens=density_dummy[d], mat.size = 200)$IPMmat)}
+  lambda_density[d] <- lambda(bigmatrix(dens=d.test[d], mat.size = 200)$IPMmat)}
 
 # Plot lambda across a range of densities
-plot(density_dummy, lambda_density, type = "l", lwd = 3, xlab = "Weighted density", ylab = "lambda")
+plot(d.test, lambda_density, type = "l", lwd = 3, xlab = "Weighted density", ylab = "lambda")
 abline(h = 1, lty = 3)
 
 
@@ -274,7 +120,6 @@ abline(h = 1, lty = 3)
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 
 # Placeholders until bootstrapping is ready
-TM <- bigmatrix(mat.size = 100, dens = -1.3)
 boot.ws.raw <- ws.raw
 boot.ws.PDF <- ws.PDF
 boot.tv.raw <- tv.raw
