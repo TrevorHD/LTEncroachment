@@ -438,7 +438,13 @@ plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens
 
 
 
-##### Integration limits (size bounds) --------------------------------------------------------------------
+##### Recruit sizes and integration limits (size bounds) --------------------------------------------------
+
+# Filter out seedlings and get their sizes
+# Plot distribution of recruit sizes using hist(LATR_recruit_size$log_volume)
+LATR_recruit_size <- LATR_full %>% 
+  filter(seedling_t1 == 1) %>% 
+  mutate(log_volume = log(volume_t1))
 
 # Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),

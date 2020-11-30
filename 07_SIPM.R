@@ -61,7 +61,7 @@ TM.recruitment <- function(d){
 
 # Recruit size distribution at size y
 TM.recruitsize <- function(y){
-  dnorm(x = y, mean = LATR_recruit_size$recruit_mean, sd = LATR_recruit_size$recruit_sd)}
+  dnorm(x = y, mean = boot.LATR_recruit_size$recruit_mean, sd = boot.LATR_recruit_size$recruit_sd)}
 
 # Combined flowering, fertility, and recruitment
 TM.fertrecruit <- function(x, y, d){

@@ -50,13 +50,18 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 
 ##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------
 
+# Should bootstrapping occur?
+# If not, the model will be run once using full data sets
+boot.on <- TRUE
+
 # Determine resampling proportion; that is, the proportion of individuals selected each interation
 # Should be in the interval (0, 1), exclusive
 # Warning: setting this number very low may adversely affect model behaviour
-boot.prop <- 0.75
+boot.prop <- 0.80
 
 # Set number of bootstrap iterations
-# Please note: one iteration takes a long time (~30 minutes), so choose this number wisely
+# Please note: one iteration takes a long time (~1 hour), so choose this number wisely
+# Ignore this if boot.on = FALSE
 boot.num <- 2
 
 # Create empty vectors to populate with wavespeeds for normal and higher survival scenarios
@@ -69,7 +74,12 @@ boot.cv2 <- c()
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
-# This takes ~ 1 hour per bootstrap replicate; be patient
+# This takes ~1 hour per bootstrap replicate; be patient
+# Note: if boot.on = TRUE, then bootstrapping will not occur and full data will be used
+
+# Override bootstrap replicate number if bootstrapping is turned off
+if(boot.on == TRUE){
+  boot.num <- 1}
 
 # Begin bootstrapping
 time.start <- Sys.time()
@@ -99,7 +109,7 @@ remove(time.start, time.end)
 
 # Remove other unneeded items from the global environment
 remove(fitGAU, fitted_all, err, fitted_vals, i, k, n_cuts_dens, new_fitted_vals, new_weights,
-       weights)
+       weights, boot.tv.raw, boot.tv.PDF, boot.ws.raw, boot.ws.PDF)
 
 
 
