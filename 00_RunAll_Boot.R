@@ -40,9 +40,9 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/03_Disp
 # Tidy up demography data before creating demography models
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 
-# "local_density_dependent_IPM"
+# "05_CDataAnalysis_NS.R"
 # Create demography models for use in SIPM
-source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/local_density_dependent_IPM.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
 
 
 

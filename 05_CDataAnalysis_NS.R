@@ -1,430 +1,459 @@
-##### Create GLM for flowering probability ----------------------------------------------------------------
+##### Prepare data for analysis ---------------------------------------------------------------------------
 
-# Define inverse logit function used as link to binomial distribution
-invlogit <- function(x){exp(x)/(1 + exp(x))} 
+# Script authored by Tom, with some changes from Trevor
 
-# Remove entries for which there is no recorded volume
-# Then standardise density and introduce unique transect identifier
-boot.CData.s <- boot.CData %>% 
-  drop_na(volume_t) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
-         unique.transect = interaction(transect, site))
+# Define inverse logit function for later use
+invlogit <- function(x){exp(x)/(1 + exp(x))}
 
-# Create a list of possible flowering models
-Mod.F <- list()
-
-  # "Null" model; only random effects of site and transect within site
-  Mod.F[[1]] <- glmer(did.flower ~ (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-  
-  # Size-only model
-  Mod.F[[2]] <- glmer(did.flower ~ volume_t + (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-  
-  # Density-only model
-  Mod.F[[3]] <- glmer(did.flower ~ d.stand + (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-  
-  # Size and density (additive)
-  Mod.F[[4]] <- glmer(did.flower ~ volume_t + d.stand + (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-  
-  # Size and density (interactive)
-  Mod.F[[5]] <- glmer(did.flower ~ volume_t * d.stand + (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-  
-  # Density-only model (quadratic)
-  Mod.F[[6]] <- glmer(did.flower ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-  
-  # Size (linear) and density (quadratic)
-  Mod.F[[7]] <- glmer(did.flower ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-  
-  # Size and density (interactive, quadratic)
-  Mod.F[[8]] <- glmer(did.flower ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                      data = boot.CData.s, family = "binomial")
-
-# Calculate an AIC table, ranked from best to worst model
-# Weights interpreted as the proportion of evidence in favour of each
-# To do this, use AICtab(Mod.F, weights = TRUE, sort = TRUE)
-  
-# Model 8 has the best AIC
-# For more info, use summary(Mod.F[[8]])
-
-# Create vector of coefficients for model with the best AIC (Model 8)
-Mod.F.top.cf <- c()
-
-  # Intercept
-  Mod.F.top.cf[1] <- fixef(Mod.F[[8]])["(Intercept)"]
-
-  # Volume coefficient
-  Mod.F.top.cf[2] <- fixef(Mod.F[[8]])["volume_t"]
-  
-  # Density coefficient
-  Mod.F.top.cf[3] <- fixef(Mod.F[[8]])["d.stand"]
-
-  # Volume and density interaction coefficient
-  Mod.F.top.cf[4] <- fixef(Mod.F[[8]])["volume_t:d.stand"]
-
-  # Density quadratic coefficient
-  Mod.F.top.cf[5] <- fixef(Mod.F[[8]])["I(d.stand^2)"]
-
-  # Volume and quadratic density interaction coefficient
-  Mod.F.top.cf[6] <- fixef(Mod.F[[8]])["volume_t:I(d.stand^2)"]
-
-  
-
-
-
-##### Create GLM for growth ratio -------------------------------------------------------------------------
-
-# Restore boot.CData.s since we deleted stuff earlier
-# Remove entries for which there is no recorded volume and log growth is NA
-# Then standardise density and introduce unique transect identifier
-boot.CData.s <- boot.CData %>% 
-  drop_na(volume_t, logGR) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
-         unique.transect = interaction(transect, site))
-
-# Create a list of possible growth models
-Mod.G <- list()
-
-  # "Null" model; only random effects of site and transect within site
-  Mod.G[[1]] <- lmer(logGR ~ (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-  # Size-only model
-  Mod.G[[2]] <- lmer(logGR ~ volume_t + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-  # Density-only model
-  Mod.G[[3]] <- lmer(logGR ~ d.stand + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-  # Size and density (additive)
-  Mod.G[[4]] <- lmer(logGR ~ volume_t + d.stand + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-  # Size and density (interactive)
-  Mod.G[[5]] <- lmer(logGR ~ volume_t * d.stand + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-  # Density-only model (quadratic)
-  Mod.G[[6]] <- lmer(logGR ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-  # Size (linear) and density (quadratic)
-  Mod.G[[7]] <- lmer(logGR ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-  # Size and density (interactive, quadratic)
-  Mod.G[[8]] <- lmer(logGR ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
-
-# Calculate an AIC table, ranked from best to worst model
-# Weights interpreted as the proportion of evidence in favour of each
-# To do this, use AICtab(Mod.G, weights = TRUE, sort = TRUE)
-
-# Model 7 has the best AIC
-# For more info, use summary(Mod.G[[7]])
-  
-# Create vector of coefficients for model with the best AIC (Model 7)
-Mod.G.top.cf <- c()
-
-  # Intercept
-  Mod.G.top.cf[1] <- fixef(Mod.G[[7]])["(Intercept)"]
-
-  # Volume coefficient
-  Mod.G.top.cf[2] <- fixef(Mod.G[[7]])["volume_t"]
-
-  # Density coefficient
-  Mod.G.top.cf[3] <- fixef(Mod.G[[7]])["d.stand"]
-  
-  # Volume and density interaction coefficient
-  Mod.G.top.cf[4] <- 0
-  
-  # Density quadratic coefficient
-  Mod.G.top.cf[5] <- fixef(Mod.G[[7]])["I(d.stand^2)"]
-    
-  # Volume and quadratic density interaction coefficient
-  Mod.G.top.cf[6] <- 0
+## Create unique transect as interaction of transect and site
+LATR_full <- CData %>% 
+  mutate( unique.transect = interaction(transect, site))
 
 
 
 
 
-##### Create GLM for number of reproductive structures ----------------------------------------------------
+##### Growth model ----------------------------------------------------------------------------------------
 
-# Restore boot.CData.s since we deleted stuff earlier
-# Remove entries for which there is no recorded volume or that did not flower
-# Then standardise density and introduce unique transect identifier
-boot.CData.s <- boot.CData %>%
-  drop_na(volume_t) %>%
-  filter(did.flower == 1) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
-         unique.transect = interaction(transect, site))
+# Prepare a data subset for growth that drops rows missing either t or t1 size data
+# Also create log_volume as a new variable because GAM doesn't like functions of variables as variables
+LATR_grow <- LATR_full  %>% drop_na(volume_t,volume_t1) %>%
+  mutate(log_volume_t = log(volume_t),
+         log_volume_t1 = log(volume_t1))
 
-# Create a list of possible reproduction models
-Mod.R <- list()
+# Create empty list to populate with model results
+LATR_gam_models <- list()
 
-  # "Null" model; only random effects of site and transect within site
-  Mod.R[[1]] <- lmer(logTR1 ~ (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+# Three candidates for variance: size only, size + density, fitted value (all the covariates plus rfx)
 
-  # Size-only model
-  Mod.R[[2]] <- lmer(logTR1 ~ volume_t + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# Pilot fits, where sigma depends on initial size only
+LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())
+LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())                
+LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss()) 
 
-  # Density-only model
-  Mod.R[[3]] <- lmer(logTR1 ~ d.stand + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# Fits where sigma depends on both initial size and density
+LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())
+LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())                
+LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss()) 
 
-  # Size and density (additive)
-  Mod.R[[4]] <- lmer(logTR1 ~ volume_t + d.stand + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# These models will be iterated to fit sigma as f(fitted value)
+LATR_grow$fitted_vals = LATR_grow$log_volume_t 
+LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())
+LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())                
+LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                            data = LATR_grow, gamma = 1.4, family = gaulss())  
 
-  # Size and density (interactive)
-  Mod.R[[5]] <- lmer(logTR1 ~ volume_t * d.stand + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# Fit sigma as f(fitted value) for models 7-9
+# The "weights" here are 1/sigma values; see ?gaulss for details.
+for(mod in 7:9){
+  fitGAU = LATR_gam_models[[mod]]
+  fitted_all = predict(fitGAU, type = "response", data = LATR);                  
+  fitted_vals = new_fitted_vals = fitted_all[, 1]; 
+  weights = fitted_all[, 2];
+  err = 100; k = 0; 
+  while(err > 10^(-6)){
+    LATR_grow$fitted_vals = new_fitted_vals; 
+    fitGAU <- update(fitGAU); 
+    fitted_all = predict(fitGAU, type = "response", data = LATR_grow);   
+    new_fitted_vals = fitted_all[, 1]; new_weights = fitted_all[, 2];
+    err = weights - new_weights; err = sqrt(mean(err^2)); 
+    weights = new_weights; 
+    k = k + 1; cat(k, err, "\n");}   
+  LATR_gam_models[[mod]] =  fitGAU;}
 
-  # Density-only model (quadratic)
-  Mod.R[[6]] <- lmer(logTR1 ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# Collect model AICs into a single table
+grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE) 
 
-  # Size (linear) and density (quadratic)
-  Mod.R[[7]] <- lmer(logTR1 ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
+# Define model 5 as our best Gaussian model
+LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
+LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
+LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
 
-  # Size and density (interactive, quadratic)
-  Mod.R[[8]] <- lmer(logTR1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                     data = boot.CData.s, REML = FALSE)
+# Plot of effect of size on future size -- obviously linear
+plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s(log_volume_t)"]) 
 
-# Calculate an AIC table, ranked from best to worst model
-# Weights interpreted as the proportion of evidence in favour of each
-# To do this, use AICtab(Mod.R,weights = TRUE, sort = TRUE)
+# Plot of effect of density on growth 
+plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s(weighted.dens)"]) 
 
-# Model 7 has the best AIC
-# For more info, use summary(Mod.R[[7]])
-  
-# Create vector of coefficients for model with the best AIC (Model 7)
-Mod.R.top.cf <- c()
-
-# Intercept
-  Mod.R.top.cf[1] <- fixef(Mod.R[[7]])["(Intercept)"]
-  
-  # Volume coefficient
-  Mod.R.top.cf[2] <- fixef(Mod.R[[7]])["volume_t"]
-
-  # Density coefficient
-  Mod.R.top.cf[3] <- fixef(Mod.R[[7]])["d.stand"]
-
-  # Volume and density interaction coefficient
-  Mod.R.top.cf[4] <- 0
-
-  # Density quadratic coefficient
-  Mod.R.top.cf[5] <- fixef(Mod.R[[7]])["I(d.stand^2)"]
-  
-  # Volume and quadratic density interaction coefficient
-  Mod.R.top.cf[6] <- 0
+#Plots of effect of size and density on sd(future size)
+plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s.1(log_volume_t)"]) 
+plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s.1(weighted.dens)"]) 
 
 
 
 
 
-##### Create GLM for survival (transplants only) ----------------------------------------------------------
+##### Flowering probability model -------------------------------------------------------------------------
 
-# Combine transplants with large shrubs for survival analysis
-# Keep only location info, survival, volume, and density
-select(boot.CData.Transplants, "site", "transect", "actual.window", 
-       "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
+# populate year t of 2017-2018 transition year
+# There are no 2018 data but this way we get all four years in the reproduction models
+# Do this by creating the 2017-18 data as a stand-alone df then bind rows
+LATR_dat_201718 <- LATR_full[LATR_full$year_t == 2016 & LATR_full$survival_t1 == 1, ]
+
+# These are the 2017 survivors; make their year t demography last year's data
+LATR_dat_201718$year_t <- 2017
+LATR_dat_201718$year_t1 <- 2018
+LATR_dat_201718$max.ht_t <- LATR_dat_201718$max.ht_t1
+LATR_dat_201718$max.w_t <- LATR_dat_201718$max.w_t1
+LATR_dat_201718$volume_t <- LATR_dat_201718$volume_t1
+LATR_dat_201718$perp.w_t <- LATR_dat_201718$perp.w_t1
+LATR_dat_201718$flowers_t <- LATR_dat_201718$flowers_t1
+LATR_dat_201718$fruits_t <- LATR_dat_201718$fruits_t1
+LATR_dat_201718$reproductive_fraction_t <- LATR_dat_201718$reproductive_fraction_t1
+LATR_dat_201718$total.reproduction_t <- LATR_dat_201718$total.reproduction_t1
+
+# Now set all the t1 data to NA
+LATR_dat_201718$max.ht_t1 <- NA
+LATR_dat_201718$max.w_t1 <- NA
+LATR_dat_201718$volume_t1 <- NA
+LATR_dat_201718$perp.w_t1 <- NA
+LATR_dat_201718$flowers_t1 <- NA
+LATR_dat_201718$fruits_t1 <- NA
+LATR_dat_201718$reproductive_fraction_t1 <- NA
+LATR_dat_201718$total.reproduction_t1 <- NA
+
+# Bind rows and create log_vol as new variables (easier for GAMs)
+LATR_flow_dat <- bind_rows(LATR_full,LATR_dat_201718) %>% 
+  select(unique.transect,volume_t,total.reproduction_t,weighted.dens) %>% drop_na()
+LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
+
+# Create empty list to populate with model results
+LATR_flower <- list()
+
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+LATR_flower[[1]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.transect, bs = "re"),
+                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+LATR_flower[[2]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+
+# Collect model AICs into a single table
+flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
+
+# Model 3 is the winner: mean ~ s(size) + s(density) + size:density
+# Define model 3 as our best 
+LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
+LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
+LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
+
+## Tom's practice bootstrap
+#for(b in 1:n.boot){
+#  LATR_flower_best <- gam(total.reproduction_t>0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t  + s(unique.transect,bs="re"),
+#                         data=LATR_flow_dat_boot[[b]], gamma=1.4, family="binomial")
+#}
+
+# Plot effect of size on pr(flower)
+plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"]) 
+
+# Plot effect of density on pr(flower)
+plot(LATR_flow_dat$weighted.dens, LATR_flower_fitted_terms[, "s(weighted.dens)"]) 
+
+# Visualize data and model
+n_cuts_dens <- 4
+n_cuts_size <- 4
+LATR_flow_dat %>% 
+  mutate(size_bin = as.integer(cut_number(log_volume_t, n_cuts_size)),
+         dens_bin = as.integer(cut_number(weighted.dens, n_cuts_dens))) %>% 
+  group_by(size_bin,dens_bin) %>% 
+  summarise(mean_size = mean(log_volume_t),
+            mean_density = mean(weighted.dens),
+            mean_flower = mean(total.reproduction_t > 0),
+            pred_flower = mean(pred),
+            bin_n = n()) -> LATR_flow_dat_plot
+
+# Generate predictions for plotting
+size_means_flow <- LATR_flow_dat_plot %>% group_by(size_bin) %>% summarise(mean_size=mean(mean_size))
+LATR_flow_pred <- data.frame(
+  weighted.dens = rep(seq(min(LATR_flow_dat$weighted.dens), max(LATR_flow_dat$weighted.dens), length.out = 20), times = n_cuts_size),
+  log_volume_t = rep(size_means_flow$mean_size,each = 20),
+  unique.transect = "1.FPS",
+  size_bin = rep(size_means_flow$size_bin, each = 20))
+LATR_flow_pred$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_pred, exclude = "s(unique.transect)")
+
+# Plot data
+plot(LATR_flow_dat_plot$mean_density, LATR_flow_dat_plot$mean_flower, type = "n", ylim = c(0, 1),
+     xlab = "Weighted density", ylab = "Pr(Flowering)")
+for(i in 1:n_cuts_size){
+  points(LATR_flow_dat_plot$mean_density[LATR_flow_dat_plot$size_bin == i],
+         LATR_flow_dat_plot$mean_flower[LATR_flow_dat_plot$size_bin == i], pch = 16, col = i,
+         cex = (LATR_flow_dat_plot$bin_n[LATR_flow_dat_plot$size_bin == i]/max(LATR_flow_dat_plot$bin_n))*3)
+  lines(LATR_flow_pred$weighted.dens[LATR_flow_pred$size_bin == i],
+        invlogit(LATR_flow_pred$pred[LATR_flow_pred$size_bin == i]), col = i)}
+
+
+
+
+
+##### Fruit production model ------------------------------------------------------------------------------
+
+# Create new df with plants that have produced at least one reproductive structure
+LATR_fruits_dat <- subset(LATR_flow_dat, total.reproduction_t > 0)
+
+# Create empty list to populate with model results
+LATR_fruits <- list()
+
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+LATR_fruits[[1]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transect, bs = "re"),
+                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+LATR_fruits[[2]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+
+# Collect model AICs into a single table
+fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
+
+# Model 2 is the winner: mean ~ s(size) + s(density)
+# Define model 2 as our best 
+LATR_fruits_best <- LATR_fruits[[which.min(fruits_aic$AIC)]]
+LATR_fruits_fitted_terms <- predict(LATR_fruits_best, type = "terms") 
+LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat, exclude = "s(unique.transect)")
+
+# Plot effect of size on fruits
+plot(LATR_fruits_dat$log_volume_t, LATR_fruits_fitted_terms[, "s(log_volume_t)"]) 
+
+# Plot effect of density on fruits 
+plot(LATR_fruits_dat$weighted.dens, LATR_fruits_fitted_terms[, "s(weighted.dens)"]) 
+
+# Visualize data and model
+LATR_fruits_dat %>% 
+  mutate(size_bin = as.integer(cut_number(log_volume_t, n_cuts_size)),
+         dens_bin = as.integer(cut_number(weighted.dens, n_cuts_dens))) %>% 
+  group_by(size_bin, dens_bin) %>% 
+  summarise(mean_size = mean(log_volume_t),
+            mean_density = mean(weighted.dens),
+            mean_fruits = mean(total.reproduction_t),
+            pred_fruits = mean(pred),
+            bin_n = n()) -> LATR_fruits_dat_plot
+
+# Generate data for prediction
+size_means_fruit <- LATR_fruits_dat_plot %>% group_by(size_bin) %>% summarise(mean_size = mean(mean_size))
+LATR_fruit_pred <- data.frame(
+  weighted.dens = rep(seq(min(LATR_fruits_dat$weighted.dens),max(LATR_fruits_dat$weighted.dens),length.out = 20), times = n_cuts_size),
+  log_volume_t = rep(size_means_fruit$mean_size, each = 20),
+  unique.transect = "1.FPS",
+  size_bin = rep(size_means_fruit$size_bin, each = 20))
+LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
+
+# Plot data
+plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n",
+     xlab = "Weighted density", ylab = "Flowers and Fruits")
+for(i in 1:n_cuts_size){
+  points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin == i],
+         LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin == i], pch = 16, col = i,
+         cex = (LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin == i]/max(LATR_fruits_dat_plot$bin_n))*3)
+  lines(LATR_fruit_pred$weighted.dens[LATR_fruit_pred$size_bin == i],
+        exp(LATR_fruit_pred$pred[LATR_fruit_pred$size_bin == i]), col = i)}
+
+
+
+
+
+##### Survival model --------------------------------------------------------------------------------------
+
+# Combine transplants with large shrubs; keep only location info, survival, volume, and density
+CData.Transplants %>% 
+  select("site", "transect", "actual.window", 
+         "spring_survival_t1", "volume_t", "weighted.dens", "transplant") %>% 
   rename("survival_t1" = "spring_survival_t1") %>% 
-  rbind(select(boot.CData, "site", "transect", "actual.window", 
-              "survival_t1", "volume_t", "weighted.dens", "transplant")) -> boot.CData.AllSurvival
-  
-# Use models for transplants (small individuals) only
-# Survival for larger individuals is pretty much guaranteed
-  
-# Remove entries for which there is no recorded volume or survival
-# Standardise density; introduce unique transect identifier
-boot.CData.AllSurvival.s <- boot.CData.AllSurvival %>% 
-  drop_na(volume_t, survival_t1) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
-         unique.transect = interaction(transect, site),
-         survival_t1 = as.numeric(survival_t1))
-  
-## how much mortality was there just among the naturally occurring plants?
-table(boot.CData.AllSurvival.s$survival_t1[boot.CData.AllSurvival.s$transplant==F])
-## why is there no natural mortality? there are natural deaths in the original data frame
-table(CData.Demography$survival_t1)
+  mutate(unique.transect = interaction(transect, site)) %>% 
+  rbind(select(LATR_full, "site", "transect", "actual.window", 
+               "survival_t1", "volume_t", "weighted.dens", "transplant","unique.transect")) %>% 
+  mutate(log_volume_t = log(volume_t)) %>% 
+  drop_na() -> LATR_surv_dat
 
-# Create a list of possible survival models
-Mod.S <- list()
+# Investigate size overlap between transplant experiment and observational census
+hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]), breaks = 25)
+hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]), breaks = 10, add = TRUE, col = alpha("gray", 0.5))
 
-  # "Null" model; only random effects of site and transect within site
-  Mod.S[[1]] <- glmer(survival_t1 ~ (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Plot survival against volume, grouped by transplant status
+plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
+     LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == FALSE])
+points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
+       LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
 
-  # Size-only model
-  Mod.S[[2]] <- glmer(survival_t1 ~ volume_t + (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Create empty list to populate with model results
+LATR_surv <- list()
 
-  # Density-only model
-  Mod.S[[3]] <- glmer(survival_t1 ~ d.stand + (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Three candidate models for the mean: size only, size + density, or size, density, and size:density
+LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t) + transplant + s(unique.transect, bs = "re"),
+                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens)  + transplant + s(unique.transect, bs = "re"),
+                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transplant + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
 
-  # Size and density (additive)
-  Mod.S[[4]] <- glmer(survival_t1 ~ volume_t + d.stand + (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Collect model AICs into a single table
+surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)
 
-  # Size and density (interactive)
-  Mod.S[[5]] <- glmer(survival_t1 ~ volume_t * d.stand + (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Model 3 is the winner: mean ~ s(size) + s(density) + size:density
+# Define model 3 as our best 
+LATR_surv_best <- LATR_surv[[which.min(surv_aic$AIC)]]
+LATR_surv_fitted_terms <- predict(LATR_surv_best, type = "terms") 
+LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclude = "s(unique.transect)")
 
-  # Density-only model (quadratic)
-  Mod.S[[6]] <- glmer(survival_t1 ~ d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Plot effect of size on pr(survival)
+plot(LATR_surv_dat$log_volume_t, LATR_surv_fitted_terms[, "s(log_volume_t)"]) 
 
-  # Size (linear) and density (quadratic)
-  Mod.S[[7]] <- glmer(survival_t1 ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Plot effect of density on pr(survival)
+plot(LATR_surv_dat$weighted.dens, LATR_surv_fitted_terms[, "s(weighted.dens)"]) 
 
-  # Size and density (interactive, quadratic)
-  Mod.S[[8]] <- glmer(survival_t1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
-                      data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
+# Visualize data and model for the natural census
+n_cuts_dens <- 4
+n_cuts_size <- 4
+LATR_surv_dat %>% 
+  filter(transplant == FALSE) %>% 
+  mutate(size_bin = as.integer(cut_interval(log_volume_t, n_cuts_size)),
+         dens_bin = as.integer(cut_interval(weighted.dens, n_cuts_dens))) %>% 
+  group_by(size_bin,dens_bin) %>% 
+  summarise(mean_size = mean(log_volume_t),
+            mean_density = mean(weighted.dens),
+            mean_surv = mean(survival_t1),
+            pred_surv = mean(pred),
+            bin_n = n()) -> LATR_surv_nat_plot
 
-# Calculate an AIC table, ranked from best to worst model
-# Weights interpreted as the proportion of evidence in favour of each
-# To do this, use AICtab(Mod.S, weights = TRUE, sort = TRUE)
+# Generate predictions for natural census plotting
+size_means_surv_nat <- LATR_surv_nat_plot %>% group_by(size_bin) %>% summarise(mean_size = mean(mean_size))
+LATR_surv_nat_pred <- data.frame(
+  weighted.dens = rep(seq(min(LATR_surv_nat_plot$mean_density), max(LATR_surv_nat_plot$mean_density), length.out = 20), times = n_cuts_size),
+  log_volume_t = rep(size_means_surv_nat$mean_size, each = 20),
+  unique.transect = "1.FPS",
+  transplant = FALSE,
+  size_bin = rep(size_means_surv_nat$size_bin, each = 20))
+LATR_surv_nat_pred$pred <- predict.gam(LATR_surv_best,newdata = LATR_surv_nat_pred, exclude = "s(unique.transect)")
 
-# Keep all models in which the weight is greater than 0.001
-Mod.S.AIC <- AICtab(Mod.S[[3]], Mod.S[[1]], Mod.S[[6]], Mod.S[[4]], 
-                    Mod.S[[5]], Mod.S[[2]], Mod.S[[7]], Mod.S[[8]], 
-                    weights = TRUE, sort = FALSE)
+# Plot natural census data
+plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n", ylim = c(0, 1),
+     xlab = "Weighted density", ylab = "Pr(Survival)")
+for(i in 1:n_cuts_size){
+  points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
+         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = i, cex = 2)
+  #cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*3)
+  lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
+        invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]),col = i)}
 
-# Create vector of average GLM coefficients from the kept models
-Mod.S.avg.cf <- c()
+# Generate predictions for transplant plotting
+LATR_surv_dat %>% 
+  filter(transplant == TRUE) %>% 
+  mutate(dens_bin = as.integer(cut_interval(weighted.dens, n_cuts_dens)),
+         mean_size = mean(log_volume_t)) %>% 
+  group_by(dens_bin) %>% 
+  summarise(mean_size = unique(mean_size),
+            mean_density = mean(weighted.dens),
+            mean_surv = mean(survival_t1),
+            bin_n = n()) -> LATR_surv_exp_plot
+LATR_surv_exp_pred <- data.frame(
+  weighted.dens = seq(min(LATR_surv_exp_plot$mean_density), max(LATR_surv_exp_plot$mean_density), length.out = 20),
+  log_volume_t = LATR_surv_exp_plot$mean_size[1],
+  unique.transect = "1.FPS",
+  transplant = TRUE)
+LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_exp_pred, exclude = "s(unique.transect)")
 
-  # Intercept
-  Mod.S.avg.cf[1] <- 
-    Mod.S.AIC$weight[1]*fixef(Mod.S[[3]])["(Intercept)"] + 
-    Mod.S.AIC$weight[2]*fixef(Mod.S[[1]])["(Intercept)"] + 
-    Mod.S.AIC$weight[3]*fixef(Mod.S[[6]])["(Intercept)"] +
-    Mod.S.AIC$weight[4]*fixef(Mod.S[[4]])["(Intercept)"] +
-    Mod.S.AIC$weight[5]*fixef(Mod.S[[5]])["(Intercept)"] +
-    Mod.S.AIC$weight[6]*fixef(Mod.S[[2]])["(Intercept)"] +
-    Mod.S.AIC$weight[7]*fixef(Mod.S[[7]])["(Intercept)"] +
-    Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["(Intercept)"]
-
-  # Volume coefficient
-  Mod.S.avg.cf[2] <- 
-    Mod.S.AIC$weight[4]*fixef(Mod.S[[4]])["volume_t"] + 
-    Mod.S.AIC$weight[5]*fixef(Mod.S[[5]])["volume_t"] +
-    Mod.S.AIC$weight[6]*fixef(Mod.S[[2]])["volume_t"] + 
-    Mod.S.AIC$weight[7]*fixef(Mod.S[[7]])["volume_t"] +
-    Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["volume_t"]
-    
-  # Density coefficient
-  Mod.S.avg.cf[3] <- 
-    Mod.S.AIC$weight[1]*fixef(Mod.S[[3]])["d.stand"] + 
-    Mod.S.AIC$weight[3]*fixef(Mod.S[[6]])["d.stand"] +
-    Mod.S.AIC$weight[4]*fixef(Mod.S[[4]])["d.stand"] + 
-    Mod.S.AIC$weight[5]*fixef(Mod.S[[5]])["d.stand"] +
-    Mod.S.AIC$weight[7]*fixef(Mod.S[[7]])["d.stand"] + 
-    Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["d.stand"]
-
-  # Volume and density interaction coefficient
-  Mod.S.avg.cf[4] <- 
-    Mod.S.AIC$weight[5]*fixef(Mod.S[[5]])["volume_t:d.stand"] +
-    Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["volume_t:d.stand"]
-
-  # Density quadratic coefficient
-  Mod.S.avg.cf[5] <- 
-    Mod.S.AIC$weight[3]*fixef(Mod.S[[6]])["I(d.stand^2)"] +
-    Mod.S.AIC$weight[7]*fixef(Mod.S[[7]])["I(d.stand^2)"] +
-    Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["I(d.stand^2)"]
-
-  # Volume and quadratic density interaction coefficient
-  Mod.S.avg.cf[6] <- 
-    Mod.S.AIC$weight[8]*fixef(Mod.S[[8]])["volume_t:I(d.stand^2)"]
+# Plot transplant data on top of natural census data
+points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2)
+lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty = 2)
 
 
 
 
 
-##### Create LM for probability of recruitment from seed --------------------------------------------------
+##### Per-seed recruitment probability model --------------------------------------------------------------
 
-# Here we will use the baseline plants whose reproduction does not change each year
-# This is much more stable and has fewer pitfalls than using yearly seed production from demography data
-  
-# Merge windows in baseline transect data with their respective weighted densities
-boot.CData.Recruitment <- merge(CData.Transects, Windows, 
-                           by.x = c("site", "transect", "window"),
-                           by.y = c("site", "transect", "window"))
-  
-# Use the reproduction model to calculate number of reproductive structures in a single year for each plant
-mutate(boot.CData.Recruitment,
-       d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
-       seeds = exp(Mod.R.top.cf[1] + Mod.R.top.cf[2]*log(volume) + Mod.R.top.cf[3]*d.stand + 
-                   Mod.R.top.cf[5]*(d.stand^2))) -> boot.CData.Recruitment
+# Create subset df of recruits
+LATR_recruits <- LATR_full %>% 
+  mutate(unique.transect = interaction(transect, site)) %>% 
+  group_by(year_t1, unique.transect, actual.window) %>% 
+  filter(seedling_t1 == 1) %>% 
+  summarise(recruits = n()) %>% 
+  rename(window = actual.window)
 
-# Calculate number of seeds in a single year for each 5-m window
-for(i in 1:nrow(boot.CData.Recruitment)){
-  boot.CData.Recruitment$seeds.win[i] <- sum(boot.CData.Recruitment$seeds[boot.CData.Recruitment$window == boot.CData.Recruitment$window[i] &
-                                                                boot.CData.Recruitment$transect == boot.CData.Recruitment$transect[i] &
-                                                                boot.CData.Recruitment$site == boot.CData.Recruitment$site[i]], na.rm = T)}
+# Estimate total seeds produced in each window
+# This is computed using the known plant sizes and the fitted flowering and fruiting models
+# Note: we assume 6 seeds per fruit
+LATR_transects <- Cdata.Transects.Windows %>% 
+  mutate(unique.transect = interaction(transect, site),
+         log_volume_t = log(volume))
+LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best,newdata = LATR_transects))* 
+                                 6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects)))
+LATR_transects %>% 
+  group_by(unique.transect,window) %>% 
+  summarise(total_seeds = sum(seeds),
+            weighted.dens = unique(weighted.dens)) -> LATR_transects
 
-# Select only one instance of each unique combination of site, transect, and window, then merge with CData
-# We're doing this because we're interested in total seeds in each window, not seeds per plant in each window
-distinct(select(boot.CData.Recruitment, "site", "transect", "window", "seeds.win")) %>% 
-  merge(boot.CData, ., by.x = c("site", "transect", "actual.window"),
-        by.y = c("site", "transect", "window")) -> boot.CData.Recruitment
+# Take three copies of this df, assigning each one to a different year and assigning recruits to zero (for now)
+LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FPS" | unique.transect == "2.FPS" | unique.transect == "3.FPS") %>% 
+                                mutate(year_t1 = 2014, recruits = 0), ## only FPS for 2013-2014
+                              LATR_transects %>% mutate(year_t1 = 2015, recruits = 0),
+                              LATR_transects %>% mutate(year_t1 = 2016, recruits = 0),
+                              LATR_transects %>% mutate(year_t1 = 2017, recruits = 0)) %>% 
+  left_join(., LATR_recruits, by = c("year_t1", "unique.transect", "window")) %>% 
+  mutate(recruits.y = replace_na(recruits.y, 0),
+         recruits = pmax(recruits.x, recruits.y, na.rm = T)) %>% 
+  drop_na()
 
-# Calculate recruitment rates for each 5-m window over 1- and 4-year periods
-boot.CData.Recruitment <- mutate(boot.CData.Recruitment, recruit.prob.1y = recruits.1y/(seeds.win),
-                                               recruit.prob.4y = recruits.4y/(4*seeds.win))
+# Create empty list to populate with model results
+LATR_recruit <- list()
 
-# Select only one instance of each unique combination of site, transect, window, and year
-# Duplicate instances of these unique combinations will inflate the data, which we don't want
-boot.CData.Recruitment %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE)) %>% 
-  group_by(site, transect, actual.window, year_t1) %>% 
-  select(d.stand, seeds.win, recruits.1y, recruits.4y, recruit.prob.1y, recruit.prob.4y) %>% 
-  summarise(d.stand = unique(d.stand),
-            seeds.win = round(unique(seeds.win), digits = 0),
-            recruits.1y = unique(recruits.1y),
-            recruits.4y = unique(recruits.4y),
-            recruit.prob.1y = unique(recruit.prob.1y),
-            recruit.prob.4y = unique(recruit.prob.4y)) %>% 
-  mutate(unique.transect = interaction(transect, site)) -> boot.CData.Recruitment
+# Two candidate models for the mean: no effect, or size only
+LATR_recruit[[1]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),
+                         data = LATR_recruitment, gamma = 1.4, family = "binomial")
+LATR_recruit[[2]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(weighted.dens) + s(unique.transect, bs = "re"),
+                         data = LATR_recruitment, gamma = 1.4, family = "binomial")
 
-# Create a list of possible per-seed recruitment models using 1-year rates
-Mod.P1 <- list()
+# Collect model AICs into a single table
+recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)
 
-  # "Null" model; only random effects of site and transect within site
-  Mod.P1[[1]] <- glmer(cbind(recruits.1y, seeds.win - recruits.1y) ~ (1 | unique.transect), 
-                       data = boot.CData.Recruitment, family = "binomial")
+# Null model (no effect) seems to be the best model
+LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
 
-  # Density-only model
-  Mod.P1[[2]] <- glmer(cbind(recruits.1y, seeds.win - recruits.1y) ~ d.stand  + (1 | unique.transect), 
-                       data = boot.CData.Recruitment, family = "binomial")
-  
-  # Density-only model (quadratic)
-  Mod.P1[[3]] <- glmer(cbind(recruits.1y, seeds.win - recruits.1y) ~ d.stand + I(d.stand^2) + (1 | unique.transect), 
-                       data = boot.CData.Recruitment, family = "binomial")
+# Plot null model
+# No evidence for density dependence in recruitment, just a really low overall recruitment rate
+plot(LATR_recruitment$weighted.dens, LATR_recruitment$recruits/LATR_recruitment$total_seeds)
+LATR_recruitment$pred = predict.gam(LATR_recruit_best, newdata = LATR_recruitment, exclude = "s(unique.transect)")
+points(LATR_recruitment$weighted.dens, invlogit(LATR_recruitment$pred), col = "red", pch = ".")
 
-# Create a list of possible per-seed recruitment models using 4-year rates
-Mod.P4 <- list()
-  
-  # "Null" model; only random effects of site and transect within site
-  Mod.P4[[1]] <- glmer(cbind(recruits.4y, seeds.win - recruits.4y) ~ (1 | unique.transect), 
-                       data = boot.CData.Recruitment, family = "binomial")
-  
-  # Density-only model
-  Mod.P4[[2]] <- glmer(cbind(recruits.4y, seeds.win - recruits.4y) ~ d.stand  + (1 | unique.transect), 
-                       data = boot.CData.Recruitment, family = "binomial")
-  
-  # Density-only model (quadratic)
-  Mod.P4[[3]] <- glmer(cbind(recruits.4y, seeds.win - recruits.4y) ~ d.stand + I(d.stand^2) + (1 | unique.transect), 
-                       data = boot.CData.Recruitment, family = "binomial")
+# Just out of curiosity, the density-dependent model is a very close second... what does this look like?
+LATR_recruit_fitted_terms = predict(LATR_recruit[[2]], type = "terms") 
+
+# Plot effect of density on pr(seedling recruitment); negative density dependence
+plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens)"])
+
+
+
+
+
+##### Seedling size distribution --------------------------------------------------------------------------
+
+# Filter out seedlings and get their sizes
+LATR_recruit_size <- LATR_full %>% 
+  filter(seedling_t1 == 1) %>% 
+  mutate(log_volume = log(volume_t1))
+
+# Plot distribution of recruit sizes
+hist(LATR_recruit_size$log_volume)
+
+# Create df of recruit sizes
+LATR_recruit_size <- data.frame(recruit_mean = mean(LATR_recruit_size$log_volume),
+                                recruit_sd = sd(LATR_recruit_size$log_volume))
+
+
+
+
+
+##### Integration limits (size bounds) --------------------------------------------------------------------
+
+# Create maximum and minimum size bounds for the IPM
+LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
+                               max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
 
