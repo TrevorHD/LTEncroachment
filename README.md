@@ -22,6 +22,8 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 **04_CDataPrep** *(.R)* - Cleans up the demographic data from **LT_Data** and calculates variables that will be used in size- and density-dependent demographic analyses.
 
+**05_BootRes.R** *(.R)* - Resamples data for each bootstrap replicate.
+
 **05_CDataAnalysis_BS** *(.R)* - Generates models of demographic rates under better survival (BS) conditions; these conditions were observed in a census that occurred after higher than average rainfall.
 
 **05_CDataAnalysis_NS** *(.R)* - Generates models of demographic rates under normal survival (NS) conditions.
@@ -33,3 +35,7 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 ## Supporting Information
 
 **S1_SupportingMaterial** *(.R)* - Code not directly used in the analyses but contributes to our understanding of the data.
+
+**S2_DeprecatedCode.R** *(.R)* - Bits of old code that is no longer in use; they are not organised in any particular order.
+
+**S3_TransplantAnalysis.R** *(.R)* - Code to analyse data from the transplant experiment.
