@@ -97,6 +97,10 @@ time.end <- Sys.time()
 time.end - time.start
 remove(time.start, time.end)
 
+# Remove other unneeded items from the global environment
+remove(fitGAU, fitted_all, err, fitted_vals, i, k, n_cuts_dens, new_fitted_vals, new_weights,
+       weights)
+
 
 
 

@@ -1,8 +1,8 @@
 ##### IPM functions ---------------------------------------------------------------------------------------
 
 # Growth from size x to y at density d, using best GAM
-growth_fn <- function(x, y, d){
-  xb = pmin(pmax(x,LATR_size_bounds$min_size), LATR_size_bounds$max_size)
+TM.growth <- function(x, y, d){
+  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_grow_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
                        type = "lpmatrix",
@@ -15,7 +15,7 @@ growth_fn <- function(x, y, d){
 
 # Survival of size x at density d using best GAM
 # For nnaturally occuring plants (transplant = FALSE)
-survival_fn <- function(x, d){
+TM.survival <- function(x, d){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_surv_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, transplant = FALSE,
@@ -26,11 +26,11 @@ survival_fn <- function(x, d){
   return(invlogit(pred))}
 
 # Combined growth and survival at density d
-pxy <- function(x, y, d){
-  survival_fn(x, d) * growth_fn(x, y, d)}
+TM.growsurv <- function(x, y, d){
+  TM.survival(x, d) * TM.growth(x, y, d)}
 
 # Flowering at size x and density d using best GAM
-flower_fn <- function(x, d){
+TM.flower <- function(x, d){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_flower_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
@@ -41,7 +41,7 @@ flower_fn <- function(x, d){
 
 # Seed production (fruits * seeds/fruit) at size x and density d using best GAM
 # Note: we assume 6 seeds per fruit, and best GAM is actually not density dependent
-seeds_fn <- function(x, d, seeds.per.fruit = 6){
+TM.seeds <- function(x, d, seeds.per.fruit = 6){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_fruits_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
@@ -51,7 +51,7 @@ seeds_fn <- function(x, d, seeds.per.fruit = 6){
   return(exp(pred)*seeds.per.fruit)}
 
 # Seed-to-Seedling recruitment probability at density d
-recruitment_fn <- function(d){
+TM.recruitment <- function(d){
   lpmat <- predict.gam(LATR_recruit_best,
                        newdata = data.frame(weighted.dens = d, unique.transect = "1.FPS"),
                        type = "lpmatrix",
@@ -60,12 +60,12 @@ recruitment_fn <- function(d){
   return(invlogit(pred[[1]]))}
 
 # Recruit size distribution at size y
-recruit_size <- function(y){
-  dnorm(x = y, mean = LATR_recruit_size$recruit_mean, sd = LATR_recruit_size$recruit_sd)}
+TM.recruitsize <- function(y){
+  dnorm(x = y, mean = LATR_TM.recruitsize$recruit_mean, sd = LATR_TM.recruitsize$recruit_sd)}
 
 # Combined flowering, fertility, and recruitment
-fxy <- function(x, y, d){
-  flower_fn(x, d) * seeds_fn(x, d) * recruitment_fn(d) * recruit_size(y)}
+TM.fertrecruit <- function(x, y, d){
+  TM.flower(x, d) * TM.seeds(x, d) * TM.recruitment(d) * TM.recruitsize(y)}
 
 # Put it all together; projection matrix is a function of weighted density (dens)
 # We need a large lower extension because growth variance (gaussian) is greater for smaller plants
@@ -88,10 +88,10 @@ TransMatrix <- function(lower.extension = -8, upper.extension = 2,
   y <- 0.5*(b[1:n] + b[2:(n + 1)])
   
   # Growth/Survival matrix
-  Pmat <- t(outer(y, y, pxy, d = dens)) * h 
+  Pmat <- t(outer(y, y, TM.growsurv, d = dens)) * h 
   
   # Fertility/Recruiment matrix
-  Fmat <- t(outer(y, y, fxy, d = dens)) * h 
+  Fmat <- t(outer(y, y, TM.fertrecruit, d = dens)) * h 
   
   # Put it all together
   IPMmat <- Pmat + Fmat

@@ -438,24 +438,6 @@ plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens
 
 
 
-##### Seedling size distribution --------------------------------------------------------------------------
-
-# Filter out seedlings and get their sizes
-LATR_recruit_size <- LATR_full %>% 
-  filter(seedling_t1 == 1) %>% 
-  mutate(log_volume = log(volume_t1))
-
-# Plot distribution of recruit sizes
-hist(LATR_recruit_size$log_volume)
-
-# Create df of recruit sizes
-LATR_recruit_size <- data.frame(recruit_mean = mean(LATR_recruit_size$log_volume),
-                                recruit_sd = sd(LATR_recruit_size$log_volume))
-
-
-
-
-
 ##### Integration limits (size bounds) --------------------------------------------------------------------
 
 # Create maximum and minimum size bounds for the IPM
