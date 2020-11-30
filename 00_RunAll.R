@@ -78,7 +78,7 @@ boot.cv2 <- c()
 # Note: if boot.on = TRUE, then bootstrapping will not occur and full data will be used
 
 # Override bootstrap replicate number if bootstrapping is turned off
-if(boot.on == TRUE){
+if(boot.on == FALSE){
   boot.num <- 1}
 
 # Begin bootstrapping
