@@ -75,7 +75,8 @@ grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
 
 # Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
 # Define model 5 as our best Gaussian model
-LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
+LATR_grow_best <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                      data = LATR_grow, gamma = 1.4, family = gaulss())
 LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
 LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
 
@@ -143,7 +144,8 @@ flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
 # Define model 3 as our best 
-LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
+LATR_flower_best <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
 LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
 LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
 
@@ -160,7 +162,7 @@ plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"])
 plot(LATR_flow_dat$weighted.dens, LATR_flower_fitted_terms[, "s(weighted.dens)"]) 
 
 # Visualize data and model
-n_cuts_dens <- 4
+n_cuts_dens <- 8
 n_cuts_size <- 4
 LATR_flow_dat %>% 
   mutate(size_bin = as.integer(cut_number(log_volume_t, n_cuts_size)),
@@ -216,7 +218,8 @@ fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
 
 # Model 2 is the winner: mean ~ s(size) + s(density)
 # Define model 2 as our best 
-LATR_fruits_best <- LATR_fruits[[which.min(fruits_aic$AIC)]]
+LATR_fruits_best <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
 LATR_fruits_fitted_terms <- predict(LATR_fruits_best, type = "terms") 
 LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat, exclude = "s(unique.transect)")
 
@@ -299,7 +302,8 @@ surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
 # Define model 3 as our best 
-LATR_surv_best <- LATR_surv[[which.min(surv_aic$AIC)]]
+LATR_surv_best <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transplant + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
 LATR_surv_fitted_terms <- predict(LATR_surv_best, type = "terms") 
 LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclude = "s(unique.transect)")
 
@@ -310,7 +314,7 @@ plot(LATR_surv_dat$log_volume_t, LATR_surv_fitted_terms[, "s(log_volume_t)"])
 plot(LATR_surv_dat$weighted.dens, LATR_surv_fitted_terms[, "s(weighted.dens)"]) 
 
 # Visualize data and model for the natural census
-n_cuts_dens <- 4
+n_cuts_dens <- 8
 n_cuts_size <- 4
 LATR_surv_dat %>% 
   filter(transplant == FALSE) %>% 
@@ -338,7 +342,7 @@ plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n", 
      xlab = "Weighted density", ylab = "Pr(Survival)")
 for(i in 1:n_cuts_size){
   points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
-         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = i, cex = 2)
+         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = i, cex = 1.5)
   #cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*3)
   lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
         invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]),col = i)}
@@ -415,7 +419,8 @@ LATR_recruit[[2]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(weighted.den
 recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)
 
 # Null model (no effect) seems to be the best model
-LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
+LATR_recruit_best <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),
+                         data = LATR_recruitment, gamma = 1.4, family = "binomial")
 
 # Plot null model
 # No evidence for density dependence in recruitment, just a really low overall recruitment rate
