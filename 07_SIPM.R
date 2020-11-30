@@ -102,17 +102,6 @@ TransMatrix <- function(lower.extension = -8, upper.extension = 2,
 # Construct transition matrix
 TM <- TransMatrix(mat.size = 100, dens = -1.3)
 
-# Calculate lambda across a range of densities
-d.test <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 10)
-lambda_density <- c()
-for(d in 1:length(d.test)){
-  print(d)
-  lambda_density[d] <- lambda(TransMatrix(dens = d.test[d], mat.size = 200)$IPMmat)}
-
-# Plot lambda across a range of densities
-plot(d.test, lambda_density, type = "l", lwd = 3, xlab = "Weighted density", ylab = "lambda")
-abline(h = 1, lty = 3)
-
 
 
 

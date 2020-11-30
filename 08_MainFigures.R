@@ -1,15 +1,12 @@
-# ----- Plot wavespeeds and growth rates ------------------------------------------------------------------
+# ----- Plot bootstrapped wavespeeds and growth rates -----------------------------------------------------
 
-# Range of s values for plotting wavespeeds
-s.values <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 2, length.out = 196))
-
-# Find wavespeed minima
-c.min <- min(c.values)
-c.min.2 <- min(c.values.2)
-
-# Find values of s at which wavespeed minima occur
-s.c.min <- s.values[as.numeric(match(c.min, c.values))]
-s.c.min.2 <- s.values[as.numeric(match(c.min.2, c.values.2))]
+# Calculate growth rate lambda across a range of densities
+d.test <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), 
+              max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 25)
+lambda_density <- c()
+for(d in 1:length(d.test)){
+  print(d)
+  lambda_density[d] <- lambda(TransMatrix(dens = d.test[d], mat.size = 200)$IPMmat)}
 
 # Prepare graphics device
 jpeg(filename = "Figure 1.jpeg", width = 2600, height = 900, units = "px")
@@ -22,28 +19,27 @@ plot.new()
 gly <- grid.layout(900, 2600)
 pushViewport(viewport(layout = gly))
 
-# Setup to plot wavespeeds
+# Setup to plot bootstrapped wavespeeds
 pushViewport(viewport(layout = gly, layout.pos.row = 1:900, layout.pos.col = 1:1300))
 par(fig = gridFIG())
 par(new = TRUE)
 par(mar = c(7, 14, 2.1, 2.1))
 
-# Plot wavespeed as function of shape parameter for both scenarios
-plot(s.values, c.values, 
-     ylim = c(0, 0.03), xlim = c(0, 1.5), type = "l", col = "yellow3", lwd = 6,
-     mgp = c(5, 2, 0), cex.lab = 4, cex.axis = 3, axes = FALSE, ann = FALSE)
-axis(1, at = seq(0, 1.5, length.out = 4), cex.axis = 3, mgp = c(5, 2, 0))
-axis(2, at = seq(0, 0.03, length.out = 7), cex.axis = 3, mgp = c(5, 2, 0), las = 1)
+# Plot PDF of bootstrapped wavespeeds
+plot(density(boot.cv1), col = "yellow3", lwd = 6, xlim = c(0.1, 0.2), ylim = c(0, 40), 
+     axes = FALSE, ann = FALSE)
+axis(1, at = seq(0.1, 0.2, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0))
+axis(2, at = seq(0, 40, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0), las = 1)
 box()
-mtext("Wave Shape Parameter", side = 1, cex = 4, line = 5)
-mtext("Wave Speed (m/yr)", side = 2, cex = 4, line = 10)
-lines(s.values, c.values.2, 
-      col = "green4", lwd = 6)
-segments(x0 = c(-0.2, -0.2, s.c.min, s.c.min.2), x1 = c(s.c.min, s.c.min.2, s.c.min, s.c.min.2),
-         y0 = c(c.min, c.min.2, -0.05, -0.05), y1 = c(c.min, c.min.2, c.min, c.min.2), lty = 2)
-text(labels = c(paste0("~ ", round(c.min.2, digits = 4), " m/yr"),
-                paste0("~ ", round(c.min, digits = 4), " m/yr")),
-     x = rep(0.110, 2), y = c(c.min.2, c.min) + 0.0007, cex = 2.5)
+mtext("Wave Speed (m/yr)", side = 1, cex = 4, line = 5)
+mtext("Probability Density", side = 2, cex = 4, line = 10)
+#lines(density(boot.cv2), col = "green4", lwd = 6)
+# Need to update code below to reflect new values once BS scenario is ready
+#segments(x0 = c(-0.2, -0.2, s.c.min, s.c.min.2), x1 = c(s.c.min, s.c.min.2, s.c.min, s.c.min.2),
+#         y0 = c(c.min, c.min.2, -0.05, -0.05), y1 = c(c.min, c.min.2, c.min, c.min.2), lty = 2)
+#text(labels = c(paste0("~ ", round(c.min.2, digits = 4), " m/yr"),
+#                paste0("~ ", round(c.min, digits = 4), " m/yr")),
+#     x = rep(0.110, 2), y = c(c.min.2, c.min) + 0.0007, cex = 2.5)
 popViewport()
 
 # Setup to plot growth rates
@@ -52,24 +48,21 @@ par(fig = gridFIG())
 par(new = TRUE)
 par(mar = c(7, 2.1, 2.1, 14))
 
-# Plot population growth rates
-plot(seq(-1.3, max(CData.s$d.stand), length.out = 100), lambda.2, 
-     type = "l", lwd = 6, col = "green4", cex.lab = 4, cex.axis = 2, mgp = c(5, 2, 0),
-     xlim = c(-1.15, 2.5), ylim = c(1, 1.012), axes = FALSE, ann = FALSE)
-axis(1, cex.axis = 3, mgp = c(5, 2, 0))
-axis(4, at = seq(1, 1.012, length.out = 7), cex.axis = 3, mgp = c(5, 2, 0), las = 1)
+# Plot growth rate lambda across a range of densities
+plot(d.test, lambda_density, type = "l", lwd = 6, col = "yellow3", xlim = c(min(d.test), max(d.test)), 
+     ylim = c(1, 1.04), axes = FALSE, ann = FALSE)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0))
+axis(4, at = seq(1, 1.04, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0), las = 1)
 box()
-mtext("Standardised Weighted Density", side = 1, cex = 4, line = 5)
-mtext("Growth Rate", side = 4, cex = 4, line = 11)
-lines(seq(-1.3, max(CData.s$d.stand), length.out = 100), lambda, 
-      lwd = 6, col = "yellow3")
+mtext("Weighted Density", side = 1, cex = 4, line = 5)
+mtext("Growth Rate", side = 4, cex = 4, line = 10)
 popViewport()
 
 # Create legend
-grid.rect(vp = viewport(layout.pos.row = 80:130, layout.pos.col = 1900:1950), gp = gpar(fill = "green4"))
-grid.rect(vp = viewport(layout.pos.row = 150:200, layout.pos.col = 1900:1950), gp = gpar(fill = "yellow3"))
+grid.rect(vp = viewport(layout.pos.row = 60:110, layout.pos.col = 2000:2050), gp = gpar(fill = "green4"))
+grid.rect(vp = viewport(layout.pos.row = 130:180, layout.pos.col = 2000:2050), gp = gpar(fill = "yellow3"))
 grid.text(label = c("Higher seedling survival", "Normal conditions"),
-          x = rep(0.759, 2), y = c(0.888, 0.810), just = "left", gp = gpar(fontsize = 31))
+          x = rep(0.794, 2), y = c(0.908, 0.830), just = "left", gp = gpar(fontsize = 31))
 
 # Deactivate grid layout; finalise graphics save
 popViewport()
