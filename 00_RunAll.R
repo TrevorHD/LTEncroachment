@@ -77,11 +77,11 @@ for(i in 1:boot.num){
   
   # "00_BootRes"
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_BootRes.R")
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
   
   # "06_SIPM"
   # Spatial integral projection setting up functions to calculate wavespeeds
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
   
   # Wavespeeds as function of s; growth as function of density
   c.values <- Wavespeed(200)
@@ -113,7 +113,7 @@ for(i in 1:boot.num){
   
   # "00_BootRes"
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_BootRes.R")
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
   
   # "05_CDataAnalysis_NS"
   # Create demography models for growth, reproduction, survival, etc. under normal circumstances
@@ -126,7 +126,7 @@ for(i in 1:boot.num){
   
   # "06_SIPM"
   # Spatial integral projection model that calculates wavespeeds
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
   
   # Wavespeeds as function of s; growth as function of density
   c.values.2 <- Wavespeed(200)
@@ -157,5 +157,5 @@ remove(time.start, time.end)
 
 # "07_MainFigures"
 # Generate figures for wavespeeds and population growth, dispersal, and demographic data
-source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_MainFigures.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_MainFigures.R")
 
