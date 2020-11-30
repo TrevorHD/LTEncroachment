@@ -40,6 +40,10 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/03_Disp
 # Tidy up demography data before creating demography models
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 
+# "local_density_dependent_IPM"
+# Create demography models for use in SIPM
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/local_density_dependent_IPM.R")
+
 
 
 
@@ -53,7 +57,7 @@ boot.prop <- 0.75
 
 # Set number of bootstrap iterations
 # Please note: one iteration takes a long time (~30 minutes), so choose this number wisely
-boot.num <- 10
+boot.num <- 2
 
 # Create empty vectors to populate with wavespeeds for normal and higher survival scenarios
 boot.cv1 <- c()
@@ -73,31 +77,20 @@ for(i in 1:boot.num){
   
   # "00_BootRes"
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/00_BootRes.R")
-  
-  # "05_CDataAnalysis_NS"
-  # Create demography models for growth, reproduction, survival, etc. under normal circumstances
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_BootRes.R")
   
   # "06_SIPM"
   # Spatial integral projection setting up functions to calculate wavespeeds
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
   
   # Wavespeeds as function of s; growth as function of density
-  c.values <- Wavespeed(100)
-  lambda <- c()
-  for(i in seq(-1.3, max(boot.CData.s$d.stand), length.out = 100)){
-    lambda.i <- TransMatrix(n = 100, d = i)
-    lambda <- append(lambda, Re(eigen(lambda.i$matrix)$values[1]))}
+  c.values <- Wavespeed(200)
   
   # Calculate minimum wavespeed
   c.min <- min(c.values)
   
   # Append wavespeed to bootstrapped vector of estimated wavespeeds
-  boot.cv1 <- append(boot.cv1, c.min)
-  
-  # Clean up
-  remove(lambda.i, TM, i)}
+  boot.cv1 <- append(boot.cv1, c.min)}
 
 # Get procedure time
 time.end <- Sys.time()
@@ -110,6 +103,8 @@ remove(time.start, time.end)
 
 # ----- Wavespeeds and population growth for higher survival scenario -------------------------------------
 
+# NOTE: this part will not be used for now, until we get the other scenario working first
+
 # This will take several minutes; be patient
 
 # Begin bootstrapping
@@ -118,7 +113,7 @@ for(i in 1:boot.num){
   
   # "00_BootRes"
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/00_BootRes.R")
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_BootRes.R")
   
   # "05_CDataAnalysis_NS"
   # Create demography models for growth, reproduction, survival, etc. under normal circumstances
@@ -134,7 +129,7 @@ for(i in 1:boot.num){
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_SIPM.R")
   
   # Wavespeeds as function of s; growth as function of density
-  c.values.2 <- Wavespeed(100)
+  c.values.2 <- Wavespeed(200)
   lambda.2 <- c()
   for(i in seq(-1.3, max(boot.CData.s$d.stand), length.out = 100)){
     lambda.i <- TransMatrix(n = 100, d = i)
