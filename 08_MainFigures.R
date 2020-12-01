@@ -24,16 +24,16 @@ pushViewport(viewport(layout = gly))
 pushViewport(viewport(layout = gly, layout.pos.row = 1:900, layout.pos.col = 1:1300))
 par(fig = gridFIG())
 par(new = TRUE)
-par(mar = c(7, 14, 2.1, 2.1))
+par(mar = c(7, 9, 2.1, 2.1))
 
 # Plot PDF of bootstrapped wavespeeds
-plot(density(boot.cv1), col = "yellow3", lwd = 6, xlim = c(0.1, 0.2), ylim = c(0, 40), 
+plot(density(boot.cv1), col = "yellow3", lwd = 6, xlim = c(0.125, 0.2), ylim = c(0, 40), 
      axes = FALSE, ann = FALSE)
-axis(1, at = seq(0.1, 0.2, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0))
-axis(2, at = seq(0, 40, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0), las = 1)
+axis(1, at = seq(0.125, 0.2, length.out = 4), cex.axis = 2, mgp = c(5, 2, 0))
+axis(2, at = seq(0, 40, length.out = 5), cex.axis = 2, mgp = c(5, 1, 0), las = 1)
+mtext("Wave Speed (m/yr)", side = 1, cex = 3, line = 5)
+mtext("Probability Density", side = 2, cex = 3, line = 5)
 box()
-mtext("Wave Speed (m/yr)", side = 1, cex = 4, line = 5)
-mtext("Probability Density", side = 2, cex = 4, line = 10)
 #lines(density(boot.cv2), col = "green4", lwd = 6)
 # Need to update code below to reflect new values once BS scenario is ready
 #segments(x0 = c(-0.2, -0.2, s.c.min, s.c.min.2), x1 = c(s.c.min, s.c.min.2, s.c.min, s.c.min.2),
@@ -47,23 +47,23 @@ popViewport()
 pushViewport(viewport(layout.pos.row = 1:900, layout.pos.col = 1300:2600))
 par(fig = gridFIG())
 par(new = TRUE)
-par(mar = c(7, 2.1, 2.1, 14))
+par(mar = c(7, 2.1, 2.1, 9))
 
 # Plot growth rate lambda across a range of densities
-plot(d.test, lambda_density, type = "l", lwd = 6, col = "yellow3", xlim = c(min(d.test), max(d.test)), 
-     ylim = c(1, 1.04), axes = FALSE, ann = FALSE)
-axis(1, at = seq(0, 200, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0))
-axis(4, at = seq(1, 1.04, length.out = 5), cex.axis = 2.5, mgp = c(5, 2, 0), las = 1)
+plot(d.test, lambda_density, type = "l", lwd = 6, col = "yellow3", ylim = c(1, 1.04), xlim = c(0, 200), 
+     axes = FALSE, ann = FALSE)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 2, mgp = c(5, 2, 0))
+axis(4, at = seq(1, 1.04, length.out = 5), cex.axis = 2, mgp = c(5, 1, 0), las = 1)
+mtext("Weighted Density", side = 1, cex = 3, line = 5)
+mtext("Growth Rate", side = 4, cex = 3, line = 6.5)
 box()
-mtext("Weighted Density", side = 1, cex = 4, line = 5)
-mtext("Growth Rate", side = 4, cex = 4, line = 10)
 popViewport()
 
 # Create legend
-grid.rect(vp = viewport(layout.pos.row = 60:110, layout.pos.col = 2000:2050), gp = gpar(fill = "green4"))
-grid.rect(vp = viewport(layout.pos.row = 130:180, layout.pos.col = 2000:2050), gp = gpar(fill = "yellow3"))
+grid.rect(vp = viewport(layout.pos.row = 60:100, layout.pos.col = 2420:2460), gp = gpar(fill = "green4"))
+grid.rect(vp = viewport(layout.pos.row = 120:160, layout.pos.col = 2420:2460), gp = gpar(fill = "yellow3"))
 grid.text(label = c("Higher seedling survival", "Normal conditions"),
-          x = rep(0.794, 2), y = c(0.908, 0.830), just = "left", gp = gpar(fontsize = 31))
+          x = rep(0.927, 2), y = c(0.912, 0.849), just = "right", gp = gpar(fontsize = 27))
 
 # Deactivate grid layout; finalise graphics save
 popViewport()
@@ -202,12 +202,12 @@ par(new = TRUE)
 par(mar = c(5, 6, 4, 2))
 
 # Plot fruits data
-plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n", xlim = c(0, 200), ylim = c(0, 2500),
-     cex.lab = 2, axes = FALSE, ann = FALSE)
+plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n", 
+     xlim = c(0, 200), ylim = c(0, 2500), cex.lab = 2, axes = FALSE, ann = FALSE)
 axis(1, at = seq(0, 200, length.out = 5), labels = FALSE, mgp = c(1, 1, 0))
 axis(2, at = seq(0, 2500, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-box()
 mtext("Flowers and Fruits", side = 2, cex = 2, line = 5)
+box()
 for(i in 1:n_cuts_size){
   points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin == i],
          LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin == i], pch = 16, col = PlotCol[i],
@@ -223,13 +223,13 @@ par(new = TRUE)
 par(mar = c(5, 6, 4, 2))
 
 # Plot flowering data
-plot(LATR_flow_dat_plot$mean_density, LATR_flow_dat_plot$mean_flower, type = "n", ylim = c(0, 1), xlim = c(0, 200),
-     cex.lab = 2, axes = FALSE, ann = FALSE)
+plot(LATR_flow_dat_plot$mean_density, LATR_flow_dat_plot$mean_flower, type = "n", 
+     xlim = c(0, 200), ylim = c(0, 1), cex.lab = 2, axes = FALSE, ann = FALSE)
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(0, 1, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-box()
 mtext("Weighted density", side = 1, cex = 2, line = 3.5)
 mtext("Pr(Flowering)", side = 2, cex = 2, line = 5)
+box()
 for(i in 1:n_cuts_size){
   points(LATR_flow_dat_plot$mean_density[LATR_flow_dat_plot$size_bin == i],
          LATR_flow_dat_plot$mean_flower[LATR_flow_dat_plot$size_bin == i], pch = 16, col = PlotCol[i],
