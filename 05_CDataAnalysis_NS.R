@@ -149,12 +149,6 @@ LATR_flower_best <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.
 LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
 LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
 
-## Tom's practice bootstrap
-#for(b in 1:n.boot){
-#  LATR_flower_best <- gam(total.reproduction_t>0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t  + s(unique.transect,bs="re"),
-#                         data=LATR_flow_dat_boot[[b]], gamma=1.4, family="binomial")
-#}
-
 # Plot effect of size on pr(flower)
 # plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"]) 
 
@@ -246,65 +240,10 @@ LATR_surv_fitted_terms <- predict(LATR_surv_best, type = "terms")
 LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclude = "s(unique.transect)")
 
 # Plot effect of size on pr(survival)
-plot(LATR_surv_dat$log_volume_t, LATR_surv_fitted_terms[, "s(log_volume_t)"]) 
+# plot(LATR_surv_dat$log_volume_t, LATR_surv_fitted_terms[, "s(log_volume_t)"]) 
 
 # Plot effect of density on pr(survival)
-plot(LATR_surv_dat$weighted.dens, LATR_surv_fitted_terms[, "s(weighted.dens)"]) 
-
-# Visualize data and model for the natural census
-n_cuts_dens <- 8
-n_cuts_size <- 4
-LATR_surv_dat %>% 
-  filter(transplant == FALSE) %>% 
-  mutate(size_bin = as.integer(cut_interval(log_volume_t, n_cuts_size)),
-         dens_bin = as.integer(cut_interval(weighted.dens, n_cuts_dens))) %>% 
-  group_by(size_bin,dens_bin) %>% 
-  summarise(mean_size = mean(log_volume_t),
-            mean_density = mean(weighted.dens),
-            mean_surv = mean(survival_t1),
-            pred_surv = mean(pred),
-            bin_n = n()) -> LATR_surv_nat_plot
-
-# Generate predictions for natural census plotting
-size_means_surv_nat <- LATR_surv_nat_plot %>% group_by(size_bin) %>% summarise(mean_size = mean(mean_size))
-LATR_surv_nat_pred <- data.frame(
-  weighted.dens = rep(seq(min(LATR_surv_nat_plot$mean_density), max(LATR_surv_nat_plot$mean_density), length.out = 20), times = n_cuts_size),
-  log_volume_t = rep(size_means_surv_nat$mean_size, each = 20),
-  unique.transect = "1.FPS",
-  transplant = FALSE,
-  size_bin = rep(size_means_surv_nat$size_bin, each = 20))
-LATR_surv_nat_pred$pred <- predict.gam(LATR_surv_best,newdata = LATR_surv_nat_pred, exclude = "s(unique.transect)")
-
-# Plot natural census data
-plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n", ylim = c(0, 1),
-     xlab = "Weighted density", ylab = "Pr(Survival)")
-for(i in 1:n_cuts_size){
-  points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
-         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = i, cex = 1.5)
-  #cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*3)
-  lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
-        invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]),col = i)}
-
-# Generate predictions for transplant plotting
-LATR_surv_dat %>% 
-  filter(transplant == TRUE) %>% 
-  mutate(dens_bin = as.integer(cut_interval(weighted.dens, n_cuts_dens)),
-         mean_size = mean(log_volume_t)) %>% 
-  group_by(dens_bin) %>% 
-  summarise(mean_size = unique(mean_size),
-            mean_density = mean(weighted.dens),
-            mean_surv = mean(survival_t1),
-            bin_n = n()) -> LATR_surv_exp_plot
-LATR_surv_exp_pred <- data.frame(
-  weighted.dens = seq(min(LATR_surv_exp_plot$mean_density), max(LATR_surv_exp_plot$mean_density), length.out = 20),
-  log_volume_t = LATR_surv_exp_plot$mean_size[1],
-  unique.transect = "1.FPS",
-  transplant = TRUE)
-LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_exp_pred, exclude = "s(unique.transect)")
-
-# Plot transplant data on top of natural census data
-points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2)
-lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty = 2)
+# plot(LATR_surv_dat$weighted.dens, LATR_surv_fitted_terms[, "s(weighted.dens)"]) 
 
 
 
