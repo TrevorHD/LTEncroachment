@@ -52,7 +52,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
-boot.on <- TRUE
+boot.on <- FALSE
 
 # Determine resampling proportion; that is, the proportion of individuals selected each interation
 # Should be in the interval (0, 1), exclusive

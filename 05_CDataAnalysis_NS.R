@@ -81,14 +81,14 @@ LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms")
 LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
 
 # Plot of effect of size on future size -- obviously linear
-plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s(log_volume_t)"]) 
+# plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s(log_volume_t)"]) 
 
 # Plot of effect of density on growth 
-plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s(weighted.dens)"]) 
+# plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s(weighted.dens)"]) 
 
-#Plots of effect of size and density on sd(future size)
-plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s.1(log_volume_t)"]) 
-plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s.1(weighted.dens)"]) 
+# Plots of effect of size and density on sd(future size)
+# plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s.1(log_volume_t)"]) 
+# plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s.1(weighted.dens)"]) 
 
 
 
@@ -156,42 +156,10 @@ LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exc
 #}
 
 # Plot effect of size on pr(flower)
-plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"]) 
+# plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"]) 
 
 # Plot effect of density on pr(flower)
-plot(LATR_flow_dat$weighted.dens, LATR_flower_fitted_terms[, "s(weighted.dens)"]) 
-
-# Visualize data and model
-n_cuts_dens <- 8
-n_cuts_size <- 4
-LATR_flow_dat %>% 
-  mutate(size_bin = as.integer(cut_number(log_volume_t, n_cuts_size)),
-         dens_bin = as.integer(cut_number(weighted.dens, n_cuts_dens))) %>% 
-  group_by(size_bin,dens_bin) %>% 
-  summarise(mean_size = mean(log_volume_t),
-            mean_density = mean(weighted.dens),
-            mean_flower = mean(total.reproduction_t > 0),
-            pred_flower = mean(pred),
-            bin_n = n()) -> LATR_flow_dat_plot
-
-# Generate predictions for plotting
-size_means_flow <- LATR_flow_dat_plot %>% group_by(size_bin) %>% summarise(mean_size=mean(mean_size))
-LATR_flow_pred <- data.frame(
-  weighted.dens = rep(seq(min(LATR_flow_dat$weighted.dens), max(LATR_flow_dat$weighted.dens), length.out = 20), times = n_cuts_size),
-  log_volume_t = rep(size_means_flow$mean_size,each = 20),
-  unique.transect = "1.FPS",
-  size_bin = rep(size_means_flow$size_bin, each = 20))
-LATR_flow_pred$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_pred, exclude = "s(unique.transect)")
-
-# Plot data
-plot(LATR_flow_dat_plot$mean_density, LATR_flow_dat_plot$mean_flower, type = "n", ylim = c(0, 1),
-     xlab = "Weighted density", ylab = "Pr(Flowering)")
-for(i in 1:n_cuts_size){
-  points(LATR_flow_dat_plot$mean_density[LATR_flow_dat_plot$size_bin == i],
-         LATR_flow_dat_plot$mean_flower[LATR_flow_dat_plot$size_bin == i], pch = 16, col = i,
-         cex = (LATR_flow_dat_plot$bin_n[LATR_flow_dat_plot$size_bin == i]/max(LATR_flow_dat_plot$bin_n))*3)
-  lines(LATR_flow_pred$weighted.dens[LATR_flow_pred$size_bin == i],
-        invlogit(LATR_flow_pred$pred[LATR_flow_pred$size_bin == i]), col = i)}
+# plot(LATR_flow_dat$weighted.dens, LATR_flower_fitted_terms[, "s(weighted.dens)"]) 
 
 
 
@@ -224,40 +192,10 @@ LATR_fruits_fitted_terms <- predict(LATR_fruits_best, type = "terms")
 LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat, exclude = "s(unique.transect)")
 
 # Plot effect of size on fruits
-plot(LATR_fruits_dat$log_volume_t, LATR_fruits_fitted_terms[, "s(log_volume_t)"]) 
+# plot(LATR_fruits_dat$log_volume_t, LATR_fruits_fitted_terms[, "s(log_volume_t)"]) 
 
 # Plot effect of density on fruits 
-plot(LATR_fruits_dat$weighted.dens, LATR_fruits_fitted_terms[, "s(weighted.dens)"]) 
-
-# Visualize data and model
-LATR_fruits_dat %>% 
-  mutate(size_bin = as.integer(cut_number(log_volume_t, n_cuts_size)),
-         dens_bin = as.integer(cut_number(weighted.dens, n_cuts_dens))) %>% 
-  group_by(size_bin, dens_bin) %>% 
-  summarise(mean_size = mean(log_volume_t),
-            mean_density = mean(weighted.dens),
-            mean_fruits = mean(total.reproduction_t),
-            pred_fruits = mean(pred),
-            bin_n = n()) -> LATR_fruits_dat_plot
-
-# Generate data for prediction
-size_means_fruit <- LATR_fruits_dat_plot %>% group_by(size_bin) %>% summarise(mean_size = mean(mean_size))
-LATR_fruit_pred <- data.frame(
-  weighted.dens = rep(seq(min(LATR_fruits_dat$weighted.dens),max(LATR_fruits_dat$weighted.dens),length.out = 20), times = n_cuts_size),
-  log_volume_t = rep(size_means_fruit$mean_size, each = 20),
-  unique.transect = "1.FPS",
-  size_bin = rep(size_means_fruit$size_bin, each = 20))
-LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
-
-# Plot data
-plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n",
-     xlab = "Weighted density", ylab = "Flowers and Fruits")
-for(i in 1:n_cuts_size){
-  points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin == i],
-         LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin == i], pch = 16, col = i,
-         cex = (LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin == i]/max(LATR_fruits_dat_plot$bin_n))*3)
-  lines(LATR_fruit_pred$weighted.dens[LATR_fruit_pred$size_bin == i],
-        exp(LATR_fruit_pred$pred[LATR_fruit_pred$size_bin == i]), col = i)}
+# plot(LATR_fruits_dat$weighted.dens, LATR_fruits_fitted_terms[, "s(weighted.dens)"]) 
 
 
 
@@ -426,13 +364,13 @@ LATR_recruit_best <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.trans
 # No evidence for density dependence in recruitment, just a really low overall recruitment rate
 plot(LATR_recruitment$weighted.dens, LATR_recruitment$recruits/LATR_recruitment$total_seeds)
 LATR_recruitment$pred = predict.gam(LATR_recruit_best, newdata = LATR_recruitment, exclude = "s(unique.transect)")
-points(LATR_recruitment$weighted.dens, invlogit(LATR_recruitment$pred), col = "red", pch = ".")
+# points(LATR_recruitment$weighted.dens, invlogit(LATR_recruitment$pred), col = "red", pch = ".")
 
 # Just out of curiosity, the density-dependent model is a very close second... what does this look like?
-LATR_recruit_fitted_terms = predict(LATR_recruit[[2]], type = "terms") 
+# LATR_recruit_fitted_terms = predict(LATR_recruit[[2]], type = "terms") 
 
 # Plot effect of density on pr(seedling recruitment); negative density dependence
-plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens)"])
+# plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens)"])
 
 
 
