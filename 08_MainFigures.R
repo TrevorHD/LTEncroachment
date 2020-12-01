@@ -195,8 +195,29 @@ plot.new()
 gly <- grid.layout(1200, 1000)
 pushViewport(viewport(layout = gly))
 
+# Setup to plot fruits data
+pushViewport(viewport(layout = gly, layout.pos.row = 1:635, layout.pos.col = 25:1000))
+par(fig = gridFIG())
+par(new = TRUE)
+par(mar = c(5, 6, 4, 2))
+
+# Plot fruits data
+plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n", xlim = c(0, 200), ylim = c(0, 2500),
+     cex.lab = 2, axes = FALSE, ann = FALSE)
+axis(1, at = seq(0, 200, length.out = 5), labels = FALSE, mgp = c(1, 1, 0))
+axis(2, at = seq(0, 2500, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+box()
+mtext("Flowers and Fruits", side = 2, cex = 2, line = 5)
+for(i in 1:n_cuts_size){
+  points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin == i],
+         LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin == i], pch = 16, col = PlotCol[i],
+         cex = (LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin == i]/max(LATR_fruits_dat_plot$bin_n))*3)
+  lines(LATR_fruit_pred$weighted.dens[LATR_fruit_pred$size_bin == i],
+        exp(LATR_fruit_pred$pred[LATR_fruit_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
+popViewport()
+
 # Setup to plot flowering data
-pushViewport(viewport(layout = gly, layout.pos.row = 1:600, layout.pos.col = 25:1000))
+pushViewport(viewport(layout = gly, layout.pos.row = 540:1175, layout.pos.col = 25:1000))
 par(fig = gridFIG())
 par(new = TRUE)
 par(mar = c(5, 6, 4, 2))
@@ -207,37 +228,25 @@ plot(LATR_flow_dat_plot$mean_density, LATR_flow_dat_plot$mean_flower, type = "n"
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(0, 1, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 box()
-mtext("Weighted density", side = 1, cex = 2, line = 3)
+mtext("Weighted density", side = 1, cex = 2, line = 3.5)
 mtext("Pr(Flowering)", side = 2, cex = 2, line = 5)
 for(i in 1:n_cuts_size){
   points(LATR_flow_dat_plot$mean_density[LATR_flow_dat_plot$size_bin == i],
          LATR_flow_dat_plot$mean_flower[LATR_flow_dat_plot$size_bin == i], pch = 16, col = PlotCol[i],
          cex = (LATR_flow_dat_plot$bin_n[LATR_flow_dat_plot$size_bin == i]/max(LATR_flow_dat_plot$bin_n))*3)
   lines(LATR_flow_pred$weighted.dens[LATR_flow_pred$size_bin == i],
-        invlogit(LATR_flow_pred$pred[LATR_flow_pred$size_bin == i]), col = PlotCol[i])}
+        invlogit(LATR_flow_pred$pred[LATR_flow_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
 popViewport()
 
-# Setup to plot fruits data
-pushViewport(viewport(layout = gly, layout.pos.row = 601:1200, layout.pos.col = 25:1000))
-par(fig = gridFIG())
-par(new = TRUE)
-par(mar = c(5, 6, 4, 2))
-
-# Plot fruits data
-plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n", xlim = c(0, 200), ylim = c(0, 2500),
-     cex.lab = 2, axes = FALSE, ann = FALSE)
-axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(0, 2500, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-box()
-mtext("Weighted density", side = 1, cex = 2, line = 3)
-mtext("Flowers and Fruits", side = 2, cex = 2, line = 5)
-for(i in 1:n_cuts_size){
-  points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin == i],
-         LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin == i], pch = 16, col = PlotCol[i],
-         cex = (LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin == i]/max(LATR_fruits_dat_plot$bin_n))*3)
-  lines(LATR_fruit_pred$weighted.dens[LATR_fruit_pred$size_bin == i],
-        exp(LATR_fruit_pred$pred[LATR_fruit_pred$size_bin == i]), col = PlotCol[i])}
-popViewport()
+# Create legend
+grid.rect(vp = viewport(layout.pos.row = 100:125, layout.pos.col = 930:955), gp = gpar(fill = "navy"))
+grid.rect(vp = viewport(layout.pos.row = 135:160, layout.pos.col = 930:955), gp = gpar(fill = "dodgerblue1"))
+grid.rect(vp = viewport(layout.pos.row = 170:195, layout.pos.col = 930:955), gp = gpar(fill = "darkorchid2"))
+grid.rect(vp = viewport(layout.pos.row = 205:230, layout.pos.col = 930:955), gp = gpar(fill = "firebrick2"))
+grid.text(label = c("[75, 100]", "[50, 75)", "[25, 50)", "[0, 25)"),
+          x = rep(0.923, 4), y = c(0.909, 0.880, 0.851, 0.822), just = "right", gp = gpar(fontsize = 20))
+grid.text(label = bquote(underline("Size percentile")),
+          x = 0.957, y = 0.936, just = "right", gp = gpar(fontsize = 26))
 
 # Deactivate grid layout; finalise graphics save
 popViewport()
