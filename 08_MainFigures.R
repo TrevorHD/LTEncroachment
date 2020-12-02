@@ -243,7 +243,7 @@ grid.rect(vp = viewport(layout.pos.row = 100:125, layout.pos.col = 930:955), gp 
 grid.rect(vp = viewport(layout.pos.row = 135:160, layout.pos.col = 930:955), gp = gpar(fill = "dodgerblue1"))
 grid.rect(vp = viewport(layout.pos.row = 170:195, layout.pos.col = 930:955), gp = gpar(fill = "darkorchid2"))
 grid.rect(vp = viewport(layout.pos.row = 205:230, layout.pos.col = 930:955), gp = gpar(fill = "firebrick2"))
-grid.text(label = c("[75, 100]", "[50, 75)", "[25, 50)", "[0, 25)"),
+grid.text(label = c("(75, 100]", "(50, 75]", "(25, 50]", "[0, 25]"),
           x = rep(0.923, 4), y = c(0.909, 0.880, 0.851, 0.822), just = "right", gp = gpar(fontsize = 20))
 grid.text(label = bquote(underline("Size percentile")),
           x = 0.957, y = 0.936, just = "right", gp = gpar(fontsize = 26))
@@ -256,8 +256,6 @@ dev.off()
 
 
 
-##### WORK IN PROGRESS ------------------------------------------------------------------------------------
-
 ##### Plot density effects on survival --------------------------------------------------------------------
 
 # Visualize data and model for the natural census
@@ -267,7 +265,7 @@ LATR_surv_dat %>%
   filter(transplant == FALSE) %>% 
   mutate(size_bin = as.integer(cut_interval(log_volume_t, n_cuts_size)),
          dens_bin = as.integer(cut_interval(weighted.dens, n_cuts_dens))) %>% 
-  group_by(size_bin,dens_bin) %>% 
+  group_by(size_bin, dens_bin) %>% 
   summarise(mean_size = mean(log_volume_t),
             mean_density = mean(weighted.dens),
             mean_surv = mean(survival_t1),
@@ -283,16 +281,6 @@ LATR_surv_nat_pred <- data.frame(
   transplant = FALSE,
   size_bin = rep(size_means_surv_nat$size_bin, each = 20))
 LATR_surv_nat_pred$pred <- predict.gam(LATR_surv_best,newdata = LATR_surv_nat_pred, exclude = "s(unique.transect)")
-
-# Plot natural census data
-plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n", ylim = c(0, 1),
-     xlab = "Weighted density", ylab = "Pr(Survival)")
-for(i in 1:n_cuts_size){
-  points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
-         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = PlotCol[i], cex = 1.5)
-  #cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*3)
-  lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
-        invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]), col = PlotCol[i])}
 
 # Generate predictions for transplant plotting
 LATR_surv_dat %>% 
@@ -311,9 +299,85 @@ LATR_surv_exp_pred <- data.frame(
   transplant = TRUE)
 LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_exp_pred, exclude = "s(unique.transect)")
 
-# Plot transplant data on top of natural census data
+# Prepare graphics device
+jpeg(filename = "Figure 4.jpeg", width = 1000, height = 1200, units = "px")
+
+# Create blank page
+grid.newpage()
+plot.new()
+
+# Set grid layout and activate it
+gly <- grid.layout(1200, 1000)
+pushViewport(viewport(layout = gly))
+
+# Setup to plot data with equal point scales
+pushViewport(viewport(layout = gly, layout.pos.row = 1:635, layout.pos.col = 25:1000))
+par(fig = gridFIG())
+par(new = TRUE)
+par(mar = c(5, 6, 4, 2))
+
+# Plot natural census and transplant survival data with equal point scales
+plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n",
+     xlim = c(0, 200), ylim = c(0, 1), cex.lab = 2, axes = FALSE, ann = FALSE)
+for(i in 1:n_cuts_size){
+  points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
+         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = PlotCol[i], cex = 1.5)
+  lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
+        invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
 points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2)
 lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty = 2)
+axis(1, at = seq(0, 200, length.out = 5), labels = FALSE, mgp = c(1, 1, 0))
+axis(2, at = seq(0, 1, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Pr(Survival)", side = 2, cex = 2, line = 5)
+box()
+popViewport()
+
+# Setup to plot data with points scaled on number of observations
+pushViewport(viewport(layout = gly, layout.pos.row = 540:1175, layout.pos.col = 25:1000))
+par(fig = gridFIG())
+par(new = TRUE)
+par(mar = c(5, 6, 4, 2))
+
+# Plot natural census and transplant survival data with points scaled on number of observations
+plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n",
+     xlim = c(0, 200), ylim = c(0, 1), cex.lab = 2, axes = FALSE, ann = FALSE)
+for(i in 1:n_cuts_size){
+  points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
+         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = PlotCol[i],
+  cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*5)
+  lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
+        invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
+points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2,
+       cex = (LATR_surv_exp_plot$bin_n/max(LATR_surv_nat_plot$bin_n))*5)
+lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty = 2)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
+axis(2, at = seq(0, 1, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted density", side = 1, cex = 2, line = 3.5)
+mtext("Pr(Survival)", side = 2, cex = 2, line = 5)
+box()
+popViewport()
+
+# Block out lines to reduce clash with legend
+grid.rect(vp = viewport(layout.pos.row = 65:90, layout.pos.col = 765:960), 
+          gp = gpar(fill = "white", col = "white"))
+grid.rect(vp = viewport(layout.pos.row = 130:190, layout.pos.col = 815:960), 
+          gp = gpar(fill = "white", col = "white"))
+
+# Create legend
+grid.rect(vp = viewport(layout.pos.row = 100:125, layout.pos.col = 930:955), gp = gpar(fill = "navy"))
+grid.rect(vp = viewport(layout.pos.row = 135:160, layout.pos.col = 930:955), gp = gpar(fill = "dodgerblue1"))
+grid.rect(vp = viewport(layout.pos.row = 170:195, layout.pos.col = 930:955), gp = gpar(fill = "darkorchid2"))
+grid.rect(vp = viewport(layout.pos.row = 205:230, layout.pos.col = 930:955), gp = gpar(fill = "firebrick2"))
+grid.text(label = c("(10.7, 14.9]", "(6.45, 10.7]", "(2.21, 6.45]", "[-2.03, 2.21]"),
+          x = rep(0.923, 4), y = c(0.909, 0.880, 0.851, 0.822), just = "right", gp = gpar(fontsize = 20))
+grid.text(label = bquote(underline("Log-size interval")),
+          x = 0.957, y = 0.936, just = "right", gp = gpar(fontsize = 26))
+
+# Deactivate grid layout; finalise graphics save
+popViewport()
+dev.off()
+
+
 
 
 
