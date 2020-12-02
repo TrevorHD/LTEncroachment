@@ -275,7 +275,7 @@ LATR_surv_dat %>%
 # Generate predictions for natural census plotting
 size_means_surv_nat <- LATR_surv_nat_plot %>% group_by(size_bin) %>% summarise(mean_size = mean(mean_size))
 LATR_surv_nat_pred <- data.frame(
-  weighted.dens = rep(seq(min(LATR_surv_nat_plot$mean_density), max(LATR_surv_nat_plot$mean_density), length.out = 20), times = n_cuts_size),
+  weighted.dens = rep(seq(0, max(LATR_surv_nat_plot$mean_density), length.out = 20), times = n_cuts_size),
   log_volume_t = rep(size_means_surv_nat$mean_size, each = 20),
   unique.transect = "1.FPS",
   transplant = FALSE,
@@ -293,7 +293,7 @@ LATR_surv_dat %>%
             mean_surv = mean(survival_t1),
             bin_n = n()) -> LATR_surv_exp_plot
 LATR_surv_exp_pred <- data.frame(
-  weighted.dens = seq(min(LATR_surv_exp_plot$mean_density), max(LATR_surv_exp_plot$mean_density), length.out = 20),
+  weighted.dens = seq(0, max(LATR_surv_exp_plot$mean_density), length.out = 20),
   log_volume_t = LATR_surv_exp_plot$mean_size[1],
   unique.transect = "1.FPS",
   transplant = TRUE)
@@ -376,8 +376,6 @@ grid.text(label = bquote(underline("Log-size interval")),
 # Deactivate grid layout; finalise graphics save
 popViewport()
 dev.off()
-
-
 
 
 
