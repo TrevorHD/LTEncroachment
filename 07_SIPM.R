@@ -163,7 +163,7 @@ Wavespeed <- function(n){
   
   # Define function to calculate wavespeed for each value of s
   ws.calc <- function(m, s){
-    H <- as.vector(m)*TM$Fmat + TM$Pmat
+    H <- TM$Fmat %*% diag(as.vector(m)) + TM$Pmat
     rho <- Re(eigen(H)$values[1])
     (1/s)*log(rho)}
   
