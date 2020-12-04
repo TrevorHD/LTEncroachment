@@ -1,7 +1,45 @@
-# ----- Plot bootstrapped wavespeeds and growth rates -----------------------------------------------------
+# ----- Plot bootstrapped wavespeeds ----------------------------------------------------------------------
 
 # If you need wave speed data, uncomment the placeholder below
-#boot.cv1 <- c(0.1589308 0.1530729 0.1895091 0.1529652 0.1520998 0.2045687 0.1692140 0.1571413 0.1544557 0.1559416)
+#boot.cv1 <- c(0.1589308, 0.1530729, 0.1895091, 0.1529652, 0.1520998, 0.1692140, 0.1571413, 0.1544557,
+#              0.1559416, 0.1784932, 0.1650285)
+
+# Prepare graphics device
+jpeg(filename = "Figure 1.jpeg", width = 750, height = 500, units = "px")
+
+# Create blank page
+grid.newpage()
+plot.new()
+
+# Set grid layout and activate it
+gly <- grid.layout(500, 750)
+pushViewport(viewport(layout = gly))
+
+# Setup to plot data with equal point scales
+pushViewport(viewport(layout = gly, layout.pos.row = 1:500, layout.pos.col = 1:750))
+par(fig = gridFIG())
+par(new = TRUE)
+par(mar = c(5, 8, 4, 2))
+
+# Plot PDF of bootstrapped wavespeeds
+plot(density(boot.cv1), lwd = 3, xlim = c(0.125, 0.2), ylim = c(0, 50), 
+     axes = FALSE, ann = FALSE)
+axis(1, at = seq(0.125, 0.2, length.out = 4), cex.axis = 1.5, mgp = c(1, 1, 0))
+axis(2, at = seq(0, 50, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Wave Speed (m/yr)", side = 1, cex = 2, line = 3.5)
+mtext("Probability Density", side = 2, cex = 2, line = 4)
+box()
+popViewport()
+
+# Deactivate grid layout; finalise graphics save
+popViewport()
+dev.off()
+
+
+
+
+
+# ----- Plot growth rate as function of density -----------------------------------------------------------
 
 # Calculate growth rate lambda across a range of densities
 d.test <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), 
@@ -10,60 +48,31 @@ lambda_density <- c()
 for(d in 1:length(d.test)){lambda_density[d] <- lambda(TransMatrix(dens = d.test[d], mat.size = 200)$IPMmat)}
 
 # Prepare graphics device
-jpeg(filename = "Figure 1.jpeg", width = 2600, height = 900, units = "px")
+jpeg(filename = "Figure 2.jpeg", width = 750, height = 500, units = "px")
 
 # Create blank page
 grid.newpage()
 plot.new()
 
 # Set grid layout and activate it
-gly <- grid.layout(900, 2600)
+gly <- grid.layout(500, 750)
 pushViewport(viewport(layout = gly))
 
-# Setup to plot bootstrapped wavespeeds
-pushViewport(viewport(layout = gly, layout.pos.row = 1:900, layout.pos.col = 1:1300))
+# Setup to plot data with equal point scales
+pushViewport(viewport(layout = gly, layout.pos.row = 1:500, layout.pos.col = 1:750))
 par(fig = gridFIG())
 par(new = TRUE)
-par(mar = c(7, 9, 2.1, 2.1))
-
-# Plot PDF of bootstrapped wavespeeds
-plot(density(boot.cv1), col = "yellow3", lwd = 6, xlim = c(0.125, 0.2), ylim = c(0, 40), 
-     axes = FALSE, ann = FALSE)
-axis(1, at = seq(0.125, 0.2, length.out = 4), cex.axis = 2, mgp = c(5, 2, 0))
-axis(2, at = seq(0, 40, length.out = 5), cex.axis = 2, mgp = c(5, 1, 0), las = 1)
-mtext("Wave Speed (m/yr)", side = 1, cex = 3, line = 5)
-mtext("Probability Density", side = 2, cex = 3, line = 5)
-box()
-#lines(density(boot.cv2), col = "green4", lwd = 6)
-# Need to update code below to reflect new values once BS scenario is ready
-#segments(x0 = c(-0.2, -0.2, s.c.min, s.c.min.2), x1 = c(s.c.min, s.c.min.2, s.c.min, s.c.min.2),
-#         y0 = c(c.min, c.min.2, -0.05, -0.05), y1 = c(c.min, c.min.2, c.min, c.min.2), lty = 2)
-#text(labels = c(paste0("~ ", round(c.min.2, digits = 4), " m/yr"),
-#                paste0("~ ", round(c.min, digits = 4), " m/yr")),
-#     x = rep(0.110, 2), y = c(c.min.2, c.min) + 0.0007, cex = 2.5)
-popViewport()
-
-# Setup to plot growth rates
-pushViewport(viewport(layout.pos.row = 1:900, layout.pos.col = 1300:2600))
-par(fig = gridFIG())
-par(new = TRUE)
-par(mar = c(7, 2.1, 2.1, 9))
+par(mar = c(5, 8, 4, 2))
 
 # Plot growth rate lambda across a range of densities
-plot(d.test, lambda_density, type = "l", lwd = 6, col = "yellow3", ylim = c(1, 1.04), xlim = c(0, 200), 
+plot(d.test, lambda_density, type = "l", lwd = 3, ylim = c(1, 1.04), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
-axis(1, at = seq(0, 200, length.out = 5), cex.axis = 2, mgp = c(5, 2, 0))
-axis(4, at = seq(1, 1.04, length.out = 5), cex.axis = 2, mgp = c(5, 1, 0), las = 1)
-mtext("Weighted Density", side = 1, cex = 3, line = 5)
-mtext("Growth Rate", side = 4, cex = 3, line = 6.5)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
+axis(2, at = seq(1, 1.04, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
+mtext("Growth Rate", side = 2, cex = 2, line = 5)
 box()
 popViewport()
-
-# Create legend
-grid.rect(vp = viewport(layout.pos.row = 60:100, layout.pos.col = 2420:2460), gp = gpar(fill = "green4"))
-grid.rect(vp = viewport(layout.pos.row = 120:160, layout.pos.col = 2420:2460), gp = gpar(fill = "yellow3"))
-grid.text(label = c("Higher seedling survival", "Normal conditions"),
-          x = rep(0.927, 2), y = c(0.912, 0.849), just = "right", gp = gpar(fontsize = 27))
 
 # Deactivate grid layout; finalise graphics save
 popViewport()
@@ -79,7 +88,7 @@ remove(gly, d.test, lambda_density)
 # ----- Plot dispersal kernels ----------------------------------------------------------------------------
 
 # Prepare graphics device
-jpeg(filename = "Figure 2.jpeg", width = 1600, height = 900, units = "px")
+jpeg(filename = "Figure 3.jpeg", width = 1600, height = 900, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -185,7 +194,7 @@ LATR_fruit_pred <- data.frame(
 LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
 
 # Prepare graphics device
-jpeg(filename = "Figure 3.jpeg", width = 1000, height = 1200, units = "px")
+jpeg(filename = "Figure 4.jpeg", width = 1000, height = 1200, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -300,7 +309,7 @@ LATR_surv_exp_pred <- data.frame(
 LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_exp_pred, exclude = "s(unique.transect)")
 
 # Prepare graphics device
-jpeg(filename = "Figure 4.jpeg", width = 1000, height = 1200, units = "px")
+jpeg(filename = "Figure 5.jpeg", width = 1000, height = 1200, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -390,7 +399,7 @@ LATR_recruitment_line[1324, 4] <- 0; LATR_recruitment_line[1325, 4] <- 300
 LATR_recruitment_line$pred <- predict.gam(LATR_recruit_best, newdata = LATR_recruitment_line, exclude = "s(unique.transect)")
 
 # Prepare graphics device
-jpeg(filename = "Figure 5.jpeg", width = 750, height = 500, units = "px")
+jpeg(filename = "Figure 6.jpeg", width = 750, height = 500, units = "px")
 
 # Create blank page
 grid.newpage()
