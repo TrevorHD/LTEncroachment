@@ -94,7 +94,7 @@ for(i in 1:boot.num){
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
   
   # Wavespeeds as function of s; growth as function of density
-  c.values <- Wavespeed(200)
+  c.values <- Wavespeed()
   
   # Calculate minimum wavespeed
   c.min <- min(c.values)
