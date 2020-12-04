@@ -7,6 +7,7 @@ names(CData.Transects)[1] <- "site"
 # Read longitudinal demography data
 CData.Demography <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_DemographyData.csv")
 names(CData.Demography)[1] <- "site"
+CData.Demography$site <- as.factor(CData.Demography$site)
 
 # Read transect lengths
 CData.Lengths <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectLengths.csv")
