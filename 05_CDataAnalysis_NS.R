@@ -299,12 +299,6 @@ recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)
 LATR_recruit_best <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),
                          data = LATR_recruitment, gamma = 1.4, family = "binomial")
 
-# Plot null model
-# No evidence for density dependence in recruitment, just a really low overall recruitment rate
-plot(LATR_recruitment$weighted.dens, LATR_recruitment$recruits/LATR_recruitment$total_seeds)
-LATR_recruitment$pred = predict.gam(LATR_recruit_best, newdata = LATR_recruitment, exclude = "s(unique.transect)")
-# points(LATR_recruitment$weighted.dens, invlogit(LATR_recruitment$pred), col = "red", pch = ".")
-
 # Just out of curiosity, the density-dependent model is a very close second... what does this look like?
 # LATR_recruit_fitted_terms = predict(LATR_recruit[[2]], type = "terms") 
 

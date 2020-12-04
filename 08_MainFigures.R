@@ -1,7 +1,7 @@
 # ----- Plot bootstrapped wavespeeds and growth rates -----------------------------------------------------
 
 # If you need wave speed data, uncomment the placeholder below
-#boot.cv1 <- c(0.185, 0.156, 0.158, 0.164, 0.175, 0.161, 0.17)
+#boot.cv1 <- c(0.1589308 0.1530729 0.1895091 0.1529652 0.1520998 0.2045687 0.1692140 0.1571413 0.1544557 0.1559416)
 
 # Calculate growth rate lambda across a range of densities
 d.test <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), 
@@ -372,6 +372,55 @@ grid.text(label = c("(10.7, 14.9]", "(6.45, 10.7]", "(2.21, 6.45]", "[-2.03, 2.2
           x = rep(0.923, 4), y = c(0.909, 0.880, 0.851, 0.822), just = "right", gp = gpar(fontsize = 20))
 grid.text(label = bquote(underline("Log-size interval")),
           x = 0.957, y = 0.936, just = "right", gp = gpar(fontsize = 26))
+
+# Deactivate grid layout; finalise graphics save
+popViewport()
+dev.off()
+
+
+
+
+
+# ----- Plot per-seed recruitment rate --------------------------------------------------------------------
+
+# Prepare graphics device
+jpeg(filename = "Figure 5.jpeg", width = 750, height = 500, units = "px")
+
+# Create blank page
+grid.newpage()
+plot.new()
+
+# Set grid layout and activate it
+gly <- grid.layout(500, 750)
+pushViewport(viewport(layout = gly))
+
+# Setup to plot data with equal point scales
+pushViewport(viewport(layout = gly, layout.pos.row = 1:500, layout.pos.col = 1:750))
+par(fig = gridFIG())
+par(new = TRUE)
+par(mar = c(5, 8, 4, 2))
+
+# Plot null model
+# No evidence for density dependence in recruitment, just a really low overall recruitment rate
+plot(LATR_recruitment$weighted.dens, LATR_recruitment$recruits/LATR_recruitment$total_seeds, pch = 16,
+     col = rgb(r = 0, g = 0, b = 0, alpha = 0.15), xlim = c(0, 300), ylim = c(0, 0.008),
+     axes = FALSE, ann = FALSE)
+axis(1, at = seq(0, 300, length.out = 4), cex.axis = 1.5, mgp = c(1, 1, 0))
+axis(2, at = seq(0, 0.008, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted density", side = 1, cex = 2, line = 3.5)
+mtext("Pr(Recruitment)", side = 2, cex = 2, line = 5)
+box()
+
+LATR_recruitment_line <- LATR_recruitment
+LATR_recruitment_line[1324:1325, 1:8] <- LATR_recruitment_line[1322:1323, 1:8]
+LATR_recruitment_line[1324, 4] <- 0
+LATR_recruitment_line[1325, 4] <- 300
+
+LATR_recruitment_line$pred = predict.gam(LATR_recruit_best, newdata = LATR_recruitment_line, exclude = "s(unique.transect)")
+
+
+lines(LATR_recruitment_line$weighted.dens, invlogit(LATR_recruitment_line$pred), col = "red")
+popViewport()
 
 # Deactivate grid layout; finalise graphics save
 popViewport()
