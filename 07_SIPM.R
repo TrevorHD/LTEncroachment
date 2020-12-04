@@ -75,7 +75,7 @@ TM.fertrecruit <- function(x, y, d){
 
 # Put it all together; projection matrix is a function of weighted density (dens)
 # We need a large lower extension because growth variance (gaussian) is greater for smaller plants
-TransMatrix <- function(lower.extension = low.extend, up.extend = upper.extension,
+TransMatrix <- function(lower.extension = low.extend, upper.extension = up.extend,
                         min.size = LATR_size_bounds$min_size, max.size = LATR_size_bounds$max_size,
                         mat.size = matdim, dens){
   
