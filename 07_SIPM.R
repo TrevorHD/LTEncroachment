@@ -1,8 +1,15 @@
-## give dimension of the size vector (# bins of the approximating matrix)
-matdim <- 200
-## eviction extensions
-low.extend <- -8
-up.extend <- 2
+##### Fix important parameters for SIPM -------------------------------------------------------------------
+
+# Give dimension of the size vector (# bins of the approximating matrix)
+TM.matdim <- 200
+
+# Eviction extensions for upper and lower size limits
+TM.lower.extension <- -8
+TM.upper.extension <- 2
+
+
+
+
 
 ##### IPM functions ---------------------------------------------------------------------------------------
 
@@ -75,14 +82,14 @@ TM.fertrecruit <- function(x, y, d){
 
 # Put it all together; projection matrix is a function of weighted density (dens)
 # We need a large lower extension because growth variance (gaussian) is greater for smaller plants
-TransMatrix <- function(lower.extension = low.extend, upper.extension = up.extend,
+TransMatrix <- function(dens, TM.lower.extension = TM.lower.extension, TM.upper.extension = TM.upper.extension,
                         min.size = LATR_size_bounds$min_size, max.size = LATR_size_bounds$max_size,
-                        mat.size = matdim, dens){
+                        mat.size = TM.matdim){
   
   # Matrix size and size extensions (upper and lower integration limits)
   n <- mat.size
-  L <- min.size + lower.extension
-  U <- max.size + upper.extension
+  L <- min.size + TM.lower.extension
+  U <- max.size + TM.upper.extension
   
   # Bin size for n bins
   h <- (U - L)/n
@@ -112,10 +119,11 @@ TM <- TransMatrix(dens = 0) ##minimum weighted density is zero
 
 
 
+
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 
 # Function to calculate the minimum wavespeed across a range of s
-Wavespeed <- function(n=matdim){
+Wavespeed <- function(n=TM.matdim){
   
   # Fit equation to convert volume to height for dispersal kernel use
   LATR_full %>%
@@ -137,10 +145,7 @@ Wavespeed <- function(n=matdim){
     return(h)}
   
   # Vector of n heights across which dispersal kernel will be evaluated
-  #z.list <- sapply(seq(exp(LATR_size_bounds$min_size + lower.extension), exp(LATR_size_bounds$max_size + upper.extension), length.out = n), 
-  #                 vol.to.height)/100
-  z.list <- sapply(exp(TM$meshpts),vol.to.height)/100
-  
+  z.list <- sapply(exp(TM$meshpts), vol.to.height)/100
   
   # List of simulated dispersal distances for each height
   r.list <- as.list(sapply(z.list[z.list >= 0.15], WALD.f.e.h))
