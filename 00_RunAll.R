@@ -119,7 +119,7 @@ for(i in 1:boot.num){
   
   # Flip switch back to original setting
   if(i == boot.num){
-    boot.switch <- TRUE}}
+    boot.switch <- FALSE}}
 
 # Get procedure time
 time.end <- Sys.time()
