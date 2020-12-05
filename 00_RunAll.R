@@ -40,15 +40,17 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/03_Disp
 # Tidy up demography data before creating demography models
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 
-# "05_CDataAnalysis_NS.R"
-# Create demography models for use in SIPM
-source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
-
 
 
 
 
 ##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------
+
+boot.switch <- FALSE
+
+# "05_CDataAnalysis_NS.R"
+# Create demography models for use in SIPM
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
@@ -81,15 +83,21 @@ boot.cv2 <- c()
 if(boot.on == FALSE){
   boot.num <- 1}
 
+boot.switch <- TRUE
+
 # Begin bootstrapping
 time.start <- Sys.time()
 for(i in 1:boot.num){
   
-  # "00_BootRes"
+  # "06_BootRes"
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
   
-  # "06_SIPM"
+  # "05_CDataAnalysis_NS.R"
+  # Create demography models for use in SIPM
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
+  
+  # "07_SIPM"
   # Spatial integral projection setting up functions to calculate wavespeeds
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
   

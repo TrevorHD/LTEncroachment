@@ -30,6 +30,16 @@ if(boot.on == FALSE){
 
 
 
+##### Get sample from demographic data  -------------------------------------------------------------------
+
+# Sample percentage of demographic data
+if(boot.on == TRUE){
+  LATR_full <- LATR_full[sample(1:nrow(LATR_full), round(nrow(LATR_full)*boot.prop), replace = FALSE), ]}
+
+
+
+
+
 ##### Get sample of recruits  -----------------------------------------------------------------------------
 
 # Sample percentages of recruits to calculate mean and sd recruit size

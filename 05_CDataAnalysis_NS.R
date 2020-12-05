@@ -7,7 +7,7 @@ invlogit <- function(x){exp(x)/(1 + exp(x))}
 
 ## Create unique transect as interaction of transect and site
 LATR_full <- CData %>% 
-  mutate( unique.transect = interaction(transect, site))
+  mutate(unique.transect = interaction(transect, site))
 
 
 
@@ -17,9 +17,11 @@ LATR_full <- CData %>%
 
 # Prepare a data subset for growth that drops rows missing either t or t1 size data
 # Also create log_volume as a new variable because GAM doesn't like functions of variables as variables
-LATR_grow <- LATR_full  %>% drop_na(volume_t,volume_t1) %>%
+LATR_grow <- LATR_full  %>% drop_na(volume_t, volume_t1) %>%
   mutate(log_volume_t = log(volume_t),
          log_volume_t1 = log(volume_t1))
+
+if(boot.switch == FALSE){
 
 # Create empty list to populate with model results
 LATR_gam_models <- list()
@@ -72,6 +74,8 @@ for(mod in 7:9){
 
 # Collect model AICs into a single table
 grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE) 
+
+}
 
 # Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
 # Define model 5 as our best Gaussian model
@@ -128,6 +132,8 @@ LATR_flow_dat <- bind_rows(LATR_full,LATR_dat_201718) %>%
   select(unique.transect,volume_t,total.reproduction_t,weighted.dens) %>% drop_na()
 LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
 
+if(boot.switch == FALSE){
+
 # Create empty list to populate with model results
 LATR_flower <- list()
 
@@ -141,6 +147,8 @@ LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.
 
 # Collect model AICs into a single table
 flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
+
+}
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
 # Define model 3 as our best 
@@ -164,6 +172,8 @@ LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exc
 # Create new df with plants that have produced at least one reproductive structure
 LATR_fruits_dat <- subset(LATR_flow_dat, total.reproduction_t > 0)
 
+if(boot.switch == FALSE){
+
 # Create empty list to populate with model results
 LATR_fruits <- list()
 
@@ -177,6 +187,8 @@ LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens
 
 # Collect model AICs into a single table
 fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
+
+}
 
 # Model 2 is the winner: mean ~ s(size) + s(density)
 # Define model 2 as our best 
@@ -218,6 +230,8 @@ plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
 points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
        LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
 
+if(boot.switch == FALSE){
+
 # Create empty list to populate with model results
 LATR_surv <- list()
 
@@ -231,6 +245,8 @@ LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transpl
 
 # Collect model AICs into a single table
 surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)
+
+}
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
 # Define model 3 as our best 
@@ -283,6 +299,8 @@ LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FP
          recruits = pmax(recruits.x, recruits.y, na.rm = T)) %>% 
   drop_na()
 
+if(boot.switch == FALSE){
+
 # Create empty list to populate with model results
 LATR_recruit <- list()
 
@@ -294,6 +312,8 @@ LATR_recruit[[2]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(weighted.den
 
 # Collect model AICs into a single table
 recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)
+
+}
 
 # Null model (no effect) seems to be the best model
 LATR_recruit_best <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),
