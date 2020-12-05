@@ -5,9 +5,11 @@
 # Define inverse logit function for later use
 invlogit <- function(x){exp(x)/(1 + exp(x))}
 
-## Create unique transect as interaction of transect and site
-LATR_full <- CData %>% 
-  mutate(unique.transect = interaction(transect, site))
+# Create unique transect as interaction of transect and site
+# First-time only; this bit of code in 06_BootRes does it all other times
+if(boot.switch == FALSE){
+  LATR_full <- CData %>% 
+    mutate(unique.transect = interaction(transect, site))}
 
 
 

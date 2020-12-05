@@ -46,6 +46,8 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDat
 
 ##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------
 
+# Pre-bootstrap switch that will flip once bootstrapping begins
+# Done so that computationally-expensive parts of 05_CDataAnalysis_NS are not re-run unnecessarily
 boot.switch <- FALSE
 
 # "05_CDataAnalysis_NS.R"
@@ -54,7 +56,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
-boot.on <- FALSE
+boot.on <- TRUE
 
 # Determine resampling proportion; that is, the proportion of individuals selected each interation
 # Should be in the interval (0, 1), exclusive
@@ -83,6 +85,8 @@ boot.cv2 <- c()
 if(boot.on == FALSE){
   boot.num <- 1}
 
+# Flip switch before running bootstrapping
+# Failure to do so should not affect results, but WILL increase computation time
 boot.switch <- TRUE
 
 # Begin bootstrapping

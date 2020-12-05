@@ -34,6 +34,8 @@ if(boot.on == FALSE){
 
 # Sample percentage of demographic data
 if(boot.on == TRUE){
+  LATR_full <- CData %>% 
+    mutate(unique.transect = interaction(transect, site))
   LATR_full <- LATR_full[sample(1:nrow(LATR_full), round(nrow(LATR_full)*boot.prop), replace = FALSE), ]}
 
 
