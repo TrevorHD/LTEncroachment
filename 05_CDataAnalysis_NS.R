@@ -330,11 +330,15 @@ LATR_recruit_best <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.trans
 
 ##### Recruit sizes and integration limits (size bounds) --------------------------------------------------
 
-# Filter out seedlings and get their sizes
+# Filter out seedlings from full data set; only do this once
+if(boot.switch == FALSE){
+
+  # Filter out seedlings and get their sizes
+  LATR_recruit_size <- LATR_full %>% 
+    filter(seedling_t1 == 1) %>% 
+    mutate(log_volume = log(volume_t1))}
+
 # Plot distribution of recruit sizes using hist(LATR_recruit_size$log_volume)
-LATR_recruit_size <- LATR_full %>% 
-  filter(seedling_t1 == 1) %>% 
-  mutate(log_volume = log(volume_t1))
 
 # Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
