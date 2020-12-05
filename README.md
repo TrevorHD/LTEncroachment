@@ -22,15 +22,15 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 **04_CDataPrep** *(.R)* - Cleans up the demographic data from **LT_Data** and calculates variables that will be used in size- and density-dependent demographic analyses.
 
-**05_BootRes.R** *(.R)* - Resamples data for each bootstrap replicate.
-
 **05_CDataAnalysis_BS** *(.R)* - Generates models of demographic rates under better survival (BS) conditions; these conditions were observed in a census that occurred after higher than average rainfall.
 
 **05_CDataAnalysis_NS** *(.R)* - Generates models of demographic rates under normal survival (NS) conditions.
 
-**06_SIPM** *(.R)* - Constructs the transition matrix that projects population growth, and combines this with dispersal data to find the speed at which the encroaching shrub wave travels.
+**06_BootRes.R** *(.R)* - Resamples data for each bootstrap replicate.
 
-**07_MainFigures** *(.R)* - Generates figures on size- and density-dependence, wave speeds and population growth, and dispersal kernels.
+**07_SIPM** *(.R)* - Constructs the transition matrix that projects population growth, and combines this with dispersal data to find the speed at which the encroaching shrub wave travels.
+
+**08_MainFigures** *(.R)* - Generates figures on size- and density-dependence, wave speeds and population growth, and dispersal kernels.
 
 ## Supporting Information
 
