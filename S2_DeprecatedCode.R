@@ -1390,3 +1390,55 @@ remove(d.and.v, d.and.v.2, d.cut, F.mean.df, F.pred, G.mean.df, G.pred, R.mean.d
        v.cut, d.range, v.range, Mod.F.top.dPlot, Mod.F.top.vPlot, Mod.G.top.dPlot, 
        Mod.G.top.vPlot, Mod.R.top.dPlot, Mod.R.top.vPlot, gly)
 
+
+
+
+
+##### Wavespeeds and population growth for higher survival scenario ---------------------------------------
+
+# NOTE: this part will not be used for now, until we get the other scenario working first
+
+# This will take several minutes; be patient
+
+# Begin bootstrapping
+time.start <- Sys.time()
+for(i in 1:boot.num){
+  
+  # "00_BootRes"
+  # Run resampling subroutine for wind speeds, terminal velocities, and demography
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
+  
+  # "05_CDataAnalysis_NS"
+  # Create demography models for growth, reproduction, survival, etc. under normal circumstances
+  # Must run this before 05_CDataAnalysis_BS since it contains all of the demography models
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
+  
+  # "05_CDataAnalysis_BS"
+  # Replace survival model in 05_CDataAnalysis_NS with higher survival from above-average rainfall
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_BS.R")
+  
+  # "06_SIPM"
+  # Spatial integral projection model that calculates wavespeeds
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
+  
+  # Wavespeeds as function of s; growth as function of density
+  c.values.2 <- Wavespeed(200)
+  lambda.2 <- c()
+  for(i in seq(-1.3, max(boot.CData.s$d.stand), length.out = 100)){
+    lambda.i <- TransMatrix(n = 100, d = i)
+    lambda.2 <- append(lambda.2, Re(eigen(lambda.i$matrix)$values[1]))}
+  
+  # Calculate minimum wavespeed
+  c.min.2 <- min(c.values.2)
+  
+  # Append wavespeed to bootstrapped vector of estimated wavespeeds
+  boot.cv2 <- append(boot.cv2, c.min.2)
+  
+  # Clean up
+  remove(lambda.i, TM, i)}
+
+# Get procedure time
+time.end <- Sys.time()
+time.end - time.start
+remove(time.start, time.end)
+
