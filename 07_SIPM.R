@@ -82,14 +82,14 @@ TM.fertrecruit <- function(x, y, d){
 
 # Put it all together; projection matrix is a function of weighted density (dens)
 # We need a large lower extension because growth variance (gaussian) is greater for smaller plants
-TransMatrix <- function(dens, TM.lower.extension = TM.lower.extension, TM.upper.extension = TM.upper.extension,
+TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upper.extension,
                         min.size = LATR_size_bounds$min_size, max.size = LATR_size_bounds$max_size,
                         mat.size = TM.matdim){
   
   # Matrix size and size extensions (upper and lower integration limits)
   n <- mat.size
-  L <- min.size + TM.lower.extension
-  U <- max.size + TM.upper.extension
+  L <- min.size + ext.lower
+  U <- max.size + ext.upper
   
   # Bin size for n bins
   h <- (U - L)/n
@@ -112,9 +112,8 @@ TransMatrix <- function(dens, TM.lower.extension = TM.lower.extension, TM.upper.
   #and transition matrix
   return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
 
-# Construct transition matrix
-#TM <- TransMatrix(mat.size = 100, dens = -1.3)
-TM <- TransMatrix(dens = 0) ##minimum weighted density is zero
+# Construct transition matrix for minimum weighted density (zero)
+TM <- TransMatrix(dens = 0)
 
 
 
