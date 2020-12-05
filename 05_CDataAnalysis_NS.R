@@ -2,12 +2,14 @@
 
 # Script authored by Tom, with some changes from Trevor
 
-# Define inverse logit function for later use
-invlogit <- function(x){exp(x)/(1 + exp(x))}
-
-# Create unique transect as interaction of transect and site
-# First-time only; this bit of code in 06_BootRes does it all other times
+# Define inverse logit and prepare data for model fitting
 if(boot.switch == FALSE){
+  
+  # Define inverse logit function for later use; need to do this only once
+  invlogit <- function(x){exp(x)/(1 + exp(x))}
+  
+  # Create unique transect as interaction of transect and site
+  # First-time only; this bit of code in 06_BootRes does it all other times
   LATR_full <- CData %>% 
     mutate(unique.transect = interaction(transect, site))}
 
@@ -23,61 +25,60 @@ LATR_grow <- LATR_full  %>% drop_na(volume_t, volume_t1) %>%
   mutate(log_volume_t = log(volume_t),
          log_volume_t1 = log(volume_t1))
 
+# Run the model selection once on the full data set; no bootstrapping here
 if(boot.switch == FALSE){
 
-# Create empty list to populate with model results
-LATR_gam_models <- list()
+  # Create empty list to populate with model results
+  LATR_gam_models <- list()
 
-# Three candidate models for the mean: size only, size + density, or size, density, and size:density
-# Three candidates for variance: size only, size + density, fitted value (all the covariates plus rfx)
+  # Three candidate models for the mean: size only, size + density, or size, density, and size:density
+  # Three candidates for variance: size only, size + density, fitted value (all the covariates plus rfx)
 
-# Pilot fits, where sigma depends on initial size only
-LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss())
-LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss())                
-LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss()) 
+  # Pilot fits, where sigma depends on initial size only
+  LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss())
+  LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss())                
+  LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss()) 
 
-# Fits where sigma depends on both initial size and density
-LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss())
-LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss())                
-LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss()) 
+  # Fits where sigma depends on both initial size and density
+  LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss())
+  LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss())                
+  LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss()) 
 
-# These models will be iterated to fit sigma as f(fitted value)
-LATR_grow$fitted_vals = LATR_grow$log_volume_t 
-LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss())
-LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss())                
-LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
-                            data = LATR_grow, gamma = 1.4, family = gaulss())  
+  # These models will be iterated to fit sigma as f(fitted value)
+  LATR_grow$fitted_vals = LATR_grow$log_volume_t 
+  LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss())
+  LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss())                
+  LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
+                              data = LATR_grow, gamma = 1.4, family = gaulss())  
 
-# Fit sigma as f(fitted value) for models 7-9
-# The "weights" here are 1/sigma values; see ?gaulss for details.
-for(mod in 7:9){
-  fitGAU = LATR_gam_models[[mod]]
-  fitted_all = predict(fitGAU, type = "response", data = LATR);                  
-  fitted_vals = new_fitted_vals = fitted_all[, 1]; 
-  weights = fitted_all[, 2];
-  err = 100; k = 0; 
-  while(err > 10^(-6)){
-    LATR_grow$fitted_vals = new_fitted_vals; 
-    fitGAU <- update(fitGAU); 
-    fitted_all = predict(fitGAU, type = "response", data = LATR_grow);   
-    new_fitted_vals = fitted_all[, 1]; new_weights = fitted_all[, 2];
-    err = weights - new_weights; err = sqrt(mean(err^2)); 
-    weights = new_weights; 
-    k = k + 1; cat(k, err, "\n");}   
-  LATR_gam_models[[mod]] =  fitGAU;}
+  # Fit sigma as f(fitted value) for models 7-9
+  # The "weights" here are 1/sigma values; see ?gaulss for details.
+  for(mod in 7:9){
+    fitGAU = LATR_gam_models[[mod]]
+    fitted_all = predict(fitGAU, type = "response", data = LATR);                  
+    fitted_vals = new_fitted_vals = fitted_all[, 1]; 
+    weights = fitted_all[, 2];
+    err = 100; k = 0; 
+    while(err > 10^(-6)){
+      LATR_grow$fitted_vals = new_fitted_vals; 
+      fitGAU <- update(fitGAU); 
+      fitted_all = predict(fitGAU, type = "response", data = LATR_grow);   
+      new_fitted_vals = fitted_all[, 1]; new_weights = fitted_all[, 2];
+      err = weights - new_weights; err = sqrt(mean(err^2)); 
+      weights = new_weights; 
+      k = k + 1; cat(k, err, "\n");}   
+    LATR_gam_models[[mod]] =  fitGAU;}
 
-# Collect model AICs into a single table
-grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE) 
-
-}
+  # Collect model AICs into a single table
+  grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)}
 
 # Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
 # Define model 5 as our best Gaussian model
@@ -134,23 +135,22 @@ LATR_flow_dat <- bind_rows(LATR_full,LATR_dat_201718) %>%
   select(unique.transect,volume_t,total.reproduction_t,weighted.dens) %>% drop_na()
 LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
 
+# Run the model selection once on the full data set; no bootstrapping here
 if(boot.switch == FALSE){
 
-# Create empty list to populate with model results
-LATR_flower <- list()
+  # Create empty list to populate with model results
+  LATR_flower <- list()
 
-# Three candidate models for the mean: size only, size + density, or size, density, and size:density
-LATR_flower[[1]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.transect, bs = "re"),
-                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
-LATR_flower[[2]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
-                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
-LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
-                        data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+  # Three candidate models for the mean: size only, size + density, or size, density, and size:density
+  LATR_flower[[1]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.transect, bs = "re"),
+                          data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+  LATR_flower[[2]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                          data = LATR_flow_dat, gamma = 1.4, family = "binomial")
+  LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                          data = LATR_flow_dat, gamma = 1.4, family = "binomial")
 
-# Collect model AICs into a single table
-flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
-
-}
+  # Collect model AICs into a single table
+  flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)}
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
 # Define model 3 as our best 
@@ -174,23 +174,22 @@ LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exc
 # Create new df with plants that have produced at least one reproductive structure
 LATR_fruits_dat <- subset(LATR_flow_dat, total.reproduction_t > 0)
 
+# Run the model selection once on the full data set; no bootstrapping here
 if(boot.switch == FALSE){
 
-# Create empty list to populate with model results
-LATR_fruits <- list()
+  # Create empty list to populate with model results
+  LATR_fruits <- list()
 
-# Three candidate models for the mean: size only, size + density, or size, density, and size:density
-LATR_fruits[[1]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transect, bs = "re"),
-                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
-LATR_fruits[[2]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
-                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
-LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
-                        data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+  # Three candidate models for the mean: size only, size + density, or size, density, and size:density
+  LATR_fruits[[1]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transect, bs = "re"),
+                          data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+  LATR_fruits[[2]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                          data = LATR_fruits_dat, gamma = 1.4, family = "nb")
+  LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                          data = LATR_fruits_dat, gamma = 1.4, family = "nb")
 
-# Collect model AICs into a single table
-fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
-
-}
+  # Collect model AICs into a single table
+  fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)}
 
 # Model 2 is the winner: mean ~ s(size) + s(density)
 # Define model 2 as our best 
@@ -232,23 +231,22 @@ plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
 points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
        LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
 
+# Run the model selection once on the full data set; no bootstrapping here
 if(boot.switch == FALSE){
 
-# Create empty list to populate with model results
-LATR_surv <- list()
+  # Create empty list to populate with model results
+  LATR_surv <- list()
 
-# Three candidate models for the mean: size only, size + density, or size, density, and size:density
-LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t) + transplant + s(unique.transect, bs = "re"),
-                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
-LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens)  + transplant + s(unique.transect, bs = "re"),
-                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
-LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transplant + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
-                      data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+  # Three candidate models for the mean: size only, size + density, or size, density, and size:density
+  LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t) + transplant + s(unique.transect, bs = "re"),
+                        data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+  LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens)  + transplant + s(unique.transect, bs = "re"),
+                        data = LATR_surv_dat, gamma = 1.4, family = "binomial")
+  LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t) + s(weighted.dens) + transplant + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+                        data = LATR_surv_dat, gamma = 1.4, family = "binomial")
 
 # Collect model AICs into a single table
-surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)
-
-}
+surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)}
 
 # Model 3 is the winner: mean ~ s(size) + s(density) + size:density
 # Define model 3 as our best 
@@ -301,21 +299,20 @@ LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FP
          recruits = pmax(recruits.x, recruits.y, na.rm = T)) %>% 
   drop_na()
 
+# Run the model selection once on the full data set; no bootstrapping here
 if(boot.switch == FALSE){
 
-# Create empty list to populate with model results
-LATR_recruit <- list()
+  # Create empty list to populate with model results
+  LATR_recruit <- list()
 
-# Two candidate models for the mean: no effect, or size only
-LATR_recruit[[1]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),
-                         data = LATR_recruitment, gamma = 1.4, family = "binomial")
-LATR_recruit[[2]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(weighted.dens) + s(unique.transect, bs = "re"),
-                         data = LATR_recruitment, gamma = 1.4, family = "binomial")
+  # Two candidate models for the mean: no effect, or size only
+  LATR_recruit[[1]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),
+                           data = LATR_recruitment, gamma = 1.4, family = "binomial")
+  LATR_recruit[[2]] <- gam(cbind(recruits,total_seeds - recruits) ~ s(weighted.dens) + s(unique.transect, bs = "re"),
+                           data = LATR_recruitment, gamma = 1.4, family = "binomial")
 
-# Collect model AICs into a single table
-recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)
-
-}
+  # Collect model AICs into a single table
+  recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)}
 
 # Null model (no effect) seems to be the best model
 LATR_recruit_best <- gam(cbind(recruits,total_seeds - recruits) ~ s(unique.transect, bs = "re"),

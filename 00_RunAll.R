@@ -78,20 +78,21 @@ boot.cv2 <- c()
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
-# This takes ~1 hour per bootstrap replicate; be patient
+# This takes 5-10 minutes per bootstrap replicate; be patient
 # Note: if boot.on = TRUE, then bootstrapping will not occur and full data will be used
 
 # Override bootstrap replicate number if bootstrapping is turned off
 if(boot.on == FALSE){
   boot.num <- 1}
 
-# Flip switch before running bootstrapping
-# Failure to do so should not affect results, but WILL increase computation time
-boot.switch <- TRUE
-
 # Begin bootstrapping
 time.start <- Sys.time()
 for(i in 1:boot.num){
+  
+  # Flip switch at beginning of bootstrapping
+  # Failure to do so should not affect results, but WILL increase computation time
+  if(i == 1){
+    boot.switch <- TRUE}
   
   # "06_BootRes"
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
@@ -112,7 +113,11 @@ for(i in 1:boot.num){
   c.min <- min(c.values)
   
   # Append wavespeed to bootstrapped vector of estimated wavespeeds
-  boot.cv1 <- append(boot.cv1, c.min)}
+  boot.cv1 <- append(boot.cv1, c.min)
+  
+  # Flip switch back to original setting
+  if(i == boot.num){
+    boot.switch <- TRUE}}
 
 # Get procedure time
 time.end <- Sys.time()
@@ -121,7 +126,7 @@ remove(time.start, time.end)
 
 # Remove other unneeded items from the global environment
 remove(fitGAU, fitted_all, err, fitted_vals, i, k, n_cuts_dens, new_fitted_vals, new_weights,
-       weights, boot.tv.raw, boot.tv.PDF, boot.ws.raw, boot.ws.PDF)
+       weights, boot.tv.raw, boot.tv.PDF, boot.ws.raw, boot.ws.PDF, c.values, c.min)
 
 
 
