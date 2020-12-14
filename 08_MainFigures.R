@@ -11,7 +11,23 @@
 #               0.06152422, 0.07297820, 0.11533840, 0.10979438, 0.07682500, 0.09560812, 0.07322340,
 #               0.08183116, 0.12628294, 0.10143668, 0.05289771, 0.10925509, 0.07852553, 0.13390366,
 #               0.08429845, 0.08730562, 0.05310306, 0.07233902, 0.05901759, 0.07969898, 0.11591684,
-#               0.08551957)
+#               0.08551957, 0.06042126, 0.05823313, 0.07704145, 0.12338452, 0.04861126, 0.08408943,
+#               0.09346643, 0.07463509, 0.07402787, 0.05796385, 0.06948643, 0.10485711, 0.07850530,
+#               0.07455227, 0.06393238, 0.10745724, 0.07934603, 0.09982847, 0.08158700, 0.08784675, 
+#               0.09684960, 0.11544402, 0.08162659, 0.08516023, 0.10758135, 0.08447032, 0.08830568, 
+#               0.07494744, 0.04640484, 0.09914065, 0.05056914, 0.08377368, 0.10592856, 0.09294985,
+#               0.08968686, 0.03431943, 0.06875685, 0.06574186, 0.07365753, 0.10969105, 0.07722590,
+#               0.06382279, 0.07873508, 0.06620297, 0.06361761, 0.08431054, 0.07980750, 0.08048164,
+#               0.07305327, 0.12910478, 0.13110497, 0.08351263, 0.06703096, 0.08380377, 0.08155384,
+#               0.09679923, 0.10122610, 0.09129387, 0.10731536, 0.08012160, 0.08822932, 0.06358983,
+#               0.11532994, 0.09729893, 0.10476709, 0.07577184, 0.11543849, 0.07921325, 0.08614493,
+#               0.08402929, 0.10235970, 0.07188793, 0.07443531, 0.08685624, 0.07959349, 0.06625494,
+#               0.07008672, 0.12343039, 0.11430853, 0.08383586, 0.08032027, 0.03931587, 0.06976292,
+#               0.07882801, 0.11628506, 0.09377468, 0.09787997, 0.09926950, 0.08665032, 0.13224269,
+#               0.09106304, 0.06180972, 0.06230508, 0.07596307, 0.09513527, 0.08958954, 0.07617481,
+#               0.08615210, 0.04772999, 0.19261312, 0.08563209, 0.11125958, 0.07035492, 0.05612170,
+#               0.10069569, 0.04800026, 0.05203727, 0.07903354, 0.10318841, 0.09522257, 0.08443790,
+#               0.06646902, 0.03617875, 0.08995294, 0.08941052)
 
 # Prepare graphics device
 jpeg(filename = "Figure 1.jpeg", width = 750, height = 500, units = "px")
@@ -79,7 +95,7 @@ plot(d.test, lambda_density, type = "l", lwd = 3, ylim = c(1, 1.04), xlim = c(0,
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(1, 1.04, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
-mtext("Growth Rate", side = 2, cex = 2, line = 5)
+mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
 box()
 popViewport()
 
@@ -221,15 +237,15 @@ par(mar = c(5, 6, 4, 2))
 
 # Plot fruits data
 plot(LATR_fruits_dat_plot$mean_density, LATR_fruits_dat_plot$mean_fruits, type = "n", 
-     xlim = c(0, 200), ylim = c(0, 2500), cex.lab = 2, axes = FALSE, ann = FALSE)
+     xlim = c(0, 200), ylim = c(0, 2500), axes = FALSE, ann = FALSE)
 axis(1, at = seq(0, 200, length.out = 5), labels = FALSE, mgp = c(1, 1, 0))
-axis(2, at = seq(0, 2500, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-mtext("Flowers and Fruits", side = 2, cex = 2, line = 5)
+axis(2, at = seq(0, 2500, length.out = 6), cex.axis = 2, mgp = c(1, 1, 0), las = 1)
+mtext("Flowers and Fruits", side = 2, cex = 2.5, line = 5)
 box()
 for(i in 1:n_cuts_size){
   points(LATR_fruits_dat_plot$mean_density[LATR_fruits_dat_plot$size_bin == i],
          LATR_fruits_dat_plot$mean_fruits[LATR_fruits_dat_plot$size_bin == i], pch = 16, col = PlotCol[i],
-         cex = (LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin == i]/max(LATR_fruits_dat_plot$bin_n))*3)
+         cex = (LATR_fruits_dat_plot$bin_n[LATR_fruits_dat_plot$size_bin == i]/max(LATR_fruits_dat_plot$bin_n))*4)
   lines(LATR_fruit_pred$weighted.dens[LATR_fruit_pred$size_bin == i],
         exp(LATR_fruit_pred$pred[LATR_fruit_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
 popViewport()
@@ -242,16 +258,16 @@ par(mar = c(5, 6, 4, 2))
 
 # Plot flowering data
 plot(LATR_flow_dat_plot$mean_density, LATR_flow_dat_plot$mean_flower, type = "n", 
-     xlim = c(0, 200), ylim = c(0, 1), cex.lab = 2, axes = FALSE, ann = FALSE)
-axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(0, 1, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-mtext("Weighted density", side = 1, cex = 2, line = 3.5)
-mtext("Pr(Flowering)", side = 2, cex = 2, line = 5)
+     xlim = c(0, 200), ylim = c(0, 1), axes = FALSE, ann = FALSE)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 2, mgp = c(1, 1, 0))
+axis(2, at = seq(0, 1, length.out = 6), cex.axis = 2, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted Density", side = 1, cex = 2.5, line = 3.5)
+mtext("Pr(Flowering)", side = 2, cex = 2.5, line = 5)
 box()
 for(i in 1:n_cuts_size){
   points(LATR_flow_dat_plot$mean_density[LATR_flow_dat_plot$size_bin == i],
          LATR_flow_dat_plot$mean_flower[LATR_flow_dat_plot$size_bin == i], pch = 16, col = PlotCol[i],
-         cex = (LATR_flow_dat_plot$bin_n[LATR_flow_dat_plot$size_bin == i]/max(LATR_flow_dat_plot$bin_n))*3)
+         cex = (LATR_flow_dat_plot$bin_n[LATR_flow_dat_plot$size_bin == i]/max(LATR_flow_dat_plot$bin_n))*4)
   lines(LATR_flow_pred$weighted.dens[LATR_flow_pred$size_bin == i],
         invlogit(LATR_flow_pred$pred[LATR_flow_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
 popViewport()
@@ -336,17 +352,17 @@ par(mar = c(5, 6, 4, 2))
 
 # Plot natural census and transplant survival data with equal point scales
 plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n",
-     xlim = c(0, 200), ylim = c(0, 1), cex.lab = 2, axes = FALSE, ann = FALSE)
+     xlim = c(0, 200), ylim = c(0, 1), axes = FALSE, ann = FALSE)
 for(i in 1:n_cuts_size){
   points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
-         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = PlotCol[i], cex = 1.5)
+         LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = PlotCol[i], cex = 2.5)
   lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
         invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
-points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2)
+points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2, cex = 2.5)
 lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty = 2)
 axis(1, at = seq(0, 200, length.out = 5), labels = FALSE, mgp = c(1, 1, 0))
-axis(2, at = seq(0, 1, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-mtext("Pr(Survival)", side = 2, cex = 2, line = 5)
+axis(2, at = seq(0, 1, length.out = 6), cex.axis = 2, mgp = c(1, 1, 0), las = 1)
+mtext("Pr(Survival)", side = 2, cex = 2.5, line = 5)
 box()
 popViewport()
 
@@ -358,20 +374,20 @@ par(mar = c(5, 6, 4, 2))
 
 # Plot natural census and transplant survival data with points scaled on number of observations
 plot(LATR_surv_nat_plot$mean_density, LATR_surv_nat_plot$mean_surv, type = "n",
-     xlim = c(0, 200), ylim = c(0, 1), cex.lab = 2, axes = FALSE, ann = FALSE)
+     xlim = c(0, 200), ylim = c(0, 1), axes = FALSE, ann = FALSE)
 for(i in 1:n_cuts_size){
   points(LATR_surv_nat_plot$mean_density[LATR_surv_nat_plot$size_bin == i],
          LATR_surv_nat_plot$mean_surv[LATR_surv_nat_plot$size_bin == i], pch = 16, col = PlotCol[i],
-  cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*5)
+  cex = (LATR_surv_nat_plot$bin_n[LATR_surv_nat_plot$size_bin == i]/max(LATR_surv_nat_plot$bin_n))*7)
   lines(LATR_surv_nat_pred$weighted.dens[LATR_surv_nat_pred$size_bin == i],
         invlogit(LATR_surv_nat_pred$pred[LATR_surv_nat_pred$size_bin == i]), col = PlotCol[i], lwd = 3)}
 points(LATR_surv_exp_plot$mean_density, LATR_surv_exp_plot$mean_surv, ylim = c(0, 1), pch = 2,
-       cex = (LATR_surv_exp_plot$bin_n/max(LATR_surv_nat_plot$bin_n))*5)
+       cex = (LATR_surv_exp_plot$bin_n/max(LATR_surv_nat_plot$bin_n))*7)
 lines(LATR_surv_exp_pred$weighted.dens, invlogit(LATR_surv_exp_pred$pred), lty = 2)
-axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(0, 1, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-mtext("Weighted density", side = 1, cex = 2, line = 3.5)
-mtext("Pr(Survival)", side = 2, cex = 2, line = 5)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 2, mgp = c(1, 1, 0))
+axis(2, at = seq(0, 1, length.out = 6), cex.axis = 2, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted Density", side = 1, cex = 2.5, line = 3.5)
+mtext("Pr(Survival)", side = 2, cex = 2.5, line = 5)
 box()
 popViewport()
 
@@ -427,11 +443,11 @@ par(mar = c(5, 8, 4, 2))
 # Plot null model for per-seed recruitment
 # No evidence for density dependence in recruitment, just a really low overall recruitment rate
 plot(LATR_recruitment$weighted.dens, LATR_recruitment$recruits/LATR_recruitment$total_seeds, pch = 16,
-     col = rgb(r = 0, g = 0, b = 0, alpha = 0.15), xlim = c(0, 300), ylim = c(0, 0.008),
+     col = rgb(r = 0, g = 0, b = 0, alpha = 0.15), xlim = c(0, 300), ylim = c(0, 0.008), cex = 2,
      axes = FALSE, ann = FALSE)
 axis(1, at = seq(0, 300, length.out = 4), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(0, 0.008, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
-mtext("Weighted density", side = 1, cex = 2, line = 3.5)
+mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
 mtext("Pr(Recruitment)", side = 2, cex = 2, line = 5)
 lines(LATR_recruitment_line$weighted.dens, invlogit(LATR_recruitment_line$pred), col = "red")
 box()
