@@ -106,28 +106,11 @@ WALD.f.e <- function(n, H){
 
 WALD.f.e.h <- function(H){
   
-  # Use 2000 replicates for each height
-  n <- 2000
-  
-  # Create "continuous" sequence of release heights
-  h.range <- seq(0.15, H, 0.01)
-  
-  # Simulate seed release events for each height
-  return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n))))}
-
-
-
-
-
-##### Same as above, but with more sampling ---------------------------------------------------------------
-
-WALD.f.e.h.2 <- function(H){
-  
   # Use 10000 replicates for each height
   n <- 10000
   
   # Create "continuous" sequence of release heights
-  h.range <- seq(0.15, H, 0.01)
+  h.range <- seq(0.15, H, length.out = 50)
   
   # Simulate seed release events for each height
   return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n))))}

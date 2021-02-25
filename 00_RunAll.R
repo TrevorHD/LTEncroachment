@@ -117,6 +117,9 @@ for(i in 1:boot.num){
   # Append wavespeed to bootstrapped vector of estimated wavespeeds
   boot.cv1 <- append(boot.cv1, c.min)
   
+  # Print bootstrapping progress to console
+  print(paste0(i, "/", boot.num, " (", round(i/boot.num, 2), ") complete..."))
+  
   # Flip switch back to original setting
   if(i == boot.num){
     boot.switch <- FALSE}}

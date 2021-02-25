@@ -272,7 +272,7 @@ LATR_recruits <- LATR_full %>%
   mutate(unique.transect = interaction(transect, site)) %>% 
   group_by(year_t1, unique.transect, actual.window) %>% 
   filter(seedling_t1 == 1) %>% 
-  summarise(recruits = n()) %>% 
+  suppressWarnings(summarise(recruits = n())) %>% 
   rename(window = actual.window)
 
 # Estimate total seeds produced in each window
@@ -285,8 +285,8 @@ LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best,newdata = L
                                  6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects)))
 LATR_transects %>% 
   group_by(unique.transect,window) %>% 
-  summarise(total_seeds = sum(seeds),
-            weighted.dens = unique(weighted.dens)) -> LATR_transects
+  suppressWarnings(summarise(total_seeds = sum(seeds),
+                   weighted.dens = unique(weighted.dens))) -> LATR_transects
 
 # Take three copies of this df, assigning each one to a different year and assigning recruits to zero (for now)
 LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FPS" | unique.transect == "2.FPS" | unique.transect == "3.FPS") %>% 
