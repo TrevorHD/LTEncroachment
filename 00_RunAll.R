@@ -118,7 +118,7 @@ for(i in 1:boot.num){
   boot.cv1 <- append(boot.cv1, c.min)
   
   # Print bootstrapping progress to console
-  print(paste0(i, "/", boot.num, " (", round(i/boot.num, 2), ") complete..."))
+  print(paste0(i, "/", boot.num, " (", round(i/boot.num, 2)*100, "%) complete..."))
   
   # Flip switch back to original setting
   if(i == boot.num){
