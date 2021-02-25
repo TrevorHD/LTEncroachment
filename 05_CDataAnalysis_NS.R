@@ -271,9 +271,9 @@ LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclu
 LATR_recruits <- LATR_full %>% 
   mutate(unique.transect = interaction(transect, site)) %>% 
   group_by(year_t1, unique.transect, actual.window) %>% 
-  filter(seedling_t1 == 1) %>% 
-  suppressWarnings(summarise(recruits = n())) %>% 
-  rename(window = actual.window)
+  filter(seedling_t1 == 1)
+  suppressMessages(summarise(LATR_recruits, recruits = n())) %>% 
+  rename(window = actual.window) -> LATR_recruits
 
 # Estimate total seeds produced in each window
 # This is computed using the known plant sizes and the fitted flowering and fruiting models
@@ -281,12 +281,11 @@ LATR_recruits <- LATR_full %>%
 LATR_transects <- Cdata.Transects.Windows %>% 
   mutate(unique.transect = interaction(transect, site),
          log_volume_t = log(volume))
-LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best,newdata = LATR_transects))* 
-                                 6*exp(predict.gam(LATR_fruits_best,newdata = LATR_transects)))
-LATR_transects %>% 
-  group_by(unique.transect,window) %>% 
-  suppressWarnings(summarise(total_seeds = sum(seeds),
-                   weighted.dens = unique(weighted.dens))) -> LATR_transects
+LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best, newdata = LATR_transects))* 
+                                 6*exp(predict.gam(LATR_fruits_best, newdata = LATR_transects)))
+LATR_transects <- group_by(LATR_transects, unique.transect, window)
+suppressMessages(summarise(LATR_transects, total_seeds = sum(seeds),
+                                           weighted.dens = unique(weighted.dens))) -> LATR_transects
 
 # Take three copies of this df, assigning each one to a different year and assigning recruits to zero (for now)
 LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FPS" | unique.transect == "2.FPS" | unique.transect == "3.FPS") %>% 
