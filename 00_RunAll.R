@@ -53,7 +53,7 @@ boot.switch <- FALSE
 # "05_CDataAnalysis_NS.R"
 # Create demography models for use in SIPM
 # Run once before bootstrapping, using full data set to find the best models
-source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
@@ -71,7 +71,6 @@ boot.num <- 2
 
 # Create empty vectors to populate with wavespeeds for normal and higher survival scenarios
 boot.cv1 <- c()
-boot.cv2 <- c()
 
 
 
@@ -80,7 +79,8 @@ boot.cv2 <- c()
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
 # This takes 5-10 minutes per bootstrap replicate; be patient
-# Note: if boot.on = TRUE, then bootstrapping will not occur and full data will be used
+# A stable internet connection is required
+# Note: if boot.on = FALSE, then bootstrapping will not occur and full data will be used
 
 # Override bootstrap replicate number if bootstrapping is turned off
 if(boot.on == FALSE){
@@ -102,7 +102,7 @@ for(i in 1:boot.num){
   # "05_CDataAnalysis_NS.R"
   # Create demography models for use in SIPM, using best models from initial run of this file
   # This avoids model uncertainty; only model coefficients change, not the overall structure
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis_NS.R")
+  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
   
   # "07_SIPM"
   # Spatial integral projection setting up functions to calculate wavespeeds
@@ -117,17 +117,22 @@ for(i in 1:boot.num){
   # Append wavespeed to bootstrapped vector of estimated wavespeeds
   boot.cv1 <- append(boot.cv1, c.min)
   
-  # Print bootstrapping progress to console
-  print(paste0(i, "/", boot.num, " (", round(i/boot.num, 2)*100, "%) complete..."))
+  # Calculate elapsed time
+  time.elapsed <- as.numeric(difftime(Sys.time(), time.start, units = "hours"))
+  
+  # Clear console (on Windows) and print bootstrapping progress to console
+  shell("cls")
+  print(paste0(i, "/", boot.num, " (", round(i/boot.num, 3)*100, "%) complete; ",
+               time.elapsed, " hours elapsed."))
   
   # Flip switch back to original setting
   if(i == boot.num){
     boot.switch <- FALSE}}
 
-# Get procedure time
-time.end <- Sys.time()
-time.end - time.start
-remove(time.start, time.end)
+# Clear console (on Windows) and print final procedure time
+shell("cls")
+print(paste0("Procedure complete with total time of ", time.elapsed, " hours." ))
+remove(time.start, time.elapsed, time.end)
 
 # Remove other unneeded items from the global environment
 # Don't worry if this returns errors; it just means the items were already cleared
