@@ -131,13 +131,13 @@ for(i in 1:boot.num){
 
 # Clear console (on Windows) and print final procedure time
 shell("cls")
-print(paste0("Procedure complete with total time of ", time.elapsed, " hours." ))
-remove(time.start, time.elapsed, time.end)
+print(paste0("Procedure complete with total time of ", time.elapsed, " hours."))
+remove(time.start, time.elapsed)
 
 # Remove other unneeded items from the global environment
-# Don't worry if this returns errors; it just means the items were already cleared
-remove(fitGAU, fitted_all, err, fitted_vals, i, k, n_cuts_dens, new_fitted_vals, new_weights,
-       weights, boot.tv.raw, boot.tv.PDF, boot.ws.raw, boot.ws.PDF, c.values, c.min, mod)
+# Suppress errors since some objects may not exist depending on which parts of code are re-run
+try(remove(fitGAU, fitted_all, err, fitted_vals, i, k, n_cuts_dens, new_fitted_vals, new_weights,
+           weights, boot.tv.raw, boot.tv.PDF, boot.ws.raw, boot.ws.PDF, c.values, c.min, mod), silent = TRUE)
 
 
 
