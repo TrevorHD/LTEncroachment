@@ -123,7 +123,7 @@ for(i in 1:boot.num){
   # Clear console (on Windows) and print bootstrapping progress to console
   shell("cls")
   print(paste0(i, "/", boot.num, " (", round(i/boot.num, 3)*100, "%) complete; ",
-               time.elapsed, " hours elapsed."))
+               round(time.elapsed, 2), " hours elapsed."))
   
   # Flip switch back to original setting
   if(i == boot.num){
