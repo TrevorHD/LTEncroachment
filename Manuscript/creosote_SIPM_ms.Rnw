@@ -231,6 +231,10 @@ In order to obtain $M$, numerous dispersal distances were simulated from the dis
 This was performed over the range from the lowest possible dispersal height to the maximum shrub height.
 Once $M(s)$ was obtained for dispersal at each shrub height, $\mathbf{H_{S}}$ and $c^*$ were calculated for each value of $s$; this was done for values of $s$ ranging from 0 to 2, as it is this range in which $c^*$ occurs.
 
+Estimates of the wavespeed were bootstrapped for a total of 1000 replicates.
+Each bootstrap replicate recreated size- and density-dependent demographic models using 80\% resampling on the original demographic data, and recreated dispersal kernels also using 80\% resampling on the wind speeds and seed terminal velocities.
+Between replicates, the structure of the demographic models was kept constant, though coefficient estimates were not; this approach, while effectively ignoring model uncertainty, has the benefit of increasing computational efficiency, which is especially useful given the time-consuming nature of numerically estimating the many dispersal kernels used in the model.
+
 %--------------------------------------------------------------------
 \section*{Results}
 
