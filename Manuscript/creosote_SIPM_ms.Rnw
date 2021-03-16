@@ -114,9 +114,16 @@ To answer these questions, we use a spatial integral projection model that combi
 %--------------------------------------------------------------------
 \section*{Materials and methods}
 
-\subsection*{Study system}
+\subsection*{Study species}
 
-\textit{Paragraph about creosotebush at the SEV. [WIP] Creosotebush is a woody perennial native that is extremely drought-resistant and has a typical lifespan of \# years. These shrubs are extremely efficient at absorbing water from the soil and tend to create large patches of barren soil where nothing else can grow. Creosotebush reproduces both asexually and sexually. Shrubs can contain numerous small, yellow flowers that eventually give rise to highly pubescent seeds. Seeds are dispersed from the parent plant by gravity and wind, and can experience secondary dispersal by kangaroo rats. Here, we examine the encroachment of creosotebush at the Sevilleta National Wildlife Refuge in central New Mexico. This area receives approximately \# of rainfall per yea andr consists of lowland shrub-grass ecotones as well as mountainous areas with juniper and pinon pine. While there is a history of creosotebush encroachment at the SEV, it seems to have stagnated over the past few decades; the reasons for this are largely unknown.}
+Creosotebush is a perennial, native shrub that is highly resistant to drought and is found throughout the arid and semiarid regions of the southwestern United States and northern Mexico.
+These shrubs are often found in valleys and on dunes and gentle slopes (Marshall 1995) and occur at a variety of densities; high-density areas of creosotebush consist largely of barren soil due to the "islands of fertility" these shrubs create around themselves (Schlesinger et al. 1996, Reynolds et al. 1999), though lower-density areas will often contain grass in the intershrub spaces since the spatial heterogeneity in soil nutrients is not as pronounced.
+Creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which consists of a single seed.
+Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff (Maddox and Carlquist 1985).
+In some locations, this shrub also reproduces asexually through its roots and can give rise to long-lived clonal stands (Vasek 1980).
+Foliage is dark green, resinous, and unpalatable to most grazing and browsing animals (Mabry et al. 1978).
+
+\subsection*{Study site}
 
 \subsection*{Encroachment re-surveys}
 We recorded shrub percent cover along two permanent 1000-m transects that spanned the shrub-grass ecotone, from high to low to near-zero shrub density. 
