@@ -27,7 +27,7 @@ library(tidyverse)
 
 %-------------------------------------------------------------------------
 
-\title{Spatial integral projection models predict slow creosotebush encroachment between episodes of rapid expansion}
+\title{Let's keep brainstorming title ideas. I don't think our results support the idea of `episodes of rapid expansion'}
 
 \author[a,b]{Trevor Drees\thanks{thd5066@psu.edu}}
 \author[b]{Brad M. Ochocki}
@@ -65,32 +65,28 @@ density-dependence, ecotones, woody encroachment, shrubs, integral projection mo
 %--------------------------------------------------------------------
 \newpage
 \section*{Introduction}
-%It is a good habit to create line breaks after sentences, otherwise git does not track changes in individual sentences.
-The encroachment of shrubs and other woody plants into adjacent grasslands has caused significant vegetation and landscape changes in ecosystems where this process takes place, and as such has become the focus of an increasing number of studies in recent years.
-This process of encroachment generally involves \tom{increases in number and/or density}{this description misses the spatial aspect} of woody shrub-like plants in a given area \citep{van2000shrub}, which can displace other species and alter abiotic aspects of the local ecosystem.
-Woody plant encroachment has been observed across many arid and semi-arid regions, such as the grasslands of the southwestern United States \citep{van2000shrub, van2009causes, goslee2003high, gibbens2005vegetation} and southern South America \citep{parizek2002soil, cabral2003shrub}, savannas of southern Africa \citep{trollope1989encroachment, roques2001dynamics}, and Asian steppes \citep{peng2013shrub, chen2015climate}.
-Such encroachment may involve native or invasive plants and can adversely affect ecosystems in which it occurs, as the resulting increases in shrub biomass and density are considered to be strong drivers of ecosystem degradation and/or desertification \citep{schlesinger1990biological, ravi2009can} due to how these plants alter the distribution of soil resources \citep{schlesinger1998plant, knapp2008shrub}.
-Other adverse effects of encroachment include changes in ecosystem services \citep{reed2015reorienting, kelleway2017review}, declines in biodiversity \citep{ratajczak2012woody, sirami2012changes, brandt2013regime}, and economic losses in areas where the proliferation of shrubs adversely affects grazing land and pastoral production \citep{mugasi2000economic, oba2000bush}.
-\tom{}{I think it would be good for this first paragraph to introduce the idea of habitat ecotones, the need to understand whether these are stable, and how they may respond to global change drivers. You can then introduce woody encroachment as a specific and widespread type of ecotone.}
+The recent and ongoing encroachment of shrubs and other woody plants into adjacent grasslands has caused significant vegetation changes across arid and semi-arid landscapes worldwide \citep{van2000shrub, van2009causes, goslee2003high, gibbens2005vegetation,parizek2002soil, cabral2003shrub,trollope1989encroachment, roques2001dynamics}.
+The process of encroachment generally involves increases in the number or density of woody plants in both time and space \citep{van2000shrub}, which can drive shifts in plant community competition and alter ecosystem processes \citep{schlesinger1990biological, ravi2009can,schlesinger1998plant, knapp2008shrub}.
+Other effects of encroachment include changes in ecosystem services \citep{reed2015reorienting, kelleway2017review}, declines in biodiversity \citep{ratajczak2012woody, sirami2012changes, brandt2013regime}, and economic losses in areas where the proliferation of shrubs adversely affects grazing land and pastoral production \citep{mugasi2000economic, oba2000bush}.
 
-The encroachment of woody plants into adjacent grasslands involves the movement of shrub-grass ecotones where a population of individuals is a gradient of conspecific density, and propagates as a wave across space and over time \citep{kot1996dispersal, neubert2000demography, wang2002integrodifference, pan2012invasion}.
-The movement of these waves is largely dependent upon two processes: local demography and dispersal of propagules.
-First, demographic processes affect how populations expand since survival, growth, reproduction, and recruitment rates in the parent plant ultimately affect the number of propagules produced and their fate after release, which is important because these propagules are the very basis for population growth.
-Second, movement is driven by the spatial dispersal of propagules produced by parent plants, and dispersal plays a role in where the new recruits that drive the wave's movement are likely to be found.
-The speed at which expansion waves move is highly dependent upon the shape of the dispersal kernel, or the probability distribution of dispersal distances, and is strongly influenced by the frequency of long-distance dispersal events at the tail of the distribution \citep{skarpaas2007dispersal}.
-Additionally, both demography and dispersal are affected by population structure based on age, size, or life stage, which can strongly influence how waves move \citep{neubert2000demography}.
-For example, the reproductive aspect of demography in some plants is affected by age and size, as older individuals may be more likely to reproduce than younger individuals \citep{hanzawa1993relationship} and larger individuals may reproduce more than smaller individuals \citep{pickering1994size, smith2003effect}.
-This means that within a population of plants, it is possible for the older or taller subset of the population to contribute disproportionately to the next generation.
-When it comes to dispersal, height influences dispersal via gravity or wind \citep{nathan2011mechanistic} and the propagules of taller plants may travel further than those of their shorter counterparts, possibly making the taller individuals influential contributors to the spatial expansion a the population. 
+Woody plant encroachment can be studied through the lens of spatial population biology as a wave of individuals that may expand across space and over time \citep{kot1996dispersal, neubert2000demography, wang2002integrodifference, pan2012invasion}.
+Theory predicts that the speed of wave expansion depends on two processes: local demography and dispersal of propagules.
+First, local demographic processes include recruitment, survival, growth, and reproduction, which collectively determine the rate at which newly colonized locations increase in density and produce new propagules. 
+Second, colonization events are driven by the spatial dispersal of propagules, which is commonly summarized as a probability distribution of dispersal distance (``dispersal kernel'').
+The speed at which expansion waves move is highly dependent upon the shape of the dispersal kernel, especially long-distance dispersal events in the tail of the distribution \citep{skarpaas2007dispersal}.
+Both demography and dispersal may depend on plant size, since larger plants often have improved demographic performance and release seeds from greater heights, leading to longer dispersal distances \citep{nathan2011mechanistic}.
+Accounting for population structure, including size structure, may therefore be important for understanding and predicting wave expansion dynamics \citep{neubert2000demography}.
 
-Given that expansion waves typically correspond to gradients of conspecific density, the effects of density dependence on demographic rates and population growth are important to consider.
-Conspecific density affects plants through intraspecific competition for resources: not only does density influence how plants survive, grow, and reproduce, but it may also determine whether dispersed propagules germinate or are prevented from establishing.
-Since intraspecific competition governs the performance of individuals within the population, the location of the individuals most responsible for population wave movement is strongly tied to how demographic rates and population growth vary with changes in conspecific density.
-If population growth has a negative and monotonic relationship with density such that highest rates of population growth tend to be found at the lowest densities, then the invading wave is pulled forward by the plants at the low-density vanguard \citep{kot1996dispersal}.
-However, \tom{if Allee effects result in reduced fitness at low densities}{I think this needs to be unpacked a bit more, explaining why fitness may be reduced at low density.}, then the wave is instead pushed forward by the individuals behind the front edge \citep{kot1996dispersal, taylor2005allee, sullivan2017density}.
-Such Allee effects can greatly limit population growth at the front of the wave, \tom{slowing}{I think it would help to have a more explicit statement that, all else equal, a pushed wave should be slower than a pulled wave -- I think this is true but we should check and cite, obviously. See two nice references that I will email.} or halting its movement \citep{lewis1993allee, veit1996dispersal, keitt2001allee}.
-
-\tom{}{I think there should be a new paragraph here that connects the pulled/pushed ideas to shrub encorachment. There is a lot of literature on woody plants being ecosystem engineers. While these are not typically called `Allee effects', you can make the link that we might expect positive density dependence at the leading edge of woody ecotones, and this could slow or halt their expansion. I think this will be an important addition for building your story.}
+The nature of conspecific density dependence is a critical feature of expansion dynamics but is rarely studied in the context of woody plant encroachment.  
+Expansion waves typically correspond to gradients of conspecific density -- high in the back and low at the front -- and demographic rates may be sensitive to density due to intraspecific interactions.
+If the demographic effects of density are strictly negative due to competitive effects then fitness is maximized as density goes to zero, at the leading edge of the wave. 
+Under these conditions, the wave is ``pulled'' forward by individuals at the low-density vanguard \citep{kot1996dispersal}, and targeting these individuals and locations would be the most effective way to slow down or prevent encroachment (cite?). 
+However, woody encroachment systems often involve positive feedbacks whereby shrub establishment modifies the environment in ways that facilitate further shrub recruitment. 
+For example, woody plants can modify their micro-climates in ways that elevate nighttime minimum temperatures, promoting conspecific recruitment and survival for freeze-sensitive species \citep{d2010positive,huang2020critical}. 
+Such Allee effects (in the language of population biology) cause demographic rates to be maximized at higher densities behind the leading edge, which ``push'' the expansion forward, leading to qualitatively different dynamics \citep{kot1996dispersal, taylor2005allee, sullivan2017density, lewis1993allee, veit1996dispersal, keitt2001allee}.
+Pushed expansion waves generally have different shapes (steeper density gradients) and slower speeds than pulled waves (cite), and require different strategies for managing or decelerating expansion (cite). 
+The potential for positive feedbacks is well documented in woody encroachment systems but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion.
+Put another way, despite decades of important work on the topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
 
 In this study, we use data from an ecosystem in which woody encroachment occurs to link the encroachment process to ecological theory for invasion waves, with the goal of better understanding how demographic processes and dispersal drive this encroachment, and determining whether a particular instance of woody encroachment is pushed or pulled.
 The woody encroachment modelled here comes from study sites in the Chihuahuan Desert of the southwestern United States, where extensive documentation of shrub encroachment exists but little is known about the dispersal and demographic processes that govern it.
