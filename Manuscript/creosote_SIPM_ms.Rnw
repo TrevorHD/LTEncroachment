@@ -113,13 +113,26 @@ To answer these questions, we use a spatial integral projection model that combi
 \subsection*{Study species}
 
 Creosotebush is a perennial, native shrub that is highly resistant to drought and is found throughout the arid and semiarid regions of the southwestern United States and northern Mexico.
-These shrubs are often found in valleys and on dunes and gentle slopes (Marshall 1995) and occur at a variety of densities; high-density areas of creosotebush consist largely of barren soil due to the "islands of fertility" these shrubs create around themselves (Schlesinger et al. 1996, Reynolds et al. 1999), though lower-density areas will often contain grass in the intershrub spaces since the spatial heterogeneity in soil nutrients is not as pronounced.
+These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea} and occur at a variety of densities; high-density areas of creosotebush consist largely of barren soil due to the "islands of fertility" these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grass in the intershrub spaces since the spatial heterogeneity in soil nutrients is not as pronounced.
 Creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which consists of a single seed.
-Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff (Maddox and Carlquist 1985).
-In some locations, this shrub also reproduces asexually through its roots and can give rise to long-lived clonal stands (Vasek 1980).
-Foliage is dark green, resinous, and unpalatable to most grazing and browsing animals (Mabry et al. 1978).
+Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff \citep{maddox1985wind}.
+In some locations, this shrub also reproduces asexually through its roots and can give rise to long-lived clonal stands \citep{vasek1980creosote}.
+Foliage is dark green, resinous, and unpalatable to most grazing and browsing animals \citep{mabry1978creosote}.
 
 \subsection*{Study site}
+
+We conducted our experiments and censuses at the Sevilleta National Wildlife Refuge, a protected area and National Science Foundation Long Term Ecological Research (LTER) site approximately 60 miles south of Albuquerque, New Mexico.
+The refuge exists at the intersection of several ecoregions, including the Chihuahuan Desert and steppes of the Colorado Plateau.
+Annual precipitation is low at approximately 250 mm, with the majority falling during the summer monsoon season from June to September.
+The site is home to various pinyon pine and juniper species at higher elevations, as well as creosotebush and grasses such as black grama (\textit{Bouteloua eriopoda}) and blue grama (\textit{Bouteloua gracilis}) at lower elevations.
+At the McKenzie Flats area on the eastern portion of the refuge, there are several locations with a prominent shrub-grass ecotone; high-density areas of creosotebush with little to no transition to areas with a mixture of the two, which then transition to grassland with few shrubs.
+This gradient of creosotebush density at this site, and how it changes via encroachment, is the primary object of interest in our study.
+
+The drivers and dynamics of creosotebush encroachment at this site are not yet fully understood.
+In recent decades, the shrub-grass ecotone here seems to be mostly stable and creosotebush expansion has been minimal; significant encroachment is believed to have last occurred in the 1950's, with high shrub recruitment before and after a multi-year drought that caused a large loss in grass cover setting the stage for creosotebush expansion \citep{moreno2015assessing, moreno2016seed}.
+Clonal reproduction in creosotebush has not been observed to occur in the Chihuahuan desert, so reproduction at this site occurs exclusively by seed, with the recruitment from seed necessary for such creosotebush expansion likely sporadic in nature \citep{peters2012long}.
+Given that creosotebush seedlings have been shown to establish around the time that late-summer heavy rainfall occurs \citep{boyd1983postdispersal, bowers2004temporal}, higher precipitation rates may be responsible for increased recruitment, though the exact nature of how heavy rainfall events affect encroachment is not well defined.
+Creosotebush dispersal at this site is also poorly understood, with almost no studies quantifying wind dispersal of seeds, and very little understanding of the magnitude and distances of animal-driven dispersal.
 
 \subsection*{Encroachment re-surveys}
 We recorded shrub percent cover along two permanent 1000-m transects that spanned the shrub-grass ecotone, from high to low to near-zero shrub density. 
