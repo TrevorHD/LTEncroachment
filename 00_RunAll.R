@@ -131,7 +131,7 @@ for(i in 1:boot.num){
 
 # Clear console (on Windows) and print final procedure time
 shell("cls")
-print(paste0("Procedure complete with total time of ", time.elapsed, " hours."))
+print(paste0("Procedure complete with total time of ", round(time.elapsed, 2), " hours."))
 remove(time.start, time.elapsed)
 
 # Remove other unneeded items from the global environment
