@@ -23,8 +23,7 @@ TM.growth <- function(x, y, d){
   # Linear predictor for mean and log sigma 
   grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef(LATR_grow_best)[1:(grow_sd_index-1)]
   grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*% coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
-  return(dnorm(y, mean = grow_mu, sd = grow_sigma))
-  }
+  return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
 
 # Survival of size x at density d using best GAM
 # For nnaturally occuring plants (transplant = FALSE)
@@ -122,7 +121,7 @@ TM <- TransMatrix(dens = 0)
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 
 # Function to calculate the minimum wavespeed across a range of s
-Wavespeed <- function(n=TM.matdim){
+Wavespeed <- function(n = TM.matdim){
   
   # Fit equation to convert volume to height for dispersal kernel use
   LATR_full %>%
@@ -189,4 +188,22 @@ Wavespeed <- function(n=TM.matdim){
   
   # Return vector of wavespeeds
   return(vec)}
+
+
+
+
+
+##### Find lambda as function of density ------------------------------------------------------------------
+
+# Function to calculate lambda from density
+LambdaD <- function(d.only = FALSE){
+  d.values <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), 
+                  max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 25)
+  if(d.only == TRUE){
+    return(d.values)}
+  if(d.only == FALSE){
+    l.values <- c()
+    for(d in 1:length(d.values)){
+      l.values[d] <- lambda(TransMatrix(dens = d.values[d], mat.size = 200)$IPMmat)}
+    return(l.values)}}
 

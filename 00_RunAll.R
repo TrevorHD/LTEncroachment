@@ -108,14 +108,17 @@ for(i in 1:boot.num){
   # Spatial integral projection setting up functions to calculate wavespeeds
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
   
-  # Wavespeeds as function of s; growth as function of density
+  # Create empty vector to store wavespeeds
   c.values <- Wavespeed()
   
-  # Calculate minimum wavespeed
-  c.min <- min(c.values)
+  # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
+  boot.cv1 <- append(boot.cv1, min(c.values))
   
-  # Append wavespeed to bootstrapped vector of estimated wavespeeds
-  boot.cv1 <- append(boot.cv1, c.min)
+  # Create empty list to store lambda as a function of density; assing density values to top
+  l.values <- list(density = LambdaD(d.only = TRUE))
+  
+  # Calculate lambda as a function of density, then append to list
+  l.values[[i + 1]] <- LambdaD()
   
   # Calculate elapsed time
   time.elapsed <- as.numeric(difftime(Sys.time(), time.start, units = "hours"))
