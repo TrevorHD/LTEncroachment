@@ -66,11 +66,14 @@ dev.off()
 
 # ----- Plot growth rate as function of density -----------------------------------------------------------
 
-# Calculate growth rate lambda across a range of densities
-d.test <- seq(min(LATR_full$weighted.dens, na.rm = TRUE), 
-              max(LATR_full$weighted.dens, na.rm = TRUE), length.out = 25)
-lambda_density <- c()
-for(d in 1:length(d.test)){lambda_density[d] <- lambda(TransMatrix(dens = d.test[d], mat.size = 200)$IPMmat)}
+# Coerce list of lambda values into data frame
+l.values.df <- data.frame(l.values)
+
+# For each density, find mean lambda as well as 95% bootstrap interval
+l.values.df <- data.frame(l.values.df[, 1],
+                          apply(X = l.values.df[, -1], MARGIN = 1, FUN = mean),
+                          apply(X = l.values.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.025),
+                          apply(X = l.values.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.975)) 
 
 # Prepare graphics device
 jpeg(filename = "Figure 2.jpeg", width = 750, height = 500, units = "px")
@@ -89,14 +92,16 @@ par(fig = gridFIG())
 par(new = TRUE)
 par(mar = c(5, 8, 4, 2))
 
-# Plot growth rate lambda across a range of densities
-plot(d.test, lambda_density, type = "l", lwd = 3, ylim = c(1, 1.04), xlim = c(0, 200), 
+# Plot lambda as function of density, with 95% bootstrap interval
+plot(x = l.values.df[, 1], y = l.values.df[, 2], type = "l", lwd = 3, ylim = c(1, 1.06), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
+polygon(x = c(l.values.df[, 1], rev(l.values.df[, 1])), 
+        y = c(l.values.df[, 3], rev(l.values.df[, 4])), col = alpha("black", alpha = 0.2), border = NA)
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(1, 1.04, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+axis(2, at = seq(1, 1.06, length.out = 7), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
 mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
-box()
+box() 
 popViewport()
 
 # Deactivate grid layout; finalise graphics save
@@ -104,7 +109,7 @@ popViewport()
 dev.off()
 
 # Clean up mess from global environment
-remove(gly, d.test, lambda_density)
+remove(gly, l.values.df)
 
 
 
