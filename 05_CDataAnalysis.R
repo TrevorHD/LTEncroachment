@@ -26,7 +26,7 @@ LATR_grow <- LATR_full  %>% drop_na(volume_t, volume_t1) %>%
          log_volume_t1 = log(volume_t1))
 
 # Run the model selection once on the full data set; no bootstrapping here
-if(boot.switch == FALSE){
+#if(boot.switch == FALSE){
 
   # Create empty list to populate with model results
   LATR_gam_models <- list()
@@ -49,8 +49,10 @@ if(boot.switch == FALSE){
                               data = LATR_grow, gamma = 1.4, family = gaulss())                
   LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
                               data = LATR_grow, gamma = 1.4, family = gaulss()) 
-# Collect model AICs into a single table
-grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)}
+
+  # Collect model AICs into a single table
+grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
+#}
 ## set top model as "best"
 LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
 ## there will always be an intercept for the sd and I can always find its index
@@ -67,6 +69,10 @@ LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(
 # Plots of effect of size and density on sd(future size)
 # plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s.1(log_volume_t)"]) 
 # plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s.1(weighted.dens)"]) 
+
+
+
+
 
 ##### Flowering probability model -------------------------------------------------------------------------
 
@@ -103,7 +109,7 @@ LATR_flow_dat <- bind_rows(LATR_full,LATR_dat_201718) %>%
 LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
 
 # Run the model selection once on the full data set; no bootstrapping here
-if(boot.switch == FALSE){
+#if(boot.switch == FALSE){
 
   # Create empty list to populate with model results
   LATR_flower <- list()
@@ -117,7 +123,8 @@ if(boot.switch == FALSE){
                           data = LATR_flow_dat, gamma = 1.4, family = "binomial")
 
 # Collect model AICs into a single table
-flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)}
+flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
+#}
 ## set top model as "best"
 LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
 LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
@@ -139,7 +146,7 @@ LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exc
 LATR_fruits_dat <- subset(LATR_flow_dat, total.reproduction_t > 0)
 
 # Run the model selection once on the full data set; no bootstrapping here
-if(boot.switch == FALSE){
+#if(boot.switch == FALSE){
 
   # Create empty list to populate with model results
   LATR_fruits <- list()
@@ -152,7 +159,8 @@ if(boot.switch == FALSE){
   LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
                           data = LATR_fruits_dat, gamma = 1.4, family = "nb")
 # Collect model AICs into a single table
-fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)}
+fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
+#}
 ## set top model as "best"
 LATR_fruits_best <- LATR_fruits[[which.min(fruits_aic$AIC)]]
 LATR_fruits_fitted_terms <- predict(LATR_fruits_best, type = "terms") 
@@ -192,7 +200,7 @@ points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
        LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
 
 # Run the model selection once on the full data set; no bootstrapping here
-if(boot.switch == FALSE){
+#if(boot.switch == FALSE){
 
   # Create empty list to populate with model results
   LATR_surv <- list()
@@ -206,7 +214,8 @@ if(boot.switch == FALSE){
                         data = LATR_surv_dat, gamma = 1.4, family = "binomial")
 
 # Collect model AICs into a single table
-surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)}
+surv_aic <- AICtab(LATR_surv, base = TRUE, sort = FALSE)
+#}
 ## set top model as "best"
 LATR_surv_best <- LATR_surv[[which.min(surv_aic$AIC)]]
 LATR_surv_fitted_terms <- predict(LATR_surv_best, type = "terms") 
@@ -256,7 +265,7 @@ LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FP
   drop_na()
 
 # Run the model selection once on the full data set; no bootstrapping here
-if(boot.switch == FALSE){
+#if(boot.switch == FALSE){
 
   # Create empty list to populate with model results
   LATR_recruit <- list()
@@ -268,7 +277,8 @@ if(boot.switch == FALSE){
                            data = LATR_recruitment, gamma = 1.4, family = "binomial")
 
 # Collect model AICs into a single table
-recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)}
+recruit_aic <- AICtab(LATR_recruit, base = TRUE, sort = FALSE)
+#}
 ## set top model as "best"
 LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
 # Just out of curiosity, the density-dependent model is a very close second... what does this look like?
