@@ -115,7 +115,8 @@ for(i in 1:boot.num){
   boot.cv1 <- append(boot.cv1, min(c.values))
   
   # Create empty list to store lambda as a function of density; assing density values to top
-  l.values <- list(density = LambdaD(d.only = TRUE))
+  if(i == 1){
+    l.values <- list(density = LambdaD(d.only = TRUE))}
   
   # Calculate lambda as a function of density, then append to list
   l.values[[i + 1]] <- LambdaD()
