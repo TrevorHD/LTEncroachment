@@ -47,12 +47,12 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDat
 ##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------
 
 # Pre-bootstrap switch that will flip once bootstrapping begins
-# Done so that computationally-expensive parts of 05_CDataAnalysis_NS are not re-run unnecessarily
+# Done so that some parts of code are not re-run unnecessarily
 boot.switch <- FALSE
 
 # "05_CDataAnalysis_NS.R"
 # Create demography models for use in SIPM
-# Run once before bootstrapping, using full data set to find the best models
+# Run once before bootstrapping to get recruit sizes and boundaries
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
 
 # Should bootstrapping occur?
@@ -62,7 +62,7 @@ boot.on <- TRUE
 # Determine resampling proportion; that is, the proportion of individuals selected each interation
 # Should be in the interval (0, 1), exclusive
 # Warning: setting this number very low may adversely affect model behaviour
-boot.prop <- 0.80
+boot.prop <- 0.75
 
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-10 minutes), so choose this number wisely
@@ -78,7 +78,7 @@ boot.cv1 <- c()
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
-# This takes 5-10 minutes per bootstrap replicate; be patient
+# This takes several minutes per bootstrap replicate; be patient
 # A stable internet connection is required
 # Note: if boot.on = FALSE, then bootstrapping will not occur and full data will be used
 
