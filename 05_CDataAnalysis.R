@@ -49,36 +49,8 @@ if(boot.switch == FALSE){
                               data = LATR_grow, gamma = 1.4, family = gaulss())                
   LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
                               data = LATR_grow, gamma = 1.4, family = gaulss()) 
-
-  # These models will be iterated to fit sigma as f(fitted value)
-  LATR_grow$fitted_vals = LATR_grow$log_volume_t 
-  LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
-                              data = LATR_grow, gamma = 1.4, family = gaulss())
-  LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
-                              data = LATR_grow, gamma = 1.4, family = gaulss())                
-  LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(fitted_vals)), 
-                              data = LATR_grow, gamma = 1.4, family = gaulss())  
-
-  # Fit sigma as f(fitted value) for models 7-9
-  # The "weights" here are 1/sigma values; see ?gaulss for details.
-  for(mod in 7:9){
-    fitGAU = LATR_gam_models[[mod]]
-    fitted_all = predict(fitGAU, type = "response", data = LATR);                  
-    fitted_vals = new_fitted_vals = fitted_all[, 1]; 
-    weights = fitted_all[, 2];
-    err = 100; k = 0; 
-    while(err > 10^(-6)){
-      LATR_grow$fitted_vals = new_fitted_vals; 
-      fitGAU <- update(fitGAU); 
-      fitted_all = predict(fitGAU, type = "response", data = LATR_grow);   
-      new_fitted_vals = fitted_all[, 1]; new_weights = fitted_all[, 2];
-      err = weights - new_weights; err = sqrt(mean(err^2)); 
-      weights = new_weights; 
-      k = k + 1; cat(k, err, "\n");}   
-    LATR_gam_models[[mod]] =  fitGAU;}
-
-  # Collect model AICs into a single table
-  grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)}
+# Collect model AICs into a single table
+grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)}
 
 # Model 5 is the winner: mean ~ s(size) + s(density), sd ~ s(size) + s(density)
 # Define model 5 as our best Gaussian model
