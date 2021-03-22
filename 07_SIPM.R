@@ -21,10 +21,10 @@ TM.growth <- function(x, y, d){
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   # Linear predictor for mean and log sigma 
-  # Need to update so these indices are not hard-coded but for now they work
-  grow_mu <- lpmat[, 1:19] %*% coef(LATR_grow_best)[1:19]
-  grow_sigma <- exp(lpmat[, 32:50] %*% coef(LATR_grow_best)[32:50])
-  return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
+  grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef(LATR_grow_best)[1:(grow_sd_index-1)]
+  grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*% coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
+  return(dnorm(y, mean = grow_mu, sd = grow_sigma))
+  }
 
 # Survival of size x at density d using best GAM
 # For nnaturally occuring plants (transplant = FALSE)
@@ -35,7 +35,7 @@ TM.survival <- function(x, d){
                                             unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[, 1:21] %*% coef(LATR_surv_best)[1:21]
+  pred <- lpmat %*% coef(LATR_surv_best)
   return(invlogit(pred))}
 
 # Combined growth and survival at density d
@@ -49,7 +49,7 @@ TM.flower <- function(x, d){
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[, 1:20] %*% coef(LATR_flower_best)[1:20]
+  pred <- lpmat %*% coef(LATR_flower_best)
   return(invlogit(pred))}
 
 # Seed production (fruits * seeds/fruit) at size x and density d using best GAM
@@ -60,7 +60,7 @@ TM.seeds <- function(x, d, seeds.per.fruit = 6){
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[, 1:19] %*% coef(LATR_fruits_best)[1:19]
+  pred <- lpmat %*% coef(LATR_fruits_best)
   return(exp(pred)*seeds.per.fruit)}
 
 # Seed-to-Seedling recruitment probability at density d
@@ -69,7 +69,7 @@ TM.recruitment <- function(d){
                        newdata = data.frame(weighted.dens = d, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  pred <- lpmat[, 1] %*% coef(LATR_recruit_best)[1]
+  pred <- lpmat%*% coef(LATR_recruit_best)
   return(invlogit(pred[[1]]))}
 
 # Recruit size distribution at size y
