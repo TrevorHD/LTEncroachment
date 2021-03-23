@@ -53,7 +53,7 @@ TM.flower <- function(x, d){
 
 # Seed production (fruits * seeds/fruit) at size x and density d using best GAM
 # Note: we assume 6 seeds per fruit, and best GAM is actually not density dependent
-TM.seeds <- function(x, d, seeds.per.fruit = 6){
+TM.seeds <- function(x, d, seeds.per.fruit = 5){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_fruits_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
