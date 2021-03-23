@@ -126,7 +126,7 @@ for(i in 1:boot.num){
   
   # Clear console (on Windows) and print bootstrapping progress to console
   shell("cls")
-  print(paste0(i, "/", boot.num, " (", round(i/boot.num, 3)*100, "%) complete; ",
+  cat(paste0(i, "/", boot.num, " (", round(i/boot.num, 3)*100, "%) complete; ",
                round(time.elapsed, 2), " hours elapsed."))
   
   # Flip switch back to original setting
@@ -134,14 +134,24 @@ for(i in 1:boot.num){
     boot.switch <- FALSE}}
 
 # Clear console (on Windows) and print final procedure time
-shell("cls")
-print(paste0("Procedure complete with total time of ", round(time.elapsed, 2), " hours."))
-remove(time.start, time.elapsed)
+# Suppress any warnings or errors
+suppressWarnings(if(1 == 1){
+  shell("cls")
+  try(ifelse(length(boot.cv1) == boot.num,
+             cat(paste0("Procedure 100% complete with total time of ", round(time.elapsed, 2), " hours.")),
+             message(paste0("Warning: Network connection interrupted; bootstrapping could not be fully completed. \n",
+                            "Procedure halted at ", round(length(boot.cv1)/boot.num, 3)*100, "% with total time of ",
+                            round(time.elapsed, 2), " hours."))), silent = TRUE)})
 
-# Remove other unneeded items from the global environment
+# Remove unneeded bootstrap items from the global environment
+# Note: don't do this if you've run only one replicate and want to examine output
 # Suppress errors since some objects may not exist depending on which parts of code are re-run
-try(remove(fitGAU, fitted_all, err, fitted_vals, i, k, n_cuts_dens, new_fitted_vals, new_weights,
-           weights, boot.tv.raw, boot.tv.PDF, boot.ws.raw, boot.ws.PDF, c.values, c.min, mod), silent = TRUE)
+try(remove(boot.LATR_recruit_size, boot.tv.PDF, boot.ws.PDF, flower_aic, fruits_aic, grow_aic, LATR_dat_201718,
+           LATR_flow_dat, LATR_flower, LATR_flower_best, LATR_flower_fitted_terms, LATR_fruits, LATR_fruits_best,
+           LATR_fruits_dat, LATR_fruits_fitted_terms, LATR_gam_models, LATR_grow, LATR_grow_best, LATR_grow_fitted_terms,
+           LATR_recruit, LATR_recruit_best, LATR_recruitment, LATR_recruits, LATR_surv, LATR_surv_best, LATR_surv_dat,
+           LATR_surv_fitted_terms, recruit_aic, surv_aic, TM, boot.tv.raw, boot.ws.raw, c.values, grow_sd_index, i,
+           time.elapsed, time.start, TM.matdim, TM.lower.extension, TM.upper.extension), silent = TRUE)
 
 
 
@@ -149,7 +159,7 @@ try(remove(fitGAU, fitted_all, err, fitted_vals, i, k, n_cuts_dens, new_fitted_v
 
 ##### Generate main figures -------------------------------------------------------------------------------
 
-# "07_MainFigures"
+# "08_MainFigures"
 # Generate figures for wavespeeds and population growth, dispersal, and demographic data
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_MainFigures.R")
 
