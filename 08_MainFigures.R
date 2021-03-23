@@ -72,11 +72,22 @@ axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
 mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
-box() 
-popViewport()
+box()
+
+# Plot lambda as function of density, with individual curves
+plot(x = l.values.df[, 1], y = l.values.df[, 2], type = "l", lwd = 3, ylim = c(1, 1.05), xlim = c(0, 200), 
+     axes = FALSE, ann = FALSE)
+for(i in 2:length(l.values)){
+  lines(x = l.values[[1]], y = l.values[[i]], col = "grey")}
+lines(x = l.values.df[, 1], y = l.values.df[, 2], lwd = 3)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
+axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
+mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
+box()
 
 # Deactivate grid layout; finalise graphics save
-popViewport()
+popViewport(2)
 dev.off()
 
 # Clean up mess from global environment
