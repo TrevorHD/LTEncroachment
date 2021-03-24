@@ -38,13 +38,12 @@ dev.off()
 # ----- Plot growth rate as function of density -----------------------------------------------------------
 
 # Coerce list of lambda values into data frame
+# Then calculate 95% bootstrap interval
 l.values.df <- data.frame(l.values)
-
-# For each density, find mean lambda as well as 95% bootstrap interval
-l.values.df <- data.frame(l.values.df[, 1],
-                          apply(X = l.values.df[, -1], MARGIN = 1, FUN = mean),
-                          apply(X = l.values.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.025),
-                          apply(X = l.values.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.975)) 
+l.values.df.boot <- data.frame(l.values.df[, 1],
+                               apply(X = l.values.df[, -1], MARGIN = 1, FUN = mean),
+                               apply(X = l.values.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.025),
+                               apply(X = l.values.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.975)) 
 
 # Prepare graphics device
 jpeg(filename = "Figure 2.jpeg", width = 750, height = 500, units = "px")
@@ -63,11 +62,24 @@ par(fig = gridFIG())
 par(new = TRUE)
 par(mar = c(5, 8, 4, 2))
 
-# Plot lambda as function of density, with 95% bootstrap interval
-plot(x = l.values.df[, 1], y = l.values.df[, 2], type = "l", lwd = 3, ylim = c(1, 1.05), xlim = c(0, 200), 
+# Plot lambda as function of density, with individual curves
+plot(x = l.values.df.boot[, 1], y = l.values.df.boot[, 2], type = "l", lwd = 3, ylim = c(1, 1.05), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
-polygon(x = c(l.values.df[, 1], rev(l.values.df[, 1])), 
-        y = c(l.values.df[, 3], rev(l.values.df[, 4])), col = alpha("black", alpha = 0.2), border = NA)
+for(i in 2:length(l.values)){
+  lines(x = l.values[[1]], y = l.values[[i]], col = "grey")}
+lines(x = l.values.df.boot[, 1], y = l.values.df.boot[, 2], lwd = 3)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
+axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
+mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
+box()
+
+# Plot lambda as function of density, with individual curves (w/ transparency)
+plot(x = l.values.df.boot[, 1], y = l.values.df.boot[, 2], type = "l", lwd = 3, ylim = c(1, 1.05), xlim = c(0, 200), 
+     axes = FALSE, ann = FALSE)
+for(i in 2:length(l.values)){
+  lines(x = l.values[[1]], y = l.values[[i]], col = rgb(red = 0, blue = 0, green = 0, alpha = 0.3))}
+lines(x = l.values.df.boot[, 1], y = l.values.df.boot[, 2], lwd = 3)
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
@@ -75,11 +87,31 @@ mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
 box()
 
 # Plot lambda as function of density, with individual curves
-plot(x = l.values.df[, 1], y = l.values.df[, 2], type = "l", lwd = 3, ylim = c(1, 1.05), xlim = c(0, 200), 
+# Curves coloured based on starting distance from mean
+lmeans <- apply(X = l.values.df[, -1], MARGIN = 1, FUN = mean)
+colours <- colorRampPalette(c("gray15", "gray90"))
+l.values.df2 <- data.frame(t(l.values.df))[-1, ]
+data.frame(cbind(l.values.df2, 1:(ncol(l.values.df) - 1),
+                 as.numeric((l.values.df[1, -1] - lmeans[1])^2))) %>% 
+  arrange(.[, 27]) %>% 
+  cbind(colours(ncol(l.values.df) - 1)) %>% 
+  arrange(.[, 26]) -> plotdata
+plot(x = l.values.df.boot[, 1], y = l.values.df.boot[, 2], type = "l", lwd = 3, ylim = c(1, 1.05), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
 for(i in 2:length(l.values)){
-  lines(x = l.values[[1]], y = l.values[[i]], col = "grey")}
-lines(x = l.values.df[, 1], y = l.values.df[, 2], lwd = 3)
+  lines(x = l.values.df[[1]], y = plotdata[i, 1:25], col = as.character(plotdata[i, 28]))}
+lines(x = l.values.df.boot[, 1], y = l.values.df.boot[, 2], lwd = 3)
+axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
+axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
+mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
+box()
+
+# Plot lambda as function of density, with 95% bootstrap interval
+plot(x = l.values.df.boot[, 1], y = l.values.df.boot[, 2], type = "l", lwd = 3, ylim = c(1, 1.05), xlim = c(0, 200), 
+     axes = FALSE, ann = FALSE)
+polygon(x = c(l.values.df.boot[, 1], rev(l.values.df.boot[, 1])), 
+        y = c(l.values.df.boot[, 3], rev(l.values.df.boot[, 4])), col = alpha("black", alpha = 0.2), border = NA)
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
