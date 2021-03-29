@@ -125,12 +125,13 @@ We address the following specific questions:
 
 \subsection*{Study species}
 
-Creosotebush is a perennial, native shrub that is highly resistant to drought and is found throughout the arid and semiarid regions of the southwestern United States and northern Mexico.
-These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea} and occur at a variety of densities; high-density areas of creosotebush consist largely of barren soil due to the "islands of fertility" these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grass in the intershrub spaces since the spatial heterogeneity in soil nutrients is not as pronounced.
-Creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which consists of a single seed.
-Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff \citep{maddox1985wind}.
-In some locations, this shrub also reproduces asexually through its roots and can give rise to long-lived clonal stands \citep{vasek1980creosote}.
-Foliage is dark green, resinous, and unpalatable to most grazing and browsing animals \citep{mabry1978creosote}.
+Creosotebush \textit{Larrea tridentata} is a perennial, drought-resistant  shrub that is native to the arid and semiarid regions of the southwestern United States and northern Mexico.
+These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea}.
+High-density areas of creosotebush consist largely of barren soil between plants due to the ``islands of fertility'' these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grasses in the intershrub spaces.
+In our northern Chihuahuan desert study region creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which consists of a single seed.
+Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff \citep{maddox1985wind}. 
+In other regions, this species also reproduces asexually and can give rise to long-lived clonal stands \citep{vasek1980creosote}.
+The foliage is dark green, resinous, and unpalatable to most grazing and browsing animals \citep{mabry1978creosote}.
 
 \subsection*{Study site}
 
