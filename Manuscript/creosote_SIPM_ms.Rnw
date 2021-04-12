@@ -66,7 +66,7 @@ density-dependence, ecotones, woody encroachment, shrubs, integral projection mo
 \newpage
 \section*{Introduction}
 The recent and ongoing encroachment of shrubs and other woody plants into adjacent grasslands has caused significant vegetation changes across arid and semi-arid landscapes worldwide \citep{van2000shrub, van2009causes, goslee2003high, gibbens2005vegetation,parizek2002soil, cabral2003shrub,trollope1989encroachment, roques2001dynamics}.
-The process of encroachment generally involves increases in the number or density of woody plants in both time and space \citep{van2000shrub}, which can drive shifts in plant community competition and alter ecosystem processes \citep{schlesinger1990biological, ravi2009can,schlesinger1998plant, knapp2008shrub}.
+The process of encroachment generally involves increases in the number or density of woody plants in both time and space \citep{van2000shrub}, which can drive shifts in plant community structure and alter ecosystem processes \citep{schlesinger1990biological, ravi2009can,schlesinger1998plant, knapp2008shrub}.
 Other effects of encroachment include changes in ecosystem services \citep{reed2015reorienting, kelleway2017review}, declines in biodiversity \citep{ratajczak2012woody, sirami2012changes, brandt2013regime}, and economic losses in areas where the proliferation of shrubs adversely affects grazing land and pastoral production \citep{mugasi2000economic, oba2000bush}.
 
 Woody plant encroachment can be studied through the lens of spatial population biology as a wave of individuals that may expand across space and over time \citep{kot1996dispersal, neubert2000demography, wang2002integrodifference, pan2012invasion}.
@@ -88,16 +88,24 @@ Pushed expansion waves generally have different shapes (steeper density gradient
 The potential for positive feedbacks is well documented in woody encroachment systems but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion and influence strategies for management of woody encroachment.
 Despite decades of work on this topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
 
-In this study, we linked woody plant encroachment to ecological theory for invasion waves, with the goal of better understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
+In this study, we linked woody plant encroachment to ecological theory for invasion waves, with the goals of understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
 Throughout the aridlands of the southwestern United States, shrub encroachment into grasslands is well documented (cite) but little is known about the dispersal and demographic processes that govern it. 
 Our work focused on encroachment of creosotebush (\textit{Larrea tridentata}) in the northern Chihuahuan Desert. 
-This species has been expanding into grasslands for approximately 150 years, leading to decreased cover of \textit{Bouteloua eriopoda}, the dominant foundation species of Chihuahuan desert grassland \citep{gardner1951vegetation, buffington1965vegetational, gibbens2005vegetation}.
-As in many woody encroachment systems, creosotebush expansion generates ecotones marking a transition from dense shrubland to open grassland, with a transition zone in between where shrubs can often be found interspersed among grasses.
+Expansion of this species into grasslands over the past 150 years has been well documented, leading to decreased cover of \textit{Bouteloua eriopoda}, the dominant foundation species of Chihuahuan desert grassland \citep{gardner1951vegetation, buffington1965vegetational, gibbens2005vegetation}.
+As in many woody encroachment systems, creosotebush expansion generates ecotones marking a transition from dense shrubland to open grassland, with a transition zone in between where shrubs can often be found interspersed among grasses (Fig. \ref{fig:waves}).
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/waves_pics}
+  \caption{Caption.}
+  \label{fig:waves}
+  \end{center}
+\end{figure}
 
 Historically, creosotebush encroachment into grasslands is believed to have been driven by a combination of factors including overgrazing, drought, variability in rainfall, and suppression of fire regimes \cite{moreno2016seed}.
-These shrubs are also thought to further facilitate their own encroachment through positive feedbacks \citep{grover1990shrubland, d2012synthetic} by modifying various their environment in ways that favor continued growth and recruitment, such as the local micro-climate \citep{d2010positive} and rates of soil erosion \citep{turnbull2010changes}.
+These shrubs are also thought to further facilitate their own encroachment through positive feedbacks \citep{grover1990shrubland, d2012synthetic} by modifying their environment in ways that favor continued growth and recruitment, such as the local micro-climate \citep{d2010positive} and rates of soil erosion \citep{turnbull2010changes}.
 Such positive feedback also involve suppression of herbaceous competitors, reducing competition as well as the amount of flammable biomass used to fuel the fires that keep creosotebush growth in check \citep{van2000shrub}.
-We hypothesized that, given potential for positive feedback mechanisms, the lack of conspecifics at the low-density encroachment front may depress demographic performance and generate pushed-wave dynamics, though this has not yet been tested.
+We hypothesized that, given potential for positive feedback mechanisms, the rarity of conspecifics at the low-density encroachment front may depress demographic performance and generate pushed-wave dynamics.
 
 %While there is considerable interest in creosotebush encroachment, literature investigating the dispersal mechanisms and demographic processes that govern this process is extremely limited, and no previous studies have evaluated demography and dispersal to understand and predict creosotebush expansion dynamics.
 %We have little understanding of how dispersal, density-dependent demography, and density-dependent population growth facilitate creosotebush encroachment, as well as a dearth of data regarding population dynamics at the vanguard of expanding creosotebush populations.
@@ -105,7 +113,7 @@ We hypothesized that, given potential for positive feedback mechanisms, the lack
 %Such gaps in knowledge make it difficult to make estimates of encroachment rates that extend beyond what can be gathered from vegetation surveys.
 
 We used a combination of observational and experimental data from shrub ecotones in central New Mexico to parameterize a spatial integral projection model (SIPM) that predicts that speed of encroachment ($m/yr$) resulting from lower-level demographic and dispersal processes. 
-Our data came from demographic surveys and experimental transplants along replicate ecotones spanning a gradient of shrub density and seed drop experiments to infer the properties of the dispersal kernel.
+Our data came from demographic surveys and experimental transplants along replicate ecotone transects spanning a gradient of shrub density and seed drop experiments to infer the properties of the dispersal kernel.
 We focused on wind dispersal of seeds as a starting point, since little is known about the natural history of dispersal in this system and the seeds lack rewards to attract animal dispersers.
 We also used re-surveys of permanents transects as an independent measure of encroachment that provided a benchmark against which to evaluate model predictions. 
 The SIPM accounts for size-structured demography of creosotebush, allows us to test whether shrub expansion is pulled by the low-density front or pushed from the high-density core, and identifies the local (demographic) and spatial (seed dispersal) life cycle transitions that most strongly contribute to expansion speed\tom{}{we will need to stay consistent with the language of encroachment/expansion/invasion. For now I am swictihg a lot.}. 
@@ -115,8 +123,8 @@ We address the following specific questions:
 \begin{enumerate}
 \item What is the observed rate of creosotebush encroachment in recent past?
 \item How do creosotebush size and conspecific density affect variation in demographic vital rates (survival, growth, reproduction, and recruitment) along shrub encroachment ecotones?
-\item What is the wind dispersal kernel for this species and how far do seeds typically travel?
-\item What is the estimated rate of expansion from the SIPM and what lower-level processes most strongly govern the expansion speed?
+\item What is the wind dispersal kernel for this species and how far do seeds typically travel by wind?
+\item What is the predicted rate of expansion from the SIPM and what lower-level processes most strongly govern the expansion speed?
 \item Is encroachment pulled by the individuals at the front of the wave or pushed by individuals behind it?
 \end{enumerate}
 
@@ -127,62 +135,71 @@ We address the following specific questions:
 
 Creosotebush \textit{Larrea tridentata} is a perennial, drought-resistant  shrub that is native to the arid and semiarid regions of the southwestern United States and northern Mexico.
 These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea}.
-High-density areas of creosotebush consist largely of barren soil between plants due to the ``islands of fertility'' these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grasses in the intershrub spaces.
+High-density areas of creosotebush consist largely of barren soil between plants due to the ``islands of fertility'' these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grasses in the intershrub spaces (Fig. \ref{fig:waves}).
 In our northern Chihuahuan desert study region creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which consists of a single seed.
 Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff \citep{maddox1985wind}. 
-In other regions, this species also reproduces asexually and can give rise to long-lived clonal stands \citep{vasek1980creosote}.
+In other regions, this species also reproduces asexually and can give rise to long-lived clonal stands \citep{vasek1980creosote}, but this does not occur in our study region.
 The foliage is dark green, resinous, and unpalatable to most grazing and browsing animals \citep{mabry1978creosote}.
 
 \subsection*{Study site}
 
-We conducted our experiments and censuses at the Sevilleta National Wildlife Refuge, a protected area and National Science Foundation Long Term Ecological Research (LTER) site approximately 60 miles south of Albuquerque, New Mexico.
-The refuge exists at the intersection of several ecoregions, including the Chihuahuan Desert and steppes of the Colorado Plateau.
+We conducted our experiments and censuses at the Sevilleta National Wildlife Refuge (SNWR), a Long-Term Ecological Research (LTER) site in central New Mexico.
+The refuge exists at the intersection of several eco-regions, including the Chihuahuan Desert and steppes of the Colorado Plateau.
 Annual precipitation is low at approximately 250 mm, with the majority falling during the summer monsoon season from June to September.
-The site is home to various pinyon pine and juniper species at higher elevations, as well as creosotebush and grasses such as black grama (\textit{Bouteloua eriopoda}) and blue grama (\textit{Bouteloua gracilis}) at lower elevations.
-At the McKenzie Flats area on the eastern portion of the refuge, there are several locations with a prominent shrub-grass ecotone; high-density areas of creosotebush with little to no transition to areas with a mixture of the two, which then transition to grassland with few shrubs.
-This gradient of creosotebush density at this site, and how it changes via encroachment, is the primary object of interest in our study.
+%The site is home to various pinyon pine and juniper species at higher elevations, as well as creosotebush and grasses such as black grama (\textit{Bouteloua eriopoda}) and blue grama (\textit{Bouteloua gracilis}) at lower elevations.
+%At the McKenzie Flats area on the eastern portion of the refuge, there are several locations with a prominent shrub-grass ecotone; high-density areas of creosotebush with little to no transition to areas with a mixture of the two, which then transition to grassland with few shrubs.
+%This gradient of creosotebush density at this site, and how it changes via encroachment, is the primary object of interest in our study.
 
-The drivers and dynamics of creosotebush encroachment at this site are not yet fully understood.
-In recent decades, the shrub-grass ecotone here seems to be mostly stable and creosotebush expansion has been minimal; significant encroachment is believed to have last occurred in the 1950's, with high shrub recruitment before and after a multi-year drought that caused a large loss in grass cover setting the stage for creosotebush expansion \citep{moreno2015assessing, moreno2016seed}.
-Clonal reproduction in creosotebush has not been observed to occur in the Chihuahuan desert, so reproduction at this site occurs exclusively by seed, with the recruitment from seed necessary for such creosotebush expansion likely sporadic in nature \citep{peters2012long}.
-Given that creosotebush seedlings have been shown to establish around the time that late-summer heavy rainfall occurs \citep{boyd1983postdispersal, bowers2004temporal}, higher precipitation rates may be responsible for increased recruitment, though the exact nature of how heavy rainfall events affect encroachment is not well defined.
-Creosotebush dispersal at this site is also poorly understood, with almost no studies quantifying wind dispersal of seeds, and very little understanding of the magnitude and distances of animal-driven dispersal.
+%The drivers and dynamics of creosotebush encroachment at this site are not yet fully understood.
+%In recent decades, the shrub-grass ecotone here seems to be mostly stable and creosotebush expansion has been minimal; 
+Significant creosotebush encroachment at SNWR is believed to have last occurred in the 1950's, with high shrub recruitment before and after a multi-year drought that caused a large loss in grass cover, setting the stage for creosotebush expansion \citep{moreno2015assessing, moreno2016seed}.
+%Clonal reproduction in creosotebush has not been observed to occur in the Chihuahuan desert, so reproduction at this site occurs exclusively by seed, with the 
+The recruitment events that facilitate creosotebush expansion are thought to be highly episodic \citep{peters2012long}.
+Given that creosotebush seedlings have been shown to establish around the time that late-summer heavy rainfall occurs \citep{boyd1983postdispersal, bowers2004temporal}, higher precipitation rates may be responsible for increased recruitment.%, though the exact nature of how heavy rainfall events affect encroachment is not well defined.
+%Creosotebush dispersal at this site is poorly understood, with almost no studies quantifying wind dispersal of seeds, and very little understanding of the magnitude and distances of animal-driven dispersal.
 
 \subsection*{Encroachment re-surveys}
 We recorded shrub percent cover along two permanent 1000-m transects that spanned the shrub-grass ecotone, from high to low to near-zero shrub density. 
-These surveys were conduced in summer 2001 and again in summer 2013 to document  change in the spatial extent of shrub encroachment. 
+These surveys were conduced in summer 2001 and again in summer 2013 to document change in creosotebush abundance and spatial extent. 
 At every 10 meters, shrub cover was recorded in nine cover classes (<1\%, 1--4\%, 5--10\%, 10--25\%, 25--33\%, 33--50\%, 50--75\%, 75--95\%, >95\%). 
-For analysis, we visually assessed midpoint values of these cover classes at each meter location for both transects and years. 
+For visualization, we show midpoint values of these cover classes at each meter location for both transects and years. 
 
-\subsection*{Annual censuses}
+\subsection*{Demographic data}
 
-\subsubsection*{Demographic data collection}
+\subsubsection*{Ecotone transects}
 
-Collection of creosotebush demographic data occurred during the early summer of every year from 2013-2017, at the Sevilleta National Wildlife Refuge LTER site in central New Mexico.
-Four different sampling sites in the eastern part of the reserve were designated, with each of the sites containing 3 different transects.
-Lengths of these transects varied from 200 to 600 m, and no two sites had identical compositions of transect lengths.
-Transect length was determined by the strength of vegetation transition, as areas where shrubland more quickly transitions to grassland do not need as long of a transect to capture the gradient of densities as a more gradual transition does.
-All transects were placed longitudinally along the shrubland-grassland ecotone so a full range of shrub densities could be captured; each transect spanned shrub-dense "core" areas as well as grasslands with few shrubs and the transition zones in between. 
+Collection of demographic data occurred during early June of every year from 2013-2017.
+This work was conducted at four sites in the eastern part of SNWR (one site was initiated in 2013 and the other three in 2014), with three transects at each site. 
+All transects were placed along a shrubland-grassland ecotone so that a full range of shrub densities was captured: each transect spanned core shrub areas, grassland with few shrubs, and the transition between them. 
+Lengths of these transects varied from 200 to 600 m, determined by the strength of vegetation transition, as ``steep'' transitions required less length to capture the full range of shrub densities. 
 
-Only plants within a metre of the transect on either side were considered when determining baseline shrub densities.
-These densities were calculated using initial measurements from 2013 and were assumed to remain relatively static over the course of the study; each density was recorded as the weighted total amount of shrub volume per 5-m transect subsection.
-The per-shrub volume was calculated as that of an elliptic cone, as this was found to be the figure most closely matching the plant's morphology, using the formula $V_{i} = \pi lwh/3$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
+We quantified shrub density in 5-meter ``windows'' along each transect, including plants within one meter of the transect on either side.
+Densities were quantified once for each transect (in 2013 or 2014) and were assumed to remain effectively constant for the duration of the study, a reasonable assumption for a species with very low recruitment and very high survival of established plants. 
+Given the population's size structure, we weighted the density of each window by the sizes of the plants, which we quantified as volume (cm$^3$).
+Volume was calculated as that of an \tom{elliptic}{I checked the code and actually this is not what we did.} cone: $V_{i} = \pi lwh/3$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
 Maximum length and width were measured so that they were always perpendicular to each other, and height was measured from the base of the woody stem at the soil surface to the highest part of the shrub.
-All three of these dimensional measurements were mutually orthogonal and were inclusive only of living parts of the shrub; dead wood and non-foliated outer sections were not included in measurements.
-The total weighted density for the window was then expressed as the sum of log-transformed volumes of each individual shrub contained within.
-Such a weighted density was chosen because density of individuals alone can often fail to be a useful measurement in environments where large size differences between plants of the same species exist.
-Different-sized plants may vary greatly in their ability to extract resources from the environment around them and may thus differ greatly in their degree of competitiveness \citep{weiner1990asymmetric, hara1993mode}.
-By using a weighted density in terms of shrub volume, we were able to account for the extra competitiveness of larger shrubs and thus have a more accurate measurement of conspecific presence that is more suitable for a study population containing significant heterogeneity in size.
+%All three of these dimensional measurements were mutually orthogonal and were inclusive only of living parts of the shrub; dead wood and non-foliated outer sections were not included in measurements.
+The weighted density for a window was then expressed as log(volume) summed over all plants in the window.
+%Such a weighted density was chosen because density of individuals alone can often fail to be a useful measurement in environments where large size differences between plants of the same species exist.
+%Different-sized plants may vary greatly in their ability to extract resources from the environment around them and may thus differ greatly in their degree of competitiveness \citep{weiner1990asymmetric, hara1993mode}.
+%By using a weighted density in terms of shrub volume, we were able to account for the extra competitiveness of larger shrubs and thus have a more accurate measurement of conspecific presence that is more suitable for a study population containing significant heterogeneity in size.
 
-A subset of the shrubs used to calculate the baseline densities were tagged, with each plant given a unique identifier that allowed it to be recognised based on sampling site, transect number, and location within 50-m and 5-m subsections.
-These tagged shrubs then had various demographic measurements recorded on an annual basis.
-Maximum width, length, and height on each shrub were measured in order to calculate conical volume, using the formula given earlier.
-Survival status of the shrubs was also recorded, with dead individuals being noted and excluded from measurements in subsequent years.
-Counts of flowers and fruits on each shrub were recorded as well.
-In instances where shrubs had large numbers of reproductive structures that would prove difficult to reliably count, estimates were made, with a more accurate count on a fraction of the shrub being extrapolated to the entire individual.
-The position of each shrub along the transect was noted to a resolution of 5 m so that it could be matched with the baseline density of its corresponding subsection.
-For shrubs in which a given 5-m subsection was not recorded, their position was estimated to the nearest 50 m; however, compared to the number of finer-resolution 5-m subsections, this occurred relatively infrequently. 
-Establishment of recruits was also accounted for, with new recruits observed within the study area tagged and measured.
+\subsubsection*{Observational census}
+At 50-m intervals along each transect we tagged up to $10$ plants for annual demographic census and recorded their local (5-m resolution) window, so that we could connect individual demographic performance to local weighted density. 
+%A subset of the shrubs used to calculate window densities were tagged for long-term demographic census, with each plant given a unique identifier that allowed it to be recognised based on sampling site, transect number, and location within 50-m and 5-m subsections.
+These tagged shrubs were revisited every June and censused for survival (alive/dead), size (width, length, and height, as above), and reproduction (numbers of flowers and fruits). 
+%Maximum width, length, and height on each shrub were measured in order to calculate conical volume, using the formula given earlier.
+%Survival status of the shrubs was also recorded, with dead individuals being noted and excluded from measurements in subsequent years.
+%Counts of flowers and fruits on each shrub were recorded as well.
+In instances where shrubs had large numbers of reproductive structures that would be difficult to reliably count, we made counts on a fraction of the shrub and extrapolated to estimate whole-plant reproduction. 
+%The position of each shrub along the transect was noted to a resolution of 5 m so that it could be matched with the baseline density of its corresponding subsection.
+%For shrubs in which a given 5-m subsection was not recorded, their position was estimated to the nearest 50 m; however, compared to the number of finer-resolution 5-m subsections, this occurred relatively infrequently.
+Each year, we also searched for new recruits within one $m$ on either side of the transect.
+New recruits were tagged and added to the demographic census. 
+
+\subsubsection*{Transplant experiment}
+
+
 
 \subsubsection*{Demographic data analysis}
 
@@ -199,12 +216,6 @@ The effect of density dependence on the probability of recruitment from seeds wa
 For every year, the sum of seeds produced the prior year was calculated for each 5-m subsection, and then probability of recruitment was calculated as the number of recruits observed in each 5-m subsection divided by that number of seeds.
 For any subsection in which seeds were not found, a count of seeds was estimated based on the number of seeds in a subsection of similar weighted density; this was done to avoid creating any undefined values of recruitment probability.
 Both linear and quadratic models using only weighted density as a predictor were fit to the distribution of recruitment probabilities, though the linear model was ultimately used because it had a higher AIC value.
-
-\subsection*{Transplant experiment}
-
-\subsubsection*{Transplant data collection}
-
-\subsubsection*{Transplant data analysis}
 
 \subsection*{Dispersal modelling}
 
@@ -272,7 +283,7 @@ Between replicates, the structure of the demographic models was kept constant, t
 
 Figure \ref{fig:transect_resurv}.
 
-<<transect_resurv,echo=F,fig.dim=c(8,4),fig.cap="Re-surveys of shrub cover along two permanent trasects (A,B) surveyed in 2001 and 2013.">>=
+<<transect_resurv,echo=F,message=F,fig.dim=c(8,4),fig.cap="Re-surveys of shrub cover along two permanent trasects (A,B) surveyed in 2001 and 2013.">>=
 resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
 par(mfrow=c(1,2),mar=c(4,4,1,1))
 plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="East"],
