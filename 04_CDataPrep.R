@@ -115,7 +115,7 @@ CData.Demography$reproductive_fraction_t1[CData.Demography$reproductive_fraction
 # Check height changes below the 2.5th and about the 97.5th percentile
 CData.Demography %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>% 
   filter(height_change > quantile(height_change, 0.975, na.rm = T) | height_change < quantile(height_change, 0.025, na.rm = T)) %>% 
-  select(site, transect, designated.window, plant, year_t, max.ht_t, 
+  dplyr::select(site, transect, designated.window, plant, year_t, max.ht_t, 
          max.w_t, perp.w_t, max.ht_t1, max.w_t1, perp.w_t1) %>% 
   arrange(site, transect, designated.window, plant, year_t)
 
@@ -203,7 +203,7 @@ CData <- anti_join(CData.Demography,problems, by = c("site", "transect", "design
 
 # Identify entries that lack an actual window (5-m resolution)
 subset(CData, is.na(actual.window)) %>% 
-  select("site", "transect", "designated.window", "plant", "year_t") %>% 
+  dplyr::select("site", "transect", "designated.window", "plant", "year_t") %>% 
   unique() -> CData.MissingWindow
 
 # Check why actual Windows are not present
@@ -229,7 +229,7 @@ CData$actual.window[is.na(CData$actual.window)] <-
 ##### Remove unnecessary columns and merge densities with demography data ---------------------------------
 
 # Keep only useful columns
-select(CData, "site", "transect", "designated.window", "actual.window", "plant", "year_t",
+dplyr::select(CData, "site", "transect", "designated.window", "actual.window", "plant", "year_t",
        "max.ht_t", "max.w_t", "perp.w_t", "flowers_t", "fruits_t", "reproductive_fraction_t", 
        "year_t1", "new.plant_t1", "seedling_t1", "survival_t1", "max.ht_t1", "max.w_t1", 
        "perp.w_t1", "flowers_t1", "fruits_t1", "reproductive_fraction_t1") %>% 
@@ -308,7 +308,7 @@ CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, log(volume
 # Write transect data to use elsewhere for estimating recruitment per seed; merge Windows and Cdata.Transects
 # Create data frame with plant sizes and window densities for all transects and windows
 left_join(CData.Transects,Windows,by=c("site","transect","window")) %>% 
-  select(site,transect,window,volume,weighted.dens) -> Cdata.Transects.Windows
+  dplyr::select(site,transect,window,volume,weighted.dens) -> Cdata.Transects.Windows
 
 
 
