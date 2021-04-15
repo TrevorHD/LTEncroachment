@@ -220,6 +220,21 @@ After that first visit, transplants were censused along with the naturally occur
 
 \subsubsection*{Demographic data analysis}
 
+We fit statistical models to the demographic data and used AIC-based model selection to evaluate empirical support for alternative candidate models. 
+The top statistical models were then used as the vital rate sub-models of the SIPM, so there is a strong connection between the statistical and population modeling, as is typical of integral projection modeling. 
+Our analyses focused on the following demographic vital rates: survival, growth, probability of flowering, flower and fruit production, and seedling recruitment. 
+All of these except recruitment were modeled as a function of plant size, and all of them included the possibility of density dependence, since we could connect the demographic performance of individual shrubs to the weighted density of their transect window. 
+
+The alternative hypotheses of pushed versus pulled wave expansion ultimately rest on how demographic vital rates, and the rate of population increase ($\lambda$) derived from the combination of all vital rates, respond to density. 
+We were particularly interested in whether demographic performance was maximized as local density goes to zero (pulled) or at non-zero densities behind the wave front (pushed). 
+To flexibly model density dependence, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
+For each vital rate, we fit candidate models with or without a smooth term for local weighted density (among other possible covariates), which allowed for the possibility of non-monotonic responses to density if sufficiently supported by the data. 
+To avoid over-fitting, we set the `gamma' argument of gam() to 1.4, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and therefore makes our approach more conservative.
+% using gamma = 1 leads to fruit production having *positive* density dependence
+% not sure if I believe this, need to look into it; otherwise the gamma value does not seem to change the results much.
+All models included the random effect of transect; we did not attempt to model both site and transect-within-site random effects due to the low numbers of each. 
+
+%Trevor's text starts here
 Collected demography data were then examined to investigate how weighted density and shrub volume affected four different demographic variables: survival, probability of flowering (i.e. producing at least one flower or fruit), annual growth, and number of reproductive structures.
 Each of these demographic variables was fit to a different mixed-effects model through maximum likelihood.
 Both survival and probability of flowering were each fit to generalised linear mixed-effects models using a binomial response and a logit link function. Annual growth was defined as $\ln(V_{t+1} / V_{t})$ where $V_{t+1}$ and $V_{t}$ are the shrub volumes in the current and previous years, respectively, and was then fit to a linear mixed-effects model. 
