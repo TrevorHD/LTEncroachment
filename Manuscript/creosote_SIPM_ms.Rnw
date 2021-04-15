@@ -40,7 +40,6 @@ library(tidyverse)
 %-------------------------------------------------------------------------
 \begin{document}
 %\SweaveOpts{concordance=TRUE}
-%\SweaveOpts{concordance=TRUE}
 
 \maketitle
 \linenumbers
@@ -169,11 +168,11 @@ For visualization, we show midpoint values of these cover classes at each meter 
 \subsubsection*{Ecotone transects}
 
 Collection of demographic data occurred during early June of every year from 2013-2017.
-This work was conducted at four sites in the eastern part of SNWR (one site was initiated in 2013 and the other three in 2014), with three transects at each site. 
+This work was conducted at four sites in the eastern part of SNWR (one site was initiated in 2013 and the other three in 2014), with three transects at each site (different transects than those used for re-surveys). 
 All transects were placed along a shrubland-grassland ecotone so that a full range of shrub densities was captured: each transect spanned core shrub areas, grassland with few shrubs, and the transition between them. 
-Lengths of these transects varied from 200 to 600 m, determined by the strength of vegetation transition, as ``steep'' transitions required less length to capture the full range of shrub densities. 
+Lengths of these transects varied from 200 to 600 m, determined by the strength of vegetation transition since ``steep'' transitions required less length to capture the full range of shrub densities. 
 
-We quantified shrub density in 5-meter ``windows'' along each transect, including plants within one meter of the transect on either side.
+We quantified shrub density in 5-meter ``windows'' along each transect, including all plants within one meter of the transect on either side.
 Densities were quantified once for each transect (in 2013 or 2014) and were assumed to remain effectively constant for the duration of the study, a reasonable assumption for a species with very low recruitment and very high survival of established plants. 
 Given the population's size structure, we weighted the density of each window by the sizes of the plants, which we quantified as volume (cm$^3$).
 Volume was calculated as that of an \tom{elliptic}{I checked the code and actually this is not what we did.} cone: $V_{i} = \pi lwh/3$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
@@ -185,21 +184,39 @@ The weighted density for a window was then expressed as log(volume) summed over 
 %By using a weighted density in terms of shrub volume, we were able to account for the extra competitiveness of larger shrubs and thus have a more accurate measurement of conspecific presence that is more suitable for a study population containing significant heterogeneity in size.
 
 \subsubsection*{Observational census}
-At 50-m intervals along each transect we tagged up to $10$ plants for annual demographic census and recorded their local (5-m resolution) window, so that we could connect individual demographic performance to local weighted density. 
+At 50-m intervals along each transect we tagged up to $10$ plants for annual demographic census and recorded their local (5-m resolution) window so that we could connect individual demographic performance to local weighted density. 
 %A subset of the shrubs used to calculate window densities were tagged for long-term demographic census, with each plant given a unique identifier that allowed it to be recognised based on sampling site, transect number, and location within 50-m and 5-m subsections.
 These tagged shrubs were revisited every June and censused for survival (alive/dead), size (width, length, and height, as above), and reproduction (numbers of flowers and fruits). 
 %Maximum width, length, and height on each shrub were measured in order to calculate conical volume, using the formula given earlier.
 %Survival status of the shrubs was also recorded, with dead individuals being noted and excluded from measurements in subsequent years.
 %Counts of flowers and fruits on each shrub were recorded as well.
-In instances where shrubs had large numbers of reproductive structures that would be difficult to reliably count, we made counts on a fraction of the shrub and extrapolated to estimate whole-plant reproduction. 
+In instances where shrubs had large numbers of reproductive structures that would be difficult to reliably count (a large shrub may have many hundreds of flowers or fruits), we made counts on a fraction of the shrub and extrapolated to estimate whole-plant reproduction. 
+Creosotebush does not have a discrete reproductive season, instead producing flowers and fruits over much of the warm season. 
+Our measurements of reproductive output are therefore conservative, and likely underestimate cumulative seed production for an entire transition year. 
 %The position of each shrub along the transect was noted to a resolution of 5 m so that it could be matched with the baseline density of its corresponding subsection.
 %For shrubs in which a given 5-m subsection was not recorded, their position was estimated to the nearest 50 m; however, compared to the number of finer-resolution 5-m subsections, this occurred relatively infrequently.
 Each year, we also searched for new recruits within one $m$ on either side of the transect.
 New recruits were tagged and added to the demographic census. 
 
 \subsubsection*{Transplant experiment}
+We conducted a transplant experiment in 2015 to test how shrub density affects seedling survival. 
+This approach complemented observational estimates of density dependence and filled in gaps for a part of the shrub life cycle that is rarely observed due to low recruitment. 
+Seeds for the experiment were collected from plants in our study population in 2014.
+Seeds were germinated on Pro-Mix potting soil (Quakertown, PA) in Fall 2014 and seedlings were transferred to 3.8 cm × 12.7 cm cylindrical containers and maintained in a greenhouse at Rice University.
+Seedlings were transported to SNWR and transplanted into our experimental design during July 27-31 2015.
+Transplant timing was intended to coincide with the start of the monsoon season, when most natural recruitment occurs. 
 
-
+The transplant experiment was conducted at the same four sites and three transects per site as the observational demographic census, where we knew weight shrub densities at 5-m window resolution. 
+Along each transect we established 12 1-m by 1-m plots. 
+Plots were intentionally placed to capture density variation: four plots were in windows with zero shrubs, four plots were placed in the top four highest-density windows, and the remaining four plots were randomly distributed among the remaining windows with weighted density greater than zero. 
+Plots were placed in the middle of each 5-m window (at meter 2.5).
+Plots were divided into four 0.5-m by 0.5-m subplots.
+We divided each subplot into nine squares and recorded ground cover of each square as one of the following categories: bare, creosotebush, black grama (\textit{B. eriopoda}), blue grama (\textit{B. gracilis}), other grass, or ``other''.
+Each subplot received one transplanted subplot, for a total of 48 transplants per transect, 144 transplants per site, and 576 transplants in the entire experiment. 
+Each site was set up on a different day and there was a significant monsoon event after the third and before the fourth site. 
+This resulted in differential mortality that appears to be related to site (the soil was moist at the fourth site at the time of transplanting, which favored survival) but more likely reflects the timing of the monsoon event relative to planting. 
+We revisited the transplant experiment on October 24, 2015 to survey mortality. 
+After that first visit, transplants were censused along with the naturally occurring plants each June, following the methods described above. 
 
 \subsubsection*{Demographic data analysis}
 
