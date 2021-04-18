@@ -229,10 +229,20 @@ The alternative hypotheses of pushed versus pulled wave expansion ultimately res
 We were particularly interested in whether demographic performance was maximized as local density goes to zero (pulled) or at non-zero densities behind the wave front (pushed). 
 To flexibly model density dependence and detect non-monotic responses, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
 For each vital rate, we fit candidate models with or without a smooth term for local weighted density (among other possible covariates). 
-To avoid over-fitting, we set the `gamma' argument of gam() to 1.4, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and therefore makes our approach more conservative.
+To avoid over-fitting, we set the `gamma' argument of gam() to 1.2, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and makes our approach more conservative.
 % using gamma = 1 leads to fruit production having *positive* density dependence
 % not sure if I believe this, need to look into it; otherwise the gamma value does not seem to change the results much.
 All models included the random effect of transect; we did not attempt to model both site and transect-within-site random effects due to the low numbers of each. 
+All vital rate functions used the natural logarithm of volume (cm$^3$) as the size variable and the sum log(volume) as the weighted density of a transect window.
+
+\paragraph{Growth}
+We modeled size in year $t+1$ as a Gaussian random variable. 
+There were nine candidate models for growth (Table).
+The simplest model (1) defined the mean of size in year $t+1$ as a smooth function of size in year $t$ and constant variance 
+Models (2) and (3) had constant variance but the mean included smooth terms for initial size and weighted density (2) or both smooth terms plus an interaction between initial size and weighted density (3).
+Models 4-6 had the same mean structure as 1-3 but defined the standard deviation of size in year $t+1$ as a smooth function of initial size. 
+Models 7-9 mirrored 4-6 and additionally included a smooth term for weighted density in the standard deviation. 
+
 
 %Trevor's text starts here
 Collected demography data were then examined to investigate how weighted density and shrub volume affected four different demographic variables: survival, probability of flowering (i.e. producing at least one flower or fruit), annual growth, and number of reproductive structures.
