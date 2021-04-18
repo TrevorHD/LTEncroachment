@@ -231,6 +231,9 @@ LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclu
 
 ##### Per-seed recruitment probability model --------------------------------------------------------------
 
+## number of seeds per fruit
+seeds_per_fruit <- 5
+
 # Create subset df of recruits
 LATR_recruits <- LATR_full %>% 
   mutate(unique.transect = interaction(transect, site)) %>% 
@@ -241,12 +244,12 @@ LATR_recruits <- LATR_full %>%
 
 # Estimate total seeds produced in each window
 # This is computed using the known plant sizes and the fitted flowering and fruiting models
-# Note: we assume 6 seeds per fruit
+# Note: we assume 6 seeds per fruit -- updated 18 Apr 2021 to 5
 LATR_transects <- Cdata.Transects.Windows %>% 
   mutate(unique.transect = interaction(transect, site),
          log_volume_t = log(volume))
 LATR_transects$seeds = ceiling(invlogit(predict.gam(LATR_flower_best, newdata = LATR_transects))* 
-                                 6*exp(predict.gam(LATR_fruits_best, newdata = LATR_transects)))
+                                 seeds_per_fruit*exp(predict.gam(LATR_fruits_best, newdata = LATR_transects)))
 LATR_transects <- group_by(LATR_transects, unique.transect, window)
 suppressMessages(summarise(LATR_transects, total_seeds = sum(seeds),
                                            weighted.dens = unique(weighted.dens))) -> LATR_transects
