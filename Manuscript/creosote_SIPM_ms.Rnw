@@ -227,8 +227,8 @@ All of these except recruitment were modeled as a function of plant size, and al
 
 The alternative hypotheses of pushed versus pulled wave expansion ultimately rest on how demographic vital rates, and the rate of population increase ($\lambda$) derived from the combination of all vital rates, respond to density. 
 We were particularly interested in whether demographic performance was maximized as local density goes to zero (pulled) or at non-zero densities behind the wave front (pushed). 
-To flexibly model density dependence, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
-For each vital rate, we fit candidate models with or without a smooth term for local weighted density (among other possible covariates), which allowed for the possibility of non-monotonic responses to density if sufficiently supported by the data. 
+To flexibly model density dependence and detect non-monotic responses, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
+For each vital rate, we fit candidate models with or without a smooth term for local weighted density (among other possible covariates). 
 To avoid over-fitting, we set the `gamma' argument of gam() to 1.4, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and therefore makes our approach more conservative.
 % using gamma = 1 leads to fruit production having *positive* density dependence
 % not sure if I believe this, need to look into it; otherwise the gamma value does not seem to change the results much.
