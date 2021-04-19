@@ -114,12 +114,18 @@ for(i in 1:boot.num){
   # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
   boot.cv1 <- append(boot.cv1, min(c.values))
   
-  # Create empty list to store lambda as a function of density; assing density values to top
+  # Create empty list to store lambda as a function of density; assign density values to top
   if(i == 1){
-    l.values <- list(density = LambdaD(d.only = TRUE))}
+    boot.lambda <- list(density = LambdaD(d.only = TRUE))}
   
   # Calculate lambda as a function of density, then append to list
-  l.values[[i + 1]] <- LambdaD()
+  boot.lambda[[i + 1]] <- LambdaD()
+  
+  # Create empty list to store transition matrices
+  boot.TM <- list()
+  
+  # Append transition matrix to list
+  boot.TM <- list(boot.TM, TM)
   
   # Calculate elapsed time
   time.elapsed <- as.numeric(difftime(Sys.time(), time.start, units = "hours"))

@@ -202,8 +202,8 @@ LambdaD <- function(d.only = FALSE){
   if(d.only == TRUE){
     return(d.values)}
   if(d.only == FALSE){
-    l.values <- c()
+    boot.lambda <- c()
     for(d in 1:length(d.values)){
-      l.values[d] <- lambda(TransMatrix(dens = d.values[d], mat.size = 200)$IPMmat)}
-    return(l.values)}}
+      boot.lambda[d] <- lambda(TransMatrix(dens = d.values[d], mat.size = 200)$IPMmat)}
+    return(boot.lambda)}}
 
