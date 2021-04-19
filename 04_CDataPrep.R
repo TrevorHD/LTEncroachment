@@ -23,7 +23,7 @@ names(CData.Transplants)[1] <- "site"
 ##### Calculate densities for each 5-m window -------------------------------------------------------------
 
 # Calculate plant volume (elliptical cone)
-vol <- function(h, w, p){(1/3)*pi*h*(sqrt((w*p))/2)^2}
+vol <- function(h, w, p){(1/3)*pi*h*(w/2)*(p/2)}
 
 # Apply calculations to transects data frame
 CData.Transects$volume <- vol(h = CData.Transects$max.ht, w = CData.Transects$max.w,

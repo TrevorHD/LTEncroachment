@@ -175,7 +175,7 @@ Lengths of these transects varied from 200 to 600 m, determined by the strength 
 We quantified shrub density in 5-meter ``windows'' along each transect, including all plants within one meter of the transect on either side.
 Densities were quantified once for each transect (in 2013 or 2014) and were assumed to remain effectively constant for the duration of the study, a reasonable assumption for a species with very low recruitment and very high survival of established plants. 
 Given the population's size structure, we weighted the density of each window by the sizes of the plants, which we quantified as volume (cm$^3$).
-Volume was calculated as that of an \tom{elliptic}{I checked the code and actually this is not what we did.} cone: $V_{i} = \pi lwh/3$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
+Volume was calculated as that of an elliptic cone: $V_{i} = \frac{\pi h}{3} \frac{lw}{4}$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
 Maximum length and width were measured so that they were always perpendicular to each other, and height was measured from the base of the woody stem at the soil surface to the highest part of the shrub.
 %All three of these dimensional measurements were mutually orthogonal and were inclusive only of living parts of the shrub; dead wood and non-foliated outer sections were not included in measurements.
 The weighted density for a window was then expressed as log(volume) summed over all plants in the window.
