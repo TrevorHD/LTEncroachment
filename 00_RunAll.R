@@ -48,6 +48,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDat
 
 # Pre-bootstrap switch that will flip once bootstrapping begins
 # Done so that some parts of code are not re-run unnecessarily
+# Should not be modified by the user
 boot.switch <- FALSE
 
 # "05_CDataAnalysis_NS.R"
@@ -59,17 +60,22 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 # If not, the model will be run once using full data sets
 boot.on <- TRUE
 
-# Determine resampling proportion; that is, the proportion of individuals selected each interation
+# Evaluate local IPM instead of spatial IPM?
+# Local IPM will not include dispersal
+boot.noDisp <- FALSE
+
+# What proportion of individuals should be resampled each bootstrap interation?
 # Should be in the interval (0, 1), exclusive
 # Warning: setting this number very low may adversely affect model behaviour
+# Ignore this if boot.on = FALSE
 boot.prop <- 0.75
 
 # Set number of bootstrap iterations
-# Please note: one iteration takes some time (5-10 minutes), so choose this number wisely
+# Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
 boot.num <- 2
 
-# Create empty vectors to populate with wavespeeds for normal and higher survival scenarios
+# Create empty vectors to populate with wavespeeds
 boot.cv1 <- c()
 
 
@@ -108,11 +114,14 @@ for(i in 1:boot.num){
   # Spatial integral projection setting up functions to calculate wavespeeds
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
   
-  # Create empty vector to store wavespeeds
-  c.values <- Wavespeed()
-  
-  # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
-  boot.cv1 <- append(boot.cv1, min(c.values))
+  # Evaluate SIPM to find wavespeeds
+  if(boot.noDisp == FALSE){
+    
+    # Create empty vector to store wavespeeds
+    c.values <- Wavespeed()
+    
+    # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
+    boot.cv1 <- append(boot.cv1, min(c.values))}
   
   # Create empty list to store lambda as a function of density; assign density values to top
   if(i == 1){
@@ -122,10 +131,11 @@ for(i in 1:boot.num){
   boot.lambda[[i + 1]] <- LambdaD()
   
   # Create empty list to store transition matrices
-  boot.TM <- list()
+  if(i == 1){
+    boot.TM <- list()}
   
   # Append transition matrix to list
-  boot.TM <- list(boot.TM, TM)
+  boot.TM[[i]] <- TM
   
   # Calculate elapsed time
   time.elapsed <- as.numeric(difftime(Sys.time(), time.start, units = "hours"))
@@ -143,21 +153,26 @@ for(i in 1:boot.num){
 # Suppress any warnings or errors
 suppressWarnings(if(1 == 1){
   shell("cls")
-  try(ifelse(length(boot.cv1) == boot.num,
+  try(ifelse(length(boot.TM) == boot.num,
              cat(paste0("Procedure 100% complete with total time of ", round(time.elapsed, 2), " hours.")),
              message(paste0("Warning: Network connection interrupted; bootstrapping could not be fully completed. \n",
                             "Procedure halted at ", round(length(boot.cv1)/boot.num, 3)*100, "% with total time of ",
                             round(time.elapsed, 2), " hours."))), silent = TRUE)})
 
-# Remove unneeded bootstrap items from the global environment
-# Note: don't do this if you've run only one replicate and want to examine output
+# Remove unneeded bootstrap items from the global environment if using spatial IPM
+# If running single replicate, just leave most items in global environment
 # Suppress errors since some objects may not exist depending on which parts of code are re-run
-try(remove(boot.LATR_recruit_size, boot.tv.PDF, boot.ws.PDF, flower_aic, fruits_aic, grow_aic, LATR_dat_201718,
-           LATR_flow_dat, LATR_flower, LATR_flower_best, LATR_flower_fitted_terms, LATR_fruits, LATR_fruits_best,
-           LATR_fruits_dat, LATR_fruits_fitted_terms, LATR_gam_models, LATR_grow, LATR_grow_best, LATR_grow_fitted_terms,
-           LATR_recruit, LATR_recruit_best, LATR_recruitment, LATR_recruits, LATR_surv, LATR_surv_best, LATR_surv_dat,
-           LATR_surv_fitted_terms, recruit_aic, surv_aic, TM, boot.tv.raw, boot.ws.raw, c.values, grow_sd_index, i,
-           time.elapsed, time.start, TM.matdim, TM.lower.extension, TM.upper.extension), silent = TRUE)
+if(boot.noDisp == FALSE){
+  try(remove(boot.LATR_recruit_size, boot.tv.PDF, boot.ws.PDF, flower_aic, fruits_aic, grow_aic, LATR_dat_201718,
+             LATR_flow_dat, LATR_flower, LATR_flower_best, LATR_flower_fitted_terms, LATR_fruits, LATR_fruits_best,
+             LATR_fruits_dat, LATR_fruits_fitted_terms, LATR_gam_models, LATR_grow, LATR_grow_best, LATR_grow_fitted_terms,
+             LATR_recruit, LATR_recruit_best, LATR_recruitment, LATR_recruits, LATR_surv, LATR_surv_best, LATR_surv_dat,
+             LATR_surv_fitted_terms, recruit_aic, surv_aic, TM, boot.tv.raw, boot.ws.raw, c.values, grow_sd_index, i,
+             time.elapsed, time.start, TM.matdim, TM.lower.extension, TM.upper.extension, gamma, seeds_per_fruit),
+      silent = TRUE)}
+if(boot.noDisp == TRUE){
+  try(remove(boot.tv.PDF, boot.ws.PDF, boot.tv.raw, boot.ws.raw, i, time.elapsed, time.start, TM),
+      silent = TRUE)}
 
 
 
