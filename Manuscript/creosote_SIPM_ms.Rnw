@@ -255,6 +255,7 @@ We modeled shrub reproductive status (vegetative or flowering) in year $t$ as a 
 These included smooth terms for current size (in year $t$) only (1), size and weighted density (3), and both smooth terms plus an interaction between size and weighted density. 
 We modeled the reproductive output of flowering plants (the sum of flowerbuds, open flowers, and fruits) in year $t$ as a negative binomial random variable. 
 There were three candidate models for mean reproductive output that corresponded to the same three candidates for flowering probability. 
+
 \paragraph{Recruitment}
 We modeled seedling recruitment in each transect window as a binomial random variable given the number of seeds produced in that window in the preceding year. 
 To estimate window-level seed production, we used the best-fit models for flowering and fruit production and applied this to all plants in each window that we observed in our initial density surveys. 

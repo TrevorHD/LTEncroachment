@@ -304,3 +304,12 @@ if(boot.switch == FALSE){
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
                                max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
 
+
+
+# Collect AIC table info --------------------------------------------------
+
+grow_aic
+flower_aic
+fruits_aic
+surv_aic
+recruit_aic
