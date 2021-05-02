@@ -15,7 +15,9 @@ library(corrplot)
 library(mgcv)
 library(popbio)
 library(bbmle)
-
+library(scales)
+library(wesanderson)
+library(oce)
 
 
 
