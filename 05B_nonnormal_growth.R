@@ -93,30 +93,31 @@ px = LATR_grow$fitted_vals[,1]; py=scaledResids;
 z = rollMomentsNP(px,py,windows=8,smooth=TRUE,scaled=TRUE) 
 
 ###########################################################
-## fit sgt to scaled residuals
+## fit sgt
 ###########################################################
 sgtLogLik=function(pars,response){
   val = dsgt(x = response, 
-             mu=0,
-             sigma=1,
-             lambda=pars[1],
-             p=exp(pars[2]),
-             q=exp(pars[3]),
+             mu=pars[1]+pars[2]*LATR_grow$log_volume_t+pars[3]*LATR_grow$weighted.dens,
+             sigma=exp(pars[4]+pars[5]*LATR_grow$log_volume_t+pars[6]*LATR_grow$weighted.dens),
+             lambda=pars[7],
+             p=exp(pars[8]),
+             q=exp(pars[9]),
              log=T) 
   return(val); 
 }
 
-p0=c(0,1,1) 
+## initial parameter values
+p0=c(0,1,0,1,0,0,0,1,1) 
 paranoid_iter <- 3
 coefs = list(paranoid_iter); LL=numeric(paranoid_iter);  
 for(j in 1:paranoid_iter) {
-  out=maxLik(logLik=sgtLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=scaledResids,
+  out=maxLik(logLik=sgtLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=LATR_grow$log_volume_t1,
              method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
   
-  out=maxLik(logLik=sgtLogLik,start=out$estimate,response=scaledResids,
+  out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
              method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
   
-  out=maxLik(logLik=sgtLogLik,start=out$estimate,response=scaledResids,
+  out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
              method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
   
   coefs[[j]] = out$estimate; LL[j] = out$maximum;
@@ -124,5 +125,5 @@ for(j in 1:paranoid_iter) {
 }
 
 j = min(which(LL==max(LL))) 
-out=maxLik(logLik=sgtLogLik,start=coefs[[j]],response=scaledResids,
+out=maxLik(logLik=sgtLogLik,start=coefs[[j]],response=LATR_grow$log_volume_t1,
            method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
