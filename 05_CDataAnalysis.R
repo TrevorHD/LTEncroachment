@@ -38,14 +38,14 @@ LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.trans
                             data = LATR_grow, gamma = gamma, family = gaulss())
 LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~1), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~1), 
+LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"), ~1), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
 LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
 LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
 # Fits where sigma depends on both initial size and density
@@ -53,7 +53,7 @@ LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.trans
                             data = LATR_grow, gamma = gamma, family = gaulss())
 LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
 
@@ -76,10 +76,6 @@ LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(
 # Plots of effect of size and density on sd(future size)
 # plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s.1(log_volume_t)"]) 
 # plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s.1(weighted.dens)"]) 
-
-
-
-
 
 ##### Flowering probability model -------------------------------------------------------------------------
 
@@ -123,7 +119,7 @@ LATR_flower[[1]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.tr
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
 LATR_flower[[2]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
-LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"),
+LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
 
 # Collect model AICs into a single table
@@ -133,16 +129,6 @@ flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
 LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
 LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
 LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
-
-# Plot effect of size on pr(flower)
-# plot(LATR_flow_dat$log_volume_t, LATR_flower_fitted_terms[, "s(log_volume_t)"]) 
-
-# Plot effect of density on pr(flower)
-# plot(LATR_flow_dat$weighted.dens, LATR_flower_fitted_terms[, "s(weighted.dens)"]) 
-
-
-
-
 
 ##### Fruit production model ------------------------------------------------------------------------------
 
@@ -304,8 +290,6 @@ if(boot.switch == FALSE){
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
                                max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
 
-
-
 # Collect AIC table info --------------------------------------------------
 
 grow_aic
@@ -313,3 +297,90 @@ flower_aic
 fruits_aic
 surv_aic
 recruit_aic
+
+
+# create vital rate figures ------------------------------------------------
+size_breaks <- 4
+density_breaks <- 5
+## I get nicer colors if I double the breaks and take every other color
+LATR_cols <- wes_palette("Zissou1", size_breaks, type = "continuous")
+#LATR_cols <- rainbow(size_breaks)
+
+# growth figure -----------------------------------------------------------
+## starting with raw data visualization, binning sizes and densities
+## this plot freaked me out because it clearly shows positive density
+## dependence at the smallest size -- no matter how you slice up sizes
+LATR_grow %>% 
+  mutate(size_bin = as.numeric(cut(log_volume_t,breaks = size_breaks)),
+         density_bin = as.numeric(cut(weighted.dens,breaks = density_breaks))) %>% 
+  group_by(size_bin,density_bin) %>% 
+  summarise(mean_size = mean(log_volume_t),
+            mean_dens = mean(weighted.dens),
+            mean_sizet1 = mean(log_volume_t1),
+            sd_sizet1 = sd(log_volume_t1),
+            bin_n = n()) -> LATR_grow_plot
+LATR_grow_plot$size_col <- LATR_cols[LATR_grow_plot$size_bin]
+
+plot(LATR_grow_plot$mean_dens,LATR_grow_plot$mean_sizet1,col=LATR_grow_plot$size_bin,pch=16,cex=2)
+## however, I realized that the bins actually differ in initial size, and
+## this can explain the apparent positive DD, here plotting the change in size to control for size differences
+plot(LATR_grow_plot$mean_dens,(LATR_grow_plot$mean_sizet1-LATR_grow_plot$mean_size),col=LATR_grow_plot$size_bin,pch=16,cex=2)
+
+## let's avoid binning the growth data for this read
+## create dummy data frame for gam prediction
+mean_size <- LATR_grow %>% 
+  mutate(size_bin = as.numeric(cut(log_volume_t,breaks = size_breaks))) %>% 
+  group_by(size_bin) %>% 
+  summarise(mean_size=mean(log_volume_t))
+grow_predict <- expand.grid(
+  weighted.dens = seq(min(LATR_grow$weighted.dens),max(LATR_grow$weighted.dens),1),
+  size_bin = mean_size$size_bin,
+  unique.transect = LATR_grow$unique.transect[1]
+)
+grow_predict$log_volume_t<-mean_size$mean_size[grow_predict$size_bin]
+grow_predict[,c("pred_mu","pred_sigma")] <- predict.gam(LATR_grow_best, newdata = grow_predict, type = "response", exclude = "s(unique.transect)")
+LATR_grow$size_col <- LATR_cols[as.numeric(cut(LATR_grow$log_volume_t,breaks = size_breaks))]
+grow_predict$size_col <- LATR_cols[grow_predict$size_bin]
+
+## growth mean and SD inset
+plot(LATR_grow$weighted.dens,LATR_grow$log_volume_t1,pch=16,cex=0.5,
+     col=alpha(LATR_grow$size_col,0.75),xlab="Weighted density",ylab=expression(paste(Size[t+1]," (log ",cm^3,")")))
+points(grow_predict$weighted.dens,grow_predict$pred_mu,col=grow_predict$size_col,pch=16,cex=0.25)
+rect(100, -2.5, 220, 6, col="white")
+plotInset(100, -1, 220, 6,
+          expr=plot(grow_predict$weighted.dens,1/(grow_predict$pred_sigma^2),
+                    col=grow_predict$size_col,pch=16,cex=0.25,xlab="",ylab=expression(paste("SD(",Size[t+1],")")),
+                    cex.axis=0.5,mgp=c(3/2, 1/2, 0)),
+          mar=c(0, 3, 0, 0))
+
+
+# flowering figure --------------------------------------------------------
+LATR_flow_dat %>% 
+  mutate(size_bin = as.numeric(cut(log_volume_t,breaks = size_breaks)),
+         density_bin = as.numeric(cut(weighted.dens,breaks = density_breaks))) %>% 
+  group_by(size_bin,density_bin) %>% 
+  summarise(mean_size = mean(log_volume_t),
+            mean_dens = mean(weighted.dens),
+            mean_flow = mean(total.reproduction_t > 0),
+            bin_n = n()) -> LATR_flow_plot
+LATR_flow_plot$size_col <- LATR_cols[LATR_flow_plot$size_bin]
+
+mean_size <- LATR_flow_plot %>% group_by(size_bin) %>% summarise(mean_size=mean(mean_size))
+flow_predict <- expand.grid(
+  weighted.dens = seq(min(LATR_flow_dat$weighted.dens),max(LATR_flow_dat$weighted.dens),50),
+  log_volume_t = mean_size$mean_size,
+  unique.transect = LATR_flow_dat$unique.transect[1]
+)
+## associate sizes with bin numbers for plotting
+flow_predict$pred <- predict.gam(LATR_flower_best, newdata = flow_predict, type = "response", exclude = "s(unique.transect)")
+flow_predict$size_col <- LATR_cols[flow_predict$size_bin]
+
+plot(LATR_flow_plot$mean_dens,LATR_flow_plot$mean_flow,col=LATR_flow_plot$size_col,pch=16,
+     ylim=c(0,1),xlab="Weighted density",ylab="Flowering probability",
+     cex=LATR_flow_plot$bin_n/max(LATR_flow_plot$bin_n)*2+1,
+     xlim=c(min(LATR_flow_dat$weighted.dens),max(LATR_flow_dat$weighted.dens)))
+points(flow_predict$weighted.dens,flow_predict$pred,col=flow_predict$size_col,pch=16,cex=0.25)
+
+plot(flow_predict$weighted.dens,flow_predict$pred,col=flow_predict$size_col,pch=16,cex=0.25,type="p")
+
+
