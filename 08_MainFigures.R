@@ -66,26 +66,26 @@ par(mar = c(5, 8, 4, 2))
 
 # [1] Plot lambda as function of density, with individual curves
 plot(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], type = "l", lwd = 3,
-     ylim = c(1, 1.05), xlim = c(0, 200), 
+     ylim = c(1, 1.06), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
 for(i in 2:length(boot.lambda)){
   lines(x = boot.lambda[[1]], y = boot.lambda[[i]], col = "grey")}
 lines(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], lwd = 3)
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+axis(2, at = seq(1, 1.06, length.out = 7), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
 mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
 box()
 
 # [2] Plot lambda as function of density, with individual curves (w/ transparency)
 plot(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], type = "l", lwd = 3,
-     ylim = c(1, 1.05), xlim = c(0, 200), 
+     ylim = c(1, 1.06), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
 for(i in 2:length(boot.lambda)){
-  lines(x = boot.lambda[[1]], y = boot.lambda[[i]], col = rgb(red = 0, blue = 0, green = 0, alpha = 0.3))}
-lines(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], lwd = 3)
+  lines(x = boot.lambda[[1]], y = boot.lambda[[i]], col = rgb(red = 0, blue = 0, green = 0, alpha = 0.2))}
+lines(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], lwd = 3, col = "red")
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+axis(2, at = seq(1, 1.06, length.out = 7), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
 mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
 box()
@@ -101,26 +101,26 @@ data.frame(cbind(boot.lambda.df2, 1:(ncol(boot.lambda.df) - 1),
   cbind(colours(ncol(boot.lambda.df) - 1)) %>% 
   arrange(.[, 26]) -> plotdata
 plot(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], type = "l", lwd = 3,
-     ylim = c(1, 1.05), xlim = c(0, 200), 
+     ylim = c(1, 1.06), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
 for(i in 2:length(boot.lambda)){
   lines(x = boot.lambda.df[[1]], y = plotdata[i, 1:25], col = as.character(plotdata[i, 28]))}
 lines(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], lwd = 3)
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+axis(2, at = seq(1, 1.06, length.out = 7), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
 mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
 box()
 
 # [4] Plot lambda as function of density, with 95% bootstrap interval
 plot(x = boot.lambda.stats[, 1], y = boot.lambda.stats[, 2], type = "l", lwd = 3,
-     ylim = c(1, 1.05), xlim = c(0, 200), 
+     ylim = c(1, 1.06), xlim = c(0, 200), 
      axes = FALSE, ann = FALSE)
 polygon(x = c(boot.lambda.stats[, 1], rev(boot.lambda.stats[, 1])), 
         y = c(boot.lambda.stats[, 3], rev(boot.lambda.stats[, 4])),
         col = alpha("black", alpha = 0.2), border = NA)
 axis(1, at = seq(0, 200, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
-axis(2, at = seq(1, 1.05, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
+axis(2, at = seq(1, 1.06, length.out = 7), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Weighted Density", side = 1, cex = 2, line = 3.5)
 mtext("Population Growth Rate", side = 2, cex = 2, line = 5)
 box()
