@@ -2,13 +2,19 @@
 
 A combination of statistical and mechanistic models used to quantify creosotebush (Larrea tridentata) encroachment at the Sevilleta National Wildlife Refuge in central New Mexico. Here, we use dispersal kernels as well as size- and density-dependent demography to model encroachment as a moving wave pulled forward by individuals at the low-density vanguard. Data used here are collected annual demographic surveys over the course of several years, a transplant experiment to assess the survival rates of seedlings, and seed velocity data gathered from experiments in a laboratory setting.
 
+<br/>
+
 # Files
 
 ## Data
 
-**LT_Data** *(.xlsx)* - Spreadsheet containing all of the demographic data on the shrubs that were a part of the study. Also contains data on transect length and the transplant experiment. See the file metadata for more information.
+**LT_XLSX** *(.xlsx)* - Spreadsheet containing all of the demographic data on the shrubs that were a part of the study. Also contains data on transect length and the transplant experiment.
 
-**Seed_Drop** *(.xlsx)* - Spreadsheet containing position and time for each seed drop trial. See the file metadata for more information.
+**SD_XLSX** *(.xlsx)* - Spreadsheet containing position and time for each seed drop trial.
+
+**Metadata** *(.txt)* - Plain text file describing fields for the various datasheets.
+
+*Note: The data folder also contains CSV files with prefixes LT or SD; these extra files just CSV replicas of individual sheets in the XLSX files, and exist to increase accessibility to those who may not have the software to read XLSX files.*
 
 ## Scripts
 
@@ -22,9 +28,7 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 **04_CDataPrep** *(.R)* - Cleans up the demographic data from **LT_Data** and calculates variables that will be used in size- and density-dependent demographic analyses.
 
-**05_CDataAnalysis_BS** *(.R)* - Generates models of demographic rates under better survival (BS) conditions; these conditions were observed in a census that occurred after higher than average rainfall.
-
-**05_CDataAnalysis_NS** *(.R)* - Generates models of demographic rates under normal survival (NS) conditions.
+**05_CDataAnalysis_NS** *(.R)* - Generates models of demographic rates as a function of size and density.
 
 **06_BootRes.R** *(.R)* - Resamples data for each bootstrap replicate.
 
@@ -32,7 +36,15 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 **08_MainFigures** *(.R)* - Generates figures on size- and density-dependence, wave speeds and population growth, and dispersal kernels.
 
-## Supporting Information
+## Others
+
+**Manuscript** *(folder)* - A folder with code and various other objects used to generate the manuscript.
+
+**05B_nonnormal_growth** *(.R)* - Models ofnon-normal growth rates as a function of size and density; not yet fully implemented.
+
+**wavespeed_sensitivities** *(.R)* - Estimates wavespeeds for a range of per-seed recruitment rates; not yet fully implemented.
+
+## Extras
 
 **S1_SupportingMaterial** *(.R)* - Code not directly used in the analyses but contributes to our understanding of the data.
 
