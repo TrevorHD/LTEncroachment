@@ -53,6 +53,9 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDat
 # Should not be modified by the user
 boot.switch <- FALSE
 
+# Save bootstrapped wavespeed and lambda outputs to CSV?
+boot.saveOutputs <- FALSE
+
 # "05_CDataAnalysis_NS.R"
 # Create demography models for use in SIPM
 # Run once before bootstrapping to get recruit sizes and boundaries
@@ -160,6 +163,15 @@ suppressWarnings(if(1 == 1){
              message(paste0("Warning: Network connection interrupted; bootstrapping could not be fully completed. \n",
                             "Procedure halted at ", round(length(boot.cv1)/boot.num, 3)*100, "% with total time of ",
                             round(time.elapsed, 2), " hours."))), silent = TRUE)})
+
+# Save outputs to CSV if enabled
+if(boot.saveOutputs == TRUE){
+  
+  # Write bootstrapped lambda values to csv
+  write.csv(boot.lambda, "BootLambda.csv")
+  
+  # Write bootstrapped wavespeed values to csv
+  write.csv(boot.cv1, "BootCV.csv")}
 
 # Remove unneeded bootstrap items from the global environment if using spatial IPM
 # If running single replicate, just leave most items in global environment
