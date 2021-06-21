@@ -18,9 +18,9 @@ par(new = TRUE)
 par(mar = c(5, 8, 4, 2))
 
 # Plot PDF of bootstrapped wavespeeds
-plot(density(boot.cv1), lwd = 3, xlim = c(0, 0.2), ylim = c(0, 25), 
-     axes = FALSE, ann = FALSE)
-axis(1, at = seq(0, 0.2, length.out = 5), cex.axis = 1.5, mgp = c(1, 1, 0))
+plot(density(boot.cv1, from = 0, to = 0.25), lwd = 3, xlim = c(0, 0.25), ylim = c(0, 25), 
+     axes = FALSE, ann = FALSE, zero.line = FALSE)
+axis(1, at = seq(0, 0.25, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0))
 axis(2, at = seq(0, 25, length.out = 6), cex.axis = 1.5, mgp = c(1, 1, 0), las = 1)
 mtext("Wave Speed (m/yr)", side = 1, cex = 2, line = 3.5)
 mtext("Probability Density", side = 2, cex = 2, line = 4)
