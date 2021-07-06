@@ -3,38 +3,32 @@
 # Create vector of year ranges used in file URLs
 years <- c("1988-1995_0", "1996-2000_1", "2001-2005", "2006-2010")
 
-# Get wind data from online
-for(i in 1:4){
+# Get wind data from repo
+for(i in 1:6){
   
-  # Create URL
-  url <- paste0("http://sevlter.unm.edu/sites/default/files/data/sev1_meteorology_",
-                years[i], ".txt")
+  # Create URL to read from; replace with local file path for faster performance
+  url <- paste0("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/Weather",
+                i, ".csv")
     
-  # Base R does not play nice with read.table and these files
-  # SQL will be much more efficient
-    
-  # Read comma-separated data from text file; keep all columns
-  # Can't use SELECT to extract only wind speeds since 3rd file has unnamed columns
-  df <- read.csv.sql(url, sql = "SELECT * FROM file", sep = ",", skip = 1)
+  # Using read.csv is too slow; SQL will be much more efficient
+  # Read comma-separated data from text file, and select relevant columns
+  df <- read.csv.sql(url, sql = "SELECT StationID, Mean_WindSpeed, Wind_Dir FROM file", eol = "\n")
     
   # Close SQL database connection
   sqldf()
   
   # Use data from the Five Points site (ID = 49)
-  df <- subset(df, df[1] == 49)
-    
-  # Only keep the mean hourly wind speeds (column 9)
-  df <- df[9]
+  df <- subset(df, StationID == 49)
   
   # Coerce data frame to vector
   # Must use matrix as intermediate since it won't work directly for some reason
-  df <- as.vector(as.matrix(df))
+  df <- as.vector(as.matrix(df$Mean_WindSpeed))
   
   # Assign name to vector
   assign(paste0("ws.", i), df)}
   
 # Combine individual vectors
-ws.raw <- c(ws.1, ws.2, ws.3, ws.4)
+ws.raw <- c(ws.1, ws.2, ws.3, ws.4, ws.5, ws.6)
   
 # Remove (negative) markers for missing values
 # Also remove zero wind speeds, as we will assume no seed release occurs in absence of wind
