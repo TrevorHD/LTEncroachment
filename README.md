@@ -14,6 +14,10 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 **Metadata** *(.txt)* - Plain text file describing fields for the various datasheets.
 
+**WeatherX** *(.csv)* - SEV weather data from one of six time periods: 1988-1994, 1995-1999, 2000-2004, 2005-2009, 2010-2014, and 2015-2019. The data files can be found [here](https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sev.1.14), and relevant metadata can be found [here](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-sev.1.14).
+
+**Creosote_transect_resurvey** *(.csv)* - Spreadsheet containing percent shrub cover from the transect resurveys; this file name will likely be changed later.
+
 *Note: The data folder also contains CSV files with prefixes LT or SD; these extra files just CSV replicas of individual sheets in the XLSX files, and exist to increase accessibility to those who may not have the software to read XLSX files.*
 
 ## Scripts
@@ -22,7 +26,7 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 **01_SeedVelocities** *(.R)* - Finds the distribution of seed terminal velocities using data from **Seed_Drop**.
 
-**02_WindSpeeds** *(.R)* - Finds the distribution of wind speeds using wind speed data from the Sevilleta NWR; this data can be found [here](http://sevlter.unm.edu/content/meteorology-data-sevilleta-national-wildlife-refuge-new-mexico-1988-present). The 2011-2015 data was not used because it did not play nice, likely due to an apparent mismatch between the header row and the rest of the data.
+**02_WindSpeeds** *(.R)* - Finds the distribution of wind speeds using wind speed data from the SEV.
 
 **03_Dispersal** *(.R)* - Creates dispersal kernels using the methods from Skarpaas and Shea (2007).
 
