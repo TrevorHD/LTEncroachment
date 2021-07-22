@@ -133,9 +133,9 @@ We address the following specific questions:
 \subsection*{Study species}
 
 Creosotebush \textit{Larrea tridentata} is a perennial, drought-resistant  shrub that is native to the arid and semiarid regions of the southwestern United States and northern Mexico.
-These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea}.
+%These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea}.
 High-density areas of creosotebush consist largely of barren soil between plants due to the ``islands of fertility'' these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grasses in the intershrub spaces (Fig. \ref{fig:waves}).
-In our northern Chihuahuan desert study region creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which consists of a single seed.
+In our northern Chihuahuan desert study region creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which contains a single seed.
 Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff \citep{maddox1985wind}. 
 In other regions, this species also reproduces asexually and can give rise to long-lived clonal stands \citep{vasek1980creosote}, but this does not occur in our study region.
 The foliage is dark green, resinous, and unpalatable to most grazing and browsing animals \citep{mabry1978creosote}.
@@ -235,6 +235,13 @@ We pooled data across transition years for demographic analysis.
 All models included the random effect of transect; we did not attempt to model both site and transect-within-site random effects due to the low numbers of each. 
 All vital rate functions used the natural logarithm of volume (cm$^3$) as the size variable and the sum log(volume) as the weighted density of a transect window.
 
+\paragraph{Survival}
+We modeled survival or mortality in year $t+1$ as a Bernoulli random variable with three candidate models for survival probability.
+These included smooth terms for initial size in year $t$ only (1), initial size and weighted density (3), and both smooth terms plus an interaction between initial size and weighted density. 
+We analyzed survival of experimental transplants and observational census plants together in the same analyses, with a fixed effect of `transplant' included in all candidate models. 
+Since recruits and thus mortality events were both very rare in the observational survey, this approach allowed us to ``borrow strength'' over both data sets to generate a predictive function for size and possibly density -dependent survival while statistically accounting for differences between experimental and naturally occurring plants. 
+Because we had additional, finer-grained cover data for the transplant experiment that we did not have for the observational census, we conducted an additional stand-alone analysis of transplant survival that explored the influence of covariates at multiple spatial scales (Appendix).
+
 \paragraph{Growth}
 We modeled size in year $t+1$ as a Gaussian random variable. 
 There were nine candidate models for growth (Table).
@@ -242,13 +249,6 @@ The simplest model (1) defined the mean of size in year $t+1$ as a smooth functi
 Models (2) and (3) had constant variance but the mean included smooth terms for initial size and weighted density (2) or both smooth terms plus an interaction between initial size and weighted density (3).
 Models 4-6 had the same mean structure as 1-3 but defined the standard deviation of size in year $t+1$ as a smooth function of initial size. 
 Models 7-9 mirrored 4-6 and additionally included a smooth term for weighted density in the standard deviation. 
-
-\paragraph{Survival}
-We modeled survival or mortality in year $t+1$ as a Bernoulli random variable with three candidate models for survival probability.
-These included smooth terms for initial size in year $t$ only (1), initial size and weighted density (3), and both smooth terms plus an interaction between initial size and weighted density. 
-We analyzed survival of experimental transplants and observational census plants together in the same analyses, with a fixed effect of `transplant' included in all candidate models. 
-Since recruits and thus mortality events were both very rare in the observational survey, this approach allowed us to ``borrow strength'' over both data sets to generate a predictive function for size and possibly density -dependent survival while statistically accounting for differences between experimental and naturally occurring plants. 
-Because we had additional, finer-grained cover data for the transplant experiment that we did not have for the observational census, we conducted an additional stand-alone analysis of transplant that explored the influence of covariates at multiple spatial scales (Appendix).
 
 \paragraph{Flowering and fruit production}
 We modeled shrub reproductive status (vegetative or flowering) in year $t$ as a Bernoulli random variable with three candidate models for flowering probability.
@@ -261,23 +261,37 @@ We modeled seedling recruitment in each transect window as a binomial random var
 To estimate window-level seed production, we used the best-fit models for flowering and fruit production and applied this to all plants in each window that we observed in our initial density surveys. 
 
 \subsubsection*{Integral Projection Model}
+The size- and density-dependent statistical models comprised the sub-models of an Integral Projection Model that we used to evaluate how the shrub population growth rate responded to conspecific density. 
+A basic density-independent IPM predicts the number of individuals of size $x\prime$ at time $t+1$ ($n(x\prime,t + 1)$) based on a projection kernel ($K$) that gives the rates of transition from sizes $x$ to $x\prime$ and is integrated over the size distribution from the minimum ($L$) to maximum ($U$) sizes.
+As in our statistical modeling, the size variable of the IPM ($x,x\prime$) was $log(cm^3)$.
+In our model, the projection kernel was additionally dependent on local density, which we represent with $\tilde{N}$.
 
+\begin{linenomath*} 
+\begin{equation} 
+n(x\prime,t + 1) = \int_{L}^{U} K(x\prime,x,\tilde{N}) n(x,t) \,dx 
+\end{equation} 
+\end{linenomath*}
 
+For our model, the demographic transitions captured by the projection kernel include growth or shrinkage ($G$) from size $x$ to $x\prime$, conditioned on survival ($S$) at size $x$, and the production of new size-$x\prime$ individuals from size-$x$ parents. Reproduction reflects the number of seeds produced at size $x$ ($F$), conditioned on flowering ($P$), the per-seed probability of recruitment ($R$), and the size distribution of recruits ($C$). 
+Thus, we can express the projection kernel as:
+\begin{linenomath*} 
+\begin{equation} 
+K(x\prime,x) = S(x,\tilde{N})G(x\prime,x,\tilde{N}) + P(x,\tilde{N})F(x,\tilde{N})R(\tilde{N})C(x\prime)
+\end{equation} 
+\end{linenomath*}
+In the statistical modeling, we explored density ($\tilde{N}$) effects in all of these vital rates expect the recruit size distribution.
+We observed only XX natural recruits during our study, so we were not able to connect recruit size to local density. 
+Instead, we used the pooled recruits to estimate a mean and standard deviation of recruit size assuming a Gaussian distribution. 
 
-%Trevor's text starts here
-Collected demography data were then examined to investigate how weighted density and shrub volume affected four different demographic variables: survival, probability of flowering (i.e. producing at least one flower or fruit), annual growth, and number of reproductive structures.
-Each of these demographic variables was fit to a different mixed-effects model through maximum likelihood.
-Both survival and probability of flowering were each fit to generalised linear mixed-effects models using a binomial response and a logit link function. Annual growth was defined as $\ln(V_{t+1} / V_{t})$ where $V_{t+1}$ and $V_{t}$ are the shrub volumes in the current and previous years, respectively, and was then fit to a linear mixed-effects model. 
-The number of reproductive structures was defined as the natural logarithm of the sum of fruits and flowers on the entire shrub and was fit to a linear mixed-effects model as well.
-To construct these models, all of the equations listed in Table 1 were first fit to each of the four demographic variables, with each equation using volume and standardised density as predictors while also treating the unique transect in which each shrub was located as a random effect.
-After these equations were fit to the data, all eight equations for each demographic variable were ranked based on their value of the Akaike information criterion (AIC) and weighted based on their quality so that better-fitting models had a higher weight.
-Then, coefficients of the same type were averaged between all eight models for each demographic variable using a weighted mean corresponding to model quality in order to generate an average model.
-All four average models have the general form \begin{linenomath*} \begin{equation} R = \beta_{1}v + \beta_{2}d + \beta_{3}d^2 + \beta_{4}vd + \beta_{5}vd^2 + \epsilon \end{equation} \end{linenomath*} where $R$ is the response variable, $v$ and $d$ are the volume and density, $\epsilon$ is a random transect effect, and $\beta$ is the coefficient for each type of term.
+For analysis, we evaluated the IPM kernel functions at a range of local densities ($\tilde{N}$), from the minimum to the maximum of weighted density values from the 5-meter windows. 
+At each density level, we discretized the IPM kernel into XX bins and calculated the asymptotic growth rate $\lambda(\tilde{N})$ as the leading eignevalue of the approximating matrix. 
+We extended the lower ($L$) and upper ($U$) integration limits to avoid unintentional ``eviction'' using the floor-and-ceiling method \citep{williams2012avoiding}.
 
-The effect of density dependence on the probability of recruitment from seeds was also modelled.
-For every year, the sum of seeds produced the prior year was calculated for each 5-m subsection, and then probability of recruitment was calculated as the number of recruits observed in each 5-m subsection divided by that number of seeds.
-For any subsection in which seeds were not found, a count of seeds was estimated based on the number of seeds in a subsection of similar weighted density; this was done to avoid creating any undefined values of recruitment probability.
-Both linear and quadratic models using only weighted density as a predictor were fit to the distribution of recruitment probabilities, though the linear model was ultimately used because it had a higher AIC value.
+We sought to characterize the ``shape'' of density dependence: whether fitness declined monotonically or not with increasing density. 
+We quantified uncertainty in the density-dependent growth rate $\lambda(\tilde{N})$ by bootstrapping our data. 
+For each bootstrap, we randomly sampled XX\% of our demographic data, re-ran the statistical modeling and model selection, and used the top vital rate models to generate $\lambda(\tilde{N})$ for that data subset. 
+We repeated this procedure for 500 bootstrap replicates. 
+
 
 \subsection*{Dispersal modelling}
 
@@ -384,6 +398,33 @@ mean_cover <- resurv %>%
 
 @
 
+\subsection*{Size and density dependent demography}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/vital_rates}
+  \caption{Size- and density-dependence in demographic vital rates.}
+  \label{fig:vital_rates}
+  \end{center}
+\end{figure}
+
+\paragraph{Survival}
+
+\paragraph{Growth}
+
+\paragraph{Flowering and fruit production}
+
+\paragraph{Recruitment}
+
+\paragraph{Population growth rate}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/BootLambda}
+  \caption{Density dependence in the geographic population growth rate ($\lambda$).}
+  \label{fig:lambda}
+  \end{center}
+\end{figure}
 
 The speed of encroachment at the study site as estimated by the SIPM is rather slow; as can be seen in Figure \ref{fig:wavespeed}, the low-density wavefront moves at approximately 0.5 cm/yr under normal conditions and at 1 cm/yr under the best seedling survival conditions observed in the dataset.
 These improved conditions were observed due to above-average rainfall that occurred after greenhouse-grown seedlings were transplanted to the site.
