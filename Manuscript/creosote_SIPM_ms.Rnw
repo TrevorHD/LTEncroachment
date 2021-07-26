@@ -356,8 +356,9 @@ Between replicates, the structure of the demographic models was kept constant, t
 \section*{Results}
 
 \subsection*{Encroachment re-surveys}
-
-Figure \ref{fig:transect_resurv}.
+Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over 12 years (Fig. \ref{fig:transect_resurv}).
+There were local changes in percent cover: on average cover increased by XX\% between surveys.
+However, there was no clear indication that the leading edge of the creosote shrubland has advanced (the modest right-ward shift on both transects is within the range of measurement error). 
 
 <<transect_resurv,echo=F,message=F,fig.dim=c(8,4),fig.cap="Re-surveys of shrub cover along two permanent trasects (A,B) surveyed in 2001 and 2013.">>=
 resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
@@ -399,6 +400,9 @@ mean_cover <- resurv %>%
 @
 
 \subsection*{Size and density dependent demography}
+Demographic data from naturally occurring and transplanted individuals revealed strong size- and density-dependence in demographic vital rates. 
+For most sizes and vital rates, local density had negative demographic effects. 
+Statistical support for size- and density-dependence is provided in Table XX, which provides AIC rankings for candidate models based on the completed (not bootstrapped) data set. 
 
 \begin{figure}[H]
   \begin{center}
@@ -409,8 +413,21 @@ mean_cover <- resurv %>%
 \end{figure}
 
 \paragraph{Survival}
+Among naturally occurring plants, survival of large, established individuals was very high (Fig. \ref{fig:vital_rates}A).
+We observed relatively few mortality events (XX out of XX) and nearly all of these were among new recruits that we detected during the study. 
+The probability of survival at these small sizes declined with increasing density. 
+
+Survival of transplants was very low, lower even than survival of similarly-sized, naturally occurring recruits (Fig. \ref{fig:vital_rates}B). 
+However, the transplant results support the general pattern of negative density dependence in survival. 
+Among the XX survivors, XX of them occurred in transect windows in the bottom 10th percentile of weighted shrub density. 
+
+SHORT PARAGRAPH SUMMARIZING SMALLER-SCALE ANALYSIS IN APPENDIX.
 
 \paragraph{Growth}
+Current size was strongly predictive of future size, as expected, and there was weak negative density dependence in mean future size conditioned on current size (Fig. \ref{fig:vital_rates}C). 
+However, there was a stronger signal of density dependence in the standard deviation of future size (Fig. \ref{fig:vital_rates}C, inset).
+Plants at low density exhibited greater variance in growth trajectories and this was especially true at the smallest sizes. 
+Thus, large increases in the size of new recruits were most likely under low-density conditions. 
 
 \paragraph{Flowering and fruit production}
 
