@@ -1,6 +1,6 @@
 ## Purpose: trying to model non-normal growth for creosote SIPM
 ## Author: Tom Miller
-## Last modified: 4.22.2021
+## Last modified: 7.28.2021
 
 library(mgcv)
 library(sgt)
@@ -57,8 +57,11 @@ grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
 LATR_gam_model <- LATR_gam_models[[which.min(grow_aic$AIC)]]
 ## extract fitted values
 LATR_grow$fitted_vals = predict(LATR_gam_model,type="response",data=LATR_grow)
-## extract the linear predictor for the mean
+## extract the linear predictor for the mean and sd
 LATR_Xp <- predict.gam(LATR_gam_model,type="lpmatrix")
+## fitted coefficients
+LATR_beta <- coef(LATR_gam_model)
+
 ##################################################################  
 # Extract values of the fitted splines to explore their properties 
 ##################################################################
@@ -93,24 +96,74 @@ px = LATR_grow$fitted_vals[,1]; py=scaledResids;
 z = rollMomentsNP(px,py,windows=8,smooth=TRUE,scaled=TRUE) 
 
 ###########################################################
-## fit sgt
+## try to recover gam parameters with a hand-cranked gaussian model
 ###########################################################
-sgtLogLik=function(pars,response){
-  val = dsgt(x = response, 
-             mu=pars[1]+pars[2]*LATR_grow$log_volume_t+pars[3]*LATR_grow$weighted.dens,
-             sigma=exp(pars[4]+pars[5]*LATR_grow$log_volume_t+pars[6]*LATR_grow$weighted.dens),
-             lambda=pars[7],
-             p=exp(pars[8]),
-             q=exp(pars[9]),
+gausLogLik=function(pars,response){
+  val = dnorm(x = response, 
+             mean=LATR_Xp[,1:31]%*%pars[1:31],
+             sd=exp(LATR_Xp[,32:50]%*%pars[32:50]),
              log=T) 
   return(val); 
 }
 
 ## initial parameter values
-p0=c(0,1,0,1,0,0,0,1,1) 
+p0=LATR_beta 
 paranoid_iter <- 3
 coefs = list(paranoid_iter); LL=numeric(paranoid_iter);  
 for(j in 1:paranoid_iter) {
+  out=maxLik(logLik=gausLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=LATR_grow$log_volume_t1,
+             method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+  
+  out=maxLik(logLik=gausLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+             method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
+  
+  out=maxLik(logLik=gausLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+             method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+  
+  coefs[[j]] = out$estimate; LL[j] = out$maximum;
+  cat(j, "#--------------------------------------#",out$maximum,"\n"); 
+}
+
+j = min(which(LL==max(LL))) 
+out=maxLik(logLik=gausLogLik,start=coefs[[j]],response=LATR_grow$log_volume_t1,
+           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
+
+## compare to original gam estimates
+plot(LATR_beta[1:31],out$estimate[1:31])
+abline(0,1)
+
+plot(LATR_Xp[,1:31]%*%LATR_beta[1:31],LATR_Xp[,1:31]%*%out$estimate[1:31])
+abline(0,1)
+###########################################################
+## fit sgt using design matrices from normal gam
+###########################################################
+#sgtLogLik=function(pars,response){
+#  val = dsgt(x = response, 
+#             mu=pars[1]+pars[2]*LATR_grow$log_volume_t+pars[3]*LATR_grow$weighted.dens,
+#             sigma=exp(pars[4]+pars[5]*LATR_grow$log_volume_t+pars[6]*LATR_grow$weighted.dens),
+#             lambda=pars[7],
+#             p=exp(pars[8]),
+#             q=exp(pars[9]),
+#             log=T) 
+#  return(val); 
+#}
+
+invlogit<-function(x){exp(x)/(1+exp(x))}
+
+sgtLogLik=function(pars,response){
+  val = dsgt(x = response, 
+             mu=LATR_Xp[,1:31]%*%pars[1:31],
+             sigma=exp(LATR_Xp[,32:50]%*%pars[32:50]),
+             lambda=-invlogit(pars[51]+pars[52]*LATR_grow$log_volume_t),
+             p=exp(pars[53]),
+             q=exp(pars[54]),
+             mean.cent=T,
+             var.adj=T,
+             log=T) 
+  return(val); 
+}
+## initial parameter values
+p0=c(LATR_beta,-10,0,2,2) 
   out=maxLik(logLik=sgtLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=LATR_grow$log_volume_t1,
              method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
   
@@ -120,10 +173,13 @@ for(j in 1:paranoid_iter) {
   out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
              method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
   
-  coefs[[j]] = out$estimate; LL[j] = out$maximum;
-  cat(j, "#--------------------------------------#",out$maximum,"\n"); 
-}
-
-j = min(which(LL==max(LL))) 
-out=maxLik(logLik=sgtLogLik,start=coefs[[j]],response=LATR_grow$log_volume_t1,
+out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
            method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
+
+## compare to original (gaussian) gam parameter estimates
+plot(LATR_beta,out$estimate[1:50])
+abline(0,1)
+## compare the expected value of the two models
+plot(LATR_Xp[,1:31]%*%LATR_beta[1:31],LATR_Xp[,1:31]%*%out$estimate[1:31])
+abline(0,1)
+## I'm satisfied that the sgt can recover the same expected value as the gaussian gam()
