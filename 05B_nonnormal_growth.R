@@ -7,6 +7,10 @@ library(sgt)
 library(maxLik)
 library(zoo)
 source("C:/Users/tm9/Dropbox/github/IPM_size_transitions/Diagnostics.R")
+# "04_CDataPrep"
+# Tidy up demography data before creating demography models
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
+
   # Create unique transect as interaction of transect and site
   # First-time only; this bit of code in 06_BootRes does it all other times
   # No transplants in this data set

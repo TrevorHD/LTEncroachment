@@ -56,26 +56,50 @@ LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.den
 LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
-
-
 # Collect model AICs into a single table
 grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
-
 # Set top model as "best"; find intercept for the sd
 LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
-grow_sd_index <- which(as.factor(names(coef(LATR_grow_best)))=="(Intercept).1")
 LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
 LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
+## extract the linear predictor for the mean and sd
+LATR_Xp <- predict.gam(LATR_grow_best,type="lpmatrix")
+## fitted coefficients
+LATR_beta <- coef(LATR_grow_best)
 
-# Plot of effect of size on future size -- obviously linear
-# plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s(log_volume_t)"]) 
+## annoying but necessary index wrangling
+grow_sd_index <- which(as.factor(names(coef(LATR_grow_best)))=="(Intercept).1") ## this is where the sd coefficients start
+gam_coef_length <- length(coef(LATR_grow_best)) ## this is where the lambda, p and q coefficients start
 
-# Plot of effect of density on growth 
-# plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s(weighted.dens)"]) 
+## now fit SGT using the LP matrix for mean and sigma that gam fit
+sgtLogLik=function(pars,response){
+  val = dsgt(x = response, 
+             mu=LATR_Xp[,1:(grow_sd_index-1)]%*%pars[1:(grow_sd_index-1)],
+             sigma=exp(LATR_Xp[,grow_sd_index:gam_coef_length]%*%pars[grow_sd_index:gam_coef_length]),
+             lambda=-invlogit(pars[(gam_coef_length+1)]+pars[(gam_coef_length+2)]*LATR_grow$log_volume_t), ## I know there is negative skew at small sizes so I am rigging this to pick it up
+             p=exp(pars[(gam_coef_length+3)]),
+             q=exp(pars[(gam_coef_length+4)]),
+             mean.cent=T,
+             var.adj=T,
+             log=T) 
+  return(val); 
+}
+## initial parameter values
+p0=c(LATR_beta,-10,0,2,2) 
+out=maxLik(logLik=sgtLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=LATR_grow$log_volume_t1,
+           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
 
-# Plots of effect of size and density on sd(future size)
-# plot(LATR_grow$log_volume_t, LATR_grow_fitted_terms[, "s.1(log_volume_t)"]) 
-# plot(LATR_grow$weighted.dens, LATR_grow_fitted_terms[, "s.1(weighted.dens)"]) 
+out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
+
+out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+
+out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
+
+## final parameter estimates for the growth model
+coef_grow_best <- out$estimate
 
 ##### Flowering probability model -------------------------------------------------------------------------
 
