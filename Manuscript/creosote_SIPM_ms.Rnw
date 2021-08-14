@@ -226,29 +226,33 @@ All of these except recruitment were modeled as a function of plant size, and al
 
 The alternative hypotheses of pushed versus pulled wave expansion ultimately rest on how demographic vital rates, and the rate of population increase ($\lambda$) derived from the combination of all vital rates, respond to density. 
 We were particularly interested in whether demographic performance was maximized as local density goes to zero (pulled) or at non-zero densities behind the wave front (pushed). 
-To flexibly model density dependence and detect non-monotic responses, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
+To flexibly model density dependence and detect non-monotonic responses, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
 For each vital rate, we fit candidate models with or without a smooth term for local weighted density (among other possible covariates). 
 To avoid over-fitting, we set the `gamma' argument of gam() to 1.2, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and makes our approach more conservative.
 % using gamma = 1 leads to fruit production having *positive* density dependence
 % not sure if I believe this, need to look into it; otherwise the gamma value does not seem to change the results much.
-We pooled data across transition years for demographic analysis. 
-All models included the random effect of transect; we did not attempt to model both site and transect-within-site random effects due to the low numbers of each. 
+We pooled data across transition years for analysis. 
+All models included the random effect of transect ($12$ transects across $4$ sites); we did not attempt to model both site and transect-within-site random effects due to the low numbers of each. 
 All vital rate functions used the natural logarithm of volume (cm$^3$) as the size variable and the sum log(volume) as the weighted density of a transect window.
 
 \paragraph{Survival}
 We modeled survival or mortality in year $t+1$ as a Bernoulli random variable with three candidate models for survival probability.
 These included smooth terms for initial size in year $t$ only (1), initial size and weighted density (3), and both smooth terms plus an interaction between initial size and weighted density. 
 We analyzed survival of experimental transplants and observational census plants together in the same analyses, with a fixed effect of `transplant' included in all candidate models. 
-Since recruits and thus mortality events were both very rare in the observational survey, this approach allowed us to ``borrow strength'' over both data sets to generate a predictive function for size and possibly density -dependent survival while statistically accounting for differences between experimental and naturally occurring plants. 
+Since recruits and thus mortality events were both very rare in the observational survey, this approach allowed us to ``borrow strength'' over both data sets to generate a predictive function for size- and possibly density-dependent survival while statistically accounting for differences between experimental and naturally occurring plants. 
 Because we had additional, finer-grained cover data for the transplant experiment that we did not have for the observational census, we conducted an additional stand-alone analysis of transplant survival that explored the influence of covariates at multiple spatial scales (Appendix).
 
 \paragraph{Growth}
-We modeled size in year $t+1$ as a Gaussian random variable. 
+We initially modeled size in year $t+1$ as a Gaussian random variable. 
 There were nine candidate models for growth (Table).
-The simplest model (1) defined the mean of size in year $t+1$ as a smooth function of size in year $t$ and constant variance 
+The simplest model (1) defined the mean of size in year $t+1$ as a smooth function of size in year $t$ and constant variance. 
 Models (2) and (3) had constant variance but the mean included smooth terms for initial size and weighted density (2) or both smooth terms plus an interaction between initial size and weighted density (3).
 Models 4-6 had the same mean structure as 1-3 but defined the standard deviation of size in year $t+1$ as a smooth function of initial size. 
 Models 7-9 mirrored 4-6 and additionally included a smooth term for weighted density in the standard deviation. 
+
+Inspection of the best-fitting growth model suggested that the data did not conform well to a Gaussian distribution: there was excess kurtosis (fatter tails) relative to Gaussian and left skew in the distribution of size in year $t+1$ especially at small initial sizes.
+Therefore, we re-fit the growth model with a skewed generalized $t$ (sgt) distribution, a five-parameter distribution on the real line that accommodates non-normal kurtosis and skew (R package `sgt': \citep{sgtpack}). 
+We specified $\mu$ and $\sigma$ of the sgt using the basis functions generated by the best-fit gam, and additionally modeled the $\lambda$ parameter (which controls skewness) as a function of size in year $t$ and the $p$ and $q$ parameters (which control kurtosis) as constants. 
 
 \paragraph{Flowering and fruit production}
 We modeled shrub reproductive status (vegetative or flowering) in year $t$ as a Bernoulli random variable with three candidate models for flowering probability.
