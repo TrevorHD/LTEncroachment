@@ -320,7 +320,7 @@ left_join(CData.Transects,Windows,by=c("site","transect","window")) %>%
 # Therefore, we will round locations up to nearest 5-m window
 for(i in 1:nrow(CData.Transplants)){
   if(CData.Transplants$plot_location[i] %% 2.5 == 0){
-    CData.Transplants$plot_location[i] <- CData.Transplants$plot_location[i] + 2.5}}
+    CData.Transplants$plot_location[i] <- CData.Transplants$plot_location[i] - 2.5}}
 
 # Calculate conical volume; use initial volume since most plants die after a year
 # Add variable indicating which plants are transplants
