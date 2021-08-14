@@ -316,6 +316,16 @@ left_join(CData.Transects,Windows,by=c("site","transect","window")) %>%
 
 ##### Tidy up transplant data for survival analysis -------------------------------------------------------
 
+# TM: The following code works only for plot locations that are multiples of 2.5
+# There are three plots that do not satisfy this condition.
+# I have gone back to the field data sheet scans and concluded the following:
+# Plot 5 on PDC-3 -- this appears to be a data entry error (55.5 should be 52.5). 
+CData.Transplants$plot_location[CData.Transplants$site=="PDC"&CData.Transplants$transect==3&CData.Transplants$plot==5]<-52.5
+# Plot 6 on SLP-1 -- moved off the 2.5 location due to a cactus, but still within that window
+CData.Transplants$plot_location[CData.Transplants$site=="SLP"&CData.Transplants$transect==1&CData.Transplants$plot==6]<-127.5
+# Plot 10 on SLP-2 -- moved off the 2.5 location due to a yucca, but still within that window
+CData.Transplants$plot_location[CData.Transplants$site=="SLP"&CData.Transplants$transect==2&CData.Transplants$plot==10]<-257.5
+
 # Locations are multiples of 2.5 m, but our density data are in 5-m windows
 # Therefore, we will round locations up to nearest 5-m window
 for(i in 1:nrow(CData.Transplants)){
@@ -335,9 +345,6 @@ rename("actual.window" = "plot_location") %>%
 merge(Windows, 
       by.x = c("site", "transect", "actual.window"),
       by.y = c("site", "transect", "window")) -> CData.Transplants
-
-
-
 
 
 ##### Clean up global environment -------------------------------------------------------------------------
