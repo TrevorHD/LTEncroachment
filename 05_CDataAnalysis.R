@@ -15,7 +15,7 @@ if(boot.switch == FALSE){
 
 
 ## set the gamma argument of gam() -- gamma>1 generates smoother fits, less likely to be overfit
-gamma = 1.8
+gamma = 1.5
 
 
 ##### Growth model ----------------------------------------------------------------------------------------
@@ -183,10 +183,6 @@ LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat,
 # Plot effect of density on fruits 
 # plot(LATR_fruits_dat$weighted.dens, LATR_fruits_fitted_terms[, "s(weighted.dens)"]) 
 
-
-
-
-
 ##### Survival model --------------------------------------------------------------------------------------
 
 # Combine transplants with large shrubs; keep only location info, survival, volume, and density
@@ -212,7 +208,6 @@ points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
 
 # Create empty list to populate with model results
 LATR_surv <- list()
-
 # Three candidate models for the mean: size only, size + density, or size, density, and size:density
 LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t,by=as.factor(transplant)) + s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = gamma, family = "binomial")
@@ -234,10 +229,6 @@ LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclu
 
 # Plot effect of density on pr(survival)
 # plot(LATR_surv_dat$weighted.dens, LATR_surv_fitted_terms[, "s(weighted.dens)"]) 
-
-
-
-
 
 ##### Per-seed recruitment probability model --------------------------------------------------------------
 
