@@ -82,10 +82,10 @@ If the demographic effects of density are strictly negative due to competitive e
 Under these conditions, the wave is ``pulled'' forward by individuals at the low-density vanguard \citep{kot1996dispersal}, and targeting these individuals and locations would be the most effective way to slow down or prevent encroachment (cite?). 
 However, woody encroachment systems often involve positive feedbacks whereby shrub establishment modifies the environment in ways that facilitate further shrub recruitment. 
 For example, woody plants can modify their micro-climates in ways that elevate nighttime minimum temperatures, promoting conspecific recruitment and survival for freeze-sensitive species \citep{d2010positive,huang2020critical}. 
-Such Allee effects (in the language of population biology) cause demographic rates to be maximized at higher densities behind the leading edge, which ``push'' the expansion forward, leading to qualitatively different dynamics \citep{kot1996dispersal, taylor2005allee, sullivan2017density, lewis1993allee, veit1996dispersal, keitt2001allee}.
+Positive density dependence (or Allee effects) causes demographic rates to be maximized at higher densities behind the leading edge, which ``push'' the expansion forward, leading to qualitatively different expansion dynamics \citep{kot1996dispersal, taylor2005allee, sullivan2017density, lewis1993allee, veit1996dispersal, keitt2001allee}.
 Pushed expansion waves generally have different shapes (steeper density gradients) and slower speeds than pulled waves \citep{gandhi2016range}, and may require different strategies for managing or decelerating expansion (check Taylor and Hastings ref). 
 The potential for positive feedbacks is well documented in woody encroachment systems but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion and influence strategies for management of woody encroachment.
-Despite decades of work on this topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
+%Despite decades of work on this topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
 
 In this study, we linked woody plant encroachment to ecological theory for invasion waves, with the goals of understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
 Throughout the aridlands of the southwestern United States, shrub encroachment into grasslands is well documented (cite) but little is known about the dispersal and demographic processes that govern it. 
@@ -96,13 +96,13 @@ As in many woody encroachment systems, creosotebush expansion generates ecotones
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/waves_pics}
-  \caption{Caption.}
+  \caption{Example of an ecotone transect at Sevilleta LTER, spanning gradients of creosotebish and black grama grass.}
   \label{fig:waves}
   \end{center}
 \end{figure}
 
 Historically, creosotebush encroachment into grasslands is believed to have been driven by a combination of factors including overgrazing, drought, variability in rainfall, and suppression of fire regimes \cite{moreno2016seed}.
-These shrubs are also thought to further facilitate their own encroachment through positive feedbacks \citep{grover1990shrubland, d2012synthetic} by modifying their environment in ways that favor continued growth and recruitment, such as the local micro-climate \citep{d2010positive} and rates of soil erosion \citep{turnbull2010changes}.
+These shrubs are also thought to further facilitate their own encroachment through positive feedbacks \citep{grover1990shrubland, d2012synthetic} by modifying their environment in ways that favor continued growth and recruitment, including changes to the local micro-climate \citep{d2010positive} and rates of soil erosion \citep{turnbull2010changes}.
 Such positive feedback also involve suppression of herbaceous competitors, reducing competition as well as the amount of flammable biomass used to fuel the fires that keep creosotebush growth in check \citep{van2000shrub}.
 We hypothesized that, given potential for positive feedback mechanisms, the rarity of conspecifics at the low-density encroachment front may depress demographic performance and generate pushed-wave dynamics.
 
@@ -112,7 +112,7 @@ We hypothesized that, given potential for positive feedback mechanisms, the rari
 %Such gaps in knowledge make it difficult to make estimates of encroachment rates that extend beyond what can be gathered from vegetation surveys.
 
 We used a combination of observational and experimental data from shrub ecotones in central New Mexico to parameterize a spatial integral projection model (SIPM) that predicts that speed of encroachment ($m/yr$) resulting from lower-level demographic and dispersal processes. 
-Our data came from demographic surveys and experimental transplants along replicate ecotone transects spanning a gradient of shrub density and seed drop experiments to infer the properties of the dispersal kernel.
+Our data came from demographic surveys and experimental transplants along replicate ecotone transects spanning a gradient of shrub density, and seed drop experiments to infer the properties of the dispersal kernel.
 We focused on wind dispersal of seeds as a starting point, since little is known about the natural history of dispersal in this system and the seeds lack rewards to attract animal dispersers.
 We also used re-surveys of permanents transects as an independent measure of encroachment that provided a benchmark against which to evaluate model predictions. 
 The SIPM accounts for size-structured demography of creosotebush, allows us to test whether shrub expansion is pulled by the low-density front or pushed from the high-density core, and identifies the local (demographic) and spatial (seed dispersal) life cycle transitions that most strongly contribute to expansion speed\tom{}{we will need to stay consistent with the language of encroachment/expansion/invasion. For now I am swictihg a lot.}. 
@@ -134,7 +134,7 @@ We address the following specific questions:
 
 Creosotebush \textit{Larrea tridentata} is a perennial, drought-resistant  shrub that is native to the arid and semiarid regions of the southwestern United States and northern Mexico.
 %These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea}.
-High-density areas of creosotebush consist largely of barren soil between plants due to the ``islands of fertility'' these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grasses in the intershrub spaces (Fig. \ref{fig:waves}).
+High-density areas of creosotebush consist largely of barren soil between plants due to the ``islands of fertility'' these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grasses in the inter-shrub spaces (Fig. \ref{fig:waves}).
 In our northern Chihuahuan desert study region creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which contains a single seed.
 Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff \citep{maddox1985wind}. 
 In other regions, this species also reproduces asexually and can give rise to long-lived clonal stands \citep{vasek1980creosote}, but this does not occur in our study region.
@@ -151,7 +151,7 @@ Annual precipitation is low at approximately 250 mm, with the majority falling d
 
 %The drivers and dynamics of creosotebush encroachment at this site are not yet fully understood.
 %In recent decades, the shrub-grass ecotone here seems to be mostly stable and creosotebush expansion has been minimal; 
-Significant creosotebush encroachment at SNWR is believed to have last occurred in the 1950's, with high shrub recruitment before and after a multi-year drought that caused a large loss in grass cover, setting the stage for creosotebush expansion \citep{moreno2015assessing, moreno2016seed}.
+Significant creosotebush encroachment at SNWR last occurred in the 1950's, with high shrub recruitment before and after a multi-year drought that caused a large loss in grass cover, likely setting the stage for creosotebush expansion \citep{moreno2015assessing, moreno2016seed}.
 %Clonal reproduction in creosotebush has not been observed to occur in the Chihuahuan desert, so reproduction at this site occurs exclusively by seed, with the 
 The recruitment events that facilitate creosotebush expansion are thought to be highly episodic \citep{peters2012long}.
 Given that creosotebush seedlings have been shown to establish around the time that late-summer heavy rainfall occurs \citep{boyd1983postdispersal, bowers2004temporal}, higher precipitation rates may be responsible for increased recruitment.%, though the exact nature of how heavy rainfall events affect encroachment is not well defined.
@@ -172,8 +172,8 @@ This work was conducted at four sites in the eastern part of SNWR (one site was 
 All transects were placed along a shrubland-grassland ecotone so that a full range of shrub densities was captured: each transect spanned core shrub areas, grassland with few shrubs, and the transition between them. 
 Lengths of these transects varied from 200 to 600 m, determined by the strength of vegetation transition since ``steep'' transitions required less length to capture the full range of shrub densities. 
 
-We quantified shrub density in 5-meter ``windows'' along each transect, including all plants within one meter of the transect on either side.
-Densities were quantified once for each transect (in 2013 or 2014) and were assumed to remain effectively constant for the duration of the study, a reasonable assumption for a species with very low recruitment and very high survival of established plants. 
+We quantified shrub density in 5-meter ``windows'' along each transect, including all shrubs within one meter of the transect on either side.
+Densities were quantified once for each transect (in 2013 or 2014) and were assumed to remain constant for the duration of the study, a reasonable assumption for a species with very low recruitment and very high survival of established plants. 
 Given the population's size structure, we weighted the density of each window by the sizes of the plants, which we quantified as volume (cm$^3$).
 Volume was calculated as that of an elliptic cone: $V_{i} = \frac{\pi h}{3} \frac{lw}{4}$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
 Maximum length and width were measured so that they were always perpendicular to each other, and height was measured from the base of the woody stem at the soil surface to the highest part of the shrub.
@@ -190,12 +190,12 @@ These tagged shrubs were revisited every June and censused for survival (alive/d
 %Maximum width, length, and height on each shrub were measured in order to calculate conical volume, using the formula given earlier.
 %Survival status of the shrubs was also recorded, with dead individuals being noted and excluded from measurements in subsequent years.
 %Counts of flowers and fruits on each shrub were recorded as well.
-In instances where shrubs had large numbers of reproductive structures that would be difficult to reliably count (a large shrub may have many hundreds of flowers or fruits), we made counts on a fraction of the shrub and extrapolated to estimate whole-plant reproduction. 
+In instances where shrubs had large numbers of reproductive structures that would be difficult to reliably count (a large shrub may have thousands of flowers or fruits), we made counts on a fraction of the shrub and extrapolated to estimate whole-plant reproduction. 
 Creosotebush does not have a discrete reproductive season, instead producing flowers and fruits over much of the warm season. 
 Our measurements of reproductive output are therefore conservative, and likely underestimate cumulative seed production for an entire transition year. 
 %The position of each shrub along the transect was noted to a resolution of 5 m so that it could be matched with the baseline density of its corresponding subsection.
 %For shrubs in which a given 5-m subsection was not recorded, their position was estimated to the nearest 50 m; however, compared to the number of finer-resolution 5-m subsections, this occurred relatively infrequently.
-Each year, we also searched for new recruits within one $m$ on either side of the transect.
+Each year, we searched for new recruits within one $m$ on either side of the transect.
 New recruits were tagged and added to the demographic census. 
 
 \subsubsection*{Transplant experiment}
@@ -203,14 +203,13 @@ We conducted a transplant experiment in 2015 to test how shrub density affects s
 This approach complemented observational estimates of density dependence and filled in gaps for a part of the shrub life cycle that is rarely observed due to low recruitment. 
 Seeds for the experiment were collected from plants in our study population in 2014.
 Seeds were germinated on Pro-Mix potting soil (Quakertown, PA) in Fall 2014 and seedlings were transferred to 3.8 cm-by-12.7 cm cylindrical containers and maintained in a greenhouse at Rice University.
-Seedlings were transported to SNWR and transplanted into our experimental design during July 27-31 2015.
+Seedlings were transported to SNWR and transplanted into our experimental design during July 27-31, 2015.
 Transplant timing was intended to coincide with the start of the monsoon season, when most natural recruitment occurs. 
 
 The transplant experiment was conducted at the same four sites and three transects per site as the observational demographic census, where we knew weight shrub densities at 5-m window resolution. 
 Along each transect we established 12 1-m by 1-m plots. 
-Plots were intentionally placed to capture density variation: four plots were in windows with zero shrubs, four plots were placed in the top four highest-density windows, and the remaining four plots were randomly distributed among the remaining windows with weighted density greater than zero. 
-Plots were placed in the middle of each 5-m window (at meter 2.5).
-Plots were divided into four 0.5-m by 0.5-m subplots.
+Plots were intentionally placed to capture density variation: four plots were in windows with zero shrubs, four plots were placed in the top four highest-density windows on the transect, and the remaining four plots were randomly distributed among the remaining windows with weighted density greater than zero. 
+Plots were placed in the middle of each 5-m window (at meter 2.5) and were divided into four 0.5-m by 0.5-m subplots.
 We divided each subplot into nine squares and recorded ground cover of each square as one of the following categories: bare, creosotebush, black grama (\textit{B. eriopoda}), blue grama (\textit{B. gracilis}), other grass, or ``other''.
 Each subplot received one transplanted subplot, for a total of 48 transplants per transect, 144 transplants per site, and 576 transplants in the entire experiment. 
 Each site was set up on a different day and there was a significant monsoon event after the third and before the fourth site. 
@@ -224,11 +223,11 @@ The top statistical models were then used as the vital rate sub-models of the SI
 Our analyses focused on the following demographic vital rates: survival, growth, probability of flowering, flower and fruit production, and seedling recruitment. 
 All of these except recruitment were modeled as a function of plant size, and all of them included the possibility of density dependence, since we could connect the demographic performance of individual shrubs to the weighted density of their transect window. 
 
-The alternative hypotheses of pushed versus pulled wave expansion ultimately rest on how demographic vital rates, and the rate of population increase ($\lambda$) derived from the combination of all vital rates, respond to density. 
+The alternative hypotheses of pushed versus pulled wave expansion rest on how demographic vital rates, and the rate of population increase ($\lambda$) derived from the combination of all vital rates, respond to density. 
 We were particularly interested in whether demographic performance was maximized as local density goes to zero (pulled) or at non-zero densities behind the wave front (pushed). 
 To flexibly model density dependence and detect non-monotonic responses, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
 For each vital rate, we fit candidate models with or without a smooth term for local weighted density (among other possible covariates). 
-To avoid over-fitting, we set the `gamma' argument of gam() to 1.2, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and makes our approach more conservative.
+To avoid over-fitting, we set the `gamma' argument of gam() to 1.5, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and makes our approach more conservative (other gamma values yielded qualitatively similar results).
 % using gamma = 1 leads to fruit production having *positive* density dependence
 % not sure if I believe this, need to look into it; otherwise the gamma value does not seem to change the results much.
 We pooled data across transition years for analysis. 
@@ -252,20 +251,21 @@ Models 7-9 mirrored 4-6 and additionally included a smooth term for weighted den
 
 Inspection of the best-fitting growth model suggested that the data did not conform well to a Gaussian distribution: there was excess kurtosis (fatter tails) relative to Gaussian and left skew in the distribution of size in year $t+1$ especially at small initial sizes.
 Therefore, we re-fit the growth model with a skewed generalized $t$ (sgt) distribution, a five-parameter distribution on the real line that accommodates non-normal kurtosis and skew (R package `sgt': \citep{sgtpack}). 
-We specified $\mu$ and $\sigma$ of the sgt using the basis functions generated by the best-fit gam, and additionally modeled the $\lambda$ parameter (which controls skewness) as a function of size in year $t$ and the $p$ and $q$ parameters (which control kurtosis) as constants. 
+We specified $\mu$ and $\sigma$ of the sgt using the basis functions generated by the best-fit gam, and additionally modeled the $\lambda$ parameter (which controls skewness) as a function of size in year $t$ and the $p$ and $q$ parameters (which control kurtosis) as constants.
+We verified that the sgt model described the data well by simuating data from it and comparing simulated and real data. 
 
 \paragraph{Flowering and fruit production}
 We modeled shrub reproductive status (vegetative or flowering) in year $t$ as a Bernoulli random variable with three candidate models for flowering probability.
 These included smooth terms for current size (in year $t$) only (1), size and weighted density (3), and both smooth terms plus an interaction between size and weighted density. 
-We modeled the reproductive output of flowering plants (the sum of flowerbuds, open flowers, and fruits) in year $t$ as a negative binomial random variable. 
+We modeled the reproductive output of flowering plants (the sum of flowerbuds, open flowers, and fruits -- assuming that all of these equally contribute to overall seed production) in year $t$ as a negative binomial random variable. 
 There were three candidate models for mean reproductive output that corresponded to the same three candidates for flowering probability. 
 
 \paragraph{Recruitment}
-We modeled seedling recruitment in each transect window as a binomial random variable given the number of seeds produced in that window in the preceding year. 
+We modeled seedling recruitment in each transect window as a binomial random variable given the number of total seeds produced in that window in the preceding year. 
 To estimate window-level seed production, we used the best-fit models for flowering and fruit production and applied this to all plants in each window that we observed in our initial density surveys. 
 
 \subsubsection*{Integral Projection Model}
-The size- and density-dependent statistical models comprised the sub-models of an Integral Projection Model that we used to evaluate how the shrub population growth rate responded to conspecific density. 
+The size- and density-dependent statistical models comprised the sub-models of a non-spatial Integral Projection Model that we used to evaluate how the shrub population growth rate responded to conspecific density, before considering the additional role of dispersal. 
 A basic density-independent IPM predicts the number of individuals of size $x\prime$ at time $t+1$ ($n(x\prime,t + 1)$) based on a projection kernel ($K$) that gives the rates of transition from sizes $x$ to $x\prime$ and is integrated over the size distribution from the minimum ($L$) to maximum ($U$) sizes.
 As in our statistical modeling, the size variable of the IPM ($x,x\prime$) was $log(cm^3)$.
 In our model, the projection kernel was additionally dependent on local density, which we represent with $\tilde{N}$.
@@ -280,20 +280,20 @@ For our model, the demographic transitions captured by the projection kernel inc
 Thus, we can express the projection kernel as:
 \begin{linenomath*} 
 \begin{equation} 
-K(x\prime,x) = S(x,\tilde{N})G(x\prime,x,\tilde{N}) + P(x,\tilde{N})F(x,\tilde{N})R(\tilde{N})C(x\prime)
+K(x\prime,x,\tilde{N}) = S(x,\tilde{N})G(x\prime,x,\tilde{N}) + P(x,\tilde{N})F(x,\tilde{N})R(\tilde{N})C(x\prime)
 \end{equation} 
 \end{linenomath*}
-In the statistical modeling, we explored density ($\tilde{N}$) effects in all of these vital rates expect the recruit size distribution.
+In the statistical modeling, we explored density ($\tilde{N}$) effects in all of these vital rates except the recruit size distribution.
 We observed only XX natural recruits during our study, so we were not able to connect recruit size to local density. 
 Instead, we used the pooled recruits to estimate a mean and standard deviation of recruit size assuming a Gaussian distribution. 
 
 For analysis, we evaluated the IPM kernel functions at a range of local densities ($\tilde{N}$), from the minimum to the maximum of weighted density values from the 5-meter windows. 
-At each density level, we discretized the IPM kernel into XX bins and calculated the asymptotic growth rate $\lambda(\tilde{N})$ as the leading eignevalue of the approximating matrix. 
+At each density level, we discretized the IPM kernel into a $200 \times 200$  approximating matrix and calculated the asymptotic growth rate $\lambda(\tilde{N})$ as its leading eignevalue. 
 We extended the lower ($L$) and upper ($U$) integration limits to avoid unintentional ``eviction'' using the floor-and-ceiling method \citep{williams2012avoiding}.
 
-We sought to characterize the ``shape'' of density dependence: whether fitness declined monotonically or not with increasing density. 
+We sought to characterize the shape of density dependence: whether fitness declined monotonically or not with increasing density. 
 We quantified uncertainty in the density-dependent growth rate $\lambda(\tilde{N})$ by bootstrapping our data. 
-For each bootstrap, we randomly sampled XX\% of our demographic data, re-ran the statistical modeling and model selection, and used the top vital rate models to generate $\lambda(\tilde{N})$ for that data subset. 
+For each bootstrap, we randomly sampled 75\% of our demographic data, re-ran the statistical modeling and model selection, and used the top vital rate models to generate $\lambda(\tilde{N})$ for that data subset. 
 We repeated this procedure for 500 bootstrap replicates. 
 
 
@@ -548,5 +548,7 @@ Though our encroachment speed estimates are representative of creosotebush popul
 \bibliographystyle{ecology}
 \bibliography{creosote_SIPM}
 
+\newpage
+\section*{Appendix A}
 
 \end{document}
