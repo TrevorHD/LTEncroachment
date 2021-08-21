@@ -27,7 +27,7 @@ library(tidyverse)
 
 %-------------------------------------------------------------------------
 
-\title{Let's keep brainstorming title ideas. I don't think our results support the idea of `episodes of rapid expansion'}
+\title{Is shrub expansion into grasslands pushed or pulled? A spatial integral projection model for woody plant encroachment}
 
 \author[a,b]{Trevor Drees\thanks{thd5066@psu.edu}}
 \author[b]{Brad M. Ochocki}
@@ -264,41 +264,38 @@ There were three candidate models for mean reproductive output that corresponded
 We modeled seedling recruitment in each transect window as a binomial random variable given the number of total seeds produced in that window in the preceding year. 
 To estimate window-level seed production, we used the best-fit models for flowering and fruit production and applied this to all plants in each window that we observed in our initial density surveys. 
 
-\subsubsection*{Integral Projection Model}
-The size- and density-dependent statistical models comprised the sub-models of a non-spatial Integral Projection Model that we used to evaluate how the shrub population growth rate responded to conspecific density, before considering the additional role of dispersal. 
-A basic density-independent IPM predicts the number of individuals of size $x\prime$ at time $t+1$ ($n(x\prime,t + 1)$) based on a projection kernel ($K$) that gives the rates of transition from sizes $x$ to $x\prime$ and is integrated over the size distribution from the minimum ($L$) to maximum ($U$) sizes.
+\subsubsection*{Density-dependent IPM}
+The size- and density-dependent statistical models comprised the sub-models of a non-spatial, density dependent Integral Projection Model that we used to evaluate how the shrub population growth rate responded to conspecific density, before considering the additional role of dispersal. 
+A basic density-independent IPM predicts the number of individuals of size $x\prime$ at time $t+1$ ($n(x\prime,t + 1)$) based on a projection kernel ($K$) that gives the rates of transition from sizes $x$ to $x\prime$ and is integrated over the size distribution from the minimum ($L$) to maximum ($U$) sizes. In a density-dependent model, components of the projection kernel may respond to population abundance and structure. 
+\begin{linenomath*} 
+\begin{equation} \label{eq:DDIPM}
+n(x\prime,t + 1) = \int_{L}^{U} K(x\prime,x,\tilde{n}(t)) n(x,t) \,dx 
+\end{equation} 
+\end{linenomath*}
+Here, $\tilde{n}(t)$ is some function of population structure $n(x,t)$ such as the total density of conspecifics (e.g., $\tilde{n}(t)=\int n(x,t) \,dx$) or, as in our case, total density weighted by size ($\tilde{n}(t)=\int x n(x,t) \,dx$). 
+For simplicity, in the analyses that follow we do not model density as a dynamic state variable; instead, we treat density as a static covariate ($\tilde{n}(t)=\tilde{n}$) and evaluate the IPM at a range of density values. 
 As in our statistical modeling, the size variable of the IPM ($x,x\prime$) was $log(cm^3)$.
-In our model, the projection kernel was additionally dependent on local density, which we represent with $\tilde{N}$.
 
+For our model, the size- and density-dependent demographic transitions captured by the projection kernel include growth or shrinkage ($g$) from size $x$ to $x\prime$ conditioned on survival ($s$) at size $x$ (combined growth-survival function $G(x\prime,x,\tilde{n}) = g(x\prime,x,\tilde{n})s(x,\tilde{n})$), and the production of new size-$x\prime$ individuals from size-$x$ parents ($Q(x\prime,x,\tilde{n})$). Reproduction reflects the probability of flowering at size $x$ ($p$), number of seeds produced by flowering plants ($d$), the per-seed probability of recruitment ($r$), and the size distribution of recruits ($c$). Collectively, the rate at which $x$-sized individuals produce $x\prime$-sized individuals at density $\tilde{n}$ is given by the combined reproduction-recruitment function $Q(x\prime,x,\tilde{n})=p(x,\tilde{n})d(x,\tilde{n})r(\tilde{n})c(x\prime)$. Thus, we can express the projection kernel as:
 \begin{linenomath*} 
 \begin{equation} 
-n(x\prime,t + 1) = \int_{L}^{U} K(x\prime,x,\tilde{N}) n(x,t) \,dx 
+K(x\prime,x,\tilde{n}) = G(x\prime,x,\tilde{n}) + Q(x\prime,x,\tilde{n})
 \end{equation} 
 \end{linenomath*}
-
-For our model, the demographic transitions captured by the projection kernel include growth or shrinkage ($G$) from size $x$ to $x\prime$, conditioned on survival ($S$) at size $x$, and the production of new size-$x\prime$ individuals from size-$x$ parents. Reproduction reflects the number of seeds produced at size $x$ ($F$), conditioned on flowering ($P$), the per-seed probability of recruitment ($R$), and the size distribution of recruits ($C$). 
-Thus, we can express the projection kernel as:
-\begin{linenomath*} 
-\begin{equation} 
-K(x\prime,x,\tilde{N}) = S(x,\tilde{N})G(x\prime,x,\tilde{N}) + P(x,\tilde{N})F(x,\tilde{N})R(\tilde{N})C(x\prime)
-\end{equation} 
-\end{linenomath*}
-In the statistical modeling, we explored density ($\tilde{N}$) effects in all of these vital rates except the recruit size distribution.
-We observed only XX natural recruits during our study, so we were not able to connect recruit size to local density. 
-Instead, we used the pooled recruits to estimate a mean and standard deviation of recruit size assuming a Gaussian distribution. 
-
-For analysis, we evaluated the IPM kernel functions at a range of local densities ($\tilde{N}$), from the minimum to the maximum of weighted density values from the 5-meter windows. 
-At each density level, we discretized the IPM kernel into a $200 \times 200$  approximating matrix and calculated the asymptotic growth rate $\lambda(\tilde{N})$ as its leading eignevalue. 
+In the statistical modeling we explored local density effects in all of these vital rates except the recruit size distribution $c(x\prime)$. 
+We observed only XX natural recruits, so we were not able to connect recruit size to local density. Instead, we used the pooled recruits to estimate a mean and standard deviation of recruit size assuming a Gaussian distribution.
+For analysis, we evaluated the IPM kernel over a range of local densities from the minimum to the maximum of weighted density values from the 5-meter windows ($0 \leq \tilde{n} \leq \tilde{n}_{max}$). 
+At each density level, we discretized the IPM kernel into a $200 \times 200$  approximating matrix and calculated the asymptotic growth rate $\lambda(\tilde{n})$ as its leading eignevalue. 
 We extended the lower ($L$) and upper ($U$) integration limits to avoid unintentional ``eviction'' using the floor-and-ceiling method \citep{williams2012avoiding}.
 
 We sought to characterize the shape of density dependence: whether fitness declined monotonically or not with increasing density. 
-We quantified uncertainty in the density-dependent growth rate $\lambda(\tilde{N})$ by bootstrapping our data. 
-For each bootstrap, we randomly sampled 75\% of our demographic data, re-ran the statistical modeling and model selection, and used the top vital rate models to generate $\lambda(\tilde{N})$ for that data subset. 
+We quantified uncertainty in the density-dependent growth rate $\lambda(\tilde{n})$ by bootstrapping our data. 
+For each bootstrap, we randomly sampled 75\% of our demographic data, re-ran the statistical modeling and model selection, and used the top vital rate models to generate $\lambda(\tilde{n})$ for that data subset. 
 We repeated this procedure for 500 bootstrap replicates. 
 
 
 \subsection*{Dispersal modelling}
-
+\paragraph{WALD dispersal model}
 Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
 The WALD model, which is largely based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels \citep{katul2005mechanistic, skarpaas2007dispersal} and may be used when empirical dispersal data is not readily available.
 Under the assumptions that wind turbulence is low, wind flow is vertically homogenous, and terminal velocity is achieved immediately upon seed release, the WALD model simplifies a Lagrangian stochastic model to create a dispersal kernel that estimates the likelihood a propagule will travel a given distance \citep{katul2005mechanistic}.
@@ -314,7 +311,7 @@ A 0.15 m grass height at the study site gives $d = 0.105$ and $z_{0}$, which are
 Calculations of $u^*$ were done using equation A2 from \citet{skarpaas2007dispersal}, in which \begin{linenomath*} \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} \end{linenomath*} and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
 Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by \citet{skarpaas2007dispersal} in their equation A4, where \begin{linenomath*} \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} \end{linenomath*} and $C_{0}$ is the Kolmogorov constant.
 $A_{w}$ is a constant that relates vertical turbulence to friction velocity and is approximately equal to 1.3 under the assumptions of above-canopy flow made by \citet{skarpaas2007dispersal}, based off calculations from \citet{hsieh1997dissipation}.
-In addition, the assumption that $z = H$ was made in order to make the calculation of $\sigma$ more feasible.
+\tom{In addition, the assumption that $z = H$ was made in order to make the calculation of $\sigma$ more feasible.}{Can you describe this assumption in biological terms?}
 
 The values from the previous three equations give us the necessary information to calculate $\mu'$ and $\lambda'$, thus allowing us to create the WALD distribution $p(r)$.
 However, the base WALD model does not take into account variation in wind speeds or seed terminal velocities, which limits its applicability in systems where such variation is present.
@@ -322,15 +319,30 @@ In order to account for this variation, we integrate the WALD model over distrib
 The WALD model assumes seed release from a single point source, though, which is not realistic for a shrub; because seeds are released across the entire height of the shrub rather than from a point source, $p(r)$ was also integrated across the uniform distribution from the grass canopy height to the shrub height.
 Thus, under the assumptions that the height at which a seed is located does not affect its probability of being released and that seeds are evenly distributed throughout the shrub, this gives the dispersal kernel $K(r)$, where \begin{linenomath*} \begin{equation} K(r) = \iiint p(F)p(U)p(z)p(r) \,dF\,dU\,dz \end{equation} \end{linenomath*} and $p(F)$ and $p(U)$ are the PDFs of the terminal velocity $F$ and wind speed $U$, respectively, and $p(z)$ is the uniform distribution from $h$ to $H$.
 
+\paragraph{Dispersal data collection}
 The distribution $p(F)$ in the integral above was constructed using experimentally determined seed terminal velocities.
-This was done by using a high-speed camera and motion tracking software to determine position as a function of time, and then using the Levenberg-Marquardt algorithm to solve a quadratic-drag equation of motion for $F$. 
-Before seeds were released, they were dried and then dyed with yellow fluorescent powder, and then put against a black background to improve visibility and make tracking easier.
-While the powder added mass to the seeds, this added mass only yielded an approximately 2.5\% increase and was thus negligible, likely having little effect on their terminal velocities.
+This was done by using laboratory-based seed release experiments with a high-speed camera and motion tracking software to determine position as a function of time.
+We then used the Levenberg-Marquardt algorithm to solve a quadratic-drag equation of motion for $F$. 
+Before seeds were released, they were dried, dyed with yellow fluorescent powder, and then put against a black background to improve visibility and make tracking easier.
+While the powder added mass to the seeds, this added mass only yielded an approximately 2.5\% increase, likely having little effect on terminal velocities.
 Measurements were conducted for 48 seeds that were randomly chosen from a seed pool derived from different plants, and then an empirical PDF of terminal velocities was constructed using the data.
-Constructing $p(U)$ involved creating an empirical PDF of hourly wind speeds at Five Points, the site closest to the 12 transects being used, that were obtained from meteorological data collected at the Sevilleta National Wildlife Refuge from 1988 to 2010.
-We did not weight $p(U)$ and assumed that the probability seed release from the shrub is the same regardless of wind speed.
+Constructing $p(U)$ involved creating an empirical PDF of hourly wind speeds using data from a Sevilleta LTER meterological station (Five Points), the station closest to our transects.
+We used wind speed data collected from 1988 to 2010.\tom{}{Most SEV data sets have a doi, so ideally we should cite the wind speed data.}
+%We did not weight $p(U)$ and assumed that the probability seed release from the shrub is the same regardless of wind speed.
 
 \subsection*{Spatial integral projection model}
+
+We used a spatial integral projection model to piece together seed dispersal and density-dependent demography, and generate predictions for the rate of shrub expansion that results from this combination of local and spatial processes. 
+The spatially explicit model builds upon the non-spatial model (Eq. \ref{eq:DDIPM}) and adds a spatial variable ($z,z^\prime$) such that demographic transitions occur across both time and space according to a combined demography-dispersal kernel $\tilde{K}$:
+\begin{linenomath*} 
+\begin{equation} \label{eq:SIPM}
+n(x\prime,z\prime,t + 1) = \int_{-\infty}^{+\infty} \int_{L}^{U} \tilde{K}(x\prime,x,z\prime,z,\tilde{n}(z,t)) n(x,z,t) \,dx \,dz 
+\end{equation} 
+\end{linenomath*}
+Here, $\tilde{K}(x\prime,x,z\prime,z,\tilde{n}(z,t))$ is the rate of transition from size $x$ and location $z$ to size $x\prime$ and location $z\prime$ given density $\tilde{n}(z,t)$ at location $z$.
+As before, $\tilde{n}$ is a function of population structure -- in our model, weighted local density -- but here integrated over an explicit competitive ``neighborhood'': 
+$\tilde{n}(z,t)=\int_{z-h}^{z+h} \int_{L}^{U} x n(x,z,t) \,dx \,dz$
+where $h$ represents neighborhood size in the units of $z$.
 
 Given that the shrub population at this site is approximately homogeneous perpendicular to the direction of encroachment, expansion is modelled as a wave moving in one dimension.
 A spatial integral projection model (SIPM) is used to estimate the speed at which encroachment occurs; such a model incorporates the effects of variation in traits like plant size that stage-structured models, such as those described in \citet{neubert2000demography}, do not capture.
