@@ -1,6 +1,6 @@
 # Overview
 
-A combination of statistical and mechanistic models used to quantify creosotebush (Larrea tridentata) encroachment at the Sevilleta National Wildlife Refuge in central New Mexico. Here, we use dispersal kernels as well as size- and density-dependent demography to model encroachment as a moving wave pulled forward by individuals at the low-density vanguard. Data used here are collected annual demographic surveys over the course of several years, a transplant experiment to assess the survival rates of seedlings, and seed velocity data gathered from experiments in a laboratory setting.
+A combination of statistical and mechanistic models used to quantify creosotebush (*Larrea tridentata*) encroachment at the Sevilleta National Wildlife Refuge in central New Mexico. Here, we use dispersal kernels as well as size- and density-dependent demography to model encroachment as a moving wave pulled forward by individuals at the low-density vanguard. Data used here are collected via annual demographic surveys over the course of several years, a transplant experiment to assess the survival rates of seedlings, and seed laboratory experiments to determine dispersal-related traits of seeds.
 
 <br/>
 
@@ -44,9 +44,9 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 **Manuscript** *(folder)* - A folder with code and various other objects used to generate the manuscript.
 
-**05B_nonnormal_growth** *(.R)* - Models ofnon-normal growth rates as a function of size and density; not yet fully implemented.
+**05B_nonnormal_growth** *(.R)* - A script containing models of non-normal growth rates as a function of size and density; not yet fully implemented.
 
-**wavespeed_sensitivities** *(.R)* - Estimates wavespeeds for a range of per-seed recruitment rates; not yet fully implemented.
+**wavespeed_sensitivities** *(.R)* - A script that estimates wavespeeds for a range of per-seed recruitment rates; not yet fully implemented.
 
 ## Extras
 
@@ -55,3 +55,5 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 **S2_DeprecatedCode.R** *(.R)* - Bits of old code that is no longer in use; they are not organised in any particular order.
 
 **S3_TransplantAnalysis.R** *(.R)* - Code to analyse data from the transplant experiment.
+
+**S3B_TransplantAnalysis.R** *(.R)* - Additional code to analyse data from the transplant experiment.
