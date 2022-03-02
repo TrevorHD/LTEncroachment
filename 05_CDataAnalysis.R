@@ -315,6 +315,9 @@ recruit_aic
 
 
 # create vital rate figure ------------------------------------------------
+
+if(boot.switch == FALSE){
+
 size_breaks <- 4
 density_breaks <- 5
 LATR_cols <- wes_palette("Zissou1", size_breaks, type = "continuous")
@@ -489,3 +492,5 @@ lines(recruit_predict$weighted.dens,recruit_predict$pred,lwd=3)
 title("F",adj=0)
 
 dev.off()
+
+}
