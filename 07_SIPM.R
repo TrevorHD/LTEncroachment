@@ -88,12 +88,19 @@ TM.recruitment <- function(d){
   return(invlogit(pred[[1]]))}
 
 # Recruit size distribution at size y
-TM.recruitsize <- function(y){
-  dnorm(x = y, mean = boot.LATR_recruit_size$recruit_mean, sd = boot.LATR_recruit_size$recruit_sd)}
+TM.recruitsize <- function(y,d){
+  lpmat <- predict.gam(LATR_recruitsize_best,
+                       newdata = data.frame(weighted.dens = d, unique.transect = "1.FPS"),
+                       type = "lpmatrix",
+                       exclude = "s(unique.transect)")
+  recruitsize_mu <- lpmat[, 1:(recruit_size_sd_index-1)] %*% coef(LATR_recruitsize_best)[1:(recruit_size_sd_index-1)]
+  recruitsize_sigma <- exp(lpmat[, recruit_size_sd_index:recruit_size_coef_length] %*% coef(LATR_recruitsize_best)[recruit_size_sd_index:recruit_size_coef_length])
+  return(dnorm(x = y, mean = recruitsize_mu, sd = recruitsize_sigma))
+  }
 
 # Combined flowering, fertility, and recruitment
 TM.fertrecruit <- function(x, y, d){
-  TM.flower(x, d) * TM.seeds(x, d) * TM.recruitment(d) * TM.recruitsize(y)}
+  TM.flower(x, d) * TM.seeds(x, d) * TM.recruitment(d) * TM.recruitsize(y,d)}
 
 # Put it all together; projection matrix is a function of weighted density (dens)
 # We need a large lower extension because growth variance (gaussian) is greater for smaller plants

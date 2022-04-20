@@ -315,6 +315,9 @@ recruitsize_aic <- AICtab(LATR_recruit_size_mod, base = TRUE, sort = FALSE)
 LATR_recruitsize_best <- LATR_recruit_size_mod[[which.min(recruitsize_aic$AIC)]]
 LATR_recruitsize_fitted_terms <- predict(LATR_recruitsize_best, type = "terms") 
 LATR_recruit_size$pred <- predict.gam(LATR_recruitsize_best, newdata = LATR_recruit_size, exclude = "s(unique.transect)")
+## annoying but necessary index wrangling
+recruit_size_sd_index <- which(as.factor(names(coef(LATR_recruitsize_best)))=="(Intercept).1") ## this is where the sd coefficients start
+recruit_size_coef_length <- length(coef(LATR_recruitsize_best))
 
 # Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
