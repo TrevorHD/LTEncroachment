@@ -300,10 +300,31 @@ if(boot.switch == FALSE){
     mutate(log_volume = log(volume_t1))}
 
 # Plot distribution of recruit sizes using hist(LATR_recruit_size$log_volume)
+hist(LATR_recruit_size$log_volume)
+# test for density dependence in recruit size
+LATR_recruit_size_mod <- list()
+LATR_recruit_size_mod[[1]] <- gam(list(log_volume ~ 1 + s(unique.transect,bs = "re"),~1), 
+                              data = LATR_recruit_size, gamma = gamma, family = gaulss())
+LATR_recruit_size_mod[[2]] <- gam(list(log_volume ~ s(weighted.dens) + s(unique.transect,bs = "re"),~1), 
+                                  data = LATR_recruit_size, gamma = gamma, family = gaulss())
+LATR_recruit_size_mod[[3]] <- gam(list(log_volume ~ 1 + s(unique.transect,bs = "re"), ~s(weighted.dens)), 
+                            data = LATR_recruit_size, gamma = gamma, family = gaulss())
+LATR_recruit_size_mod[[4]] <- gam(list(log_volume ~ s(weighted.dens) + s(unique.transect,bs = "re"), ~s(weighted.dens)), 
+                              data = LATR_recruit_size, gamma = gamma, family = gaulss())
+# Collect model AICs into a single table
+recruitsize_aic <- AICtab(LATR_recruit_size_mod, base = TRUE, sort = FALSE)
+
+# Set top model as "best"
+LATR_recruitsize_best <- LATR_recruit_size_mod[[which.min(recruitsize_aic$AIC)]]
+LATR_recruitsize_fitted_terms <- predict(LATR_recruitsize_best, type = "terms") 
+LATR_recruit_size$pred <- predict.gam(LATR_recruitsize_best, newdata = LATR_recruit_size, exclude = "s(unique.transect)")
 
 # Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
                                max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
+
+plot(LATR_recruit_size$weighted.dens,LATR_recruit_size$log_volume)
+lines(LATR_recruit_size$weighted.dens,LATR_recruit_size$pred[,1],lwd=3)
 
 # Collect AIC table info --------------------------------------------------
 
