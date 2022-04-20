@@ -21,6 +21,7 @@ library(oce)
 library(sgt)
 library(maxLik)
 library(zoo)
+library(binr)
 
 
 
