@@ -15,7 +15,7 @@ if(boot.switch == FALSE){
 
 
 ## set the gamma argument of gam() -- gamma>1 generates smoother fits, less likely to be overfit
-gamma = 1.5
+gamma = 1.8
 
 
 ##### Growth model ----------------------------------------------------------------------------------------
@@ -285,10 +285,6 @@ LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
 # LATR_recruit_fitted_terms <- predict(LATR_recruit[[2]], type = "terms") 
 # plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens)"])
 
-
-
-
-
 ##### Recruit sizes and integration limits (size bounds) --------------------------------------------------
 
 # Filter out seedlings from full data set; only do this once
@@ -297,7 +293,8 @@ if(boot.switch == FALSE){
   # Filter out seedlings and get their sizes
   LATR_recruit_size <- LATR_full %>% 
     filter(seedling_t1 == 1) %>% 
-    mutate(log_volume = log(volume_t1))}
+    mutate(log_volume = log(volume_t1)) %>% 
+    arrange(weighted.dens)}
 
 # Plot distribution of recruit sizes using hist(LATR_recruit_size$log_volume)
 hist(LATR_recruit_size$log_volume)
@@ -322,9 +319,6 @@ LATR_recruit_size$pred <- predict.gam(LATR_recruitsize_best, newdata = LATR_recr
 # Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
                                max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
-
-plot(LATR_recruit_size$weighted.dens,LATR_recruit_size$log_volume)
-lines(LATR_recruit_size$weighted.dens,LATR_recruit_size$pred[,1],lwd=3)
 
 # Collect AIC table info --------------------------------------------------
 
@@ -392,14 +386,12 @@ surv_trans_predict <- expand.grid(
 )
 surv_trans_predict$pred <- predict.gam(LATR_surv_best, newdata = surv_trans_predict, type = "response", exclude = "s(unique.transect)")
 
-plot(LATR_surv_plot_transT$mean_dens,LATR_surv_plot_transT$mean_surv,col=alpha("black",0.5),pch=16,
-     ylim=c(0,1),xlab="Weighted density",ylab="Transplant survival probability",cex.lab=1.4,
-     cex=LATR_surv_plot_transT$bin_n/max(LATR_surv_plot_transT$bin_n)*2+1,
-     xlim=c(min(LATR_surv_dat$weighted.dens),max(LATR_surv_dat$weighted.dens)))
+points(LATR_surv_plot_transT$mean_dens,LATR_surv_plot_transT$mean_surv,col=alpha("black",0.5),pch=16,
+    cex.lab=1.4,cex=LATR_surv_plot_transT$bin_n/max(LATR_surv_plot_transT$bin_n)*2+1)
 lines(surv_trans_predict$weighted.dens,surv_trans_predict$pred,lwd=3)
 #points(LATR_surv_dat$weighted.dens[LATR_surv_dat$transplant==T],LATR_surv_dat$survival_t1[LATR_surv_dat$transplant==T],
-#       col=alpha("black",0.5),pch="|")
-title("B",adj=0)
+#       col=alph)
+text(30,0.1,"Transplants",font=3)
 
 ## growth
 ## starting with raw data visualization, binning sizes and densities
@@ -447,7 +439,7 @@ plotInset(100, -1, 220, 6,
                     col=grow_predict$size_col,pch=16,cex=0.25,xlab="",ylab=expression(paste("SD(",Size[t+1],")")),
                     cex.axis=0.5,mgp=c(3/2, 1/2, 0)),
           mar=c(0, 3, 0, 0))
-title("C",adj=0)
+title("B",adj=0)
 
 ## flowering
 LATR_flow_dat %>% 
@@ -476,7 +468,7 @@ plot(LATR_flow_plot$mean_dens,LATR_flow_plot$mean_flow,col=alpha(LATR_flow_plot$
      cex=LATR_flow_plot$bin_n/max(LATR_flow_plot$bin_n)*2+1,cex.lab=1.4,
      xlim=c(min(LATR_flow_dat$weighted.dens),max(LATR_flow_dat$weighted.dens)))
 points(flow_predict$weighted.dens,flow_predict$pred,col=flow_predict$size_col,pch=16,cex=0.75)
-title("D",adj=0)
+title("C",adj=0)
 
 ## fruits
 mean_size <- LATR_fruits_dat %>% 
@@ -498,7 +490,7 @@ fruits_predict$size_col <- LATR_cols[fruits_predict$size_bin]
 plot(LATR_fruits_dat$weighted.dens,LATR_fruits_dat$total.reproduction_t,pch=16,cex=0.5,ylim=c(0,4000),cex.lab=1.4,
      col=alpha(LATR_fruits_dat$size_col,0.5),xlab="Weighted density",ylab="Flowers and fruits")
 points(fruits_predict$weighted.dens,fruits_predict$pred,col=fruits_predict$size_col,pch=16,cex=0.75)
-title("E",adj=0)
+title("D",adj=0)
 
 ## recruitment
 recruit_predict <- expand.grid(
@@ -510,6 +502,11 @@ recruit_predict$pred <- predict.gam(LATR_recruit_best, newdata = recruit_predict
 plot(LATR_recruitment$weighted.dens,LATR_recruitment$recruits/LATR_recruitment$total_seeds,cex.lab=1.4,
      col=alpha("black",0.5),pch=1,xlab="Weighted density",ylab="Per-seed recruitment probability",ylim=c(0,0.001))
 lines(recruit_predict$weighted.dens,recruit_predict$pred,lwd=3)
+title("E",adj=0)
+
+plot(LATR_recruit_size$weighted.dens,LATR_recruit_size$log_volume,col=alpha("black",0.5),cex.lab=1.4,
+     pch=16,xlab="Weighted density",ylab=expression(paste("Recruit size (log ",cm^3,")")))
+lines(LATR_recruit_size$weighted.dens,LATR_recruit_size$pred[,1],lwd=3)
 title("F",adj=0)
 
 dev.off()
