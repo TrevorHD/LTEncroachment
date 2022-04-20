@@ -229,7 +229,7 @@ The alternative hypotheses of pushed versus pulled wave expansion rest on how de
 We were particularly interested in whether demographic performance was maximized as local density goes to zero (pulled) or at non-zero densities behind the wave front (pushed). 
 To flexibly model density dependence and detect non-monotonic responses, we used generalized additive models in the R package `mgcv' \citep{Wood2017}.
 For each vital rate, we fit candidate models with or without a smooth term for local weighted density (among other possible covariates). 
-To avoid over-fitting, we set the `gamma' argument of gam() to 1.5, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and makes our approach more conservative (other gamma values yielded qualitatively similar results).
+To avoid over-fitting, we set the `gamma' argument of gam() to 1.8, which increases the complexity penalty, results in smoother fits \citep{Wood2017}, and makes our approach more conservative (other gamma values yielded qualitatively similar results).
 % using gamma = 1 leads to fruit production having *positive* density dependence
 % not sure if I believe this, need to look into it; otherwise the gamma value does not seem to change the results much.
 We pooled data across transition years for analysis. 
@@ -264,7 +264,11 @@ There were three candidate models for mean reproductive output that corresponded
 
 \paragraph{Recruitment}
 We modeled seedling recruitment in each transect window as a binomial random variable given the number of total seeds produced in that window in the preceding year. 
+There were two candidate models, with and without an influence of weighted density on the per-seed recruitment probability. 
 To estimate window-level seed production, we used the best-fit models for flowering and fruit production and applied this to all plants in each window that we observed in our initial density surveys. 
+
+We modeled recruit size as a Gaussian-distributed random variable and fit four candidate models including an influence of weighted density on mean, variance, both, and neither. 
+Because we observed only \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} recruits, we were not confident in our ability to model skewness and kurtosis of the recruit size distribution and therefore assumed a Gaussian distribution. 
 
 \subsubsection*{Density-dependent IPM}
 The size- and density-dependent statistical models comprised the sub-models of a density dependent Integral Projection Model that we used to evaluate how the shrub population growth rate responded to conspecific density; we present this non-spatial model before layering on the spatial dynamics driven by seed dispersal. 
@@ -278,14 +282,14 @@ Here, $\tilde{n}(t)$ is some function of population structure $n(x,t)$ such as t
 For simplicity, in the analyses that follow we do not model density as a dynamic state variable; instead, we treat density as a static covariate ($\tilde{n}(t)=\tilde{n}$) and evaluate the IPM at a range of density values. 
 As in our statistical modeling, the size variable of the IPM ($x,x\prime$) was $log(cm^3)$.
 
-For our model, the size- and density-dependent demographic transitions captured by the projection kernel include growth or shrinkage ($g$) from size $x$ to $x\prime$ conditioned on survival ($s$) at size $x$ (combined growth-survival function $G(x\prime,x,\tilde{n}) = g(x\prime,x,\tilde{n})s(x,\tilde{n})$), and the production of new size-$x\prime$ individuals from size-$x$ parents ($Q(x\prime,x,\tilde{n})$). Reproduction reflects the probability of flowering at size $x$ ($p$), the number of seeds produced by flowering plants ($d$), the per-seed probability of recruitment ($r$), and the size distribution of recruits ($c$). Collectively, the rate at which $x$-sized individuals produce $x\prime$-sized individuals at density $\tilde{n}$ is given by the combined reproduction-recruitment function $Q(x\prime,x,\tilde{n})=p(x,\tilde{n})d(x,\tilde{n})r(\tilde{n})c(x\prime)$. Thus, we can express the projection kernel as:
+For our model, the size- and density-dependent demographic transitions captured by the projection kernel include growth or shrinkage ($g$) from size $x$ to $x\prime$ conditioned on survival ($s$) at size $x$ (combined growth-survival function $G(x\prime,x,\tilde{n}) = g(x\prime,x,\tilde{n})s(x,\tilde{n})$), and the production of new size-$x\prime$ individuals from size-$x$ parents ($Q(x\prime,x,\tilde{n})$). Reproduction reflects the probability of flowering at size $x$ ($p$), the number of seeds produced by flowering plants ($d$), the per-seed probability of recruitment ($r$), and the size distribution of recruits ($c$). Collectively, the rate at which $x$-sized individuals produce $x\prime$-sized individuals at density $\tilde{n}$ is given by the combined reproduction-recruitment function $Q(x\prime,x,\tilde{n})=p(x,\tilde{n})d(x,\tilde{n})r(\tilde{n})c(x\prime,\tilde{n)$. Thus, we can express the projection kernel as:
 \begin{linenomath*} 
 \begin{equation} 
 K(x\prime,x,\tilde{n}) = G(x\prime,x,\tilde{n}) + Q(x\prime,x,\tilde{n})
 \end{equation} 
 \end{linenomath*}
-In the statistical modeling we explored local density effects in all of these vital rates except the recruit size distribution $c(x\prime)$. 
-We observed only \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruits, so we were not able to connect recruit size to local density. Instead, we used the pooled recruits to estimate a mean and standard deviation of recruit size assuming a Gaussian distribution.
+%In the statistical modeling we explored local density effects in all of these vital rates except the recruit size distribution $c(x\prime)$. 
+%We observed only \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruits, so we were not able to connect recruit size to local density. Instead, we used the pooled recruits to estimate a mean and standard deviation of recruit size assuming a Gaussian distribution.
 For analysis, we evaluated the IPM kernel over a range of local densities from the minimum to the maximum of weighted density values from the 5-meter windows ($0 \leq \tilde{n} \leq \tilde{n}_{max}$). 
 At each density level, we discretized the IPM kernel into a $200 \times 200$  approximating matrix and calculated the asymptotic growth rate $\lambda(\tilde{n})$ as its leading eignevalue. 
 We extended the lower ($L$) and upper ($U$) integration limits to avoid unintentional ``eviction'' using the floor-and-ceiling method \citep{williams2012avoiding}.
