@@ -271,7 +271,7 @@ We modeled recruit size as a Gaussian-distributed random variable and fit four c
 Because we observed only \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} recruits, we were not confident in our ability to model skewness and kurtosis of the recruit size distribution and therefore assumed a Gaussian distribution. 
 
 \subsubsection*{Density-dependent IPM}
-The size- and density-dependent statistical models comprised the sub-models of a density dependent Integral Projection Model that we used to evaluate how the shrub population growth rate responded to conspecific density; we present this non-spatial model before layering on the spatial dynamics driven by seed dispersal. 
+The size- and density-dependent statistical models comprised the sub-models of a density dependent Integral Projection Model (IPM) that we used to evaluate how the shrub population growth rate responded to con-specific density; we present this non-spatial model before layering on the spatial dynamics driven by seed dispersal. 
 A basic density-independent IPM predicts the number of individuals of size $x\prime$ at time $t+1$ ($n(x\prime,t + 1)$) based on a projection kernel ($K$) that gives the rates of transition from sizes $x$ to $x\prime$ from times $t$ to $t+1$ and is integrated over the size distribution from the minimum ($L$) to maximum ($U$) sizes. In a density-dependent IPM, components of the projection kernel may respond to population abundance and structure:
 \begin{linenomath*} 
 \begin{equation} \label{eq:DDIPM}
@@ -303,27 +303,52 @@ We repeated this procedure for 500 bootstrap replicates.
 \subsection*{Dispersal modelling}
 \paragraph{WALD dispersal model}
 Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
-The WALD model, which is largely based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels \citep{katul2005mechanistic, skarpaas2007dispersal} and may be used when empirical dispersal data is not readily available.
+The WALD model, which is based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels \citep{katul2005mechanistic, skarpaas2007dispersal} and may be used when direct observations of dispersal are not available. 
 Under the assumptions that wind turbulence is low, wind flow is vertically homogenous, and terminal velocity is achieved immediately upon seed release, the WALD model simplifies a Lagrangian stochastic model to create a dispersal kernel that estimates the likelihood a propagule will travel a given distance \citep{katul2005mechanistic}.
-This dispersal kernel takes the form of the inverse Gaussian distribution \begin{linenomath*} \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} \end{linenomath*} that is a slight adaptation from equation 5b in \citet{katul2005mechanistic}, using $r$ to denote dispersal distance.
-Here, $\lambda'$ is the location parameter and $\mu'$ is the scale parameter, which depend on environmental and plant-specific properties of the study system.
+Our dispersal kernel takes the form of the inverse Gaussian distribution 
+
+\begin{linenomath*} \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} \end{linenomath*} 
+
+that is a \tom{slight adaptation}{unclear what this refers to} from equation 5b in \citet{katul2005mechanistic}, using $r$ to denote dispersal distance.
+Here, $\lambda'$ is the location parameter and $\mu'$ is the scale parameter, which depend on environmental and plant-specific properties of the study system. 
+(We use $\lambda'$ for consistency with notation in related papers, but $\lambda'$ the dispersal location parameter should not be confused with $\lambda$ the geometric growth rate.)
 The location and scale parameters are defined as $\lambda' = (H/\sigma)^2$ and $\mu' = HU/F$; these are functions of the height $H$ of seed release, wind speed $U$ at seed release height, seed terminal velocity $F$, and the turbulent flow parameter $\sigma$ that depends on both wind speed and local vegetation roughness.
 
-In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \begin{linenomath*} \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} \end{linenomath*} given in \citet{bullock2012modelling} equation 6, with the notation slightly modified. 
+In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \tom{}{We need to describe and cite the wind data used here.}
+
+\begin{linenomath*} \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} 
+\end{linenomath*} 
+
+given in \citet{bullock2012modelling} equation 6, with the notation slightly modified. 
 Here, $z$ is the height above the ground, $K$ is the von Karman constant, and $u^*$ is the friction velocity.
 The zero-plane displacement $d$ and roughness length $z_{0}$ are surface roughness parameters that, for a grass canopy height $h$ above the ground, are  approximated by $d \approx 0.7h$ and $z_{0} \approx 0.1h$.
 These estimates are from \citet{raupach1994simplified} for a canopy area index $\Lambda = 1$ in which the sum of grass canopy elements is equal to the unit area being measured.
-A 0.15 m grass height at the study site gives $d = 0.105$ and $z_{0}$, which are suitable approximations for grassland \citep{wiernga1993representative}.
-Calculations of $u^*$ were done using equation A2 from \citet{skarpaas2007dispersal}, in which \begin{linenomath*} \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} \end{linenomath*} and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
-Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by \citet{skarpaas2007dispersal} in their equation A4, where \begin{linenomath*} \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} \end{linenomath*} and $C_{0}$ is the Kolmogorov constant.
+A 0.15 m grass height at our study site gives $d = 0.105$ and $z_{0}$, which are suitable approximations for grassland \citep{wiernga1993representative}.
+Calculations of $u^*$ were done using equation A2 from \citet{skarpaas2007dispersal}, in which 
+
+\begin{linenomath*} \begin{equation} u^* = KU_{m} \left[\log\left(\frac{z_{m} - d}{z_{0}}\right)\right]^{-1} \end{equation} 
+\end{linenomath*} 
+
+and $U_{m}$ is the mean wind velocity at the measurement height $z_{m}$.
+Values for the turbulent flow parameter $\sigma$ were then calculated using the estimate made by \citet{skarpaas2007dispersal} in their equation A4, where 
+
+\begin{linenomath*} \begin{equation} \sigma = 2A_{w}^2 \sqrt{\frac{K(z-d)u^*}{C_{0}U}} \end{equation} 
+\end{linenomath*} 
+
+and $C_{0}$ is the Kolmogorov constant.
 $A_{w}$ is a constant that relates vertical turbulence to friction velocity and is approximately equal to 1.3 under the assumptions of above-canopy flow made by \citet{skarpaas2007dispersal}, based off calculations from \citet{hsieh1997dissipation}.
 \tom{In addition, the assumption that $z = H$ was made in order to make the calculation of $\sigma$ more feasible.}{Can you describe this assumption in biological terms?}
 
 The values from the previous three equations give us the necessary information to calculate $\mu'$ and $\lambda'$, thus allowing us to create the WALD distribution $p(r)$.
 However, the base WALD model does not take into account variation in wind speeds or seed terminal velocities, which limits its applicability in systems where such variation is present.
-In order to account for this variation, we integrate the WALD model over distributions these two variables using the same method as \citet{skarpaas2007dispersal}.
-The WALD model assumes seed release from a single point source, though, which is not realistic for a shrub; because seeds are released across the entire height of the shrub rather than from a point source, $p(r)$ was also integrated across the uniform distribution from the grass canopy height to the shrub height.
-Thus, under the assumptions that the height at which a seed is located does not affect its probability of being released and that seeds are evenly distributed throughout the shrub, this gives the dispersal kernel $K(r)$, where \begin{linenomath*} \begin{equation} K(r) = \iiint p(F)p(U)p(z)p(r) \,dF\,dU\,dz \end{equation} \end{linenomath*} and $p(F)$ and $p(U)$ are the PDFs of the terminal velocity $F$ and wind speed $U$, respectively, and $p(z)$ is the uniform distribution from $h$ to $H$.
+In order to account for this variation, we integrate the WALD model over distributions of these two variables using the same method as \citet{skarpaas2007dispersal}.
+Additionally, the WALD model assumes seed release from a single point source, which is not realistic for creosote bush; because seeds are released across the entire height of the shrub rather than from a point source, we integrated $p(r)$ across the uniform distribution from the grass canopy height to the shrub height.
+Thus, under the assumptions that the height at which a seed is located does not affect its probability of being released and that seeds are evenly distributed throughout the shrub, this gives the dispersal kernel $K(r)$, where
+
+\begin{linenomath*} \begin{equation} K(r) = \iiint p(F)p(U)p(z)p(r) \,dF\,dU\,dz \end{equation} 
+\end{linenomath*} 
+
+and $p(F)$ and $p(U)$ are the PDFs of the terminal velocity $F$ and wind speed $U$, respectively, and $p(z)$ is the uniform distribution from $h$ to $H$.
 
 \paragraph{Dispersal data collection}
 The distribution $p(F)$ in the integral above was constructed using experimentally determined seed terminal velocities.
