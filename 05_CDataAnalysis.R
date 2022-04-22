@@ -59,7 +59,10 @@ LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.den
 # Collect model AICs into a single table
 grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
 # Set top model as "best"; find intercept for the sd
-LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
+LATR_grow_best <- LATR_gam_models[[9]] ##which.min(grow_aic$AIC)
+## I am fixing the growth model to this one, so every bootstrap will use this model
+## this avoids problems of bad initial conditions in the sgt fits
+
 LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
 LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
 ## extract the linear predictor for the mean and sd
@@ -297,7 +300,7 @@ if(boot.switch == FALSE){
     arrange(weighted.dens)}
 
 # Plot distribution of recruit sizes using hist(LATR_recruit_size$log_volume)
-hist(LATR_recruit_size$log_volume)
+#hist(LATR_recruit_size$log_volume)
 # test for density dependence in recruit size
 LATR_recruit_size_mod <- list()
 LATR_recruit_size_mod[[1]] <- gam(list(log_volume ~ 1 + s(unique.transect,bs = "re"),~1), 
@@ -325,12 +328,12 @@ LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$
 
 # Collect AIC table info --------------------------------------------------
 
-grow_aic
-flower_aic
-fruits_aic
-surv_aic
-recruit_aic
-
+#grow_aic
+#flower_aic
+#fruits_aic
+#surv_aic
+#recruit_aic
+#recruitsize_aic
 
 # create vital rate figure ------------------------------------------------
 
@@ -340,9 +343,8 @@ size_breaks <- 4
 density_breaks <- 5
 LATR_cols <- wes_palette("Zissou1", size_breaks, type = "continuous")
 
-pdf("Manuscript/Figures/vital_rates.pdf",useDingbats = F,height=9,width=6)
-par(mfrow=c(1,3),mar=c(5,5,1,1))
-par(mfrow=c(3,2))
+pdf("Manuscript/Figures/vital_rates.pdf",useDingbats = F,height=9,width=7)
+par(mfrow=c(3,2),mar=c(5,5,1,1))
 ## survival
 LATR_surv_dat %>% 
   filter(transplant==F) %>% 
@@ -515,3 +517,29 @@ title("F",adj=0)
 dev.off()
 
 }
+
+
+# plot growth kernel ------------------------------------------------------
+## checking that the fitted kernel gives a visually satisfying fit to the data
+size_dim <- 200
+size_dum <- seq(min(LATR_grow$log_volume_t1),max(LATR_grow$log_volume_t1),length.out = size_dim)
+## problem here is that growth has a continuous covariate. to visualize this I will
+## discretize 4 quantiles of the weighted density distribution
+hist(LATR_grow$weighted.dens)
+quantile(LATR_grow$weighted.dens,c(0.25,0.5,0.75))
+bins.quantiles(LATR_grow$weighted.dens,target.bins = 4,max.breaks = 4)
+
+growth_kernel <- matrix(NA,size_dim,size_dim)
+for(i in 1:size_dim){
+  mu_size <- fixef(CYIM_lmer_best)[1] + fixef(CYIM_lmer_best)[2] * size_dum[i]
+  CYIM_lmer_best_kernel[,i] <- dnorm(size_dum,
+                                     mean = mu_size,
+                                     sd = exp(pars[[best_model]][1] + pars[[best_model]][2]*mu_size))
+}
+
+levelplot(CYIM_lmer_best_kernel,row.values = size_dum, column.values = size_dum,cuts=30,
+          col.regions=rainbow(30),xlab="log Size t",ylab="log Size t+1",main="Gaussian, non-constant variance",
+          panel = function(...) {
+            panel.levelplot(...)
+            grid.points(log(CYIM$vol_t), log(CYIM$vol_t1), pch = ".",gp = gpar(cex=3,col=alpha("black",0.5)))
+          })
