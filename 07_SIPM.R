@@ -31,13 +31,13 @@ TM.growth <- function(x, y, d){
   # Linear predictor for mean, sigma, and lambda
   grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef_grow_best[1:(grow_sd_index-1)]
   grow_sigma <- exp(lpmat[, grow_sd_index:gam_coef_length] %*% coef_grow_best[grow_sd_index:gam_coef_length])
-  grow_lambda <- -invlogit(pars[(gam_coef_length+1)]+pars[(gam_coef_length+2)]*xb)
+  grow_lambda <- -invlogit(coef_grow_best[(gam_coef_length+1)]+coef_grow_best[(gam_coef_length+2)]*xb)
   return(dsgt(x = y, 
               mu=grow_mu,
               sigma=grow_sigma,
               lambda=grow_lambda,
-              p=exp(pars[(gam_coef_length+3)]),
-              q=exp(pars[(gam_coef_length+4)]),
+              p=exp(coef_grow_best[(gam_coef_length+3)]),
+              q=exp(coef_grow_best[(gam_coef_length+4)]),
               mean.cent=T,
               var.adj=T))}
 
