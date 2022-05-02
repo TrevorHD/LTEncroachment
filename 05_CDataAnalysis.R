@@ -89,18 +89,18 @@ sgtLogLik=function(pars,response){
 }
 ## initial parameter values
 p0=c(LATR_beta,-10,0,2,2) 
-out1=maxLik(logLik=sgtLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=LATR_grow$log_volume_t1,
+out=maxLik(logLik=sgtLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=LATR_grow$log_volume_t1,
            method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
 
-out2=maxLik(logLik=sgtLogLik,start=out1$estimate,response=LATR_grow$log_volume_t1,
-           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
-
-out3=maxLik(logLik=sgtLogLik,start=out2$estimate,response=LATR_grow$log_volume_t1,
-           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
-
-out4=maxLik(logLik=sgtLogLik,start=out3$estimate,response=LATR_grow$log_volume_t1,
-           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
-
+#out=maxLik(logLik=sgtLogLik,start=out1$estimate,response=LATR_grow$log_volume_t1,
+#           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
+#
+#out=maxLik(logLik=sgtLogLik,start=out2$estimate,response=LATR_grow$log_volume_t1,
+#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+#
+#out=maxLik(logLik=sgtLogLik,start=out3$estimate,response=LATR_grow$log_volume_t1,
+#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
+#
 ## final parameter estimates for the growth model
 coef_grow_best <- out$estimate
 
