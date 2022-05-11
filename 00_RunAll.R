@@ -68,11 +68,11 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
-boot.on <- TRUE
+boot.on <- FALSE
 
 # Evaluate local IPM instead of spatial IPM?
 # Local IPM will not include dispersal
-boot.noDisp <- FALSE
+boot.noDisp <- TRUE
 
 # What proportion of individuals should be resampled each bootstrap interation?
 # Should be in the interval (0, 1), exclusive
