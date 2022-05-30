@@ -82,7 +82,7 @@ TM.seeds <- function(x, d, seeds.per.fruit = 5, elas=0){
                        exclude = "s(unique.transect)")
   pred <- lpmat %*% coef(LATR_fruits_best)
   if(elas=="fertility"){pred=pred*(1+pert)}
-  return(exp(pred*delta)*seeds.per.fruit)}
+  return(exp(pred)*seeds.per.fruit)}
 
 # Seed-to-Seedling recruitment probability at density d
 TM.recruitment <- function(d,elas=0){
@@ -92,7 +92,7 @@ TM.recruitment <- function(d,elas=0){
                        exclude = "s(unique.transect)")
   pred <- lpmat%*% coef(LATR_recruit_best)
   if(elas=="recruitment"){pred=pred*(1+pert)}
-  return(invlogit(pred[[1]]*delta))}
+  return(invlogit(pred[[1]]))}
 
 # Recruit size distribution at size y
 TM.recruitsize <- function(y,d,elas=0){
@@ -103,7 +103,7 @@ TM.recruitsize <- function(y,d,elas=0){
   recruitsize_mu <- lpmat[, 1:(recruit_size_sd_index-1)] %*% coef(LATR_recruitsize_best)[1:(recruit_size_sd_index-1)]
   if(elas=="recruitsize"){recruitsize_mu=recruitsize_mu*(1+pert)}
   recruitsize_sigma <- exp(lpmat[, recruit_size_sd_index:recruit_size_coef_length] %*% coef(LATR_recruitsize_best)[recruit_size_sd_index:recruit_size_coef_length])
-  return(dnorm(x = y, mean = recruitsize_mu*delta, sd = recruitsize_sigma))
+  return(dnorm(x = y, mean = recruitsize_mu, sd = recruitsize_sigma))
   }
 
 # Combined flowering, fertility, and recruitment
