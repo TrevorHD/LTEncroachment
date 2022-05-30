@@ -61,7 +61,6 @@ boot.switch <- FALSE
 # Save bootstrapped wavespeed and lambda outputs to CSV?
 boot.saveOutputs <- FALSE
 
-# "05_CDataAnalysis_NS.R"
 # Create demography models for use in SIPM
 # Run once before bootstrapping to get recruit sizes and boundaries
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
@@ -72,7 +71,7 @@ boot.on <- FALSE
 
 # Evaluate local IPM instead of spatial IPM?
 # Local IPM will not include dispersal
-boot.noDisp <- TRUE
+boot.noDisp <- FALSE
 
 # What proportion of individuals should be resampled each bootstrap interation?
 # Should be in the interval (0, 1), exclusive
@@ -83,7 +82,7 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 2
+boot.num <- 100
 
 # Create empty vectors to populate with wavespeeds
 boot.cv1 <- c()
