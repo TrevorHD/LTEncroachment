@@ -190,7 +190,7 @@ Wavespeed <- function(n = TM.matdim){
     return(mgf.values)}
   
   # Set up range of s values over which to calculate wavespeeds
-  s.seq <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 2, length.out = 96))
+  s.seq <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 1, length.out = 46))
   
   # Apply MGF for each value of s
   mgf.over.s <- mapply(MGF.s, s = s.seq)
@@ -205,7 +205,7 @@ Wavespeed <- function(n = TM.matdim){
   vec <- c()
   
   # Calculate wavespeed for each s and add it to the vector
-  for(i in 1:100){
+  for(i in 1:length(s.seq)){
     val <- ws.calc(m = mgf.over.s[, i], s = s.seq[i])
     vec <- append(vec, val)}
   
