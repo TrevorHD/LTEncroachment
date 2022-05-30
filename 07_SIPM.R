@@ -52,7 +52,7 @@ TM.survival <- function(x, d){
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   pred <- lpmat %*% coef(LATR_surv_best)
-  return(1)#return(invlogit(pred))
+  return(invlogit(pred))
   }
 
 # Combined growth and survival at density d
@@ -190,7 +190,7 @@ Wavespeed <- function(n = TM.matdim){
     return(mgf.values)}
   
   # Set up range of s values over which to calculate wavespeeds
-  s.seq <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 2, length.out = 96))
+  s.seq <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 1, length.out = 46))
   
   # Apply MGF for each value of s
   mgf.over.s <- mapply(MGF.s, s = s.seq)
