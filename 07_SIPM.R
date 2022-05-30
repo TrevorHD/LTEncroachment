@@ -41,6 +41,7 @@ TM.growth <- function(x, y, d){
               mean.cent=T,
               var.adj=T))}
 
+
 # Survival of size x at density d using best GAM
 # For nnaturally occuring plants (transplant = FALSE)
 TM.survival <- function(x, d){
@@ -51,7 +52,8 @@ TM.survival <- function(x, d){
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   pred <- lpmat %*% coef(LATR_surv_best)
-  return(invlogit(pred))}
+  return(1)#return(invlogit(pred))
+  }
 
 # Combined growth and survival at density d
 TM.growsurv <- function(x, y, d){
@@ -136,10 +138,8 @@ TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upp
 
 # Construct transition matrix for minimum weighted density (zero)
 TM <- TransMatrix(dens = 0)
-
-
-
-
+#lambda(TM$IPMmat)
+#image(TM$IPMmat)
 
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 

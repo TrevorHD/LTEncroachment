@@ -47,7 +47,6 @@ LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.den
                             data = LATR_grow, gamma = gamma, family = gaulss())                
 LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
-
 # Fits where sigma depends on both initial size and density
 LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
@@ -59,7 +58,7 @@ LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.den
 # Collect model AICs into a single table
 grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
 # Set top model as "best"; find intercept for the sd
-LATR_grow_best <- LATR_gam_models[[9]] ##which.min(grow_aic$AIC)
+LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
 ## I am fixing the growth model to this one, so every bootstrap will use this model
 ## this avoids problems of bad initial conditions in the sgt fits
 
@@ -87,20 +86,24 @@ sgtLogLik=function(pars,response){
              log=T) 
   return(val); 
 }
+
+dnorm(x=runif(10),mean=0,sd=1,log=T)
+      
 ## initial parameter values
+## I cut randomness from initial values to make this more reliable for bootstrapping: start=p0*exp(0.2*rnorm(length(p0)))
 p0=c(LATR_beta,-10,0,2,2) 
-out=maxLik(logLik=sgtLogLik,start=p0*exp(0.2*rnorm(length(p0))), response=LATR_grow$log_volume_t1,
+out=maxLik(logLik=sgtLogLik,start=p0, response=LATR_grow$log_volume_t1,
            method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
 
-#out=maxLik(logLik=sgtLogLik,start=out1$estimate,response=LATR_grow$log_volume_t1,
-#           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
-#
-#out=maxLik(logLik=sgtLogLik,start=out2$estimate,response=LATR_grow$log_volume_t1,
-#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
-#
-#out=maxLik(logLik=sgtLogLik,start=out3$estimate,response=LATR_grow$log_volume_t1,
-#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
-#
+out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
+
+out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+
+out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
+
 ## final parameter estimates for the growth model
 coef_grow_best <- out$estimate
 
@@ -200,14 +203,14 @@ CData.Transplants %>%
   drop_na() -> LATR_surv_dat
 
 # Investigate size overlap between transplant experiment and observational census
-hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]), breaks = 25)
-hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]), breaks = 10, add = TRUE, col = alpha("gray", 0.5))
+#hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]), breaks = 25)
+#hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]), breaks = 10, add = TRUE, col = alpha("gray", 0.5))
 
 # Plot survival against volume, grouped by transplant status
-plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
-     LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == FALSE])
-points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
-       LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
+#plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
+#     LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == FALSE])
+#points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
+#       LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
 
 # Create empty list to populate with model results
 LATR_surv <- list()
