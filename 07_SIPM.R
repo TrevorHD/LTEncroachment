@@ -10,7 +10,7 @@ TM.upper.extension <- 2
 ##### IPM functions ---------------------------------------------------------------------------------------
 
 # Growth from size x to y at density d, using best GAM -- GAUSSIAN
-TM.growth <- function(x, y, d){
+TM.growth <- function(x, y, d, delta=1){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_grow_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
@@ -19,7 +19,7 @@ TM.growth <- function(x, y, d){
   # Linear predictor for mean and log sigma 
   grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef(LATR_grow_best)[1:(grow_sd_index-1)]
   grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*% coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
-  return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
+  return(dnorm(y, mean = grow_mu*delta, sd = grow_sigma))}
 
 # Growth from size x to y at density d, using best GAM -- SGT!!
 #TM.growth <- function(x, y, d){
@@ -44,7 +44,7 @@ TM.growth <- function(x, y, d){
 
 # Survival of size x at density d using best GAM
 # For nnaturally occuring plants (transplant = FALSE)
-TM.survival <- function(x, d){
+TM.survival <- function(x, d, delta=1){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_surv_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, transplant = FALSE,
@@ -52,12 +52,12 @@ TM.survival <- function(x, d){
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   pred <- lpmat %*% coef(LATR_surv_best)
-  return(invlogit(pred))
+  return(invlogit(pred*delta))
   }
 
 # Combined growth and survival at density d
-TM.growsurv <- function(x, y, d){
-  TM.survival(x, d) * TM.growth(x, y, d)}
+TM.growsurv <- function(x, y, d, delta=1){
+  TM.survival(x, d, delta) * TM.growth(x, y, d, delta)}
 
 # Flowering at size x and density d using best GAM
 TM.flower <- function(x, d){
@@ -190,7 +190,7 @@ Wavespeed <- function(n = TM.matdim){
     return(mgf.values)}
   
   # Set up range of s values over which to calculate wavespeeds
-  s.seq <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 1, length.out = 46))
+  s.seq <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 2, length.out = 96))
   
   # Apply MGF for each value of s
   mgf.over.s <- mapply(MGF.s, s = s.seq)
