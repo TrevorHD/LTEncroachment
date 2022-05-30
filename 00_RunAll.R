@@ -196,6 +196,21 @@ if(boot.noDisp == TRUE){
 
 
 # elasticity analysis -----------------------------------------------------
+lambda(TransMatrix(dens = 0)$IPMmat)
+lambda(TransMatrix(dens = 0,elas="growth")$IPMmat)
+lambda(TransMatrix(dens = 0,elas="survival")$IPMmat)
+lambda(TransMatrix(dens = 0,elas="flower")$IPMmat)
+lambda(TransMatrix(dens = 0,elas="fertility")$IPMmat)
+lambda(TransMatrix(dens = 0,elas="recruitment")$IPMmat)
+lambda(TransMatrix(dens = 0,elas="recruitsize")$IPMmat)
+
+TM <- TransMatrix(dens = 0, elas="recruitment")
+min(Wavespeed(elas="recruitment"));min(Wavespeed(elas="recruitment"));min(Wavespeed(elas="recruitment"))
+TM <- TransMatrix(dens = 0, elas="dispersal")
+min(Wavespeed(elas="dispersal"));min(Wavespeed(elas="dispersal"));min(Wavespeed(elas="dispersal"))
+TM <- TransMatrix(dens = 0)
+min(Wavespeed());min(Wavespeed());min(Wavespeed())
+
 
 # elasticity perturbation
 pert <- 0.05
@@ -205,10 +220,13 @@ pert <- 0.05
 c.values <- Wavespeed()
 c_ref <- min(c.values)
 
+vr <- c("growth","survival","flower","fertility","recruitment","recruitsize")
+lambda_elas <- c()
+lambda_elas[1] <- lambda(TransMatrix(dens = 0)$IPMmat)
 # loop over perturbations to growth, survival, flowering, fertility, recr
-for(i in 1:){
+for(i in 1:length(vr)){
   ## recalculate demographic transition matrix with this perturbation
-  TM <- TransMatrix(dens = 0, )
+  TM <- TransMatrix(dens = 0, elas=vr[i])
   
 }
 
