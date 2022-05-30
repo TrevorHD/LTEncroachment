@@ -70,7 +70,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
-boot.on <- FALSE
+boot.on <- TRUE
 
 # Evaluate local IPM instead of spatial IPM?
 # Local IPM will not include dispersal

@@ -70,40 +70,40 @@ LATR_Xp <- predict.gam(LATR_grow_best,type="lpmatrix")
 LATR_beta <- coef(LATR_grow_best)
 
 ## annoying but necessary index wrangling
-grow_sd_index <- which(as.factor(names(coef(LATR_grow_best)))=="(Intercept).1") ## this is where the sd coefficients start
-gam_coef_length <- length(coef(LATR_grow_best)) ## this is where the lambda, p and q coefficients start
+#grow_sd_index <- which(as.factor(names(coef(LATR_grow_best)))=="(Intercept).1") ## this is where the sd coefficients start
+#gam_coef_length <- length(coef(LATR_grow_best)) ## this is where the lambda, p and q coefficients start
 
 ## now fit SGT using the LP matrix for mean and sigma that gam fit
-sgtLogLik=function(pars,response){
-  val = dsgt(x = response, 
-             mu=LATR_Xp[,1:(grow_sd_index-1)]%*%pars[1:(grow_sd_index-1)],
-             sigma=exp(LATR_Xp[,grow_sd_index:gam_coef_length]%*%pars[grow_sd_index:gam_coef_length]),
-             lambda=-invlogit(pars[(gam_coef_length+1)]+pars[(gam_coef_length+2)]*LATR_grow$log_volume_t), ## I know there is negative skew at small sizes so I am rigging this to pick it up
-             p=exp(pars[(gam_coef_length+3)]),
-             q=exp(pars[(gam_coef_length+4)]),
-             mean.cent=T,
-             var.adj=T,
-             log=T) 
-  return(val); 
-}
+#sgtLogLik=function(pars,response){
+#  val = dsgt(x = response, 
+#             mu=LATR_Xp[,1:(grow_sd_index-1)]%*%pars[1:(grow_sd_index-1)],
+#             sigma=exp(LATR_Xp[,grow_sd_index:gam_coef_length]%*%pars[grow_sd_index:gam_coef_length]),
+#             lambda=-invlogit(pars[(gam_coef_length+1)]+pars[(gam_coef_length+2)]*LATR_grow$log_volume_t), ## I know there is negative skew at small sizes so I am rigging this to pick it up
+#             p=exp(pars[(gam_coef_length+3)]),
+#             q=exp(pars[(gam_coef_length+4)]),
+#             mean.cent=T,
+#             var.adj=T,
+#             log=T) 
+#  return(val); 
+#}
 
 ## initial parameter values
 ## I cut randomness from initial values to make this more reliable for bootstrapping: start=p0*exp(0.2*rnorm(length(p0)))
-p0=c(LATR_beta,-10,0,2,2) 
-out=maxLik(logLik=sgtLogLik,start=p0, response=LATR_grow$log_volume_t1,
-           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
-
-out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
-           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); 
-
-out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
-           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
-
-out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
-           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
-
+#p0=c(LATR_beta,-10,0,2,2) 
+#out=maxLik(logLik=sgtLogLik,start=p0, response=LATR_grow$log_volume_t1,
+#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+#
+#out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+#           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); #
+#
+#out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+#
+#out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
+#
 ## final parameter estimates for the growth model
-coef_grow_best <- out$estimate
+#coef_grow_best <- out$estimate
 
 ##### Flowering probability model -------------------------------------------------------------------------
 
