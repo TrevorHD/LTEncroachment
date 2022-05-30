@@ -10,36 +10,36 @@ TM.upper.extension <- 2
 ##### IPM functions ---------------------------------------------------------------------------------------
 
 # Growth from size x to y at density d, using best GAM -- GAUSSIAN
-#TM.growth <- function(x, y, d){
-#  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
-#  lpmat <- predict.gam(LATR_grow_best,
-#                       newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
-#                       type = "lpmatrix",
-#                       exclude = "s(unique.transect)")
-#  # Linear predictor for mean and log sigma 
-#  grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef(LATR_grow_best)[1:(grow_sd_index-1)]
-#  grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*% coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
-#  return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
-
-# Growth from size x to y at density d, using best GAM -- SGT!!
 TM.growth <- function(x, y, d){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_grow_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
-  # Linear predictor for mean, sigma, and lambda
-  grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef_grow_best[1:(grow_sd_index-1)]
-  grow_sigma <- exp(lpmat[, grow_sd_index:gam_coef_length] %*% coef_grow_best[grow_sd_index:gam_coef_length])
-  grow_lambda <- -invlogit(coef_grow_best[(gam_coef_length+1)]+coef_grow_best[(gam_coef_length+2)]*xb)
-  return(dsgt(x = y, 
-              mu=grow_mu,
-              sigma=grow_sigma,
-              lambda=grow_lambda,
-              p=exp(coef_grow_best[(gam_coef_length+3)]),
-              q=exp(coef_grow_best[(gam_coef_length+4)]),
-              mean.cent=T,
-              var.adj=T))}
+  # Linear predictor for mean and log sigma 
+  grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef(LATR_grow_best)[1:(grow_sd_index-1)]
+  grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*% coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
+  return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
+
+# Growth from size x to y at density d, using best GAM -- SGT!!
+#TM.growth <- function(x, y, d){
+#  xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
+#  lpmat <- predict.gam(LATR_grow_best,
+#                       newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
+#                       type = "lpmatrix",
+#                       exclude = "s(unique.transect)")
+#  # Linear predictor for mean, sigma, and lambda
+#  grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef_grow_best[1:(grow_sd_index-1)]
+#  grow_sigma <- exp(lpmat[, grow_sd_index:gam_coef_length] %*% coef_grow_best[grow_sd_index:gam_coef_length])
+#  grow_lambda <- -invlogit(coef_grow_best[(gam_coef_length+1)]+coef_grow_best[(gam_coef_length+2)]*xb)
+#  return(dsgt(x = y, 
+#              mu=grow_mu,
+#              sigma=grow_sigma,
+#              lambda=grow_lambda,
+#              p=exp(coef_grow_best[(gam_coef_length+3)]),
+#              q=exp(coef_grow_best[(gam_coef_length+4)]),
+#              mean.cent=T,
+#              var.adj=T))}
 
 
 # Survival of size x at density d using best GAM

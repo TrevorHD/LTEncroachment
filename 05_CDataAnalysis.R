@@ -87,8 +87,6 @@ sgtLogLik=function(pars,response){
   return(val); 
 }
 
-dnorm(x=runif(10),mean=0,sd=1,log=T)
-      
 ## initial parameter values
 ## I cut randomness from initial values to make this more reliable for bootstrapping: start=p0*exp(0.2*rnorm(length(p0)))
 p0=c(LATR_beta,-10,0,2,2) 

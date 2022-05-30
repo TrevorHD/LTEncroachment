@@ -13,16 +13,18 @@ abline(0,1)
 # compare simulated and real data -----------------------------------------
 n_sim <- 500
 LATR_sim_SGT<-matrix(NA,nrow=nrow(LATR_grow),ncol=n_sim)
+grow_pred<-predict(LATR_grow_best,type="response",data=LATR_grow)
 for(i in 1:n_sim){
   print(i)
-  LATR_sim_SGT[,i] <- rsgt(n = nrow(LATR_grow), 
-                           mu = LATR_Xp[,1:(grow_sd_index-1)]%*%out$estimate[1:(grow_sd_index-1)], 
-                           sigma = exp(LATR_Xp[,grow_sd_index:gam_coef_length]%*%out$estimate[grow_sd_index:gam_coef_length]),
-                           lambda=-invlogit(out$estimate[(gam_coef_length+1)]+out$estimate[(gam_coef_length+2)]*LATR_grow$log_volume_t),
-                           p=exp(out$estimate[(gam_coef_length+3)]),
-                           q=exp(out$estimate[(gam_coef_length+4)]),
-                           mean.cent=T,
-                           var.adj=T)
+  #LATR_sim_SGT[,i] <- rsgt(n = nrow(LATR_grow), 
+  #                         mu = LATR_Xp[,1:(grow_sd_index-1)]%*%out$estimate[1:(grow_sd_index-1)], 
+#                           sigma = exp(LATR_Xp[,grow_sd_index:gam_coef_length]%*%out$estimate[grow_sd_index:gam_coef_length]),
+#                           lambda=-invlogit(out$estimate[(gam_coef_length+1)]+out$estimate[(gam_coef_length+2)]*LATR_grow$log_volume_t),
+#                           p=exp(out$estimate[(gam_coef_length+3)]),
+#                           q=exp(out$estimate[(gam_coef_length+4)]),
+#                           mean.cent=T,
+#                           var.adj=T)
+  LATR_sim_SGT[,i] <- rnorm(n = nrow(LATR_grow),mean=grow_pred[,1],sd=1/grow_pred[,2])  
 }
 
 n_bins = 6
