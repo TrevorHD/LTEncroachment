@@ -47,6 +47,9 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/03_Disp
 # Tidy up demography data before creating demography models
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 
+# "07_SIPM"
+# Spatial integral projection setting up functions to calculate wavespeeds
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
 
 
 
@@ -119,10 +122,9 @@ for(i in 1:boot.num){
   # This avoids model uncertainty; only model coefficients change, not the overall structure
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
   
-  # "07_SIPM"
-  # Spatial integral projection setting up functions to calculate wavespeeds
-  source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
-  
+  # Construct transition matrix for minimum weighted density (zero)
+  TM <- TransMatrix(dens = 0)
+
   # Evaluate SIPM to find wavespeeds
   if(boot.noDisp == FALSE){
     
@@ -193,7 +195,22 @@ if(boot.noDisp == TRUE){
       silent = TRUE)}
 
 
+# elasticity analysis -----------------------------------------------------
 
+# elasticity perturbation
+pert <- 0.05
+
+## recalculate wavespeed with a 5% increase in the intercept of all vital rates
+## reference wavespeed (all data, base model)
+c.values <- Wavespeed()
+c_ref <- min(c.values)
+
+# loop over perturbations to growth, survival, flowering, fertility, recr
+for(i in 1:){
+  ## recalculate demographic transition matrix with this perturbation
+  TM <- TransMatrix(dens = 0, )
+  
+}
 
 
 ##### Generate main figures -------------------------------------------------------------------------------
