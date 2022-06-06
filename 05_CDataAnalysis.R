@@ -70,8 +70,8 @@ LATR_Xp <- predict.gam(LATR_grow_best,type="lpmatrix")
 LATR_beta <- coef(LATR_grow_best)
 
 ## annoying but necessary index wrangling
-#grow_sd_index <- which(as.factor(names(coef(LATR_grow_best)))=="(Intercept).1") ## this is where the sd coefficients start
-#gam_coef_length <- length(coef(LATR_grow_best)) ## this is where the lambda, p and q coefficients start
+grow_sd_index <- which(as.factor(names(coef(LATR_grow_best)))=="(Intercept).1") ## this is where the sd coefficients start
+gam_coef_length <- length(coef(LATR_grow_best)) ## this is where the lambda, p and q coefficients start
 
 ## now fit SGT using the LP matrix for mean and sigma that gam fit
 #sgtLogLik=function(pars,response){

@@ -85,7 +85,7 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 100
+boot.num <- 500
 
 # Create empty vectors to populate with wavespeeds
 boot.cv1 <- c()
