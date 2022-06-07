@@ -138,47 +138,43 @@ Creosotebush \textit{Larrea tridentata} is a perennial, drought-resistant  shrub
 %These shrubs are often found in valleys and on dunes and gentle slopes \citep{marshall1995larrea}.
 High-density areas of creosotebush consist largely of barren soil between plants due to the ``islands of fertility'' these shrubs create around themselves \citep{schlesinger1996spatial, reynolds1999impact}, though lower-density areas will often contain grasses in the inter-shrub spaces (Fig. \ref{fig:waves}).
 In our northern Chihuahuan desert study region creosotebush reproduces sexually, with numerous small yellow flowers giving rise to highly pubescent spherical fruits several millimetres in diameter; these fruits consist of five carpels, each of which contains a single seed.
-Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to also be blown across the soil surface or transported by water runoff \citep{maddox1985wind}. 
+Seeds are dispersed from the parent plant by gravity and wind, with the possibility for seeds to subsequently be transported by animals or water \citep{maddox1985wind}. 
 In other regions, this species also reproduces asexually and can give rise to long-lived clonal stands \citep{vasek1980creosote}, but this does not occur in our study region.
 The foliage is dark green, resinous, and unpalatable to most grazing and browsing animals \citep{mabry1978creosote}.
 
 \subsection*{Study site}
 
-We conducted our experiments and censuses at the Sevilleta National Wildlife Refuge (SNWR), a Long-Term Ecological Research (LTER) site in central New Mexico.
-The refuge exists at the intersection of several eco-regions, including the Chihuahuan Desert and steppes of the Colorado Plateau.
-Annual precipitation is low at approximately 250 mm, with the majority falling during the summer monsoon season from June to September.
+We conducted our work at the Sevilleta National Wildlife Refuge (SNWR), a Long-Term Ecological Research (SEV-LTER) site in central New Mexico.
+The refuge exists at the intersection of several eco-regions, including the northern Chihuahuan Desert, Great Plains grassland, and steppes of the Colorado Plateau.
+Annual precipitation is approximately 250 mm, with the majority falling during the summer monsoon season from June to September.
+The recruitment events that facilitate creosotebush expansion are thought to be highly episodic \citep{peters2012long}, and this may be linked to fluctuations in monsoon precipitation\citep{boyd1983postdispersal, bowers2004temporal}.
+Monsoon precipitation during the study years (2013-2017) was [summarise climate data].
 %The site is home to various pinyon pine and juniper species at higher elevations, as well as creosotebush and grasses such as black grama (\textit{Bouteloua eriopoda}) and blue grama (\textit{Bouteloua gracilis}) at lower elevations.
 %At the McKenzie Flats area on the eastern portion of the refuge, there are several locations with a prominent shrub-grass ecotone; high-density areas of creosotebush with little to no transition to areas with a mixture of the two, which then transition to grassland with few shrubs.
 %This gradient of creosotebush density at this site, and how it changes via encroachment, is the primary object of interest in our study.
 
 %The drivers and dynamics of creosotebush encroachment at this site are not yet fully understood.
 %In recent decades, the shrub-grass ecotone here seems to be mostly stable and creosotebush expansion has been minimal; 
-Significant creosotebush encroachment at SNWR last occurred in the 1950's, with high shrub recruitment before and after a multi-year drought that caused a large loss in grass cover, likely setting the stage for creosotebush expansion \citep{moreno2015assessing, moreno2016seed}.
+%Significant episodes of creosotebush encroachment at SNWR last occurred in the 1950's, with high shrub recruitment before and after a multi-year drought that caused a large loss in grass cover, likely setting the stage for creosotebush expansion \citep{moreno2015assessing, moreno2016seed}.
 %Clonal reproduction in creosotebush has not been observed to occur in the Chihuahuan desert, so reproduction at this site occurs exclusively by seed, with the 
-The recruitment events that facilitate creosotebush expansion are thought to be highly episodic \citep{peters2012long}.
-Given that creosotebush seedlings have been shown to establish around the time that late-summer heavy rainfall occurs \citep{boyd1983postdispersal, bowers2004temporal}, higher precipitation rates may be responsible for increased recruitment.%, though the exact nature of how heavy rainfall events affect encroachment is not well defined.
+%The recruitment events that facilitate creosotebush expansion are thought to be highly episodic \citep{peters2012long}.
+%Given that creosotebush seedlings have been shown to establish around the time that late-summer heavy rainfall occurs \citep{boyd1983postdispersal, bowers2004temporal}, higher precipitation rates may be responsible for increased recruitment.%, though the exact nature of how heavy rainfall events affect encroachment is not well defined.
 %Creosotebush dispersal at this site is poorly understood, with almost no studies quantifying wind dispersal of seeds, and very little understanding of the magnitude and distances of animal-driven dispersal.
-
-\subsection*{Encroachment re-surveys}
-We recorded shrub percent cover along two permanent 1000-m transects that spanned the shrub-grass ecotone, from high to low to near-zero shrub density. 
-These surveys were conduced in summer 2001 and again in summer 2013 to document change in creosotebush abundance and spatial extent. 
-At every 10 meters, shrub cover was recorded in nine cover classes (<1\%, 1--4\%, 5--10\%, 10--25\%, 25--33\%, 33--50\%, 50--75\%, 75--95\%, >95\%). 
-For visualization, we show midpoint values of these cover classes at each meter location for both transects and years. 
 
 \subsection*{Demographic data}
 
 \subsubsection*{Ecotone transects}
 
-Collection of demographic data occurred during early June of every year from 2013-2017.
-This work was conducted at four sites in the eastern part of SNWR (one site was initiated in 2013 and the other three in 2014), with three transects at each site (different transects than those used for re-surveys). 
-All transects were placed along a shrubland-grassland ecotone so that a full range of shrub densities was captured: each transect spanned core shrub areas, grassland with few shrubs, and the transition between them. 
-Lengths of these transects varied from 200 to 600 m, determined by the strength of vegetation transition since ``steep'' transitions required less length to capture the full range of shrub densities. 
+We collected demographic data during early June of every year from 2013-2017.
+This work was conducted at \tom{four sites in the eastern part of SNWR}{would a map be helpful?} (one site was initiated in 2013 and the other three in 2014), with three transects at each site. 
+All transects were placed along a shrubland-grassland ecotone so that a full range of shrub densities was captured: each transect spanned core shrub areas, grassland with no or few shrubs, and the transition between them. 
+Lengths of these transects varied from 200 to 600 m, determined by the strength of vegetation transition since ``steep'' transitions required less length to capture the full range of shrub density. 
 
-We quantified shrub density in 5-meter ``windows'' along each transect, including all shrubs within one meter of the transect on either side.
+We quantified shrub density in 5-meter ``windows'' along each transect, including all shrubs within one meter of the transect on either side (shrubs that partially overlapped with the census area were included).
 Densities were quantified once for each transect (in 2013 or 2014) and were assumed to remain constant for the duration of the study, a reasonable assumption for a species with very low recruitment and very high survival of established plants. 
 Given the population's size structure, we weighted the density of each window by the sizes of the plants, which we quantified as volume (cm$^3$).
 Volume was calculated as that of an elliptic cone: $V_{i} = \frac{\pi h}{3} \frac{lw}{4}$ where $l$, $w$, and $h$ are the maximum length, maximum width, and height, respectively.
-Maximum length and width were measured so that they were always perpendicular to each other, and height was measured from the base of the woody stem at the soil surface to the highest part of the shrub.
+Maximum length and width were measured so that they were always perpendicular to each other, and height was measured from the base of the woody stem at the soil surface to the tallest part of the shrub.
 %All three of these dimensional measurements were mutually orthogonal and were inclusive only of living parts of the shrub; dead wood and non-foliated outer sections were not included in measurements.
 The weighted density for a window was then expressed as log(volume) summed over all plants in the window.
 %Such a weighted density was chosen because density of individuals alone can often fail to be a useful measurement in environments where large size differences between plants of the same species exist.
@@ -354,52 +350,14 @@ Estimates of the wavespeed were bootstrapped for a total of 1000 replicates.
 Each bootstrap replicate recreated size- and density-dependent demographic models using 80\% resampling on the original demographic data, and recreated dispersal kernels also using 80\% resampling on the wind speeds and seed terminal velocities.
 Between replicates, the structure of the demographic models was kept constant, though coefficient estimates were not; this approach, while effectively ignoring model uncertainty, has the benefit of increasing computational efficiency, which is especially useful given the time-consuming nature of numerically estimating the many dispersal kernels used in the model.
 
+\subsection*{Encroachment re-surveys}
+We recorded shrub percent cover along two permanent 1000-m transects that spanned the shrub-grass ecotone, from high to low to near-zero shrub density. 
+These surveys were conduced in summer 2001 and again in summer 2013 to document change in creosotebush abundance and spatial extent. 
+At every 10 meters, shrub cover was recorded in nine cover classes (<1\%, 1--4\%, 5--10\%, 10--25\%, 25--33\%, 33--50\%, 50--75\%, 75--95\%, >95\%). 
+For visualization, we show midpoint values of these cover classes at each meter location for both transects and years. 
+
 %--------------------------------------------------------------------
 \section*{Results}
-
-\subsection*{Encroachment re-surveys}
-Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over 12 years (Fig. \ref{fig:transect_resurv}).
-There were local changes in percent cover: on average cover increased by XX\% between surveys.
-However, there was no clear indication that the leading edge of the creosote shrubland has advanced (the modest right-ward shift on both transects is within the range of measurement error). 
-
-<<transect_resurv,echo=F,message=F,fig.dim=c(8,4),fig.cap="Re-surveys of shrub cover along two permanent trasects (A,B) surveyed in 2001 and 2013.">>=
-resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
-par(mfrow=c(1,2),mar=c(4,4,1,1))
-plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="East"],
-     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="East"],
-     type="l",lwd=2,col="gray",ylim=c(0,50),
-     xlab="Meter",ylab="Percent cover")
-points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="East"]+5,
-     resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="East"],
-     type="l",lwd=2,col="black")
-title("A",adj=0,font=3)
-plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="West"],
-     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="West"],
-     type="l",lwd=2,col="gray",ylim=c(0,50),
-     xlab="Meter",ylab="Percent cover")
-points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="West"]+5,
-     resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="West"],
-     type="l",lwd=2,col="black")
-title("B",adj=0,font=3)
-legend("topright",legend=c("2001","2013"),bty="n",lwd=2,col=c("gray","black"))
-
-##how many quads had zero creosote in 2001 and non-zero in 2013
-resurv$trans_quad <- interaction(resurv$Transect,resurv$Quad)
-zero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]==0),]$trans_quad
-nonzero2013 <- resurv[resurv$trans_quad%in%zero2001 & resurv$Year==2013,]$LATR_percent>0
-zero_to_nonzero <- sum(nonzero2013,na.rm=T)/length(na.omit(nonzero2013))
-
-##now the reverse: what fraction of quads with nonzero in 2001 had zero in 2013?
-nonzero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]>0),]$trans_quad
-zero2013 <- resurv[resurv$trans_quad%in%nonzero2001 & resurv$Year==2013,]$LATR_percent==0
-nonzero_to_zero <- sum(zero2013,na.rm=T)/length(na.omit(zero2013))
-
-## what was the overall mean cover in both years?
-mean_cover <- resurv %>% 
-  group_by(Transect,as.factor(Year)) %>% 
-  summarise(mean(LATR_percent,na.rm=T))
-
-@
 
 \subsection*{Size and density dependent demography}
 Demographic data from naturally occurring and transplanted individuals revealed strong size- and density-dependence in demographic vital rates. 
@@ -497,7 +455,49 @@ Interestingly, though most recruits were found at lower densities, the probabili
   \end{center}
 \end{figure}
 
+\subsection*{Encroachment re-surveys}
+Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over 12 years (Fig. \ref{fig:transect_resurv}).
+There were local changes in percent cover: on average cover increased by XX\% between surveys.
+However, there was no clear indication that the leading edge of the creosote shrubland has advanced (the modest right-ward shift on both transects is within the range of measurement error). 
 
+<<transect_resurv,echo=F,message=F,fig.dim=c(8,4),fig.cap="Re-surveys of shrub cover along two permanent trasects (A,B) surveyed in 2001 and 2013.">>=
+resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
+par(mfrow=c(1,2),mar=c(4,4,1,1))
+plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="East"],
+     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="East"],
+     type="l",lwd=2,col="gray",ylim=c(0,50),
+     xlab="Meter",ylab="Percent cover")
+points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="East"]+5,
+     resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="East"],
+     type="l",lwd=2,col="black")
+title("A",adj=0,font=3)
+plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="West"],
+     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="West"],
+     type="l",lwd=2,col="gray",ylim=c(0,50),
+     xlab="Meter",ylab="Percent cover")
+points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="West"]+5,
+     resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="West"],
+     type="l",lwd=2,col="black")
+title("B",adj=0,font=3)
+legend("topright",legend=c("2001","2013"),bty="n",lwd=2,col=c("gray","black"))
+
+##how many quads had zero creosote in 2001 and non-zero in 2013
+resurv$trans_quad <- interaction(resurv$Transect,resurv$Quad)
+zero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]==0),]$trans_quad
+nonzero2013 <- resurv[resurv$trans_quad%in%zero2001 & resurv$Year==2013,]$LATR_percent>0
+zero_to_nonzero <- sum(nonzero2013,na.rm=T)/length(na.omit(nonzero2013))
+
+##now the reverse: what fraction of quads with nonzero in 2001 had zero in 2013?
+nonzero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]>0),]$trans_quad
+zero2013 <- resurv[resurv$trans_quad%in%nonzero2001 & resurv$Year==2013,]$LATR_percent==0
+nonzero_to_zero <- sum(zero2013,na.rm=T)/length(na.omit(zero2013))
+
+## what was the overall mean cover in both years?
+mean_cover <- resurv %>% 
+  group_by(Transect,as.factor(Year)) %>% 
+  summarise(mean(LATR_percent,na.rm=T))
+
+@
 
 
 %--------------------------------------------------------------------
