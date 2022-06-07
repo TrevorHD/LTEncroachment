@@ -200,20 +200,20 @@ The observational census included a total of \Sexpr{length(unique(interaction(CD
 
 \subsubsection*{Transplant experiment}
 We conducted a transplant experiment in 2015 to test how shrub density affects seedling survival. 
-This approach complemented observational estimates of density dependence and filled in gaps for a part of the shrub life cycle that is rarely observed due to low recruitment. 
+This approach complemented observational estimates of density dependence and filled in gaps for a part of the shrub life cycle that was rarely observed due to low recruitment. 
 Seeds for the experiment were collected from plants in our study population in 2014.
 Seeds were germinated on Pro-Mix potting soil (Quakertown, PA) in Fall 2014 and seedlings were transferred to 3.8 cm-by-12.7 cm cylindrical containers and maintained in a greenhouse at Rice University.
-Seedlings were transported to SNWR and transplanted into our experimental design during July 27-31, 2015.
-Transplant timing was intended to coincide with the start of the monsoon season, when most natural recruitment occurs. 
+Seedlings were transported to SNWR and transplanted into the experiment during July 27-31, 2015.
+Transplant timing was intended to coincide with the monsoon season, when most natural recruitment occurs. 
 
 The transplant experiment was conducted at the same four sites and three transects per site as the observational demographic census, where we knew weight shrub densities at 5-m window resolution. 
-Along each transect we established 12 1-m by 1-m plots. 
+We established 12 1-m by 1-m plots along each transect. 
 Plots were intentionally placed to capture density variation: four plots were in windows with zero shrubs, four plots were placed in the top four highest-density windows on the transect, and the remaining four plots were randomly distributed among the remaining windows with weighted density greater than zero. 
 Plots were placed in the middle of each 5-m window (at meter 2.5) and were divided into four 0.5-m by 0.5-m subplots.
-We divided each subplot into nine squares and recorded ground cover of each square as one of the following categories: bare, creosotebush, black grama (\textit{B. eriopoda}), blue grama (\textit{B. gracilis}), other grass, or ``other''.
-Each subplot received one transplanted subplot, for a total of 48 transplants per transect, 144 transplants per site, and 576 transplants in the entire experiment. 
+We divided each subplot into nine squares (0.125-m by 0.125-m) and recorded ground cover of each square as one of the following categories: bare ground, creosotebush, black grama (\textit{B. eriopoda}), blue grama (\textit{B. gracilis}), other grass, or ``other''.
+Each subplot received one transplanted shrub seedling, for a total of 48 transplants per transect, 144 transplants per site, and 576 transplants in the entire experiment. 
 Each site was set up on a different day and there was a significant monsoon event after the third and before the fourth site. 
-This resulted in differential mortality that appears to be related to site (the soil was moist at the fourth site at the time of transplanting, which favored survival) but more likely reflects the timing of the monsoon event relative to planting. 
+This resulted in differential mortality that appears to be related to site (captured as a statistical random effect) but more likely reflects the timing of the monsoon event relative to planting (moist soil likely promoted transplant survival). 
 We revisited the transplant experiment on October 24, 2015 to survey mortality. 
 After that first visit, transplants were censused along with the naturally occurring plants each June, following the methods described above. 
 
