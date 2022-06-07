@@ -90,7 +90,7 @@ The potential for positive feedbacks is well documented in woody encroachment sy
 %Despite decades of work on this topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
 
 In this study, we linked woody plant encroachment to ecological theory for invasion waves, with the goals of understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
-Throughout the aridlands of the southwestern United States, shrub encroachment into grasslands is well documented (cite) but little is known about the dispersal and demographic processes that govern it. 
+Throughout the aridlands of the southwestern United States, shrub encroachment into grasslands is well documented \citep{d2012synthetic} but little is known about the dispersal and demographic processes that govern it. 
 Our work focused on encroachment of creosotebush (\textit{Larrea tridentata}) in the northern Chihuahuan Desert. 
 Expansion of this species into grasslands over the past 150 years has been well documented, leading to decreased cover of \textit{Bouteloua eriopoda}, the dominant foundation species of Chihuahuan desert grassland \citep{gardner1951vegetation, buffington1965vegetational, gibbens2005vegetation}.
 As in many woody encroachment systems, creosotebush expansion generates ecotones marking a transition from dense shrubland to open grassland, with a transition zone in between where shrubs can often be found interspersed among grasses (Fig. \ref{fig:waves}).
@@ -98,7 +98,7 @@ As in many woody encroachment systems, creosotebush expansion generates ecotones
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/waves_pics}
-  \caption{Example of an ecotone transect at Sevilleta LTER, spanning gradients of creosotebush and black grama grass.}
+  \caption{Example of an ecotone transect at Sevilleta LTER, spanning gradients of creosotebush and black grama grass. Photo credits: TEX Miller}
   \label{fig:waves}
   \end{center}
 \end{figure}
@@ -114,18 +114,18 @@ We hypothesized that, given potential for positive feedback mechanisms, the rari
 %Such gaps in knowledge make it difficult to make estimates of encroachment rates that extend beyond what can be gathered from vegetation surveys.
 
 We used a combination of observational and experimental data from shrub ecotones in central New Mexico to parameterize a spatial integral projection model (SIPM) that predicts that speed of encroachment ($m/yr$) resulting from lower-level demographic and dispersal processes. 
-Our data came from demographic surveys and experimental transplants along replicate ecotone transects spanning a gradient of shrub density, and seed drop experiments to infer the properties of the dispersal kernel.
-We focused on wind dispersal of seeds as a starting point, since little is known about the natural history of dispersal in this system and the seeds lack rewards to attract animal dispersers.
+Our data came from demographic surveys and experimental transplants along replicate ecotone transects spanning a gradient of shrub density, and seed drop experiments to estimate the properties of the dispersal kernel.
+We focused on wind dispersal of seeds, since little is known about the natural history of dispersal in this system and the seeds lack rewards to attract animal dispersers.
 We also used re-surveys of permanents transects as an independent measure of encroachment that provided a benchmark against which to evaluate model predictions. 
 The SIPM accounts for size-structured demography of creosotebush, allows us to test whether shrub expansion is pulled by the low-density front or pushed from the high-density core, and identifies the local (demographic) and spatial (seed dispersal) life cycle transitions that most strongly contribute to expansion speed\tom{}{we will need to stay consistent with the language of encroachment/expansion/invasion. For now I am swictihg a lot.}. 
 %Our investigations are novel in the sense that they will be some of the first to apply a wave model of population expansion to ecotones of Larrea tridentata and its grassy competitors, using density-dependent demographic rates and recruitment to describe the dynamics of ecotone movement in this specific system.
 %This research aims to fill the aforementioned knowledge gaps by not only collecting data on demographic rates and dispersal in Larrea tridentata, but by examining creosotebush encroachment in the framework of a wave model; by examining this system in such a way we can estimate the rate of creosotebush encroachment, and additionally determine whether this encroachment is pulled by the low-density wavefront pushed by high-density areas behind the wavefront.
 We address the following specific questions: 
 \begin{enumerate}
-\item What is the nature of conspecific density dependence in demographic vital rates along shrub encroachment ecotones? Is encroachment pulled by the individuals at the front of the wave or pushed by individuals behind it?
-\item What is the wind dispersal kernel for this species and how far do seeds typically travel by wind?
-\item What is the predicted rate of expansion from the SIPM and what lower-level processes most strongly govern the expansion speed?
-\item How does the observed rate of encroachment in recent past compare to model predictions?
+\item What is the nature of conspecific density dependence in demographic vital rates along shrub encroachment ecotones? Is encroachment pulled by the individuals at the front or pushed by individuals behind it?
+\item What is the seed dispersal kernel for this species and how does this vary with maternal plant size?
+\item What is the predicted rate of expansion from the SIPM and which lower-level processes most strongly affect the expansion speed?
+\item How does the observed rate of encroachment in the recent past compare to model predictions?
 
 \end{enumerate}
 
