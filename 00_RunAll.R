@@ -62,7 +62,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM
 boot.switch <- FALSE
 
 # Save bootstrapped wavespeed and lambda outputs to CSV?
-boot.saveOutputs <- FALSE
+boot.saveOutputs <- TRUE
 
 # Create demography models for use in SIPM
 # Run once before bootstrapping to get recruit sizes and boundaries
@@ -196,6 +196,50 @@ if(boot.noDisp == TRUE){
 
 
 # elasticity analysis -----------------------------------------------------
+# turn off bootstrapping
+boot.prop <- 1
+# re-run demography and dispersal analysis with full data
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
+# these are the vital rates that will be perturbed
+vr <- c("growth","survival","flower","fertility","recruitment","recruitsize","dispersal")
+# elasticity perturbation
+pert <- 0.1 ## 10% increase
+# replicates for wavespeed calculation (bc there is stochasticity built into it)
+c_reps <- 100
+## recalculate wavespeed with a pert% increase in the intercept of all vital rates
+c_elas<-matrix(NA,c_reps,8)
+for(i in 1:c_reps){
+  ## reference model
+  TM <- TransMatrix(dens = 0)
+  c_elas[i,1] <- min(Wavespeed())
+  ## dispersal perturbation
+  c_elas[i,2] <- min(Wavespeed(elas="dispersal")) 
+  ## growth perturbation
+  TM <- TransMatrix(dens = 0, elas="growth")
+  c_elas[i,3] <- min(Wavespeed())
+  ## survival perturbation
+  TM <- TransMatrix(dens = 0, elas="survival")
+  c_elas[i,4] <- min(Wavespeed())  
+  ## flowering perturbation
+  TM <- TransMatrix(dens = 0, elas="flower")
+  c_elas[i,5] <- min(Wavespeed())   
+  ## fertility perturbation
+  TM <- TransMatrix(dens = 0, elas="fertility")
+  c_elas[i,6] <- min(Wavespeed())   
+  ## recruitment perturbation
+  TM <- TransMatrix(dens = 0, elas="recruitment")
+  c_elas[i,7] <- min(Wavespeed())   
+  ## recruitsize perturbation
+  TM <- TransMatrix(dens = 0, elas="recruitsize")
+  c_elas[i,8] <- min(Wavespeed())     
+}
+
+
+
+
+
+
 lambda(TransMatrix(dens = 0)$IPMmat)
 lambda(TransMatrix(dens = 0,elas="growth")$IPMmat)
 lambda(TransMatrix(dens = 0,elas="survival")$IPMmat)
@@ -212,23 +256,7 @@ TM <- TransMatrix(dens = 0)
 min(Wavespeed());min(Wavespeed());min(Wavespeed())
 
 
-# elasticity perturbation
-pert <- 0.05
 
-## recalculate wavespeed with a 5% increase in the intercept of all vital rates
-## reference wavespeed (all data, base model)
-c.values <- Wavespeed()
-c_ref <- min(c.values)
-
-vr <- c("growth","survival","flower","fertility","recruitment","recruitsize")
-lambda_elas <- c()
-lambda_elas[1] <- lambda(TransMatrix(dens = 0)$IPMmat)
-# loop over perturbations to growth, survival, flowering, fertility, recr
-for(i in 1:length(vr)){
-  ## recalculate demographic transition matrix with this perturbation
-  TM <- TransMatrix(dens = 0, elas=vr[i])
-  
-}
 
 
 ##### Generate main figures -------------------------------------------------------------------------------
