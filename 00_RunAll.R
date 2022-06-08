@@ -197,12 +197,11 @@ if(boot.noDisp == TRUE){
 
 # elasticity analysis -----------------------------------------------------
 # turn off bootstrapping
+boot.on <- FALSE
 boot.prop <- 1
 # re-run demography and dispersal analysis with full data
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
-# these are the vital rates that will be perturbed
-vr <- c("growth","survival","flower","fertility","recruitment","recruitsize","dispersal")
 # elasticity perturbation
 pert <- 0.1 ## 10% increase
 # replicates for wavespeed calculation (bc there is stochasticity built into it)
@@ -232,7 +231,8 @@ for(i in 1:c_reps){
   c_elas[i,7] <- min(Wavespeed())   
   ## recruitsize perturbation
   TM <- TransMatrix(dens = 0, elas="recruitsize")
-  c_elas[i,8] <- min(Wavespeed())     
+  c_elas[i,8] <- min(Wavespeed()) 
+  print(i)
 }
 
 
