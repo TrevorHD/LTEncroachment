@@ -56,6 +56,8 @@ WALD.b <- function(n, H){
 # Code adapted from Skarpaas and Shea (2007)
 WALD.f.e <- function(n, H, elas){
   
+  if(elas=="dispersal"){H<-H*(1+pert)}
+  
   # Initialise physical constants
   K <- 0.4      # von Karman constant
   C0 <- 3.125   # Kolmogorov constant
@@ -95,8 +97,6 @@ WALD.f.e <- function(n, H, elas){
   # Calculate location parameter nu
   nu <- H*U/f
   
-  if(elas=="dispersal"){lambda<-lambda*(1+pert)}
-
   # Generate inverse Gaussian distribution
   return(rinvGauss(n, nu = nu, lambda = lambda))}
 
