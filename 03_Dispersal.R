@@ -54,7 +54,7 @@ WALD.b <- function(n, H){
 
 # "Full" WALD PDF, including distributions of wind speeds and terminal velocities
 # Code adapted from Skarpaas and Shea (2007)
-WALD.f.e <- function(n, H, elas){
+WALD.f.e <- function(n, H, elas,seed){
   
   if(elas=="dispersal"){H<-H*(1+pert)}
   
@@ -97,6 +97,9 @@ WALD.f.e <- function(n, H, elas){
   # Calculate location parameter nu
   nu <- H*U/f
   
+  # set seed for that rinvGauss is reproducible
+  set.seed(seed)
+  
   # Generate inverse Gaussian distribution
   return(rinvGauss(n, nu = nu, lambda = lambda))}
 
@@ -106,7 +109,7 @@ WALD.f.e <- function(n, H, elas){
 
 ##### "Full" empirical WALD PDF release across entire height ----------------------------------------------
 
-WALD.f.e.h <- function(H, elas){
+WALD.f.e.h <- function(H, elas, seed){
   
   # Use 10000 replicates for each height #TM: could we do less?
   n <- 1000#0
@@ -115,5 +118,5 @@ WALD.f.e.h <- function(H, elas){
   h.range <- seq(0.15, H, length.out = 50) ##TM: could we make this chunkier
   
   # Simulate seed release events for each height
-  return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas=elas))))}
+  return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas=elas, seed=seed))))}
 
