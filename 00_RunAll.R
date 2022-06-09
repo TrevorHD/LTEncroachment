@@ -235,29 +235,13 @@ for(i in 1:c_reps){
   print(i)
 }
 
+par(mfrow=c(8,1),oma=c(0,0,0,0),mar=c(0,0,0,0))
+for(i in 1:8){
+  plot(density(c_elas[,i]),xlim=c(0,0.4),lwd=3)
+}
 
-
-
-
-
-lambda(TransMatrix(dens = 0)$IPMmat)
-lambda(TransMatrix(dens = 0,elas="growth")$IPMmat)
-lambda(TransMatrix(dens = 0,elas="survival")$IPMmat)
-lambda(TransMatrix(dens = 0,elas="flower")$IPMmat)
-lambda(TransMatrix(dens = 0,elas="fertility")$IPMmat)
-lambda(TransMatrix(dens = 0,elas="recruitment")$IPMmat)
-lambda(TransMatrix(dens = 0,elas="recruitsize")$IPMmat)
-
-TM <- TransMatrix(dens = 0, elas="recruitment")
-min(Wavespeed(elas="recruitment"));min(Wavespeed(elas="recruitment"));min(Wavespeed(elas="recruitment"))
-TM <- TransMatrix(dens = 0, elas="dispersal")
-min(Wavespeed(elas="dispersal"));min(Wavespeed(elas="dispersal"));min(Wavespeed(elas="dispersal"))
-TM <- TransMatrix(dens = 0)
-min(Wavespeed());min(Wavespeed());min(Wavespeed())
-
-
-
-
+# Write elasticity results
+write.csv(c_elas, "c_elas.csv")
 
 ##### Generate main figures -------------------------------------------------------------------------------
 
