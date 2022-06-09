@@ -145,7 +145,7 @@ TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upp
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 
 # Function to calculate the minimum wavespeed across a range of s
-Wavespeed <- function(n = TM.matdim,elas="none"){
+Wavespeed <- function(n = TM.matdim,elas="none",seed=1){
   
   # Fit equation to convert volume to height for dispersal kernel use
   LATR_full %>%
@@ -170,7 +170,7 @@ Wavespeed <- function(n = TM.matdim,elas="none"){
   z.list <- sapply(exp(TM$meshpts), vol.to.height)/100
   
   # List of simulated dispersal distances for each height
-  r.list <- as.list(sapply(z.list[z.list >= 0.15], elas=elas, WALD.f.e.h))
+  r.list <- as.list(sapply(z.list[z.list >= 0.15], elas=elas, seed=seed, WALD.f.e.h))
   
   # Define modified bessel function for product of s and dispersal distance
   bessel <- function(r, t){
