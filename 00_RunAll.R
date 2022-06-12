@@ -85,7 +85,7 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 500
+boot.num <- 100
 
 # Create empty vectors to populate with wavespeeds
 boot.cv1 <- c()
@@ -134,13 +134,14 @@ for(i in 1:boot.num){
     # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
     boot.cv1 <- append(boot.cv1, min(c.values))}
   
-  # Create empty list to store lambda as a function of density; assign density values to top
-  if(i == 1){
-    boot.lambda <- list(density = LambdaD(d.only = TRUE))}
-  
+  ## UNCOMMENT TO RUN LANMBDA VS DENSITY
+  ## Create empty list to store lambda as a function of density; assign density values to top
+  #if(i == 1){
+  #  boot.lambda <- list(density = LambdaD(d.only = TRUE))}
+  #
   # Calculate lambda as a function of density, then append to list
-  boot.lambda[[i + 1]] <- LambdaD()
-  
+  #boot.lambda[[i + 1]] <- LambdaD()
+  #
   # Create empty list to store transition matrices
   if(i == 1){
     boot.TM <- list()}

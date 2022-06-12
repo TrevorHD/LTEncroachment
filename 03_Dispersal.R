@@ -54,7 +54,7 @@ WALD.b <- function(n, H){
 
 # "Full" WALD PDF, including distributions of wind speeds and terminal velocities
 # Code adapted from Skarpaas and Shea (2007)
-WALD.f.e <- function(n, H, elas,seed){
+WALD.f.e <- function(n, H, elas, seed=NULL){
   
   if(elas=="dispersal"){H<-H*(1+pert)}
   
@@ -73,9 +73,11 @@ WALD.f.e <- function(n, H, elas,seed){
   # Let H be the seed release height
   
   # Simulate wind speeds from empirical distribution of wind speeds
+  set.seed(seed)
   Um <- rnorm(n, sample(boot.ws.raw, size = n, replace = TRUE), boot.ws.PDF$bw)
   
   # Simulate terminal velocities from empirical distribution of terminal velocities
+  set.seed(seed)
   f <- rnorm(n, sample(boot.tv.raw, size = n, replace = TRUE), boot.tv.PDF$bw)
   
   # Calculate ustar, the friction velocity
@@ -99,24 +101,47 @@ WALD.f.e <- function(n, H, elas,seed){
   
   # set seed for that rinvGauss is reproducible
   set.seed(seed)
-  
+  draw<-rinvGauss(n, nu = nu, lambda = lambda)
   # Generate inverse Gaussian distribution
-  return(rinvGauss(n, nu = nu, lambda = lambda))}
+  
+  return(draw)}
 
 
+WALD.f.e(10,H=1,elas="none",seed=1234)
 
+test<-function(nu,seed){set.seed(seed);draw<-rinvGauss(10,nu,1);return(draw)}
+test(5,10)
+
+set.seed(10)
+rinvGauss(10,5,1)
 
 
 ##### "Full" empirical WALD PDF release across entire height ----------------------------------------------
 
-WALD.f.e.h <- function(H, elas, seed){
+WALD.f.e.h <- function(H, elas, seed=NULL, reps=10000, heights=50){
   
   # Use 10000 replicates for each height #TM: could we do less?
-  n <- 1000#0
+  n <- reps
   
   # Create "continuous" sequence of release heights
-  h.range <- seq(0.15, H, length.out = 50) ##TM: could we make this chunkier
+  h.range <- seq(0.15, H, length.out = heights) ##TM: could we make this chunkier
   
-  # Simulate seed release events for each height
+  # Simulate seed release events for each height - returns n*length.out dispersal events
   return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas=elas, seed=seed))))}
 
+test1<-WALD.f.e.h(H=1,elas="none",seed=1234)
+test2<-WALD.f.e.h(H=1,elas="none",seed=1234)
+test3<-WALD.f.e.h(H=1,elas="none")
+
+plot(test1,test2)
+plot(test1,test3)
+hist(test1);hist(test2)
+
+list.of.seeds <- 1:50
+
+lapply(1:50, function(x){
+  set.seed(list.of.seeds[x])
+  sample(1:10, 1)})
+
+set.seed(11)
+.Random.seed

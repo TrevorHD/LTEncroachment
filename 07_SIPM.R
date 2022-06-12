@@ -145,7 +145,7 @@ TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upp
 ##### Find minimum wave speed -----------------------------------------------------------------------------
 
 # Function to calculate the minimum wavespeed across a range of s
-Wavespeed <- function(n = TM.matdim,elas="none",seed=1){
+Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL){
   
   # Fit equation to convert volume to height for dispersal kernel use
   LATR_full %>%
@@ -190,7 +190,7 @@ Wavespeed <- function(n = TM.matdim,elas="none",seed=1){
     mgf.values <- c(mgf.values.a, mgf.values.b)
     return(mgf.values)}
   
-  # Set up range of s values over which to calculate wavespeeds
+  # Set up range of s values over which to calculate wavespeeds -- TM changed from 100 to 50
   s.seq <- c(0.0001, 0.0005, 0.001, 0.005, seq(0.01, 1, length.out = 46))
   
   # Apply MGF for each value of s
