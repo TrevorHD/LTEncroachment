@@ -51,26 +51,23 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDat
 # Spatial integral projection setting up functions to calculate wavespeeds
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
 
-
-
-
-##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------
-
 # Pre-bootstrap switch that will flip once bootstrapping begins
 # Done so that some parts of code are not re-run unnecessarily
 # Should not be modified by the user
 boot.switch <- FALSE
 
-# Save bootstrapped wavespeed and lambda outputs to CSV?
-boot.saveOutputs <- TRUE
-
-# Create demography models for use in SIPM
+# 05_Data Analysis -- Create demography models for use in SIPM
 # Run once before bootstrapping to get recruit sizes and boundaries
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
 
+##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------
+
+# Save bootstrapped wavespeed and lambda outputs to CSV?
+boot.saveOutputs <- TRUE
+
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
-boot.on <- TRUE
+boot.on <- FALSE
 
 # Evaluate local IPM instead of spatial IPM?
 # Local IPM will not include dispersal
@@ -89,10 +86,6 @@ boot.num <- 100
 
 # Create empty vectors to populate with wavespeeds
 boot.cv1 <- c()
-
-
-
-
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
@@ -195,6 +188,60 @@ if(boot.noDisp == TRUE){
   try(remove(boot.tv.PDF, boot.ws.PDF, boot.tv.raw, boot.ws.raw, i, time.elapsed, time.start, TM),
       silent = TRUE)}
 
+## get wavespeed estimates with full data
+## adjust the dispersal sampling methods
+c_reps100_h50<-c_reps1000_h50<-c_reps10000_h50<-c()
+c_reps100_h25<-c_reps1000_h25<-c_reps10000_h25<-c()
+TM <- TransMatrix(dens = 0)
+
+for(i in 1:100){
+  c_reps100_h25[i]<-min(Wavespeed(reps = 100, heights = 25))
+  c_reps1000_h25[i]<-min(Wavespeed(reps = 1000, heights = 25))
+  c_reps10000_h25[i]<-min(Wavespeed(reps = 10000, heights = 25))
+  
+  c_reps100_h50[i]<-min(Wavespeed(reps = 100, heights = 50))
+  c_reps1000_h50[i]<-min(Wavespeed(reps = 1000, heights = 50))
+  c_reps10000_h50[i]<-min(Wavespeed(reps = 10000, heights = 50))
+  print(i)
+}
+
+par(mfrow=c(1,2))
+plot(density(c_reps100_h25),xlab="wavespeed",main="25 height increments",xlim=c(0,0.2),lwd=2)
+lines(density(c_reps1000_h25),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="blue")
+lines(density(c_reps10000_h25),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
+legend("topright",legend=c(100,1000,10000),col=c("black","blue","red"),lwd=2)
+
+plot(density(c_reps100_h50),xlab="wavespeed",main="50 height increments",xlim=c(0,0.2),lwd=2)
+lines(density(c_reps1000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="blue")
+lines(density(c_reps10000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
+
+par(mfrow=c(1,3))
+plot(density(c_reps100_h25),xlab="wavespeed",main="100 samples",xlim=c(0,0.2),lwd=2)
+lines(density(c_reps100_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
+
+plot(density(c_reps1000_h25),xlab="wavespeed",main="1000 samples",xlim=c(0,0.2),lwd=2)
+lines(density(c_reps1000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
+
+plot(density(c_reps10000_h25),xlab="wavespeed",main="10000 samples",xlim=c(0,0.2),lwd=2)
+lines(density(c_reps10000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
+
+## compare to bootstrapped wavespeed
+boot.cv1<-read.csv("BootCV_500noseed.csv")
+plot(density(boot.cv1$x),lwd=2)
+
+## save these outputs
+write.csv(c_reps100_h25,"c_reps100_h25.csv")
+write.csv(c_reps1000_h25,"c_reps1000_h25.csv")
+write.csv(c_reps10000_h25,"c_reps10000_h25.csv")
+write.csv(c_reps100_h50,"c_reps100_h25.csv")
+write.csv(c_reps1000_h50,"c_reps1000_h25.csv")
+write.csv(c_reps10000_h50,"c_reps10000_h25.csv")
+##check the I get constant wavespeed when I set seed
+c_seed_check<-c()
+for(i in 1:10){
+  c_seed_check[i]<-min(Wavespeed(reps = 100, heights = 25, seed=1))
+  print(i)
+}
 
 # elasticity analysis -----------------------------------------------------
 # turn off bootstrapping
