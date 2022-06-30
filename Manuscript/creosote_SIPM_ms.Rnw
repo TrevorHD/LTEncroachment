@@ -25,6 +25,7 @@ knitr::opts_chunk$set(fig.pos = 'H')
 library(tidyverse)
 ##read in demography data to pull some quantities
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
 @
 
 %-------------------------------------------------------------------------
@@ -249,7 +250,7 @@ Models (2) and (3) had constant variance but the mean included smooth terms for 
 Models 4-6 had the same mean structure as 1-3 but defined the standard deviation of size in year $t+1$ as a smooth function of initial size. 
 Models 7-9 mirrored 4-6 and additionally included a smooth term for weighted density in the standard deviation. 
 Modeling growth correctly is important because it defines the probability of any future size conditional on current size, a critical element of the IPM transition kernel.
-We verified that the AIC-selected model described the data well by simuating data from it and comparing the moments (mean, variance, skewness, and kurtosis) of simulated and real data.
+We verified that the AIC-selected model described the data well by simulating data from it and comparing the moments (mean, variance, skewness, and kurtosis) of simulated and real data.
 
 %Inspection of the best-fitting growth model suggested that the data did not conform well to a Gaussian distribution: there was excess kurtosis (fatter tails) relative to Gaussian and left skew in the distribution of size in year $t+1$ especially at small initial sizes.
 %Therefore, we re-fit the growth model with a skewed generalized $t$ (sgt) distribution, a five-parameter distribution on the real line that accommodates excess kurtosis and skew (R package `sgt': \citep{sgtpack}). 
@@ -342,8 +343,8 @@ $G$ is derived from the model for annual growth ratio, and $Q$ is derived from t
 Both $G$ and $Q$ give the probability of transition between sizes; in the case of $G$, this is the probability of growing from one specific size to another, and in the case of $Q$ the probability that an individual of a specific size produces a recruit of a specific size.
 The product of $K$ and $Q$ represents the production and dispersal of motile propagules, while the product of $G$ and $\delta$ represents the growth of sessile individuals.
 
-Given growth function $G$ and the reproduction function $Q$, the speed of the moving wave can be calculated as \begin{linenomath*} \begin{equation} c^* = \min_{s > 0} \left[\frac{1}{s}\ln(\rho_{s})\right] \end{equation} \end{linenomath*} where $s$ is the wave shape parameter and $\rho_{s}$ is the dominant eigenvalue of the kernel $\mathbf{H_{S}}$ \citep{jongejans2011importance}. 
-This estimate for the wavespeed is valid under the assumption that population growth decreases monotonically as conspecific density increases, with the highest rates of growth occurring at the lowest population densities \citep{lewis2006guide}.
+Assuming strictly negative density dependence (i.e., pulled waves), the speed of the moving wave can be calculated as \begin{linenomath*} \begin{equation} c^* = \min_{s > 0} \left[\frac{1}{s}\ln(\rho_{s})\right] \end{equation} \end{linenomath*} where $s$ is the wave shape parameter and $\rho_{s}$ is the dominant eigenvalue of the kernel $\mathbf{H_{S}}$ \citep{jongejans2011importance}. 
+%This estimate for the wavespeed is valid under the assumption that population growth decreases monotonically as conspecific density increases, with the highest rates of growth occurring at the lowest population densities \citep{lewis2006guide}.
 The kernel $\mathbf{H_{S}}$ is defined as \begin{linenomath*} \begin{equation} \mathbf{H_{S}} = M(s) Q(z_{2} - z_{1}) + G(z_{2} - z_{1}) \end{equation} \end{linenomath*} where $M(s)$ is the moment-generating function of the dispersal kernel \citep{jongejans2011importance}. 
 For one-dimensional dispersal, this moment-generating function can be estimated as \begin{linenomath*} \begin{equation} M(s) = \frac{1}{N} \sum_{i=1}^{n} I_{0}(sr_{i}) \end{equation} \end{linenomath*} where $r$ is the dispersal distance for each observation, and $I_{0}$ is the modified Bessel function of the first kind and zeroth order \citep{skarpaas2007dispersal}.
 In order to obtain $M$, numerous dispersal distances were simulated from the dispersal kernel $K(r)$ described in the previous section, with over 2000 replications for each shrub height increment of 1 cm.
@@ -371,38 +372,49 @@ Statistical support for size- and density-dependence is provided in Table XX, wh
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/vital_rates}
-  \caption{Size- and density-dependence in demographic vital rates.}
+  \caption{Size- and density-dependence in demographic vital rates. \textbf{A} Probability of survival from natural population census and transplant experiment (black line), \textbf{B} Mean and variance (inset) of size conditional on previous size, \textbf{C} Probability of flowering, \textbf{D} Flower and fruit production, \textbf{E} Probability of recruitment per seed, \textbf{F} Recruit size.  In \textbf{A}--\textbf{E}, colored lines indicate four size groups (red is largest, blue is smallest), discretized for data visualization only. In all panel, weighted density is the sum of all plant sizes $log(cm^3)$ within the same 5-m window as the census individual.}
   \label{fig:vital_rates}
   \end{center}
 \end{figure}
 
 \paragraph{Survival}
 Among naturally occurring plants, survival of large, established individuals was very high (Fig. \ref{fig:vital_rates}A).
-We observed relatively few mortality events (XX out of XX) and nearly all of these were among new recruits that we detected during the study. 
+We observed relatively few mortality events and nearly all of these were among new recruits. 
 The probability of survival at these small sizes declined with increasing density. 
-
 Survival of transplants was very low, lower even than survival of similarly-sized, naturally occurring recruits (Fig. \ref{fig:vital_rates}B). 
 However, the transplant results support the general pattern of negative density dependence in survival. 
-Among the XX survivors, XX of them occurred in transect windows in the bottom 10th percentile of weighted shrub density. 
+Among the \Sexpr{nrow(LATR_surv_dat[LATR_surv_dat$transplant==T & LATR_surv_dat$survival_t1==1,])} survivors, \Sexpr{nrow(LATR_surv_dat[LATR_surv_dat$transplant==T & LATR_surv_dat$survival_t1==1 & LATR_surv_dat$weighted.dens < quantile(LATR_surv_dat$weighted.dens,0.25),])} of them occurred in transect windows in the bottom 10th percentile of weighted shrub density. 
 
 SHORT PARAGRAPH SUMMARIZING SMALLER-SCALE ANALYSIS IN APPENDIX.
 
 \paragraph{Growth}
 Current size was strongly predictive of future size, as expected, and there was weak negative density dependence in mean future size conditioned on current size (Fig. \ref{fig:vital_rates}C). 
-However, there was a stronger signal of density dependence in the standard deviation of future size (Fig. \ref{fig:vital_rates}C, inset).
+However, there was a stronger signal of density dependence in the variance of future size (Fig. \ref{fig:vital_rates}C, inset).
 Plants at low density exhibited greater variance in growth trajectories and this was especially true at the smallest sizes. 
-Thus, large increases in the size of new recruits were most likely under low-density conditions. 
+Thus, large increases in the size of new recruits were most likely to occur under low-density conditions. 
 
 \paragraph{Flowering and fruit production}
+Flowering probability was strongly size-dependent and and very weakly sensitive to local density (Fig. \ref{fig:vital_rates}D). 
+However, fertility of flowering plants was strongly negative density dependent, with greatest flower and fruit production by the largest plants at the lowest densities, and vice versa (Fig. \ref{fig:vital_rates}E).
 
-\paragraph{Recruitment}
+\paragraph{Recruitment and recruit size}
+We observed \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruitment events along our transects during the study years and our estimate recruitment rate, given total expected seed production in each window preceding the recruitment year, was very low ($\leq XX$, \ref{fig:vital_rates}F). 
+While most recruitment events occurred at low density, this is also where most seed production was concentrated (Fig. \ref{fig:vital_rates}E) and low-density windows were over-represented relative to high density. 
+For these reasons we were more likely to observe recruiment events at low density. 
+Controlling for sampling effort and seed production, the statistical models indicated that our data were most consistent with a constant, density-independent recruitment rate (Table XX). 
+However, the mean size of new recruits declined significantly with local density (Fig. \ref{fig:vital_rates}F).
+
 
 \paragraph{Population growth rate}
+As expected based on the vital rate results, the asymptotic population growth rate $\lambda$ declined monotonically with density (Fig. \ref{fig:lambda}). 
+This was true across all bootstrap replicates, indicating high certainty that shrub fitness is maximized at zero density and thus that the expansion wave is ``pulled''. 
+Mean growth rate at low density was XX\% per year, with bootstrap uncertainty spanning 1--6\%.
+At high density population growth rates approached $\lambda=1$, indicating stasis driven by near-perfect survival and extremely rare recruitment. 
 
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/BootLambda}
-  \caption{Density dependence in the geographic population growth rate ($\lambda$).}
+  \caption{Density dependence in the asymptotic geometric growth rate ($\lambda$). Lines show bootstrap replicates sub-sampled from the full demographic data set. Weighted deighted density is the sum of all plant sizes $log(cm^3)$ within 5-m windows.}
   \label{fig:lambda}
   \end{center}
 \end{figure}
