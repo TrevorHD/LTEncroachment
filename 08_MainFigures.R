@@ -338,7 +338,8 @@ par(new = TRUE)
 par(mar = c(7, 7, 2.1, 2.1))
 
 # Create plot of dispersal kernels, with various drop heights (0.6 m, 0.8 m, 1 m, 1.2 m, 1.4 m)
-plot(density(na.omit(WALD.f.e.h(0.6)), from = 0, to = 10, bw = 0.05), lwd = 4, xlim = c(0, 2),
+plot(density(na.omit(WALD.b.h(H = 0.6, elas = 0, seed = 8675309, reps = 10000, heights = 50)),
+             from = 0, to = 10, bw = 0.05), lwd = 4, xlim = c(0, 2),
      ylim = c(0, 5), xlab = "Distance (m)", ylab = "Probability Density", axes = FALSE, ann = FALSE)
 axis(1, at = seq(0, 2, length.out = 5), cex.axis = 2, mgp = c(5, 2, 0))
 axis(2, at = seq(0, 5, length.out = 6), cex.axis = 2, mgp = c(5, 2, 0), las = 1)
@@ -347,7 +348,8 @@ mtext("Distance (m)", side = 1, cex = 3, line = 5)
 mtext("Probability Density", side = 2, cex = 3, line = 4)
 for(i in 1:4){
   colours <- c("black", "blue", "forestgreen", "red", "orange")
-  lines(density(na.omit(WALD.f.e.h(0.6 + 0.2*i)), from = 0, to = 10, bw = 0.05), 
+  lines(density(na.omit(WALD.b.h(H = 0.6 + 0.2*i, elas = 0, seed = 8675309, reps = 10000, heights = 50)),
+                from = 0, to = 10, bw = 0.05), 
         col = colours[i + 1], lwd = 4)}
 text(x = c(0.22, 0.31, 0.36, 0.42, 0.49), y = c(4, 2.25, 1.75, 1.45, 1.2), col = colours,
      labels = c("H = 0.6 m", "H = 0.8 m", "H = 1.0 m", "H = 1.2 m", "H = 1.4 m"), cex = 2)
