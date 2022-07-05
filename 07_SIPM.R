@@ -170,7 +170,8 @@ Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL,reps=10000,heights=50)
   z.list <- sapply(exp(TM$meshpts), vol.to.height)/100
   
   # List of simulated dispersal distances for each height
-  r.list <- as.list(sapply(z.list[z.list >= 0.15], elas=elas, seed=seed, reps=reps, heights=heights, WALD.f.e.h))
+  r.list <- as.list(sapply(z.list[z.list >= 0.15], elas = elas, seed = seed,
+                           reps = reps, heights = heights, WALD.b.h))
   
   # Define modified bessel function for product of s and dispersal distance
   bessel <- function(r, t){
