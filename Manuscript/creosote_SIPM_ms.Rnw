@@ -23,9 +23,10 @@
 <<setup,echo=F, message=F, warning=F>>=
 knitr::opts_chunk$set(fig.pos = 'H')
 library(tidyverse)
+library(xtable)
 ##read in demography data to pull some quantities
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
-source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
+aic_tables <- readRDS("aic_tables.rds")
 @
 
 %-------------------------------------------------------------------------
@@ -383,7 +384,7 @@ We observed relatively few mortality events and nearly all of these were among n
 The probability of survival at these small sizes declined with increasing density. 
 Survival of transplants was very low, lower even than survival of similarly-sized, naturally occurring recruits (Fig. \ref{fig:vital_rates}B). 
 However, the transplant results support the general pattern of negative density dependence in survival. 
-Among the \Sexpr{nrow(LATR_surv_dat[LATR_surv_dat$transplant==T & LATR_surv_dat$survival_t1==1,])} survivors, \Sexpr{nrow(LATR_surv_dat[LATR_surv_dat$transplant==T & LATR_surv_dat$survival_t1==1 & LATR_surv_dat$weighted.dens < quantile(LATR_surv_dat$weighted.dens,0.25),])} of them occurred in transect windows in the bottom 10th percentile of weighted shrub density. 
+Among the \Sexpr{nrow(CData.Transplants[CData.Transplants$transplant==T & CData.Transplants$spring_survival_t1==1,])} survivors, \Sexpr{nrow(CData.Transplants[CData.Transplants$transplant==T & CData.Transplants$spring_survival_t1==1 & CData.Transplants$weighted.dens < quantile(CData.Transplants$weighted.dens,0.5),])} of them occurred in transect windows below the median of weighted shrub density. 
 
 SHORT PARAGRAPH SUMMARIZING SMALLER-SCALE ANALYSIS IN APPENDIX.
 
@@ -398,7 +399,7 @@ Flowering probability was strongly size-dependent and and very weakly sensitive 
 However, fertility of flowering plants was strongly negative density dependent, with greatest flower and fruit production by the largest plants at the lowest densities, and vice versa (Fig. \ref{fig:vital_rates}E).
 
 \paragraph{Recruitment and recruit size}
-We observed \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruitment events along our transects during the study years and our estimate recruitment rate, given total expected seed production in each window preceding the recruitment year, was very low ($\leq XX$, \ref{fig:vital_rates}F). 
+We observed \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruitment events along our transects during the study years and our estimate recruitment rate, given total expected seed production in each window preceding the recruitment year, was very low ($2.47 \times 10^{-6}$, \ref{fig:vital_rates}F). 
 While most recruitment events occurred at low density, this is also where most seed production was concentrated (Fig. \ref{fig:vital_rates}E) and low-density windows were over-represented relative to high density. 
 For these reasons we were more likely to observe recruiment events at low density. 
 Controlling for sampling effort and seed production, the statistical models indicated that our data were most consistent with a constant, density-independent recruitment rate (Table XX). 
@@ -408,32 +409,18 @@ However, the mean size of new recruits declined significantly with local density
 \paragraph{Population growth rate}
 As expected based on the vital rate results, the asymptotic population growth rate $\lambda$ declined monotonically with density (Fig. \ref{fig:lambda}). 
 This was true across all bootstrap replicates, indicating high certainty that shrub fitness is maximized at zero density and thus that the expansion wave is ``pulled''. 
-Mean growth rate at low density was XX\% per year, with bootstrap uncertainty spanning 1--6\%.
-At high density population growth rates approached $\lambda=1$, indicating stasis driven by near-perfect survival and extremely rare recruitment. 
+Mean growth rate at low density was 3\% per year, with bootstrap uncertainty spanning 1--6\%.
+At high density in the core of the expansion wave, population growth rates approached $\lambda=1$, indicating population stasis driven by near-perfect survival and extremely rare recruitment. 
 
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/BootLambda}
-  \caption{Density dependence in the asymptotic geometric growth rate ($\lambda$). Lines show bootstrap replicates sub-sampled from the full demographic data set. Weighted deighted density is the sum of all plant sizes $log(cm^3)$ within 5-m windows.}
+  \caption{Density dependence in the asymptotic population growth rate ($\lambda$). Lines show bootstrap replicates sub-sampled from the full demographic data set. Weighted deighted density is the sum of all plant sizes $log(cm^3)$ within 5-m windows.}
   \label{fig:lambda}
   \end{center}
 \end{figure}
 
-The speed of encroachment at the study site as estimated by the SIPM is rather slow; as can be seen in Figure \ref{fig:wavespeed}, the low-density wavefront moves at approximately 0.5 cm/yr under normal conditions and at 1 cm/yr under the best seedling survival conditions observed in the dataset.
-These improved conditions were observed due to above-average rainfall that occurred after greenhouse-grown seedlings were transplanted to the site.
-Population growth in this low-density region of the moving wave is also low, with a geometric growth rate of $\lambda \approx 1.006$ and even lower rates of growth the higher-density regions behind; in the higher-survival scenario the maximum rate increases to $\lambda \approx 1.013$, with growth still decreasing as density increases.
-For both scenarios, the decrease in population growth rate with increasing density was monotonic across the range of observed standardised densities, as is shown in Figure \ref{fig:wavespeed}.
-This suggests that an Allee effect is likely not present in this population, as the highest rate of population growth is found at the lowest density vanguard of the encroaching population.
-Thus, the conditions necessary for equation 9 to be valid are satisfied, and these wavespeeds are applicable for a pulled-wave scenario in which no Allee effects are present.
-
-\begin{figure}[H]
-  \begin{center}
-    \includegraphics[width=\linewidth]{Figures/Figure1}
-  \caption{Estimated encroachment wave speeds (left) and geometric rates of population growth (right) for higher             post-rainfall seedling survival and normal conditions.}
-  \label{fig:wavespeed}
-  \end{center}
-\end{figure}
-
+\subsection*{Seed dispersal}
 As the speed of encroachment is quite limited, so is the extent of wind dispersal.
 Long distance dispersal events, while more common for taller shrubs than their shorter counterparts, are still uncommon overall.
 For the tallest shrub height of 1.98 m, only 0.32\% of propagules exceed a dispersal distance of 5 m, and 0.02\% exceed 10 m.
@@ -452,26 +439,27 @@ It is clear that the shape of the height-dependent dispersal kernel $K(r)$ varie
   \end{center}
 \end{figure}
 
-Density and size dependence are evident in all 4 of the demographic rates, with coefficients for each model displayed in Table 2.
-For growth, reproduction, and survival, density dependence is mostly negative and monotonic; this is not the case for probability of flowering, where shrub size seems to be more important than the effects of density alone and suggests that larger shrubs have a higher probability of flowering than their smaller counterparts.
-This, along with size and density dependence in growth and reproduction, is shown in Figure \ref{fig:demog}.
-Size dependence is positive for reproduction, as would be expected since larger plants typically produce more flowers and fruits.
-However, annual growth decreases as size increases; this could be in part due to the annual growth in this study being quantified as a proportion relative to the shrub's initial size.
-While larger shrubs may produce more plant material over a year in terms of absolute volume, smaller shrubs produce less but can still have higher annual growth in terms of the percentage of volume added relative to their initial volume.
-When compared to density, shrub size is a much stronger predictor of survival, with significant differences in mortality rates depending on shrub size.
-For small shrubs, mortality is exceptionally high, and increases in volume for these shrubs only slightly increase the likelihood of survival.
-However, after shrubs reach a logarithmic volume of approximately 7.3, they are almost guaranteed to survive, with survival rates near 100\% persisting regardless of any further size increases.
-Interestingly, though most recruits were found at lower densities, the probability of recruitment from seed displays positive density dependence; the probability of recruitment was still very low, though, with a baseline rate of approximately 2 recruits per 10,000 seeds. 
+
+\subsection*{Expansion speed}
+
+The speed of encroachment at the study site as estimated by the SIPM is rather slow; as can be seen in Figure \ref{fig:wavespeed}, the low-density wavefront moves at approximately 0.5 cm/yr under normal conditions and at 1 cm/yr under the best seedling survival conditions observed in the dataset.
+These improved conditions were observed due to above-average rainfall that occurred after greenhouse-grown seedlings were transplanted to the site.
+Population growth in this low-density region of the moving wave is also low, with a geometric growth rate of $\lambda \approx 1.006$ and even lower rates of growth the higher-density regions behind; in the higher-survival scenario the maximum rate increases to $\lambda \approx 1.013$, with growth still decreasing as density increases.
+For both scenarios, the decrease in population growth rate with increasing density was monotonic across the range of observed standardised densities, as is shown in Figure \ref{fig:wavespeed}.
+This suggests that an Allee effect is likely not present in this population, as the highest rate of population growth is found at the lowest density vanguard of the encroaching population.
+Thus, the conditions necessary for equation 9 to be valid are satisfied, and these wavespeeds are applicable for a pulled-wave scenario in which no Allee effects are present.
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Figures/Figure3}
-  \caption{Flowering probability (top row), log annual growth ratio (centre row), and log reproductive structure             count (bottom row) at all four sampling sites. In the left column of graphs, the three response                   variables are shown as a function of density for each of four volume quartiles, with each quartile                containing six density bins; in the right column, the opposite occurs, with response variables shown as            functions of four volume quartiles that each contain six density bins. Graphs quantifying the number of            reproductive structures include data only on plants that flowered. }
-  \label{fig:demog}
+    \includegraphics[width=\linewidth]{Figures/Figure1}
+  \caption{Estimated encroachment wave speeds (left) and geometric rates of population growth (right) for higher             post-rainfall seedling survival and normal conditions.}
+  \label{fig:wavespeed}
   \end{center}
 \end{figure}
 
-\subsection*{Encroachment re-surveys}
+
+
+\subsection*{Transect re-surveys}
 Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over 12 years (Fig. \ref{fig:transect_resurv}).
 There were local changes in percent cover: on average cover increased by XX\% between surveys.
 However, there was no clear indication that the leading edge of the creosote shrubland has advanced (the modest right-ward shift on both transects is within the range of measurement error). 
@@ -564,6 +552,9 @@ Though our encroachment speed estimates are representative of creosotebush popul
 
 \newpage
 \section*{Appendix A: Dispersal kernel modeling}
+\renewcommand{\thefigure}{A\arabic{figure}}\setcounter{figure}{0}
+\renewcommand{\thetable}{A\arabic{table}}\setcounter{table}{0}
+\renewcommand{\theequation}{A\arabic{equation}}\setcounter{equation}{0}
 
 \paragraph{WALD dispersal kernel}
 In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \tom{}{We need to describe and cite the wind data used here.}
@@ -612,6 +603,22 @@ Measurements were conducted for 48 seeds that were randomly chosen from a seed p
 Constructing $p(U)$ involved creating an empirical PDF of hourly wind speeds using data from a Sevilleta LTER meterological station (Five Points), the station closest to our transects.
 We used wind speed data collected from 1988 to 2010.\tom{}{Most SEV data sets have a doi, so ideally we should cite the wind speed data.}
 %We did not weight $p(U)$ and assumed that the probability seed release from the shrub is the same regardless of wind speed.
+
+\newpage
+\section*{Appendix B: Model selection results}
+\renewcommand{\thefigure}{B\arabic{figure}}\setcounter{figure}{0}
+\renewcommand{\thetable}{B\arabic{table}}\setcounter{table}{0}
+\renewcommand{\theequation}{B\arabic{equation}}\setcounter{equation}{0}
+
+<<surv_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+surv_aic<-xtable(aic_tables$surv_aic_out[,c("surv","df","dAIC")], caption = "AIC model selection of survival probability.", label = "tab:surv_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(surv_aic)<-"c|p{8cm}|c|c|"
+print(surv_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
 
 
 \end{document}

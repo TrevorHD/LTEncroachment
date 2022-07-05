@@ -204,10 +204,6 @@ CData.Transplants %>%
 #hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]), breaks = 25)
 #hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]), breaks = 10, add = TRUE, col = alpha("gray", 0.5))
 
-LATR_surv_dat[LATR_surv_dat$transplant==T & 
-                LATR_surv_dat$survival_t1==1 &
-                LATR_surv_dat$weighted.dens < quantile(LATR_surv_dat$weighted.dens,0.25),]
-
 # Plot survival against volume, grouped by transplant status
 #plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
 #     LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == FALSE])
@@ -333,10 +329,50 @@ LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$
 
 # Collect AIC table info --------------------------------------------------
 
-#grow_aic
-#flower_aic
-#fruits_aic
 #surv_aic
+surv_aic_out<-as.data.frame(surv_aic)
+surv_aic_out$surv<-c("~size + transplant + size:transplant + (1|transect)",
+                                   "~size + transplant + density + size:transplant + density:transplant + (1|transect)",
+                                   "~size + transplant + density + size:transplant + density:transplant + size:density + size:transplant:density + (1|transect)")
+
+#grow_aic
+grow_aic_out<-as.data.frame(grow_aic)
+grow_aic_out$`mean(size_t+1)`<-c("~size_t + (1|transect)","~size_t + density + (1|transect)","~size_t + density + size_t:density + (1|transect)",
+                     "~size_t + (1|transect)","~size_t + density + (1|transect)","~size_t + density + size_t:density + (1|transect)",
+                     "~size_t + (1|transect)","~size_t + density + (1|transect)","~size_t + density + size_t:density + (1|transect)")
+grow_aic_out$`sd(size_t+1)`<-c("~1","~1","~1",
+                   "~size_t","~size_t","~size_t",
+                   "~size_t + density","~size_t + density","~size_t + density")          
+
+#flower_aic
+flower_aic_out <- as.data.frame(flower_aic)
+flower_aic_out$`Pr(Flowering_t+1)`<-c("~size_t + (1|transect)",
+                                      "~size_t + density + (1|transect)",
+                                      "~size_t + density + size_t:density + (1|transect)")
+
+#fruits_aic
+fruits_aic_out <- as.data.frame(fruits_aic)
+fruits_aic_out$`No. fruits` <- c("~size_t + (1|transect)",
+                                 "~size_t + density + (1|transect)",
+                                 "~size_t + density + size_t:density + (1|transect)")
+
 #recruit_aic
+recruit_aic_out <- as.data.frame(recruit_aic)
+recruit_aic_out$`Pr(Recruitment)`<-c("~(1|transect)","~density + (1|transect)")
+
 #recruitsize_aic
+recruitsize_aic_out<-as.data.frame(recruitsize_aic)
+recruitsize_aic_out$`mean(size)`<-c("~(1|transect)","~density+(1|transect)",
+                                    "~(1|transect)","~density+(1|transect)")
+recruitsize_aic_out$`sd(size)`<-c("~1","~1","~density","~density")
+
+aic_tables <- list(surv_aic_out=surv_aic_out,
+                      grow_aic_out=grow_aic_out,
+                      flower_aic_out=flower_aic_out,
+                      fruits_aic_out=fruits_aic_out,
+                      recruit_aic_out=recruit_aic_out,
+                      recruitsize_aic_out=recruitsize_aic_out)
+     
+## write out these quantities as an Rds file (do this once)
+write_rds(x=aic_tables,file="Manuscript/aic_tables.rds")
 

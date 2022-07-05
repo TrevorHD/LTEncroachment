@@ -24,9 +24,6 @@ library(zoo)
 library(binr)
 
 
-
-
-
 ##### Run scripts that do not change between the two scenarios --------------------------------------------
 
 # This will take several minutes; be patient
