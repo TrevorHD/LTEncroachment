@@ -1,18 +1,14 @@
 ##### Initialise data -------------------------------------------------------------------------------------
 
-# Create vector of year ranges used in file URLs
-years <- c("1988-1995_0", "1996-2000_1", "2001-2005", "2006-2010")
-
+## TM update 6July2022: grabbing 2015-19 met data from station 49 only (speeds things up)
 # Get wind data from repo
-for(i in 1:6){
-  
+
   # Create URL to read from; replace with local file path for faster performance
-  url <- paste0("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/Weather",
-                i, ".csv")
+  url <- "https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/Sevilleta_LTER_Hourly_Meteorological_Data_2015_2019_station49.csv"
     
   # Using read.csv is too slow; SQL will be much more efficient
   # Read comma-separated data from text file, and select relevant columns
-  df <- read.csv.sql(url, sql = "SELECT StationID, Mean_WindSpeed, Wind_Dir FROM file", eol = "\n")
+  df <- read.csv.sql(url, sql = "SELECT Mean_WindSpeed, Wind_Dir FROM file", eol = "\n")
     
   # Close SQL database connection
   sqldf()
@@ -25,7 +21,7 @@ for(i in 1:6){
   df <- as.vector(as.matrix(df$Mean_WindSpeed))
   
   # Assign name to vector
-  assign(paste0("ws.", i), df)}
+  assign(paste0("ws.", i), df)
   
 # Combine individual vectors
 ws.raw <- c(ws.1, ws.2, ws.3, ws.4, ws.5, ws.6)
