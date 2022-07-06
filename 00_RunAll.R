@@ -113,7 +113,7 @@ for(i in 1:boot.num){
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
   
   # Construct transition matrix for minimum weighted density (zero)
-  TM <- TransMatrix(dens = 0)
+  TM <- TransMatrix(dens = 0, mat.size = 100)
 
   # Evaluate SIPM to find wavespeeds
   if(boot.noDisp == FALSE){
