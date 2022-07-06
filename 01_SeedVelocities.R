@@ -33,7 +33,7 @@ for(i in 13:62){
   tv.raw <- append(tv.raw, v)}
   
 # Remove outliers
-tv.raw <- tv.raw[tv.raw < 5]
+tv.raw <- tv.raw[tv.raw < 10] #[tv.raw < 5] TM edit here - this keeps one additional obs
 
 
 

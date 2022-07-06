@@ -13,26 +13,14 @@
   # Close SQL database connection
   sqldf()
   
-  # Use data from the Five Points site (ID = 49)
-  df <- subset(df, StationID == 49)
-  
   # Coerce data frame to vector
   # Must use matrix as intermediate since it won't work directly for some reason
-  df <- as.vector(as.matrix(df$Mean_WindSpeed))
-  
-  # Assign name to vector
-  assign(paste0("ws.", i), df)
-  
-# Combine individual vectors
-ws.raw <- c(ws.1, ws.2, ws.3, ws.4, ws.5, ws.6)
+  ws.raw <- as.vector(as.matrix(df$Mean_WindSpeed))
+  #hist(ws.raw)
   
 # Remove (negative) markers for missing values
 # Also remove zero wind speeds, as we will assume no seed release occurs in absence of wind
 ws.raw <- ws.raw[ws.raw > 0]
-
-
-
-
 
 ##### Create wind speed distributions ---------------------------------------------------------------------
 
@@ -63,5 +51,5 @@ ws.fits <- c()
 ##### Clean up --------------------------------------------------------------------------------------------
 
 # Clean up variables from global environment
-remove(ws.ln, ws.gm, df, i, url, years, ws.1, ws.2, ws.3, ws.4)
+remove(ws.ln, ws.gm, df, url)
 
