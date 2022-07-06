@@ -141,3 +141,5 @@ WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){
   
   # Simulate seed release events for each height; returns n*length.out dispersal events
   return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas = elas, seed = seed))))}
+
+
