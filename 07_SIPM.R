@@ -142,10 +142,9 @@ TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upp
   #and transition matrix
   return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
 
-##### Find minimum wave speed -----------------------------------------------------------------------------
 
-# Function to calculate the minimum wavespeed across a range of s
-Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL,reps=10000,heights=50){
+# Trevor's function to calculate the minimum wavespeed across a range of s
+Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL,reps=1000,heights=25){
   
   # Fit equation to convert volume to height for dispersal kernel use
   LATR_full %>%
@@ -215,7 +214,87 @@ Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL,reps=10000,heights=50)
   return(vec)}
 
 
+##### Find minimum wave speed -----------------------------------------------------------------------------
+# Functions from Ellner et al. IPMbook mashed up with my changes ------------------------------------
 
+## Function to compute the WALD mgf
+WALDmgf <- function(s,nu,lambda) {
+  t1 <- (lambda/nu) 
+  t2 <- 2*(nu^2)*s/lambda 
+  mgf <- exp(t1*(1-sqrt(1-t2)))
+  return(mgf)
+}    
+
+## Function to compute the marginalize WALD mgf
+margWALDmgf <- function(s,nu,lambda) {
+  (1/pi)*integrate(function(q) WALDmgf(s*cos(q),nu,lambda),0,pi)$value
+}
+
+# this function creates a vector of WALD parameters for each element of the TM size vector
+# h is grass height, below which it is assumed seeds cannot disperse
+WALD_par <- function(h=0.15){
+  
+  # Fit equation to convert volume to height for dispersal kernel use
+  LATR_full %>%
+    select(max.ht_t, volume_t) %>% 
+    drop_na(max.ht_t, volume_t) %>% 
+    rename("h" = max.ht_t, "v" = volume_t) %>% 
+    arrange(v) %>% 
+    nlsLM(h ~ A*v^(1/3),
+          start = list(A = 0), data = .) %>% 
+    coef() %>% 
+    as.numeric() -> A
+  
+  # Function converting volume to height (embedded here bc LATR_full will change with bootstrap iterations)
+  # returns height in centimeters
+  vol.to.height <- function(v){A*v^(1/3)}
+  
+  # size vector (log(volume))
+  zvals <- TM$meshpts
+  ## eviction problem!! if the zval is below true min or above true max, set to true min and true max
+  zvals[zvals<LATR_size_bounds$min_size]=LATR_size_bounds$min_size
+  zvals[zvals>=LATR_size_bounds$max_size]=LATR_size_bounds$max_size
+  
+  # Vector of heights across which dispersal kernel will be evaluated
+  heights <- sapply(exp(zvals), vol.to.height)/100
+  WALD.par <- vector("list",length(heights))
+  WALD.par[heights>=h] <- lapply(heights[heights>=h],WALD.b.tom)
+
+  return(list(heights=heights,WALD.par=WALD.par))
+}
+
+params <- WALD_par()
+# Reality check: mgf and marginalized mgf should have value 1 at s=0
+WALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
+margWALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
+
+## Function to compute wave speeds c(s)
+cs <- function(s,h=0.15) {
+  # survival-growth matrix
+  P <- TM$Pmat 
+  # fertility matrix
+  Fs <- TM$Fmat 
+  for(j in 1:length(params$heights)) {
+    Fs[,j] <- ifelse(params$heights[j]>=h,Fs[,j]*margWALDmgf(s,nu=params$WALD.par[[j]]$nu,lambda=params$WALD.par[[j]]$lambda),Fs[,j])
+  }
+  Hs <- P+Fs 
+  L1 = abs(eigen(Hs)$values[1]); 
+  return((1/s)*log(L1)) 
+}
+
+# Maximum value of s for which the WALD mgf is finite.  
+s.max <- function(nu,lambda) {
+  return(lambda/(2*nu*nu))
+} 
+#s.max(params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
+ 
+cs = Vectorize(cs,"s") 
+plot(function(s) cs(s),0.0005,4);
+
+## Find the asymptotic wave speed c*(s) 
+out=optimize(cs,lower=0.05,upper=2); 
+cat("Wave speed cstar =",out$objective,"\n"); 
+cat("Wave shape parameter s =",out$minimum,"\n");
 
 
 ##### Find lambda as function of density ------------------------------------------------------------------
