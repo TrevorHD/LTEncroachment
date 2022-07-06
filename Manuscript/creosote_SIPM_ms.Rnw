@@ -611,10 +611,62 @@ We used wind speed data collected from 1988 to 2010.\tom{}{Most SEV data sets ha
 \renewcommand{\theequation}{B\arabic{equation}}\setcounter{equation}{0}
 
 <<surv_aic,echo=F, message=F, warning=F, results = 'asis'>>=
-surv_aic<-xtable(aic_tables$surv_aic_out[,c("surv","df","dAIC")], caption = "AIC model selection of survival probability.", label = "tab:surv_aic",
+surv_aic<-xtable(aic_tables$surv_aic_out[,c("surv","df","dAIC")], caption = "AIC model selection for survival probability.", label = "tab:surv_aic",
                  hline.after=c(-1,0,1,2,3))
-align(surv_aic)<-"c|p{8cm}|c|c|"
+align(surv_aic)<-"c|p{12cm}|c|c|"
 print(surv_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+<<grow_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+grow_aic<-xtable(aic_tables$grow_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of future size", label = "tab:surv_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(grow_aic)<-"c|p{8cm}|p{4cm}|c|c|"
+print(grow_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+
+<<flower_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+flower_aic<-xtable(aic_tables$flower_aic_out[,c("Pr(Flowering)","df","dAIC")], caption = "AIC model selection for flowering probability.", label = "tab:surv_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(flower_aic)<-"c|p{8cm}|c|c|"
+print(flower_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+
+<<fruits_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+fruits_aic<-xtable(aic_tables$fruits_aic_out[,c("No. fruits","df","dAIC")], caption = "AIC model selection for fruit number.", label = "tab:surv_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(fruits_aic)<-"c|p{8cm}|c|c|"
+print(fruits_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+<<recruit_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+recruit_aic<-xtable(aic_tables$recruit_aic_out[,c("Pr(Recruitment)","df","dAIC")], caption = "AIC model selection for recruitment probability.", label = "tab:surv_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(recruit_aic)<-"c|p{8cm}|c|c|"
+print(recruit_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+<<recruitsize_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+recruitsize_aic<-xtable(aic_tables$recruitsize_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of recruit size.", label = "tab:surv_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(recruitsize_aic)<-"c|p{8cm}|p{4cm}|c|c|"
+print(recruitsize_aic, 
       include.rownames=F,
       include.colnames=T, 
       floating = TRUE, latex.environments = "center")
