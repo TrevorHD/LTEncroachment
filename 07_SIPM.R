@@ -275,11 +275,12 @@ cs <- function(s,h=0.15) {
   # fertility matrix
   Fs <- TM$Fmat 
   for(j in 1:length(params$heights)) {
-    Fs[,j] <- ifelse(params$heights[j]>=h,Fs[,j]*margWALDmgf(s,nu=params$WALD.par[[j]]$nu,lambda=params$WALD.par[[j]]$lambda),Fs[,j])
+    if(params$heights[j]<h){next}
+    Fs[,j] <- Fs[,j]*margWALDmgf(s,nu=params$WALD.par[[j]]$nu,lambda=params$WALD.par[[j]]$lambda)
   }
   Hs <- P+Fs 
   L1 = abs(eigen(Hs)$values[1]); 
-  return((1/s)*log(L1)) 
+  return((1/s)*log(L1))  #
 }
 
 # Maximum value of s for which the WALD mgf is finite.  
@@ -289,10 +290,10 @@ s.max <- function(nu,lambda) {
 #s.max(params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
  
 cs = Vectorize(cs,"s") 
-plot(function(s) cs(s),0.0005,4);
+plot(function(s) cs(s),0.5,4);
 
 ## Find the asymptotic wave speed c*(s) 
-out=optimize(cs,lower=0.05,upper=2); 
+out=optimize(cs,lower=0.05,upper=4); 
 cat("Wave speed cstar =",out$objective,"\n"); 
 cat("Wave shape parameter s =",out$minimum,"\n");
 
