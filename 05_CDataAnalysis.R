@@ -331,30 +331,30 @@ LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$
 
 #surv_aic
 surv_aic_out<-as.data.frame(surv_aic)
-surv_aic_out$surv<-c("~size + transplant + size:transplant + (1|transect)",
+surv_aic_out$`Pr(Survival)`<-c("~size + transplant + size:transplant + (1|transect)",
                                    "~size + transplant + density + size:transplant + density:transplant + (1|transect)",
                                    "~size + transplant + density + size:transplant + density:transplant + size:density + size:transplant:density + (1|transect)")
 
 #grow_aic
 grow_aic_out<-as.data.frame(grow_aic)
-grow_aic_out$`mean(size_t+1)`<-c("~size_t + (1|transect)","~size_t + density + (1|transect)","~size_t + density + size_t:density + (1|transect)",
-                     "~size_t + (1|transect)","~size_t + density + (1|transect)","~size_t + density + size_t:density + (1|transect)",
-                     "~size_t + (1|transect)","~size_t + density + (1|transect)","~size_t + density + size_t:density + (1|transect)")
-grow_aic_out$`sd(size_t+1)`<-c("~1","~1","~1",
-                   "~size_t","~size_t","~size_t",
-                   "~size_t + density","~size_t + density","~size_t + density")          
+grow_aic_out$`mean(size)`<-c("~size + (1|transect)","~size + density + (1|transect)","~size + density + size:density + (1|transect)",
+                     "~size + (1|transect)","~size + density + (1|transect)","~size + density + size:density + (1|transect)",
+                     "~size + (1|transect)","~size + density + (1|transect)","~size + density + size:density + (1|transect)")
+grow_aic_out$`sd(size)`<-c("~1","~1","~1",
+                   "~size","~size","~size",
+                   "~size + density","~size + density","~size + density")          
 
 #flower_aic
 flower_aic_out <- as.data.frame(flower_aic)
-flower_aic_out$`Pr(Flowering_t+1)`<-c("~size_t + (1|transect)",
-                                      "~size_t + density + (1|transect)",
-                                      "~size_t + density + size_t:density + (1|transect)")
+flower_aic_out$`Pr(Flowering)`<-c("~size + (1|transect)",
+                                      "~size + density + (1|transect)",
+                                      "~size + density + size:density + (1|transect)")
 
 #fruits_aic
 fruits_aic_out <- as.data.frame(fruits_aic)
-fruits_aic_out$`No. fruits` <- c("~size_t + (1|transect)",
-                                 "~size_t + density + (1|transect)",
-                                 "~size_t + density + size_t:density + (1|transect)")
+fruits_aic_out$`No. fruits` <- c("~size + (1|transect)",
+                                 "~size + density + (1|transect)",
+                                 "~size + density + size:density + (1|transect)")
 
 #recruit_aic
 recruit_aic_out <- as.data.frame(recruit_aic)
