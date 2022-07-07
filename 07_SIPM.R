@@ -263,10 +263,9 @@ WALD_par <- function(h=0.15){
   return(list(heights=heights,WALD.par=WALD.par))
 }
 
-params <- WALD_par()
 # Reality check: mgf and marginalized mgf should have value 1 at s=0
-WALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
-margWALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
+#WALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
+#margWALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
 
 ## Function to compute wave speeds c(s)
 cs <- function(s,h=0.15) {
@@ -288,15 +287,6 @@ s.max <- function(nu,lambda) {
   return(lambda/(2*nu*nu))
 } 
 #s.max(params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
- 
-cs = Vectorize(cs,"s") 
-plot(function(s) cs(s),0.5,4);
-
-## Find the asymptotic wave speed c*(s) 
-out=optimize(cs,lower=0.05,upper=4); 
-cat("Wave speed cstar =",out$objective,"\n"); 
-cat("Wave shape parameter s =",out$minimum,"\n");
-
 
 ##### Find lambda as function of density ------------------------------------------------------------------
 

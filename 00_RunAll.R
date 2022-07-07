@@ -82,6 +82,7 @@ boot.prop <- 0.75
 boot.num <- 100
 
 # Create empty vectors to populate with wavespeeds
+# cv1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
 boot.cv1 <- c()
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
@@ -118,11 +119,16 @@ for(i in 1:boot.num){
   # Evaluate SIPM to find wavespeeds
   if(boot.noDisp == FALSE){
     
+    #get WALD parameters from this data bootstrap
+    params <- WALD_par()
+    # Find the asymptotic wave speed c*(s) 
+    cstar <- optimize(cs,lower=0.05,upper=4)
+    
     # Create empty vector to store wavespeeds
-    c.values <- Wavespeed()
+    # c.values <- Wavespeed()
     
     # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
-    boot.cv1 <- append(boot.cv1, min(c.values))}
+    boot.cv1 <- append(boot.cv1,cstar)}
   
   ## UNCOMMENT TO RUN LANMBDA VS DENSITY
   ## Create empty list to store lambda as a function of density; assign density values to top
