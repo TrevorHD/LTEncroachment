@@ -269,9 +269,8 @@ WALD_par <- function(h=0.15){
 #WALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
 #margWALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
 
-WALD_samples<-function(N,h=0.15,elas="none,",seed=NULL){
+WALD_samples<-function(N,h=0.15,elas="none",seed=NULL){
   r=matrix(0,nrow=N,ncol=length(params$heights))
-  dispersing_heights=params$heights>h
   r[,params$heights>h]=sapply(params$heights[params$heights>h],WALD.f.e.h.tom,n=N,elas=elas,seed=seed)
   alpha <- matrix(runif(N*length(params$heights),0,2*pi),dim(r))
   X=r*cos(alpha)
