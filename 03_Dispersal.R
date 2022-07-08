@@ -150,7 +150,8 @@ WALD.f.e <- function(n, H, elas, seed = NULL){
   
   # Generate inverse Gaussian distribution
   set.seed(seed)
-  return(rinvGauss(n, nu = nu, lambda = lambda))}
+  return(rinvGauss(n, nu = nu, lambda = lambda))
+  }
 
 
 
@@ -182,3 +183,54 @@ WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){
   
   # Simulate seed release events for each height; returns n*length.out dispersal events
   return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas = elas, seed = seed))))}
+
+
+
+##### Tom's version of full WALD
+WALD.f.e.h.tom <- function(n, H, elas, h=0.15, seed = NULL){
+  
+  # Add option for height perturbation analysis
+  if(elas == "dispersal"){H <- H*(1 + pert)}
+  
+  # Initialise physical constants
+  K <- 0.4      # von Karman constant
+  C0 <- 3.125   # Kolmogorov constant
+  
+  # Initialise other fixed quantities
+  Aw <- 1.3     # Ratio of sigmaw to ustar
+  h <- 0.15     # Grass cover height
+  d <- 0.7*h    # Zero-plane displacement
+  z0 <- 0.1*h   # Roughness length
+  zm <- 3       # Wind speed measurement height
+  
+  # Simulate wind speeds from empirical distribution of wind speeds
+  set.seed(seed)
+  Um <- sample(boot.ws.raw, size = n, replace = TRUE)
+  
+  # Simulate terminal velocities from empirical distribution of terminal velocities
+  set.seed(seed)
+  f <- sample(boot.tv.raw, size = n, replace = TRUE)
+  
+  # Calculate ustar, the friction velocity
+  ustar <- K*Um*(log((zm - d)/z0))^(-1)
+  
+  # Set up integrand for wind speed between vegetation surface and drop height H
+  integrand <- function(z){
+    (1/K)*(log((z - d)/z0))}
+  
+  # Integrate to obtain U
+  U <- (ustar/H)*integrate(integrand, lower = d + z0, upper = H)$value
+  
+  # Calculate instability parameter
+  sigma <- 2*(Aw^2)*sqrt((K*(H - d)*ustar)/(C0*U))
+  
+  # Calculate scale parameter lambda
+  lambda <- (H/sigma)^2
+  
+  # Calculate location parameter nu
+  nu <- H*U/f
+  
+  # Generate inverse Gaussian distribution
+  set.seed(seed)
+  return(rinvGauss(n, nu = nu, lambda = lambda))
+}

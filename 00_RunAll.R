@@ -64,7 +64,7 @@ boot.saveOutputs <- TRUE
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
-boot.on <- FALSE
+boot.on <- TRUE
 
 # Evaluate local IPM instead of spatial IPM?
 # Local IPM will not include dispersal
@@ -79,11 +79,13 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 100
+boot.num <- 2
 
 # Create empty vectors to populate with wavespeeds
-# cv1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
-boot.cv1 <- c()
+# c1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
+boot.c1 <- c()
+# c2 are the wavespeeds from simulating dispersal events over variation in heights, windspeed, and terminal velocity
+boot.c2 <- c()
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
@@ -119,17 +121,20 @@ for(i in 1:boot.num){
   # Evaluate SIPM to find wavespeeds
   if(boot.noDisp == FALSE){
     
-    #get WALD parameters from this data bootstrap
+    #get WALD parameters from this data bootstrap - generates a list of length mat.size containing
+    # plant heights and correpsonding WALD parameters
     params <- WALD_par()
+    #sample dispersal events for empirical MGF - generates a N*mat.size matrix
+    D.samples <- WALD_samples(N=10000,seed=5768) 
     # Find the asymptotic wave speed c*(s) 
-    cstar <- optimize(cs,lower=0.05,upper=4)
-    
-    # Create empty vector to store wavespeeds
-    # c.values <- Wavespeed()
-    
+    c1star <- optimize(cs,lower=0.05,upper=4,emp=F)$objective
+    # use empirical MGF to get wavespeed from sampled dispersal events
+    c2star <- optimize(cs,lower=0.05,upper=4,emp=T)$objective
+
     # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
-    boot.cv1 <- append(boot.cv1,cstar)}
-  
+    boot.c1 <- append(boot.c1,c1star)
+    boot.c2 <- append(boot.c2,c2star)}
+
   ## UNCOMMENT TO RUN LANMBDA VS DENSITY
   ## Create empty list to store lambda as a function of density; assign density values to top
   #if(i == 1){
@@ -142,7 +147,7 @@ for(i in 1:boot.num){
   if(i == 1){
     boot.TM <- list()}
   
-  # Append transition matrix to list
+  # Append transition matrix to list -- TM: why save these?
   boot.TM[[i]] <- TM
   
   # Calculate elapsed time
@@ -155,7 +160,8 @@ for(i in 1:boot.num){
   
   # Flip switch back to original setting
   if(i == boot.num){
-    boot.switch <- FALSE}}
+    boot.switch <- FALSE}
+  }
 
 # Clear console (on Windows) and print final procedure time
 # Suppress any warnings or errors
@@ -174,7 +180,7 @@ if(boot.saveOutputs == TRUE){
   write.csv(boot.lambda, "BootLambda.csv")
   
   # Write bootstrapped wavespeed values to csv
-  write.csv(boot.cv1, "BootCV.csv")}
+  write.csv(boot.c1, "BootC1.csv")}
 
 # Remove unneeded bootstrap items from the global environment if using spatial IPM
 # If running single replicate, just leave most items in global environment

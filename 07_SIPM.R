@@ -142,7 +142,6 @@ TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upp
   #and transition matrix
   return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
 
-
 # Trevor's function to calculate the minimum wavespeed across a range of s
 Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL,reps=1000,heights=25){
   
@@ -230,6 +229,9 @@ margWALDmgf <- function(s,nu,lambda) {
   (1/pi)*integrate(function(q) WALDmgf(s*cos(q),nu,lambda),0,pi)$value
 }
 
+## empirical MGF, takes the vector x=r*cos(alpha) -- Jongejans et al. 2008 Eq 6
+empiricalWALDmgf<-function(s,x){1/length(x) * sum(exp(s*x))}
+
 # this function creates a vector of WALD parameters for each element of the TM size vector
 # h is grass height, below which it is assumed seeds cannot disperse
 WALD_par <- function(h=0.15){
@@ -267,20 +269,32 @@ WALD_par <- function(h=0.15){
 #WALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
 #margWALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
 
+WALD_samples<-function(N,h=0.15,elas="none,",seed=NULL){
+  r=matrix(0,nrow=N,ncol=length(params$heights))
+  dispersing_heights=params$heights>h
+  r[,params$heights>h]=sapply(params$heights[params$heights>h],WALD.f.e.h.tom,n=N,elas=elas,seed=seed)
+  alpha <- matrix(runif(N*length(params$heights),0,2*pi),dim(r))
+  X=r*cos(alpha)
+  return(X)
+}
+
 ## Function to compute wave speeds c(s)
-cs <- function(s,h=0.15) {
+cs <- function(s,h=0.15,emp=F) {
   # survival-growth matrix
   P <- TM$Pmat 
   # fertility matrix
   Fs <- TM$Fmat 
-  for(j in 1:length(params$heights)) {
+  for(j in 1:length(params$heights)){
     if(params$heights[j]<h){next}
-    Fs[,j] <- Fs[,j]*margWALDmgf(s,nu=params$WALD.par[[j]]$nu,lambda=params$WALD.par[[j]]$lambda)
+    if(emp==F){Fs[,j] <- Fs[,j]*margWALDmgf(s,nu=params$WALD.par[[j]]$nu,lambda=params$WALD.par[[j]]$lambda)}
+    if(emp==T){Fs[,j] <- Fs[,j]*empiricalWALDmgf(s,D.samples[,j])}
   }
   Hs <- P+Fs 
   L1 = abs(eigen(Hs)$values[1]); 
   return((1/s)*log(L1))  #
 }
+#cs = Vectorize(cs,"s"); 
+#plot(function(s) cs(s,emp=T),0.05,2);
 
 # Maximum value of s for which the WALD mgf is finite.  
 s.max <- function(nu,lambda) {
