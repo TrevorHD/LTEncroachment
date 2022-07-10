@@ -79,7 +79,7 @@ boot.prop <- 0.5
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 2
+boot.num <- 1000
 
 # Create empty vectors to populate with wavespeeds
 # c1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
@@ -99,8 +99,8 @@ elas <- c("growth.mean","growth.sd","survival","flower","fertility",
 boot.elas <- vector("numeric",length = length(elas))
 boot.sens <- vector("numeric",length = length(elas))
 
-#seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"100seeds.csv")
-seeds<-read.csv("100seeds.csv")
+#seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"1000seeds.csv")
+seeds<-read.csv("1000seeds.csv")
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
@@ -168,19 +168,19 @@ for(i in 1:boot.num){
 
       # calculate proportional change in cstar and append to output
       boot.elas <- rbind(boot.elas,((c2star.elas/c2star)-1))
-      boot.sens <- rbind(boot.sens,(c2star.sens-c2star))
+      boot.sens <- rbind(boot.sens,(c2star.sens-c2star)/pert)
     }#end pert on
     
     }#end noDisp
 
   ## UNCOMMENT TO RUN LANMBDA VS DENSITY
   ## Create empty list to store lambda as a function of density; assign density values to top
-  #if(i == 1){
-  #  boot.lambda <- list(density = LambdaD(d.only = TRUE))}
-  #
+  if(i == 1){
+    boot.lambda <- list(density = LambdaD(d.only = TRUE))}
+  
   # Calculate lambda as a function of density, then append to list
-  #boot.lambda[[i + 1]] <- LambdaD()
-  #
+  boot.lambda[[i + 1]] <- LambdaD()
+  
   # Create empty list to store transition matrices
   if(i == 1){
     boot.TM <- list()}
@@ -215,10 +215,14 @@ suppressWarnings(if(1 == 1){
 if(boot.saveOutputs == TRUE){
   
   # Write bootstrapped lambda values to csv
-  #write.csv(boot.lambda, "BootLambda.csv")
+  write.csv(boot.lambda, "BootLambda.csv")
   
   # Write bootstrapped wavespeed values to csv
-  write.csv(boot.c1, "BootC1.csv")}
+  write.csv(boot.c1, "BootC1.csv")
+  write.csv(boot.c2, "BootC2.csv")
+  write.csv(boot.elas,"Boot.elas.csv")
+  write.csv(boot.sens,"Boot.sens.csv")
+}
 
 # Remove unneeded bootstrap items from the global environment if using spatial IPM
 # If running single replicate, just leave most items in global environment
@@ -234,110 +238,6 @@ if(boot.noDisp == FALSE){
 if(boot.noDisp == TRUE){
   try(remove(boot.tv.PDF, boot.ws.PDF, boot.tv.raw, boot.ws.raw, i, time.elapsed, time.start, TM),
       silent = TRUE)}
-
-## get wavespeed estimates with full data
-## adjust the dispersal sampling methods
-c_reps100_h50<-c_reps1000_h50<-c_reps10000_h50<-c()
-c_reps100_h25<-c_reps1000_h25<-c_reps10000_h25<-c()
-TM <- TransMatrix(dens = 0)
-
-for(i in 1:100){
-  c_reps100_h25[i]<-min(Wavespeed(reps = 100, heights = 25))
-  c_reps1000_h25[i]<-min(Wavespeed(reps = 1000, heights = 25))
-  c_reps10000_h25[i]<-min(Wavespeed(reps = 10000, heights = 25))
-  
-  c_reps100_h50[i]<-min(Wavespeed(reps = 100, heights = 50))
-  c_reps1000_h50[i]<-min(Wavespeed(reps = 1000, heights = 50))
-  c_reps10000_h50[i]<-min(Wavespeed(reps = 10000, heights = 50))
-  print(i)
-}
-
-par(mfrow=c(1,2))
-plot(density(c_reps100_h25),xlab="wavespeed",main="25 height increments",xlim=c(0,0.2),lwd=2)
-lines(density(c_reps1000_h25),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="blue")
-lines(density(c_reps10000_h25),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
-legend("topright",legend=c(100,1000,10000),col=c("black","blue","red"),lwd=2)
-
-plot(density(c_reps100_h50),xlab="wavespeed",main="50 height increments",xlim=c(0,0.2),lwd=2)
-lines(density(c_reps1000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="blue")
-lines(density(c_reps10000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
-
-par(mfrow=c(1,3))
-plot(density(c_reps100_h25),xlab="wavespeed",main="100 samples",xlim=c(0,0.2),lwd=2)
-lines(density(c_reps100_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
-
-plot(density(c_reps1000_h25),xlab="wavespeed",main="1000 samples",xlim=c(0,0.2),lwd=2)
-lines(density(c_reps1000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
-
-plot(density(c_reps10000_h25),xlab="wavespeed",main="10000 samples",xlim=c(0,0.2),lwd=2)
-lines(density(c_reps10000_h50),xlab="wavespeed",main=" ",xlim=c(0,0.2),lwd=2,col="red")
-
-## compare to bootstrapped wavespeed
-boot.cv1<-read.csv("BootCV_500noseed.csv")
-plot(density(boot.cv1$x),lwd=2)
-
-## save these outputs
-write.csv(c_reps100_h25,"c_reps100_h25.csv")
-write.csv(c_reps1000_h25,"c_reps1000_h25.csv")
-write.csv(c_reps10000_h25,"c_reps10000_h25.csv")
-write.csv(c_reps100_h50,"c_reps100_h25.csv")
-write.csv(c_reps1000_h50,"c_reps1000_h25.csv")
-write.csv(c_reps10000_h50,"c_reps10000_h25.csv")
-##check the I get constant wavespeed when I set seed
-c_seed_check<-c()
-for(i in 1:10){
-  c_seed_check[i]<-min(Wavespeed(reps = 100, heights = 25, seed=1))
-  print(i)
-}
-
-# elasticity analysis -----------------------------------------------------
-# turn off bootstrapping
-boot.on <- FALSE
-boot.prop <- 1
-# re-run demography and dispersal analysis with full data
-source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
-source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
-# elasticity perturbation
-pert <- 0.1 ## 10% increase
-# replicates for wavespeed calculation (bc there is stochasticity built into it)
-c_reps <- 100
-## recalculate wavespeed with a pert% increase in the intercept of all vital rates
-c_elas<-matrix(NA,c_reps,8)
-for(i in 1:c_reps){
-  ## reference model
-  TM <- TransMatrix(dens = 0)
-  c_elas[i,1] <- min(Wavespeed())
-  ## dispersal perturbation
-  c_elas[i,2] <- min(Wavespeed(elas="dispersal")) 
-  ## growth perturbation
-  TM <- TransMatrix(dens = 0, elas="growth")
-  c_elas[i,3] <- min(Wavespeed())
-  ## survival perturbation
-  TM <- TransMatrix(dens = 0, elas="survival")
-  c_elas[i,4] <- min(Wavespeed())  
-  ## flowering perturbation
-  TM <- TransMatrix(dens = 0, elas="flower")
-  c_elas[i,5] <- min(Wavespeed())   
-  ## fertility perturbation
-  TM <- TransMatrix(dens = 0, elas="fertility")
-  c_elas[i,6] <- min(Wavespeed())   
-  ## recruitment perturbation
-  TM <- TransMatrix(dens = 0, elas="recruitment")
-  c_elas[i,7] <- min(Wavespeed())   
-  ## recruitsize perturbation
-  TM <- TransMatrix(dens = 0, elas="recruitsize")
-  c_elas[i,8] <- min(Wavespeed()) 
-  print(i)
-}
-
-par(mfrow=c(8,1),oma=c(0,0,0,0),mar=c(0,0,0,0))
-for(i in 1:8){
-  plot(density(c_elas[,i]),xlim=c(0,0.4),lwd=3)
-}
-
-# Write elasticity results
-write.csv(c_elas, "c_elas.csv")
-
 
 ##### Generate main figures -------------------------------------------------------------------------------
 
