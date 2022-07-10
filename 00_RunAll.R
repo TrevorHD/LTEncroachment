@@ -74,7 +74,7 @@ boot.noDisp <- FALSE
 # Should be in the interval (0, 1), exclusive
 # Warning: setting this number very low may adversely affect model behaviour
 # Ignore this if boot.on = FALSE
-boot.prop <- 0.75
+boot.prop <- 0.5
 
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
@@ -86,6 +86,20 @@ boot.num <- 2
 boot.c1 <- c()
 # c2 are the wavespeeds from simulating dispersal events over variation in heights, windspeed, and terminal velocity
 boot.c2 <- c()
+
+# Should elasticity analysis be run?
+elas.on <- TRUE
+# magnitue of perturbation
+pert <- 0.01 ## 1% increase in mean or variance of vital rate
+# vector of vital rates to be perturbed
+elas <- c("growth.mean","growth.sd","survival","flower","fertility",
+          "recruitment","recruitsize.mean","recruitsize.sd",
+          "dispersal.location","dispersal.scale")
+# store elasticity values across bootstrap replicates
+boot.elas <- vector("numeric",length = length(elas))
+
+#seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"100seeds.csv")
+seeds<-read.csv("100seeds.csv")
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
@@ -125,15 +139,27 @@ for(i in 1:boot.num){
     # plant heights and correpsonding WALD parameters
     params <- WALD_par()
     #sample dispersal events for empirical MGF - generates a N*mat.size matrix
-    D.samples <- WALD_samples(N=10000,seed=5768) 
+    D.samples <- WALD_samples(N=10000,seed=seeds[i,2]) 
     # Find the asymptotic wave speed c*(s) 
     c1star <- optimize(cs,lower=0.05,upper=4,emp=F)$objective
     # use empirical MGF to get wavespeed from sampled dispersal events
     c2star <- optimize(cs,lower=0.05,upper=4,emp=T)$objective
-
+    
     # Calculate minimum wavespeed, then append to bootstrapped vector of estimated wavespeeds
     boot.c1 <- append(boot.c1,c1star)
-    boot.c2 <- append(boot.c2,c2star)}
+    boot.c2 <- append(boot.c2,c2star)
+    
+    #run elasticity analysis on this data bootstrap
+    if(elas.on==TRUE){
+      for(e in 1:length(elas)){
+        D.samples <- WALD_samples(N=10000,seed=seeds[i,2],elas=elas[e]) 
+        c2star.elas[e] <- optimize(cs,lower=0.05,upper=4,emp=T)$objective
+      }
+      # calculate proportional change in cstar and append to output
+      boot.elas <- rbind(boot.elas,((c2star.elas/c2star)-1))
+    }
+    
+    }
 
   ## UNCOMMENT TO RUN LANMBDA VS DENSITY
   ## Create empty list to store lambda as a function of density; assign density values to top
@@ -177,7 +203,7 @@ suppressWarnings(if(1 == 1){
 if(boot.saveOutputs == TRUE){
   
   # Write bootstrapped lambda values to csv
-  write.csv(boot.lambda, "BootLambda.csv")
+  #write.csv(boot.lambda, "BootLambda.csv")
   
   # Write bootstrapped wavespeed values to csv
   write.csv(boot.c1, "BootC1.csv")}

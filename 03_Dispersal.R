@@ -53,10 +53,7 @@ WALD.b <- function(H, elas="none",n,seed){
 
 
 WALD.b.tom <- function(H, elas="none"){
-  
-  # Add option for height perturbation analysis
-  if(elas == "dispersal"){H <- H*(1 + pert)}
-  
+
   # Initialise physical constants
   K <- 0.4      # von Karman constant
   C0 <- 3.125   # Kolmogorov constant
@@ -92,9 +89,11 @@ WALD.b.tom <- function(H, elas="none"){
   
   # Calculate scale parameter lambda
   lambda <- (H/sigma)^2
+  if(elas == "dispersal.scale"){lambda <- lambda*(1 + pert)}
   
   # Calculate location parameter nu
   nu <- H*U/f
+  if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
   
   return(list(lambda=lambda,nu=nu))
 }
@@ -103,10 +102,7 @@ WALD.b.tom <- function(H, elas="none"){
 # "Full" WALD PDF, including distributions of wind speeds and terminal velocities
 # Code adapted from Skarpaas and Shea (2007)
 WALD.f.e <- function(n, H, elas, seed = NULL){
-  
-  # Add option for height perturbation analysis
-  if(elas == "dispersal"){H <- H*(1 + pert)}
-  
+
   # Initialise physical constants
   K <- 0.4      # von Karman constant
   C0 <- 3.125   # Kolmogorov constant
@@ -144,9 +140,11 @@ WALD.f.e <- function(n, H, elas, seed = NULL){
   
   # Calculate scale parameter lambda
   lambda <- (H/sigma)^2
+  if(elas == "dispersal.scale"){lambda <- lambda*(1 + pert)}
   
   # Calculate location parameter nu
   nu <- H*U/f
+  if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
   
   # Generate inverse Gaussian distribution
   set.seed(seed)
@@ -226,9 +224,11 @@ WALD.f.e.h.tom <- function(n, H, elas, h=0.15, seed = NULL){
   
   # Calculate scale parameter lambda
   lambda <- (H/sigma)^2
+  if(elas == "dispersal.scale"){lambda <- lambda*(1 + pert)}
   
   # Calculate location parameter nu
   nu <- H*U/f
+  if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
   
   # Generate inverse Gaussian distribution
   set.seed(seed)
