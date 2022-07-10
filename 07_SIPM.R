@@ -10,7 +10,7 @@ TM.upper.extension <- 2
 ##### IPM functions ---------------------------------------------------------------------------------------
 
 # Growth from size x to y at density d, using best GAM -- GAUSSIAN
-TM.growth <- function(x, y, d, elas){
+TM.growth <- function(x, y, d, elas, sens){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_grow_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
@@ -19,8 +19,10 @@ TM.growth <- function(x, y, d, elas){
   # Linear predictor for mean and log sigma 
   grow_mu <- lpmat[, 1:(grow_sd_index-1)] %*% coef(LATR_grow_best)[1:(grow_sd_index-1)]
   if(elas=="growth.mean"){grow_mu=grow_mu*(1+pert)}
+  if(sens=="growth.mean"){grow_mu=grow_mu+pert}
   grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*% coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
   if(elas=="growth.sd"){grow_sigma=grow_sigma*(1+pert)}
+  if(sens=="growth.sd"){grow_sigma=grow_sigma+pert}
   return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
 
 # Growth from size x to y at density d, using best GAM -- SGT!!
@@ -46,7 +48,7 @@ TM.growth <- function(x, y, d, elas){
 
 # Survival of size x at density d using best GAM
 # For nnaturally occuring plants (transplant = FALSE)
-TM.survival <- function(x, d, elas){
+TM.survival <- function(x, d, elas, sens){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_surv_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, transplant = FALSE,
@@ -55,15 +57,16 @@ TM.survival <- function(x, d, elas){
                        exclude = "s(unique.transect)")
   pred <- invlogit(lpmat %*% coef(LATR_surv_best))
   if(elas=="survival"){pred<-pred*(1+pert)}
+  if(sens=="survival"){pred<-pred+pert}
   return(pred)
   }
 
 # Combined growth and survival at density d
-TM.growsurv <- function(x, y, d, elas){
-  TM.survival(x, d, elas) * TM.growth(x, y, d, elas)}
+TM.growsurv <- function(x, y, d, elas, sens){
+  TM.survival(x, d, elas, sens) * TM.growth(x, y, d, elas, sens)}
 
 # Flowering at size x and density d using best GAM
-TM.flower <- function(x, d, elas){
+TM.flower <- function(x, d, elas, sens){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_flower_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
@@ -71,11 +74,12 @@ TM.flower <- function(x, d, elas){
                        exclude = "s(unique.transect)")
   pred <- invlogit(lpmat %*% coef(LATR_flower_best))
   if(elas=="flower"){pred<-pred*(1+pert)}
+  if(sens=="flower"){pred<-pred+pert}
   return(pred)}
 
 # Seed production (fruits * seeds/fruit) at size x and density d using best GAM
 # Note: we assume 6 seeds per fruit, and best GAM is actually not density dependent
-TM.seeds <- function(x, d, elas, seeds.per.fruit = 5){
+TM.seeds <- function(x, d, elas, sens, seeds.per.fruit = 5){
   xb = pmin(pmax(x, LATR_size_bounds$min_size), LATR_size_bounds$max_size)
   lpmat <- predict.gam(LATR_fruits_best,
                        newdata = data.frame(weighted.dens = d, log_volume_t = xb, unique.transect = "1.FPS"),
@@ -83,10 +87,11 @@ TM.seeds <- function(x, d, elas, seeds.per.fruit = 5){
                        exclude = "s(unique.transect)")
   pred <- exp(lpmat %*% coef(LATR_fruits_best))
   if(elas=="fertility"){pred<-pred*(1+pert)}
+  if(sens=="fertility"){pred<-pred+pert}
   return(pred*seeds.per.fruit)}
 
 # Seed-to-Seedling recruitment probability at density d
-TM.recruitment <- function(d, elas){
+TM.recruitment <- function(d, elas, sens){
   lpmat <- predict.gam(LATR_recruit_best,
                        newdata = data.frame(weighted.dens = d, unique.transect = "1.FPS"),
                        type = "lpmatrix",
@@ -94,30 +99,33 @@ TM.recruitment <- function(d, elas){
   pred <- lpmat%*% coef(LATR_recruit_best)
   pred <- invlogit(pred[[1]])
   if(elas=="recruitment"){pred<-pred*(1-pert)} ## note substraction here bc pred is negative
+  if(sens=="recruitment"){pred<-pred+pert} 
   return(pred)}
 
 # Recruit size distribution at size y
-TM.recruitsize <- function(y,d,elas){
+TM.recruitsize <- function(y,d,elas,sens){
   lpmat <- predict.gam(LATR_recruitsize_best,
                        newdata = data.frame(weighted.dens = d, unique.transect = "1.FPS"),
                        type = "lpmatrix",
                        exclude = "s(unique.transect)")
   recruitsize_mu <- lpmat[, 1:(recruit_size_sd_index-1)] %*% coef(LATR_recruitsize_best)[1:(recruit_size_sd_index-1)]
   if(elas=="recruitsize.mean"){recruitsize_mu<-recruitsize_mu*(1+pert)}
+  if(sens=="recruitsize.mean"){recruitsize_mu<-recruitsize_mu+pert}
   recruitsize_sigma <- exp(lpmat[, recruit_size_sd_index:recruit_size_coef_length] %*% coef(LATR_recruitsize_best)[recruit_size_sd_index:recruit_size_coef_length])
   if(elas=="recruitsize.sd"){recruitsize_sigma<-recruitsize_sigma*(1+pert)}
+  if(sens=="recruitsize.sd"){recruitsize_sigma<-recruitsize_sigma+pert}
   return(dnorm(x = y, mean = recruitsize_mu, sd = recruitsize_sigma))
   }
 
 # Combined flowering, fertility, and recruitment
-TM.fertrecruit <- function(x, y, d, elas){
-  TM.flower(x, d, elas) * TM.seeds(x, d, elas) * TM.recruitment(d,elas) * TM.recruitsize(y,d,elas)}
+TM.fertrecruit <- function(x, y, d, elas, sens){
+  TM.flower(x, d, elas, sens) * TM.seeds(x, d, elas, sens) * TM.recruitment(d,elas,sens) * TM.recruitsize(y,d,elas,sens)}
 
 # Put it all together; projection matrix is a function of weighted density (dens)
 # We need a large lower extension because growth variance (gaussian) is greater for smaller plants
 TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upper.extension,
                         min.size = LATR_size_bounds$min_size, max.size = LATR_size_bounds$max_size,
-                        mat.size = TM.matdim,elas="none"){
+                        mat.size = TM.matdim,elas="none",sens="none"){
   
   # Matrix size and size extensions (upper and lower integration limits)
   n <- mat.size
@@ -134,10 +142,10 @@ TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upp
   y <- 0.5*(b[1:n] + b[2:(n + 1)])
   
   # Growth/Survival matrix
-  Pmat <- t(outer(y, y, TM.growsurv, d = dens, elas=elas)) * h 
+  Pmat <- t(outer(y, y, TM.growsurv, d = dens, elas=elas, sens=sens)) * h 
   
   # Fertility/Recruiment matrix
-  Fmat <- t(outer(y, y, TM.fertrecruit, d = dens, elas=elas)) * h 
+  Fmat <- t(outer(y, y, TM.fertrecruit, d = dens, elas=elas, sens=sens)) * h 
   
   # Put it all together
   IPMmat <- Pmat + Fmat
@@ -146,7 +154,7 @@ TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upp
   return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
 
 # Trevor's function to calculate the minimum wavespeed across a range of s
-Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL,reps=1000,heights=25){
+Wavespeed <- function(n = TM.matdim,elas="none",sens="none",seed=NULL,reps=1000,heights=25){
   
   # Fit equation to convert volume to height for dispersal kernel use
   LATR_full %>%
@@ -171,7 +179,7 @@ Wavespeed <- function(n = TM.matdim,elas="none",seed=NULL,reps=1000,heights=25){
   z.list <- sapply(exp(TM$meshpts), vol.to.height)/100
   
   # List of simulated dispersal distances for each height
-  r.list <- as.list(sapply(z.list[z.list >= 0.15], elas = elas, seed = seed,
+  r.list <- as.list(sapply(z.list[z.list >= 0.15], elas = elas, sens=sens, seed = seed,
                            reps = reps, heights = heights, WALD.b.h))
   
   # Define modified bessel function for product of s and dispersal distance
@@ -237,7 +245,7 @@ empiricalWALDmgf<-function(s,x){1/length(x) * sum(exp(s*x))}
 
 # this function creates a vector of WALD parameters for each element of the TM size vector
 # h is grass height, below which it is assumed seeds cannot disperse
-WALD_par <- function(h=0.15,elas="none"){
+WALD_par <- function(h=0.15,elas="none",sens="none"){
   
   # Fit equation to convert volume to height for dispersal kernel use
   LATR_full %>%
@@ -263,7 +271,7 @@ WALD_par <- function(h=0.15,elas="none"){
   # Vector of heights across which dispersal kernel will be evaluated
   heights <- sapply(exp(zvals), vol.to.height)/100
   WALD.par <- vector("list",length(heights))
-  WALD.par[heights>=h] <- lapply(heights[heights>=h],WALD.b.tom,elas=elas)
+  WALD.par[heights>=h] <- lapply(heights[heights>=h],WALD.b.tom,elas=elas,sens=sens)
 
   return(list(heights=heights,WALD.par=WALD.par))
 }
@@ -272,9 +280,9 @@ WALD_par <- function(h=0.15,elas="none"){
 #WALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
 #margWALDmgf(0,params$WALD.par[[100]]$nu,params$WALD.par[[100]]$lambda)
 
-WALD_samples<-function(N,h=0.15,elas="none",seed=NULL){
+WALD_samples<-function(N,h=0.15,elas="none",sens="none",seed=NULL){
   r=matrix(0,nrow=N,ncol=length(params$heights))
-  r[,params$heights>h]=sapply(params$heights[params$heights>h],WALD.f.e.h.tom,n=N,elas=elas,seed=seed)
+  r[,params$heights>h]=sapply(params$heights[params$heights>h],WALD.f.e.h.tom,n=N,elas=elas,sens=sens,seed=seed)
   alpha <- matrix(runif(N*length(params$heights),0,2*pi),dim(r))
   X=r*cos(alpha)
   return(X)

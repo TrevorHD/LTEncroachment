@@ -87,8 +87,8 @@ boot.c1 <- c()
 # c2 are the wavespeeds from simulating dispersal events over variation in heights, windspeed, and terminal velocity
 boot.c2 <- c()
 
-# Should elasticity analysis be run?
-elas.on <- TRUE
+# Should perturvation analysis be run?
+pert.on <- TRUE
 # magnitue of perturbation
 pert <- 0.01 ## 1% increase in mean or variance of vital rate
 # vector of vital rates to be perturbed
@@ -97,6 +97,7 @@ elas <- c("growth.mean","growth.sd","survival","flower","fertility",
           "dispersal.location","dispersal.scale")
 # store elasticity values across bootstrap replicates
 boot.elas <- vector("numeric",length = length(elas))
+boot.sens <- vector("numeric",length = length(elas))
 
 #seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"100seeds.csv")
 seeds<-read.csv("100seeds.csv")
@@ -149,17 +150,28 @@ for(i in 1:boot.num){
     boot.c1 <- append(boot.c1,c1star)
     boot.c2 <- append(boot.c2,c2star)
     
-    #run elasticity analysis on this data bootstrap
-    if(elas.on==TRUE){
+    #run perturbation analysis on this data bootstrap
+    if(pert.on==TRUE){
+      c2star.elas<-c2star.sens<-c()
       for(e in 1:length(elas)){
+        
+        # elasticities
+        TM <- TransMatrix(dens = 0, mat.size = 100,elas=elas[e])
         D.samples <- WALD_samples(N=10000,seed=seeds[i,2],elas=elas[e]) 
         c2star.elas[e] <- optimize(cs,lower=0.05,upper=4,emp=T)$objective
+        
+        # senstitivies
+        TM <- TransMatrix(dens = 0, mat.size = 100,sens=elas[e])
+        D.samples <- WALD_samples(N=10000,seed=seeds[i,2],sens=elas[e]) 
+        c2star.sens[e] <- optimize(cs,lower=0.05,upper=4,emp=T)$objective
       }
+
       # calculate proportional change in cstar and append to output
       boot.elas <- rbind(boot.elas,((c2star.elas/c2star)-1))
-    }
+      boot.sens <- rbind(boot.sens,(c2star.sens-c2star))
+    }#end pert on
     
-    }
+    }#end noDisp
 
   ## UNCOMMENT TO RUN LANMBDA VS DENSITY
   ## Create empty list to store lambda as a function of density; assign density values to top

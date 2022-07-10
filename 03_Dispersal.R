@@ -52,7 +52,7 @@ WALD.b <- function(H, elas="none",n,seed){
 
 
 
-WALD.b.tom <- function(H, elas="none"){
+WALD.b.tom <- function(H, elas="none", sens="none"){
 
   # Initialise physical constants
   K <- 0.4      # von Karman constant
@@ -90,10 +90,12 @@ WALD.b.tom <- function(H, elas="none"){
   # Calculate scale parameter lambda
   lambda <- (H/sigma)^2
   if(elas == "dispersal.scale"){lambda <- lambda*(1 + pert)}
+  if(sens == "dispersal.scale"){lambda <- lambda + pert}
   
   # Calculate location parameter nu
   nu <- H*U/f
   if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
+  if(sens == "dispersal.location"){nu <- nu + pert}
   
   return(list(lambda=lambda,nu=nu))
 }
@@ -185,7 +187,7 @@ WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){
 
 
 ##### Tom's version of full WALD
-WALD.f.e.h.tom <- function(n, H, elas, h=0.15, seed = NULL){
+WALD.f.e.h.tom <- function(n, H, elas, sens, h=0.15, seed = NULL){
   
   # Add option for height perturbation analysis
   if(elas == "dispersal"){H <- H*(1 + pert)}
@@ -225,10 +227,12 @@ WALD.f.e.h.tom <- function(n, H, elas, h=0.15, seed = NULL){
   # Calculate scale parameter lambda
   lambda <- (H/sigma)^2
   if(elas == "dispersal.scale"){lambda <- lambda*(1 + pert)}
+  if(sens == "dispersal.scale"){lambda <- lambda + pert}
   
   # Calculate location parameter nu
   nu <- H*U/f
   if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
+  if(sens == "dispersal.location"){nu <- nu + pert}
   
   # Generate inverse Gaussian distribution
   set.seed(seed)
