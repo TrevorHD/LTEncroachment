@@ -239,6 +239,50 @@ if(boot.noDisp == TRUE){
   try(remove(boot.tv.PDF, boot.ws.PDF, boot.tv.raw, boot.ws.raw, i, time.elapsed, time.start, TM),
       silent = TRUE)}
 
+
+# perturbation analysis with full data ------------------------------------
+boot.on <- FALSE
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
+ 
+## piece together the H matrix evaluated at s*
+TM <- TransMatrix(dens = 0, mat.size = 100)
+# survival-growth matrix
+P <- TM$Pmat 
+# fertility matrix
+Fs <- TM$Fmat 
+
+# get dispersal pieces
+params <- WALD_par()
+#sample dispersal events for empirical MGF - generates a N*mat.size matrix
+D.samples <- WALD_samples(N=10000,seed=seeds[1,2]) 
+# get s* and c(s*)
+c2star <- optimize(cs,lower=0.05,upper=4,emp=T)
+Ms <- matrix(NA,nrow(Fs),ncol(Fs))
+# apply MGF over columns of Fs
+for(j in 1:length(params$heights)){
+  if(params$heights[j]<0.15){next}
+  Ms[,j] <- empiricalWALDmgf(s=c2star$minimum,D.samples[,j])
+  Fs[,j] <- Fs[,j]*Ms[,j]
+}
+Hs <- P+Fs 
+
+# eigenanalysis -- see Ellner et al Ch4
+Hs.eig <- eigen(Hs)
+rho1 <- Re(Hs.eig$values[1])
+w.z <- Re(Hs.eig$vectors[,1])
+v.z1 <- Re(eigen(t(Hs))$vectors[,1])
+h <- diff(TM$meshpts[1:2])
+
+## kernel sensitivity
+dc.dK <- (outer(v.z1, w.z, "*")/sum(v.z1 * w.z * h)) * (1/(c2star$minimum*rho1))
+
+image(TM$meshpts, TM$meshpts, t(dc.dK),
+      col=grey(seq(0.6, 1, length=100)),
+      xlab="Volume (t), z", ylab="Volume (t+1), z\'")
+contour(TM$meshpts, TM$meshpts, t(dc.dK), add=TRUE)
+
 ##### Generate main figures -------------------------------------------------------------------------------
 
 # "08_MainFigures"
