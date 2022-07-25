@@ -185,7 +185,6 @@ WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){
   return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas = elas, seed = seed))))}
 
 
-
 ##### Tom's version of full WALD
 WALD.f.e.h.tom <- function(n, H, elas, sens, h=0.15, seed = NULL){
   
