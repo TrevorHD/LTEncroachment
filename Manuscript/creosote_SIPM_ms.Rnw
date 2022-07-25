@@ -1,19 +1,30 @@
 \documentclass[11pt]{article}
+\usepackage[sc]{mathpazo} %Like Palatino with extensive math support
+\usepackage{fullpage}
+\usepackage[authoryear,sectionbib,sort]{natbib}
+\linespread{1.7}
+\usepackage[utf8]{inputenc}
+\usepackage{lineno}
+\usepackage{titlesec}
+\titleformat{\section}[block]{\Large\bfseries\filcenter}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\Large\itshape\filcenter}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}[block]{\large\itshape}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]{\itshape}{\theparagraph}{1em}{}[. ]\renewcommand{\refname}{Literature Cited}
+% my addnl packages
 \usepackage{geometry}
-\usepackage[round]{natbib}
 \usepackage{graphicx}
-\geometry{a4paper}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{authblk}
-\usepackage[running]{lineno}
 \usepackage{setspace}
-\usepackage{amsfonts,amssymb,amsmath,graphicx,hyperref}
+\usepackage{amsfonts,amssymb,amsmath,hyperref}
 \usepackage{float}
-\usepackage{setspace}
 \usepackage{caption}
 \usepackage{multirow}
 \usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[usenames,dvipsnames]{xcolor}
 
 \newcommand{\tom}[2]{{\color{red}{#1}}\footnote{\textit{\color{red}{#2}}}}
 
@@ -372,18 +383,21 @@ H_{s}(x\prime,x) = M(s,x)Q(x\prime,x) + G(x\prime,x)
 \end{equation} 
 \end{linenomath*}
 
-where $M(s,x)$ is the moment-generating function for the dispersal kernel associated with size $x$.
+where $M(s,x)$ is the moment-generating function (MGF) for the dispersal kernel associated with size $x$.
 This formulation of the model assumes that the dispersal kernel depends only on maternal size $x$ and not offspring size $x\prime$.
 To estimate $M(s,x)$ we simulated $N=10000$ dispersal events ($r$) for each size $x$ and marginalized these over one spatial dimension as in \cite{lewis2006guide}.
-We then evaluated the empirical moment-generating function for each size $x$: $M(s)=\frac{1}{N} \sum_{i=1}^{N}e^{sr}$. 
+We then evaluated the empirical MGF for each size $x$: $M(s)=\frac{1}{N} \sum_{i=1}^{N}e^{sr}$. 
 
 Estimates of wavespeed were bootstrapped for a total of 1000 replicates.
 Each bootstrap replicate recreated size- and density-dependent demographic models using 50\% resampling on the original demographic data, and recreated dispersal kernels also using 50\% resampling on the wind speeds and seed terminal velocities.
-Model selection for demographic vital rates was re-run for each bootstrap replicate, so this approach incorporates both parameter and model uncertainty. 
+Model selection for demographic vital rates was re-run for each bootstrap replicate. 
+The empirical MGF relied on numerical sampling and was therefore sensitive to extreme long-distance events that differed across bootstrap realizations. 
+Therefore, the distribution of bootstrapped wavespeeds reflects the combination of model uncertainty, parameter uncertainty, and stochasticity inherent to empirical MGFs. 
 
 \subsection*{Encroachment re-surveys}
-We recorded shrub percent cover along two permanent 1000-m transects that spanned the shrub-grass ecotone, from high to low to near-zero shrub density. 
-These surveys were conduced in summer 2001 and again in summer 2013 to document change in creosotebush abundance and spatial extent. 
+Finally, we used re-survey data from permanent transects to assess the predictions of the SIPM with respect to independent empirical observations. 
+In summer 2001, shrub percent cover was recorded along two permanent 1000-m transects that spanned the shrub-grass ecotone (these were different transects than those described above for shrub demography). 
+Surveys were conduced again in summer 2013 to document change in creosotebush abundance and spatial extent. 
 At every 10 meters, shrub cover was recorded in nine cover classes (<1\%, 1--4\%, 5--10\%, 10--25\%, 25--33\%, 33--50\%, 50--75\%, 75--95\%, >95\%). 
 For visualization, we show midpoint values of these cover classes at each meter location for both transects and years. 
 
@@ -398,7 +412,7 @@ Statistical support for size- and density-dependence is provided in Table XX, wh
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/vital_rates}
-  \caption{Size- and density-dependence in demographic vital rates. \textbf{A} Probability of survival from natural population census and transplant experiment (black line), \textbf{B} Mean and variance (inset) of size conditional on previous size, \textbf{C} Probability of flowering, \textbf{D} Flower and fruit production, \textbf{E} Probability of recruitment per seed, \textbf{F} Recruit size.  In \textbf{A}--\textbf{E}, colored lines indicate four size groups (red is largest, blue is smallest), discretized for data visualization only. In all panel, weighted density is the sum of all plant sizes $log(cm^3)$ within the same 5-m window as the census individual.}
+  \caption{Size- and density-dependence in demographic vital rates. \textbf{A} Probability of survival from natural population census and transplant experiment (black line), \textbf{B} Mean and variance (inset) of size conditional on previous size, \textbf{C} Probability of flowering, \textbf{D} Flower and fruit production, \textbf{E} Probability of recruitment per seed, \textbf{F} Recruit size.  In \textbf{A}--\textbf{E}, colored lines indicate four size groups (red is largest, blue is smallest), discretized for data visualization only. In all panels, weighted density is the sum of all plant sizes $log(cm^3)$ within the same 5-m window as the census individual.}
   \label{fig:vital_rates}
   \end{center}
 \end{figure}
@@ -417,7 +431,7 @@ SHORT PARAGRAPH SUMMARIZING SMALLER-SCALE ANALYSIS IN APPENDIX.
 Current size was strongly predictive of future size, as expected, and there was weak negative density dependence in mean future size conditioned on current size (Fig. \ref{fig:vital_rates}C). 
 However, there was a stronger signal of density dependence in the variance of future size (Fig. \ref{fig:vital_rates}C, inset).
 Plants at low density exhibited greater variance in growth trajectories and this was especially true at the smallest sizes. 
-Thus, large increases in the size of new recruits were most likely to occur under low-density conditions. 
+Thus, large increases (and decreases) in the size of new recruits were most likely to occur under low-density conditions. 
 
 \paragraph{Flowering and fruit production}
 Flowering probability was strongly size-dependent and and very weakly sensitive to local density (Fig. \ref{fig:vital_rates}D). 
@@ -439,27 +453,22 @@ At high density in the core of the expansion wave, population growth rates appro
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Figures/BootLambda}
+    \includegraphics[width=\linewidth]{Figures/LambdaD}
   \caption{Density dependence in the asymptotic population growth rate ($\lambda$). Lines show bootstrap replicates sub-sampled from the full demographic data set. Weighted deighted density is the sum of all plant sizes $log(cm^3)$ within 5-m windows.}
   \label{fig:lambda}
   \end{center}
 \end{figure}
 
 \subsection*{Seed dispersal}
-As the speed of encroachment is quite limited, so is the extent of wind dispersal.
-Long distance dispersal events, while more common for taller shrubs than their shorter counterparts, are still uncommon overall.
-For the tallest shrub height of 1.98 m, only 0.32\% of propagules exceed a dispersal distance of 5 m, and 0.02\% exceed 10 m.
-At 1 m, or approximately half the tallest shrub height, long distance dispersal is even less likely, with 0.0046\% of propagules exceeding a dispersal distance of 5 m and 0.0009\% exceeding 10 m.
-Given that the median shrub height is only 0.64 m, the occurrence of long-distance wind dispersal in most of the shrub population is highly improbable, and the few instances in which it occurs will only be limited to the tallest shrubs.
-Thus, as Figure \ref{fig:dispersal} demonstrates, shorter dispersal distances dominate; even for the tallest shrub, 81\% of seeds fall within only a metre of the plant, and this percentage increases as shrub height decreases.
-Dispersal kernels have their highest probability density at dispersal distances between 2 and 8 cm from the shrub; here, as shrub height increases, the most probable dispersal distance slightly increases while maximum probability density decreases.
-Regardless of the shrub height, most dispersal will occur very close to the plant, though increases in shrub height dramatically increase the likelihood of dispersal at longer distances.
-It is clear that the shape of the height-dependent dispersal kernel $K(r)$ varies greatly among the shrub population given the large range of shrub heights observed; shrubs at lower heights have more slender kernels with most of the seeds dispersing closer to the plant, while taller shrubs have kernels with much fatter tails and are more capable of longer-distance dispersal.
+WALD dispersal kernels, inferred from the properties of seeds and wind and accounting for observed variation in wind speeds, were predicted to be strongly size dependent, with taller plants having a greater probability of dispersing seeds longer distances (Fig. \ref{fig:dispersal}). 
+However, predicted seed dispersal was highly local, with most seeds expected to fall within one meter of parent plants for most sizes. 
+Even for the very tallest shrub we observed (1.96 m), only 6.2\% of its seeds were predicted to fall more than 3 m away and less than 1\% were predicted to fall more than 6 m away (Fig. \ref{fig:dispersal}). 
+Taller shrubs also exhibited wider variance in their dispersal kernel and this reflects their wider range of seed release heights. 
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Figures/Figure2}
-  \caption{Dispersal kernels, with each colour representing a selected shrub height. The inset plot is the same              as the large plot, though with a logarithmic x-axis to more easily show differences in dispersal                  probability at smaller distances.}
+    \includegraphics[width=\linewidth]{Figures/Dkernels}
+  \caption{Predicted WALD dispersal kernels for four shrub heights corresponding to the 25th, 50th, 75th, and 100th (maximum) percentiles of the observed size distribution. We assume that heights below 15 cm have effectively no seed movement due to interference with the grass layer.}
   \label{fig:dispersal}
   \end{center}
 \end{figure}
@@ -476,58 +485,17 @@ Thus, the conditions necessary for equation 9 to be valid are satisfied, and the
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Figures/Figure1}
+    \includegraphics[width=\linewidth]{Figures/wavespeed}
   \caption{Estimated encroachment wave speeds (left) and geometric rates of population growth (right) for higher             post-rainfall seedling survival and normal conditions.}
   \label{fig:wavespeed}
   \end{center}
 \end{figure}
 
 
-
 \subsection*{Transect re-surveys}
-Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over 12 years (Fig. \ref{fig:transect_resurv}).
+Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over 12 years .
 There were local changes in percent cover: on average cover increased by XX\% between surveys.
 However, there was no clear indication that the leading edge of the creosote shrubland has advanced (the modest right-ward shift on both transects is within the range of measurement error). 
-
-<<transect_resurv,echo=F,message=F,fig.dim=c(8,4),fig.cap="Re-surveys of shrub cover along two permanent trasects (A,B) surveyed in 2001 and 2013.">>=
-resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
-par(mfrow=c(1,2),mar=c(4,4,1,1))
-plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="East"],
-     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="East"],
-     type="l",lwd=2,col="gray",ylim=c(0,50),
-     xlab="Meter",ylab="Percent cover")
-points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="East"]+5,
-     resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="East"],
-     type="l",lwd=2,col="black")
-title("A",adj=0,font=3)
-plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="West"],
-     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="West"],
-     type="l",lwd=2,col="gray",ylim=c(0,50),
-     xlab="Meter",ylab="Percent cover")
-points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="West"]+5,
-     resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="West"],
-     type="l",lwd=2,col="black")
-title("B",adj=0,font=3)
-legend("topright",legend=c("2001","2013"),bty="n",lwd=2,col=c("gray","black"))
-
-##how many quads had zero creosote in 2001 and non-zero in 2013
-resurv$trans_quad <- interaction(resurv$Transect,resurv$Quad)
-zero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]==0),]$trans_quad
-nonzero2013 <- resurv[resurv$trans_quad%in%zero2001 & resurv$Year==2013,]$LATR_percent>0
-zero_to_nonzero <- sum(nonzero2013,na.rm=T)/length(na.omit(nonzero2013))
-
-##now the reverse: what fraction of quads with nonzero in 2001 had zero in 2013?
-nonzero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]>0),]$trans_quad
-zero2013 <- resurv[resurv$trans_quad%in%nonzero2001 & resurv$Year==2013,]$LATR_percent==0
-nonzero_to_zero <- sum(zero2013,na.rm=T)/length(na.omit(zero2013))
-
-## what was the overall mean cover in both years?
-mean_cover <- resurv %>% 
-  group_by(Transect,as.factor(Year)) %>% 
-  summarise(mean(LATR_percent,na.rm=T))
-
-@
-
 
 %--------------------------------------------------------------------
 \section*{Discussion}
