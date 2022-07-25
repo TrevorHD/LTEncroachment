@@ -220,9 +220,18 @@ dev.off()
 
 # ----- Plot growth rate as function of density -----------------------------------------------------------
 
-# Coerce list of lambda values into data frame
-# Then calculate 95% bootstrap interval
-boot.lambda.df <- data.frame(boot.lambda)
+# get bootstrapped results
+boot.lambda <- read.csv("BootLambda.csv")
+# compute mean result
+mean.lambda <- LambdaD()
+
+plot(boot.lambda$density,boot.lambda[,3],type="n",xlab="Weighted density",
+     ylab=expression(paste(lambda)),cex.lab=1.2,ylim=c(1,1.06))
+for(i in 3:dim(boot.lambda)[2]){
+  lines(boot.lambda$density,boot.lambda[,i],col=alpha("black",0.15))
+}
+lines(boot.lambda$density,mean.lambda,lwd=3,col="red")
+
 boot.lambda.stats <- data.frame(boot.lambda.df[, 1],
                                apply(X = boot.lambda.df[, -1], MARGIN = 1, FUN = mean),
                                apply(X = boot.lambda.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.025),
