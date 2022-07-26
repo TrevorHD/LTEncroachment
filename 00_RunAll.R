@@ -74,12 +74,12 @@ boot.noDisp <- FALSE
 # Should be in the interval (0, 1), exclusive
 # Warning: setting this number very low may adversely affect model behaviour
 # Ignore this if boot.on = FALSE
-boot.prop <- 0.5
+boot.prop <- 0.75
 
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 1000
+boot.num <- 100
 
 # Create empty vectors to populate with wavespeeds
 # c1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
@@ -90,7 +90,7 @@ boot.c2 <- c()
 # Should perturvation analysis be run?
 pert.on <- TRUE
 # magnitue of perturbation
-pert <- 0.01 ## 1% increase in mean or variance of vital rate
+pert <- 0.01 ## 0.01 increase in vital rate function
 # vector of vital rates to be perturbed
 elas <- c("growth.mean","growth.sd","survival","flower","fertility",
           "recruitment","recruitsize.mean","recruitsize.sd",
@@ -152,13 +152,14 @@ for(i in 1:boot.num){
     
     #run perturbation analysis on this data bootstrap
     if(pert.on==TRUE){
-      c2star.elas<-c2star.sens<-c()
+      #c2star.elas<-
+      c2star.sens<-c()
       for(e in 1:length(elas)){
         
         # elasticities
-        TM <- TransMatrix(dens = 0, mat.size = 100,elas=elas[e])
-        D.samples <- WALD_samples(N=10000,seed=seeds[i,2],elas=elas[e]) 
-        c2star.elas[e] <- optimize(cs,lower=0.05,upper=4,emp=T)$objective
+        #TM <- TransMatrix(dens = 0, mat.size = 100,elas=elas[e])
+        #D.samples <- WALD_samples(N=10000,seed=seeds[i,2],elas=elas[e]) 
+        #c2star.elas[e] <- optimize(cs,lower=0.05,upper=4,emp=T)$objective
         
         # senstitivies
         TM <- TransMatrix(dens = 0, mat.size = 100,sens=elas[e])
@@ -167,7 +168,7 @@ for(i in 1:boot.num){
       }
 
       # calculate proportional change in cstar and append to output
-      boot.elas <- rbind(boot.elas,((c2star.elas/c2star)-1))
+      #boot.elas <- rbind(boot.elas,((c2star.elas/c2star)-1))
       boot.sens <- rbind(boot.sens,(c2star.sens-c2star)/pert)
     }#end pert on
     
@@ -220,7 +221,7 @@ if(boot.saveOutputs == TRUE){
   # Write bootstrapped wavespeed values to csv
   write.csv(boot.c1, "BootC1.csv")
   write.csv(boot.c2, "BootC2.csv")
-  write.csv(boot.elas,"Boot.elas.csv")
+  #write.csv(boot.elas,"Boot.elas.csv")
   write.csv(boot.sens,"Boot.sens.csv")
 }
 
