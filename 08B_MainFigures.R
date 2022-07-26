@@ -184,7 +184,10 @@ dev.off()
 
 # get bootstrapped results
 boot.lambda <- read.csv("BootLambda.csv")
-# compute mean result
+# compute mean result with full data
+boot.prop<-1
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
 mean.lambda <- LambdaD()
 
 pdf("Manuscript/Figures/LambdaD.pdf",useDingbats = F,height=5,width=6)
@@ -223,8 +226,18 @@ dev.off()
 
 
 # Wavespeeds --------------------------------------------------------------
-
+library(plotrix)
+library(ggbreak)
+library(patchwork)
 boot.wave <- read.csv("BootC2.csv")
+boot.sens <- read.csv("Boot.sens.csv")
+boot.elas <- read.csv("Boot.elas.csv")
+
+## drop first row (garbage)
+boot.sens <- boot.sens[-1,]
+names(boot.sens)[2:11]<-elas
+boot.elas <- boot.elas[-1,]
+names(boot.elas)[2:11]<-elas
 
 pdf("Manuscript/Figures/wavespeed.pdf",useDingbats = F,height=5,width=6)
 par(mar=c(5,5,1,1))
@@ -235,3 +248,54 @@ plot(density(boot.wave[,2]),type="n",main=" ",cex.lab=1.2,
 polygon(density(boot.wave[,2]),col=alpha(D_cols[4],.5))
 
 dev.off()
+
+
+twovec<-list(vec1=c(rnorm(30),-6),vec2=c(sample(1:10,40,TRUE),20))
+gap.boxplot(twovec,gap=list(top=c(12,18),bottom=c(-5,-3)),
+            main="Show outliers separately")
+gap.boxplot(twovec,gap=list(top=c(12,18),bottom=c(-5,-3)),range=0,
+            main="Include outliers in whiskers")
+
+gap.boxplot(boot.sens[,2:11],gap=list(top=c(5,36),bottom=c(NA,NA)),ylim = c(0,102))
+
+gap.barplot(colMeans(boot.sens[,2:11]),gap=c(3,50),ylim=c(-.1,2))
+
+
+
+gap.boxplot(boot.sens[,c(2:6,8:11)],gap=list(top=c(0.65,1.05),bottom=c(NA,NA)),ylim=c(-.1,3))
+
+
+gap.barplot(colMeans(boot.sens[,c(2:6,8:11)]), gap=c(1,2))
+
+twogrp<-c(rnorm(10)+4,rnorm(10)+20)
+gap.barplot(twogrp,gap=c(8,16),xlab="Index",ytics=c(3,6,17,20),
+            ylab="Group values",main="Barplot with gap")
+gap.barplot(twogrp,gap=c(8,16),xlab="Index",ytics=c(3,6,17,20),
+            ylab="Group values",horiz=TRUE,main="Horizontal barplot with gap")
+
+
+test<-data.frame(colMeans(boot.sens[,2:11]))
+names(test)<-"sens"
+test$vital_rate <- rownames(test)
+
+
+ggplot(data = test,
+       aes(x = vital_rate, y = sens, fill=rainbow(10)))+
+  geom_bar(stat = "identity")+ 
+  scale_y_break(c(2.05,69.8))+
+  scale_y_break(c(0.2,1.95)) -> crap1
+
+
+
+boot.sens %>% 
+  select(-X) %>% 
+  pivot_longer(`growth.mean`:`dispersal.scale`,names_to = "vital_rate", values_to = "sensitivity")->test2
+
+ggplot(boot.sens)+
+  geom_boxplot()
+
+
+ggplot(boot.wave,aes(x=x))+
+         geom_histogram() -> crap2
+       
+crap2+crap1

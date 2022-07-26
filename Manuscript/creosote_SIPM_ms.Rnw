@@ -388,11 +388,16 @@ This formulation of the model assumes that the dispersal kernel depends only on 
 To estimate $M(s,x)$ we simulated $N=10000$ dispersal events ($r$) for each size $x$ and marginalized these over one spatial dimension as in \cite{lewis2006guide}.
 We then evaluated the empirical MGF for each size $x$: $M(s)=\frac{1}{N} \sum_{i=1}^{N}e^{sr}$. 
 
-Estimates of wavespeed were bootstrapped for a total of 1000 replicates.
+We used numerical sensitivity analysis to compare the contributions of demography and dispersal processes to the speed of expansion. 
+We perturbed each vital rate function by an arbitrary value, recalculated wavespeed, and quantified sensitivity as the change in wavespeed divided by the perturbation. 
+Analytical sensitivity analysis is also possible \citep{ellner2016data} but these sensitivities reflect infinitesmally small perturbations.
+We were particularly interested in the effects of large perturbations, especially large changes in seedling recruitment, which is subject to pulse events. 
+
+Estimates of wavespeed and its sensitivity to demography and dispersal processes were bootstrapped for a total of 1000 replicates.
 Each bootstrap replicate recreated size- and density-dependent demographic models using 50\% resampling on the original demographic data, and recreated dispersal kernels also using 50\% resampling on the wind speeds and seed terminal velocities.
 Model selection for demographic vital rates was re-run for each bootstrap replicate. 
 The empirical MGF relied on numerical sampling and was therefore sensitive to extreme long-distance events that differed across bootstrap realizations. 
-Therefore, the distribution of bootstrapped wavespeeds reflects the combination of model uncertainty, parameter uncertainty, and stochasticity inherent to empirical MGFs. 
+Therefore, bootstrapped distributions reflect the combination of model uncertainty, parameter uncertainty, and stochasticity inherent to empirical MGFs. 
 
 \subsection*{Encroachment re-surveys}
 Finally, we used re-survey data from permanent transects to assess the predictions of the SIPM with respect to independent empirical observations. 
@@ -438,7 +443,7 @@ Flowering probability was strongly size-dependent and and very weakly sensitive 
 However, fertility of flowering plants was strongly negative density dependent, with greatest flower and fruit production by the largest plants at the lowest densities, and vice versa (Fig. \ref{fig:vital_rates}E).
 
 \paragraph{Recruitment and recruit size}
-We observed \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruitment events along our transects during the study years and our estimate recruitment rate, given total expected seed production in each window preceding the recruitment year, was very low ($2.47 \times 10^{-6}$, \ref{fig:vital_rates}F). 
+We observed \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruitment events along our transects during the study years and our estimate recruitment rate, given total expected seed production in each window preceding the recruitment year, was very low ($2.47 \times 10^{-6}$, \ref{fig:vital_rates}E). 
 While most recruitment events occurred at low density, this is also where most seed production was concentrated (Fig. \ref{fig:vital_rates}E) and low-density windows were over-represented relative to high density. 
 For these reasons we were more likely to observe recruiment events at low density. 
 Controlling for sampling effort and seed production, the statistical models indicated that our data were most consistent with a constant, density-independent recruitment rate (Table XX). 
@@ -446,8 +451,8 @@ However, the mean size of new recruits declined significantly with local density
 
 
 \paragraph{Population growth rate}
-As expected based on the vital rate results, the asymptotic population growth rate $\lambda$ declined monotonically with density (Fig. \ref{fig:lambda}). 
-This was true across all bootstrap replicates, indicating high certainty that shrub fitness is maximized at zero density and thus that the expansion wave is ``pulled''. 
+As expected given the vital rate results, the asymptotic population growth rate $\lambda$ declined monotonically with density (Fig. \ref{fig:lambda}). 
+This was true across nearly all bootstrap replicates, indicating high certainty that shrub fitness is maximized at zero density and thus that the expansion wave is ``pulled'' (for this reason our wavespeed results are based on the analytical approach described above). 
 Mean growth rate at low density was 3\% per year, with bootstrap uncertainty spanning 1--6\%.
 At high density in the core of the expansion wave, population growth rates approached $\lambda=1$, indicating population stasis driven by near-perfect survival and extremely rare recruitment. 
 
@@ -460,7 +465,7 @@ At high density in the core of the expansion wave, population growth rates appro
 \end{figure}
 
 \subsection*{Seed dispersal}
-WALD dispersal kernels, inferred from the properties of seeds and wind and accounting for observed variation in wind speeds, were predicted to be strongly size dependent, with taller plants having a greater probability of dispersing seeds longer distances (Fig. \ref{fig:dispersal}). 
+WALD dispersal kernels, inferred from the properties of seeds and wind and accounting for observed variation in wind speeds and within-plant seed release height, were predicted to be strongly size dependent, with taller plants having a greater probability of dispersing seeds longer distances (Fig. \ref{fig:dispersal}). 
 However, predicted seed dispersal was highly local, with most seeds expected to fall within one meter of parent plants for most sizes. 
 Even for the very tallest shrub we observed (1.96 m), only 6.2\% of its seeds were predicted to fall more than 3 m away and less than 1\% were predicted to fall more than 6 m away (Fig. \ref{fig:dispersal}). 
 Taller shrubs also exhibited wider variance in their dispersal kernel and this reflects their wider range of seed release heights. 
@@ -474,14 +479,12 @@ Taller shrubs also exhibited wider variance in their dispersal kernel and this r
 \end{figure}
 
 
-\subsection*{Expansion speed}
+\subsection*{Expansion speed and sensitivities}
+The asymptotic speed of creosote encroachment, given the above demography and dispersal patterns, was very slow. 
+The mean asymptotic speed was VALUE m/year and the 5--95 percentiles of the uncertainty distribution was VALUE m/year (Fig. \ref{fig:wavespeed}A). 
+Expansion speed was by far the most sensitive to the probability of seedling recruitment (Fig. \ref{fig:wavespeed}B), indicating that this life cycle transition is imposes the strongest constraint on encroachment. 
+Sensitivity to survival ranked second, and since nearly all mortality occurred at the smallest sizes this too can be interpreted as an early life cycle constraint on expansion. 
 
-The speed of encroachment at the study site as estimated by the SIPM is rather slow; as can be seen in Figure \ref{fig:wavespeed}, the low-density wavefront moves at approximately 0.5 cm/yr under normal conditions and at 1 cm/yr under the best seedling survival conditions observed in the dataset.
-These improved conditions were observed due to above-average rainfall that occurred after greenhouse-grown seedlings were transplanted to the site.
-Population growth in this low-density region of the moving wave is also low, with a geometric growth rate of $\lambda \approx 1.006$ and even lower rates of growth the higher-density regions behind; in the higher-survival scenario the maximum rate increases to $\lambda \approx 1.013$, with growth still decreasing as density increases.
-For both scenarios, the decrease in population growth rate with increasing density was monotonic across the range of observed standardised densities, as is shown in Figure \ref{fig:wavespeed}.
-This suggests that an Allee effect is likely not present in this population, as the highest rate of population growth is found at the lowest density vanguard of the encroaching population.
-Thus, the conditions necessary for equation 9 to be valid are satisfied, and these wavespeeds are applicable for a pulled-wave scenario in which no Allee effects are present.
 
 \begin{figure}[H]
   \begin{center}
@@ -493,12 +496,21 @@ Thus, the conditions necessary for equation 9 to be valid are satisfied, and the
 
 
 \subsection*{Transect re-surveys}
-Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over 12 years .
+Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over the 12 years that preceded our study.
 There were local changes in percent cover: on average cover increased by XX\% between surveys.
 However, there was no clear indication that the leading edge of the creosote shrubland has advanced (the modest right-ward shift on both transects is within the range of measurement error). 
 
 %--------------------------------------------------------------------
 \section*{Discussion}
+
+The encroachment of grasslands by woody plants is a worldwide phenomenon with broad implications for biodiversity and ecosystem function. 
+To our knowlegde, ours is the first study to apply spatial population biology theory to woody plant encroachment. 
+Through this lens, we asked whether the encroachment process is pushed or pulled, hypothesizing that positive feedbacks, well documented in this and other woody encroachment systems, would cause declines in fitness at the low-density front and generate pushed-wave dynamics. 
+Instead, observational and experimental evidence unambiguously indicate that fitness was maximized in low-density plant neighborhoods.
+The creosote encroachment wave is therefore predicted to be pulled by maximum demographic performance at the leading edge.
+However, our field-parameterized spatial integral projection model revealed that this wave is pulled at the very slow rate of 5--10 centimeters per year -- so slow that, under the observed conditions, this grass-shrub ecotone is effectively stationary. 
+Re-surveys of permanent transects independently supported this prediction, showing virtually no change in the position of the shrub boundary in over a decade. 
+
 
 The slow movement of the encroaching creosotebush wave at the Sevilleta LTER site can likely be contributed to a combination of three factors: short dispersal distances with extremely limited long-distance dispersal events, very low probability of recruitment from seed, and high seedling mortality.
 These three barriers, when combined, form a formidable challenge to the establishment of new shrubs at the low-density front of the wave.
