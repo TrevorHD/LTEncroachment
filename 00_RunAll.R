@@ -22,7 +22,9 @@ library(sgt)
 library(maxLik)
 library(zoo)
 library(binr)
-
+library(plotrix)
+library(ggbreak)
+library(patchwork)
 
 ##### Run scripts that do not change between the two scenarios --------------------------------------------
 
@@ -79,7 +81,7 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 100
+boot.num <- 1000
 
 # Create empty vectors to populate with wavespeeds
 # c1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
@@ -90,7 +92,7 @@ boot.c2 <- c()
 # Should perturvation analysis be run?
 pert.on <- TRUE
 # magnitue of perturbation
-pert <- 0.01 ## 0.01 increase in vital rate function
+pert <- 0.001 ## 0.001 increase in vital rate function
 # vector of vital rates to be perturbed
 elas <- c("growth.mean","growth.sd","survival","flower","fertility",
           "recruitment","recruitsize.mean","recruitsize.sd",
@@ -99,8 +101,8 @@ elas <- c("growth.mean","growth.sd","survival","flower","fertility",
 boot.elas <- vector("numeric",length = length(elas))
 boot.sens <- vector("numeric",length = length(elas))
 
-#seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"1000seeds.csv")
-seeds<-read.csv("1000seeds.csv")
+seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"1000seeds.csv")
+#seeds<-read.csv("1000seeds.csv")
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 

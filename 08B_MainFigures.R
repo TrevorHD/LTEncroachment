@@ -202,6 +202,15 @@ lines(boot.lambda$density,mean.lambda,lwd=3,col="red")
 
 dev.off()
 
+## find weird samples
+which(boot.lambda[25,3:100]>1.005)
+## here are 3 weird ones from the first 100 samples
+plot(boot.lambda$density,boot.lambda[,3],type="n",xlab="Weighted density",
+     ylab=expression(paste(lambda)),cex.lab=1.2,ylim=c(1,1.06))
+lines(boot.lambda$density,boot.lambda[,3],col="red")
+lines(boot.lambda$density,boot.lambda[,28],col="blue")
+lines(boot.lambda$density,boot.lambda[,87],col="darkgreen")
+
 # Dispersal kernel --------------------------------------------------------
 heights <- quantile(LATR_full$max.ht_t,na.rm=T)
 D_cols <- wes_palette("Zissou1", 4, type = "continuous")
@@ -226,9 +235,7 @@ dev.off()
 
 
 # Wavespeeds --------------------------------------------------------------
-library(plotrix)
-library(ggbreak)
-library(patchwork)
+
 boot.wave <- read.csv("BootC2.csv")
 boot.sens <- read.csv("Boot.sens.csv")
 boot.elas <- read.csv("Boot.elas.csv")
@@ -299,3 +306,49 @@ ggplot(boot.wave,aes(x=x))+
          geom_histogram() -> crap2
        
 crap2+crap1
+
+
+# transect resurveys ------------------------------------------------------
+
+resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
+
+pdf("Manuscript/Figures/resurveys.pdf",useDingbats = F,height=4,width=8)
+
+par(mfrow=c(1,2),mar=c(4,4,1,1))
+plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="East"],
+     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="East"],
+     type="l",lwd=2,col="gray",ylim=c(0,50),
+     xlab="Meter location",ylab="Shrub cover (%)")
+points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="East"],
+       resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="East"],
+       type="l",lwd=2,col="black")
+title("A",adj=0,font=3)
+plot(resurv$Quad[resurv$Year==2001 & resurv$Transect=="West"],
+     resurv$LATR_percent[resurv$Year==2001 & resurv$Transect=="West"],
+     type="l",lwd=2,col="gray",ylim=c(0,50),
+     xlab="Meter location",ylab="Shrub cover (%)")
+points(resurv$Quad[resurv$Year==2013 & resurv$Transect=="West"],
+       resurv$LATR_percent[resurv$Year==2013 & resurv$Transect=="West"],
+       type="l",lwd=2,col="black")
+title("B",adj=0,font=3)
+legend("topright",legend=c("2001","2013"),bty="n",lwd=2,col=c("gray","black"))
+
+dev.off()
+
+
+##how many quads had zero creosote in 2001 and non-zero in 2013
+resurv$trans_quad <- interaction(resurv$Transect,resurv$Quad)
+zero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]==0),]$trans_quad
+nonzero2013 <- resurv[resurv$trans_quad%in%zero2001 & resurv$Year==2013,]$LATR_percent>0
+zero_to_nonzero <- sum(nonzero2013,na.rm=T)/length(na.omit(nonzero2013))
+
+##now the reverse: what fraction of quads with nonzero in 2001 had zero in 2013?
+nonzero2001 <- resurv[which(resurv$LATR_percent[resurv$Year==2001]>0),]$trans_quad
+zero2013 <- resurv[resurv$trans_quad%in%nonzero2001 & resurv$Year==2013,]$LATR_percent==0
+nonzero_to_zero <- sum(zero2013,na.rm=T)/length(na.omit(zero2013))
+
+## what was the overall mean cover in both years?
+mean_cover <- resurv %>% 
+  group_by(Transect,as.factor(Year)) %>% 
+  summarise(mean(LATR_percent,na.rm=T))
+
