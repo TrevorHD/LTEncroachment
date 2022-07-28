@@ -4,13 +4,36 @@
 monsoon <- read.csv("Data/Weather/SEV_monsoon_precipitation.csv")
 str(monsoon)
 
-plot(monsoon$Year[monsoon$StationID==49],
-     monsoon$Precipitation[monsoon$StationID==49],type="b")
-points(2013:2016,
-       monsoon$Precipitation[monsoon$StationID==49 & monsoon$Year%in%2013:2016],
-       pch=16)
+## calculate seedlings per area by getting transect lengths
+transect_lengths <- read.csv("Data/LT_TransectLengths.csv") %>% 
+  mutate(area = Length_m*2)
 
 CData %>% 
-  filter(new.plant_t1==1 & seedling_t1==1) %>% 
+  group_by(site,transect,year_t1) %>% 
+  summarise(seedlings=sum(new.plant_t1==1 & seedling_t1==1,na.rm=T)) %>% 
+  rename(Site=site,Transect=transect) %>% 
+  left_join(.,transect_lengths,by=c("Site","Transect"))%>% 
   group_by(year_t1) %>% 
-  summarise(n())
+  summarise(tot_recruits=sum(seedlings),
+            tot_area=sum(area)) %>% 
+  mutate(recruits_per_area=tot_recruits/tot_area) -> recruits
+
+pdf("Manuscript/Figures/monsoon_seedlings.pdf",useDingbats = F,height=4,width=8)
+par(mfrow=c(1,2),mar=c(4,4,1,1))
+
+plot(monsoon$Year[monsoon$StationID==49],
+     monsoon$Precipitation[monsoon$StationID==49],type="b",
+     ylab="Monsoon (July-September) precip. (mm)",
+     xlab="Year")
+points(2013:2017,
+       monsoon$Precipitation[monsoon$StationID==49 & monsoon$Year%in%2013:2017],
+       pch=16)
+title("A",adj=0,font=3)
+
+plot(monsoon$Precipitation[monsoon$StationID==49 & monsoon$Year%in%2013:2016],
+     recruits$recruits_per_area[recruits$year_t1%in%2014:2017],
+     xlab="Monsoon precip. (mm)",ylab="Recruit density per m2",
+     cex=2,pch=16)
+title("B",adj=0,font=3)
+
+dev.off()
