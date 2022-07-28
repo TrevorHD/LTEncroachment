@@ -500,6 +500,14 @@ Re-surveys along two permanent transects revealed virtually no change the in the
 There were local changes in percent cover: on average cover increased by XX\% between surveys.
 However, there was no clear indication that the leading edge of the creosote shrubland has advanced (the modest right-ward shift on both transects is within the range of measurement error). 
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/resurveys}
+  \caption{Surveys of creosotebush percent cover along two permanent transects (A,B) in 2001 and 2013.}
+  \label{fig:wavespeed}
+  \end{center}
+\end{figure}
+
 %--------------------------------------------------------------------
 \section*{Discussion}
 
@@ -609,7 +617,7 @@ Constructing $p(U)$ involved creating an empirical PDF of hourly wind speeds usi
 We used wind speed data collected hourly from 2015 to 2019 \citep{SEVmet}.
 
 \newpage
-\section*{Appendix B: Model selection results}
+\section*{Appendix B: Additional results}
 \renewcommand{\thefigure}{B\arabic{figure}}\setcounter{figure}{0}
 \renewcommand{\thetable}{B\arabic{table}}\setcounter{table}{0}
 \renewcommand{\theequation}{B\arabic{equation}}\setcounter{equation}{0}
@@ -676,5 +684,13 @@ print(recruitsize_aic,
       floating = TRUE, latex.environments = "center")
 @
 
+\newpage
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/monsoon_seedlings}
+  \caption{.}
+  \label{fig:monsoon}
+  \end{center}
+\end{figure}
 
 \end{document}
