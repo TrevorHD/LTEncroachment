@@ -1,0 +1,31 @@
+The slow movement of the encroaching creosotebush wave at the Sevilleta LTER site can likely be contributed to a combination of three factors: short dispersal distances with extremely limited long-distance dispersal events, very low probability of recruitment from seed, and high seedling mortality.
+These three barriers, when combined, form a formidable challenge to the establishment of new shrubs at the low-density front of the wave.
+First, a seed must travel far enough to avoid competition with the parent shrub, which is unlikely given the dispersal kernels shown in Figure 2.
+Even if the seed manages to be dispersed this far, its chances of becoming a seedling are low.
+Caching and consumption by seed-eaters such as a variety of seed-harvesting ants \citep{whitford1978structure, whitford1980foraging, lei1999ecological} and the kangaroo rat Dipodomys merriami \citep{chew1970energy} decreases the amount of seeds available for germination.
+However, reduction in germination caused by destruction of seeds may be partly mitigated by the more favourable germination conditions that these seeds can experience when cached underground \citep{chew1970energy}.
+Many of the remaining seeds will still fail to germinate, and in the unlikely event that germination does occur, seedlings will likely die given the high rates of mortality observed in smaller shrubs.
+Such high rates of creosotebush seedling mortality have been observed in other studies as well \citep{boyd1983postdispersal, bowers2004temporal}, probably due to a combination of herbivory, competition, and abiotic stresses. 
+
+However, as low as they are, the wavespeed estimates given in this paper are still conservative estimates for reasons mostly related to dispersal.
+First, it is important to note that the dispersal kernels used here, while they account for variation in factors such as wind speed and terminal velocity, may underestimate the distances that shrub propagules travel.
+Because the WALD model assumes that terminal velocity is reached immediately upon seed release, seeds in the estimate thus take a shorter time to fall and have less time to be transported by wind, and the true frequency of long-distance dispersal events may thus be greater than what is estimated here.
+Second, dispersal at the study site could occur through additional mechanisms other than wind.
+For example, secondary dispersal through runoff from significant rainfall events can transport seeds \citep{thompson2014secondary}, and given that long-distance dispersal by bird and subsequent species divergence is thought to be responsible for creosotebush being in North America in the first place \citep{wells1976origin}, short-distance dispersal by other animals at the study site likely occurs.
+As mentioned above, seeds are transported by seed-harvesting ants and granivorous mammals, where they are often stored in caches that can be appreciable distances from the parent shrubs.
+Whether transportation occurs via ant or rodent, creosotebush seeds can be moved significantly further than wind alone can, though many of these seeds are eventually consumed.
+
+Despite the more conservative estimates our model yields, the estimated rate of dispersal in creosotebush populations at the Sevilleta National Wildlife Refuge is consistent with observations from the past 50-60 years, as creosotebush expansion during this time has been minimal \citep{moreno2016seed}.
+However, it cannot explain the long-term increases in creosotebush cover at the study site, as total encroachment over the past 150 years is much greater than what would be expected given the encroachment rates derived by our models.
+Such a discrepancy is likely due to much of the expansion occurring in an episodic fashion, with short times during which rapid encroachment occurs due to favourable environmental conditions.
+This could be due in part to seedling recruitment, which is a factor that strongly limits creosotebush expansion, being rare and episodic.
+For example, \citet{allen2008allometry} estimate that a major recruitment event occurred at this site in the 1950s, which is supported by photographic evidence from \citet{milne2003multidecadal} of a drought-driven expansion during this time.
+\citet{moreno2016seed} estimate that after this expansion, several smaller creosotebush recruitment events occurred in decadal episodes.
+However, such events can be highly localised and may not necessarily occur at the low-density front of encroachment, which could explain how these recruitment events can still coexist with lack of encroachment in the recent past.
+
+Overall, our observations and model highlight three aspects of creosotebush encroachment that should be the focus of future studies seeking to obtain better estimates of encroachment rates.
+First, negative density dependence in survival, growth, and reproduction is demonstrated, along with size dependence. The clear dependence on size and conspecific density suggests that they both should be considered when estimating creosotebush expansion and quantifying the demographic variation that contributes to it.
+Second, wind dispersal in these shrubs is quite limited; though the dispersal kernels seen here are typical in the sense that they are characterised by high near-plant dispersal and exceptionally low long-distance dispersal, the scale across which such dispersal occurs is small, with most seeds landing within only 1 m of the shrub.
+Wind dispersal alone may be an underestimate of the true amount of dispersal occurring, and future work should seek to incorporate the effects of dispersal by runoff and animals so that a more representative model of total dispersal can be obtained.
+Finally, encroachment is slow or even stagnates, but only most of the time.
+Though our encroachment speed estimates are representative of creosotebush populations for most years, the significant expansion seen over larger time scales suggests that there is episodic expansion in other years; while our model is consistent with the recent stagnation in creosotebush encroachment at the Sevilleta LTER site, a model that also includes interannual variability in factors such as survival and recruitment would be able to better account for instances of episodic population expansion that are characteristic of this location.

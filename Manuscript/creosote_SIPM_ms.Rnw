@@ -37,7 +37,7 @@ library(tidyverse)
 library(xtable)
 ##read in demography data to pull some quantities
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
-aic_tables <- readRDS("aic_tables.rds")
+aic_tables <- readRDS("Manuscript/aic_tables.rds")
 @
 
 %-------------------------------------------------------------------------
@@ -252,7 +252,7 @@ We modeled survival or mortality in year $t+1$ as a Bernoulli random variable wi
 These included smooth terms for initial size in year $t$ only (1), initial size and weighted density (2), and both smooth terms plus an interaction between initial size and weighted density (3). 
 We analyzed survival of experimental transplants and observational census plants together in the same analyses, with a fixed effect of transplant status (yes/no) included in all candidate models. 
 Since recruits and thus mortality events were both very rare in the observational survey, this approach allowed us to ``borrow strength'' over both data sets to generate a predictive function for size- and possibly density-dependent survival while statistically accounting for differences between experimental and naturally occurring plants. 
-Because we had additional, finer-grained cover data for the transplant experiment that we did not have for the observational census, we conducted an additional stand-alone analysis of transplant survival that explored the influence of covariates at multiple spatial scales (Appendix).
+Because we had additional, finer-grained cover data for the transplant experiment that we did not have for the observational census, we conducted an additional stand-alone analysis of transplant survival that explored the influence of shrub and grass density at multiple spatial scales (Appendix).
 
 \paragraph{Growth}
 We modeled size in year $t+1$ as a Gaussian random variable. 
@@ -411,8 +411,8 @@ For visualization, we show midpoint values of these cover classes at each meter 
 
 \subsection*{Size and density dependent demography}
 Demographic data from naturally occurring and transplanted individuals revealed strong size- and density-dependence in demographic vital rates. 
-For most sizes and vital rates, local density had negative demographic effects. 
-Statistical support for size- and density-dependence is provided in Table XX, which provides AIC rankings for candidate models based on the completed (not bootstrapped) data set. 
+For most sizes and vital rates, shrub density had negative demographic effects; there was no strong evidence for positive density dependence in any demographic process at any size. 
+Statistical support for size- and density-dependence is provided in Tables \ref{tab:surv_aic}--\ref{recruitsize_aic}, which provide AIC rankings for candidate models based on the complete data set. 
 
 \begin{figure}[H]
   \begin{center}
@@ -429,8 +429,7 @@ The probability of survival at these small sizes declined with increasing densit
 Survival of transplants was very low, lower even than survival of similarly-sized, naturally occurring recruits (Fig. \ref{fig:vital_rates}B). 
 However, the transplant results support the general pattern of negative density dependence in survival. 
 Among the \Sexpr{nrow(CData.Transplants[CData.Transplants$transplant==T & CData.Transplants$spring_survival_t1==1,])} survivors, \Sexpr{nrow(CData.Transplants[CData.Transplants$transplant==T & CData.Transplants$spring_survival_t1==1 & CData.Transplants$weighted.dens < quantile(CData.Transplants$weighted.dens,0.5),])} of them occurred in transect windows below the median of weighted shrub density. 
-
-SHORT PARAGRAPH SUMMARIZING SMALLER-SCALE ANALYSIS IN APPENDIX.
+In Appendix XX, we show that transplant mortality was dominated by negative effects of shrub density at the 5-m window scale, even when effects of local grass and shrub cover were included as alternative or additional statistical covariates, which suggests that this is the appropriate spatial scale for modeling density dependence in this system. 
 
 \paragraph{Growth}
 Current size was strongly predictive of future size, as expected, and there was weak negative density dependence in mean future size conditioned on current size (Fig. \ref{fig:vital_rates}C). 
@@ -512,45 +511,23 @@ However, there was no clear indication that the leading edge of the creosote shr
 \section*{Discussion}
 
 The encroachment of grasslands by woody plants is a worldwide phenomenon with broad implications for biodiversity and ecosystem function. 
-To our knowlegde, ours is the first study to apply spatial population biology theory to woody plant encroachment. 
+To our knowledge, ours is the first study to apply spatial population biology theory to woody plant encroachment. 
+This lens on the problem brings attention to the combined influence of dispersal and density-dependent demography as critical controls on the occurrence and pace of encroachment. 
 Through this lens, we asked whether the encroachment process is pushed or pulled, hypothesizing that positive feedbacks, well documented in this and other woody encroachment systems, would cause declines in fitness at the low-density front and generate pushed-wave dynamics. 
 Instead, observational and experimental evidence unambiguously indicate that fitness was maximized in low-density plant neighborhoods.
 The creosote encroachment wave is therefore predicted to be pulled by maximum demographic performance at the leading edge.
 However, our field-parameterized spatial integral projection model revealed that this wave is pulled at the very slow rate of 5--10 centimeters per year -- so slow that, under the observed conditions, this grass-shrub ecotone is effectively stationary. 
 Re-surveys of permanent transects independently supported this prediction, showing virtually no change in the position of the shrub boundary in over a decade. 
+Below, we discuss and interepret these key findings in greater detail. 
 
-
-The slow movement of the encroaching creosotebush wave at the Sevilleta LTER site can likely be contributed to a combination of three factors: short dispersal distances with extremely limited long-distance dispersal events, very low probability of recruitment from seed, and high seedling mortality.
-These three barriers, when combined, form a formidable challenge to the establishment of new shrubs at the low-density front of the wave.
-First, a seed must travel far enough to avoid competition with the parent shrub, which is unlikely given the dispersal kernels shown in Figure 2.
-Even if the seed manages to be dispersed this far, its chances of becoming a seedling are low.
-Caching and consumption by seed-eaters such as a variety of seed-harvesting ants \citep{whitford1978structure, whitford1980foraging, lei1999ecological} and the kangaroo rat Dipodomys merriami \citep{chew1970energy} decreases the amount of seeds available for germination.
-However, reduction in germination caused by destruction of seeds may be partly mitigated by the more favourable germination conditions that these seeds can experience when cached underground \citep{chew1970energy}.
-Many of the remaining seeds will still fail to germinate, and in the unlikely event that germination does occur, seedlings will likely die given the high rates of mortality observed in smaller shrubs.
-Such high rates of creosotebush seedling mortality have been observed in other studies as well \citep{boyd1983postdispersal, bowers2004temporal}, probably due to a combination of herbivory, competition, and abiotic stresses. 
-
-However, as low as they are, the wavespeed estimates given in this paper are still conservative estimates for reasons mostly related to dispersal.
-First, it is important to note that the dispersal kernels used here, while they account for variation in factors such as wind speed and terminal velocity, may underestimate the distances that shrub propagules travel.
-Because the WALD model assumes that terminal velocity is reached immediately upon seed release, seeds in the estimate thus take a shorter time to fall and have less time to be transported by wind, and the true frequency of long-distance dispersal events may thus be greater than what is estimated here.
-Second, dispersal at the study site could occur through additional mechanisms other than wind.
-For example, secondary dispersal through runoff from significant rainfall events can transport seeds \citep{thompson2014secondary}, and given that long-distance dispersal by bird and subsequent species divergence is thought to be responsible for creosotebush being in North America in the first place \citep{wells1976origin}, short-distance dispersal by other animals at the study site likely occurs.
-As mentioned above, seeds are transported by seed-harvesting ants and granivorous mammals, where they are often stored in caches that can be appreciable distances from the parent shrubs.
-Whether transportation occurs via ant or rodent, creosotebush seeds can be moved significantly further than wind alone can, though many of these seeds are eventually consumed.
-
-Despite the more conservative estimates our model yields, the estimated rate of dispersal in creosotebush populations at the Sevilleta National Wildlife Refuge is consistent with observations from the past 50-60 years, as creosotebush expansion during this time has been minimal \citep{moreno2016seed}.
-However, it cannot explain the long-term increases in creosotebush cover at the study site, as total encroachment over the past 150 years is much greater than what would be expected given the encroachment rates derived by our models.
-Such a discrepancy is likely due to much of the expansion occurring in an episodic fashion, with short times during which rapid encroachment occurs due to favourable environmental conditions.
-This could be due in part to seedling recruitment, which is a factor that strongly limits creosotebush expansion, being rare and episodic.
-For example, \citet{allen2008allometry} estimate that a major recruitment event occurred at this site in the 1950s, which is supported by photographic evidence from \citet{milne2003multidecadal} of a drought-driven expansion during this time.
-\citet{moreno2016seed} estimate that after this expansion, several smaller creosotebush recruitment events occurred in decadal episodes.
-However, such events can be highly localised and may not necessarily occur at the low-density front of encroachment, which could explain how these recruitment events can still coexist with lack of encroachment in the recent past.
-
-Overall, our observations and model highlight three aspects of creosotebush encroachment that should be the focus of future studies seeking to obtain better estimates of encroachment rates.
-First, negative density dependence in survival, growth, and reproduction is demonstrated, along with size dependence. The clear dependence on size and conspecific density suggests that they both should be considered when estimating creosotebush expansion and quantifying the demographic variation that contributes to it.
-Second, wind dispersal in these shrubs is quite limited; though the dispersal kernels seen here are typical in the sense that they are characterised by high near-plant dispersal and exceptionally low long-distance dispersal, the scale across which such dispersal occurs is small, with most seeds landing within only 1 m of the shrub.
-Wind dispersal alone may be an underestimate of the true amount of dispersal occurring, and future work should seek to incorporate the effects of dispersal by runoff and animals so that a more representative model of total dispersal can be obtained.
-Finally, encroachment is slow or even stagnates, but only most of the time.
-Though our encroachment speed estimates are representative of creosotebush populations for most years, the significant expansion seen over larger time scales suggests that there is episodic expansion in other years; while our model is consistent with the recent stagnation in creosotebush encroachment at the Sevilleta LTER site, a model that also includes interannual variability in factors such as survival and recruitment would be able to better account for instances of episodic population expansion that are characteristic of this location.
+Strong observational and experimental evidence for strictly negative density dependence, in all vital rates and at all sizes, was surprising given widespread evidence for positive feedbacks during woody plant encroachment generally \citep{d2013vegetation} and specifically in this system \citep{d2010positive}. 
+How can we square these apparently conflicting results?
+First, it may be important to consider the distinction between ``demographic'' and ``component'' Allee effects \citep{stephens1999allee}, which refer to effects that manifest in total fitnesss and components of fitness, respectively. 
+That is, positive effects of conspecific density may occur but in our measures of demographic performance these are swamped by counter-acting negative effects.
+It is worth noting that our demographic measurements are relatively coarse, reflecting aggregate performance over a full transition year.
+More mechanistic studies on finer time scales might reveal component Allee effects that are masked by strong net-negative density dependence. 
+Second, many of the possible mechanisms for positive feedbacks at shrub-grass ecotones would manifest infrequently under extreme conditions. 
+For example, 
 
 %--------------------------------------------------------------------
 \section*{Acknowledgements}
@@ -633,7 +610,7 @@ print(surv_aic,
 @
 
 <<grow_aic,echo=F, message=F, warning=F, results = 'asis'>>=
-grow_aic<-xtable(aic_tables$grow_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of future size", label = "tab:surv_aic",
+grow_aic<-xtable(aic_tables$grow_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of future size", label = "tab:grow_aic",
                  hline.after=c(-1,0,1,2,3))
 align(grow_aic)<-"c|p{8cm}|p{4cm}|c|c|"
 print(grow_aic, 
@@ -644,7 +621,7 @@ print(grow_aic,
 
 
 <<flower_aic,echo=F, message=F, warning=F, results = 'asis'>>=
-flower_aic<-xtable(aic_tables$flower_aic_out[,c("Pr(Flowering)","df","dAIC")], caption = "AIC model selection for flowering probability.", label = "tab:surv_aic",
+flower_aic<-xtable(aic_tables$flower_aic_out[,c("Pr(Flowering)","df","dAIC")], caption = "AIC model selection for flowering probability.", label = "tab:flow_aic",
                  hline.after=c(-1,0,1,2,3))
 align(flower_aic)<-"c|p{8cm}|c|c|"
 print(flower_aic, 
@@ -655,7 +632,7 @@ print(flower_aic,
 
 
 <<fruits_aic,echo=F, message=F, warning=F, results = 'asis'>>=
-fruits_aic<-xtable(aic_tables$fruits_aic_out[,c("No. fruits","df","dAIC")], caption = "AIC model selection for fruit number.", label = "tab:surv_aic",
+fruits_aic<-xtable(aic_tables$fruits_aic_out[,c("No. fruits","df","dAIC")], caption = "AIC model selection for fruit number.", label = "tab:fruit_aic",
                  hline.after=c(-1,0,1,2,3))
 align(fruits_aic)<-"c|p{8cm}|c|c|"
 print(fruits_aic, 
@@ -665,7 +642,7 @@ print(fruits_aic,
 @
 
 <<recruit_aic,echo=F, message=F, warning=F, results = 'asis'>>=
-recruit_aic<-xtable(aic_tables$recruit_aic_out[,c("Pr(Recruitment)","df","dAIC")], caption = "AIC model selection for recruitment probability.", label = "tab:surv_aic",
+recruit_aic<-xtable(aic_tables$recruit_aic_out[,c("Pr(Recruitment)","df","dAIC")], caption = "AIC model selection for recruitment probability.", label = "tab:recruit_aic",
                  hline.after=c(-1,0,1,2,3))
 align(recruit_aic)<-"c|p{8cm}|c|c|"
 print(recruit_aic, 
@@ -675,7 +652,7 @@ print(recruit_aic,
 @
 
 <<recruitsize_aic,echo=F, message=F, warning=F, results = 'asis'>>=
-recruitsize_aic<-xtable(aic_tables$recruitsize_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of recruit size.", label = "tab:surv_aic",
+recruitsize_aic<-xtable(aic_tables$recruitsize_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of recruit size.", label = "tab:recruitsize_aic",
                  hline.after=c(-1,0,1,2,3))
 align(recruitsize_aic)<-"c|p{8cm}|p{4cm}|c|c|"
 print(recruitsize_aic, 

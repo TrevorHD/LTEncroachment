@@ -34,25 +34,25 @@ plot(jitter(transplant.plots$weighted.dens),jitter(transplant.plots$shrub_cover)
 ## Model selection with shrub effects at different scales
 fall_surv_models <- list()
 ## transect effects only
-fall_surv_models[[1]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ 1 + s(unique.transect, bs = "re"),
+fall_surv_models[[1]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ 1 + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                       data = transplant.plots, gamma = gamma, family = "binomial")
 ## window density
-fall_surv_models[[2]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(weighted.dens) + s(unique.transect, bs = "re"),
+fall_surv_models[[2]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(weighted.dens) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 ## plot shrub cover
-fall_surv_models[[3]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(shrub_cover) + s(unique.transect, bs = "re"),
+fall_surv_models[[3]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 ## plot grass cover
-fall_surv_models[[4]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(grass_cover) + s(unique.transect, bs = "re"),
+fall_surv_models[[4]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(grass_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 ## window density and plot shrub cover
-fall_surv_models[[5]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(weighted.dens) + s(shrub_cover) + s(unique.transect, bs = "re"),
+fall_surv_models[[5]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(weighted.dens) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 ## plot shrub cover and plot grass cover
-fall_surv_models[[6]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re"),
+fall_surv_models[[6]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 ## window density, plot shrub and grass cover
-fall_surv_models[[7]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re"),
+fall_surv_models[[7]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 ## Model selection
 AICtab(fall_surv_models)
@@ -66,39 +66,39 @@ plot(transplant.plots$shrub_cover, fall_surv_fitted_terms[, "s(shrub_cover)"])
 ## Same but for spring
 spring_surv_models <- list()
 ## transect effects only
-spring_surv_models[[1]] <- gam(cbind(spring_survivors,fall_survivors) ~ 1 + s(unique.transect, bs = "re"),
+spring_surv_models[[1]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ 1 + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## window density
-spring_surv_models[[2]] <- gam(cbind(spring_survivors,fall_survivors) ~ s(weighted.dens) + s(unique.transect, bs = "re"),
+spring_surv_models[[2]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ s(weighted.dens) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## plot shrub cover
-spring_surv_models[[3]] <- gam(cbind(spring_survivors,fall_survivors) ~ s(shrub_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[3]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## plot grass cover
-spring_surv_models[[4]] <- gam(cbind(spring_survivors,fall_survivors) ~ s(grass_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[4]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ s(grass_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## window density and plot shrub cover
-spring_surv_models[[5]] <- gam(cbind(spring_survivors,fall_survivors) ~ s(weighted.dens) + s(shrub_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[5]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ s(weighted.dens) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## plot shrub cover and plot grass cover
-spring_surv_models[[6]] <- gam(cbind(spring_survivors,fall_survivors) ~ s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[6]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## window density, plot shrub and grass cover
-spring_surv_models[[7]] <- gam(cbind(spring_survivors,fall_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[7]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## Model selection
 AICtab(spring_surv_models)
-spring_surv_fitted_terms <- predict(spring_surv_models[[4]], type = "terms") 
-plot(transplant.plots$grass_cover, spring_surv_fitted_terms[, "s(grass_cover)"]) 
-
 spring_surv_fitted_terms <- predict(spring_surv_models[[6]], type = "terms") 
-plot(transplant.plots$grass_cover, spring_surv_fitted_terms[, "s(grass_cover)"]) 
-plot(transplant.plots$shrub_cover, spring_surv_fitted_terms[, "s(shrub_cover)"]) 
-
-spring_surv_fitted_terms <- predict(spring_surv_models[[2]], type = "terms") 
-plot(transplant.plots$weighted.dens, spring_surv_fitted_terms[, "s(weighted.dens)"]) 
+plot(transplant.plots$grass_cover[transplant.plots$fall_survivors>0], spring_surv_fitted_terms[, "s(grass_cover)"]) 
+plot(transplant.plots$shrub_cover[transplant.plots$fall_survivors>0], spring_surv_fitted_terms[, "s(shrub_cover)"]) 
 
 ## show fitted
 transplant.plots$springpred4 <- predict.gam(spring_surv_models[[4]], newdata = transplant.plots, type = "response", exclude = "s(unique.transect)")
 plot(jitter(transplant.plots$grass_cover),jitter(transplant.plots$spring_survivors/4))
 points(transplant.plots$grass_cover,transplant.plots$springpred4,pch=16,col="red")
+
+
+## what was total fall and spring survival?
+sum(transplant.plots$fall_survivors);length(transplant.plots$fall_survivors)
+sum(transplant.plots$spring_survivors);sum(transplant.plots$fall_survivors)
+

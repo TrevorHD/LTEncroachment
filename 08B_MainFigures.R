@@ -203,13 +203,22 @@ lines(boot.lambda$density,mean.lambda,lwd=3,col="red")
 dev.off()
 
 ## find weird samples
-which(boot.lambda[25,3:100]>1.005)
+which(boot.lambda[25,]>1.005)
 ## here are 3 weird ones from the first 100 samples
 plot(boot.lambda$density,boot.lambda[,3],type="n",xlab="Weighted density",
      ylab=expression(paste(lambda)),cex.lab=1.2,ylim=c(1,1.06))
-lines(boot.lambda$density,boot.lambda[,3],col="red")
-lines(boot.lambda$density,boot.lambda[,28],col="blue")
-lines(boot.lambda$density,boot.lambda[,87],col="darkgreen")
+for(i in 3:dim(boot.lambda)[2]){
+  lines(boot.lambda$density,boot.lambda[,i],col=alpha("black",0.15))
+}
+lines(boot.lambda$density,boot.lambda[,30],col="red",lwd=4)
+lines(boot.lambda$density,boot.lambda[,52],col="blue",lwd=4)
+lines(boot.lambda$density,boot.lambda[,100],col="darkgreen",lwd=4)
+## which reps have max lambda at density >0
+allee<-which(apply(as.matrix(boot.lambda[,3:102]),2,which.max)>1)
+lines(boot.lambda$density,boot.lambda[,28+3],lwd=4,lty=2)
+
+## dig into column 30, which would be seed 28
+
 
 # Dispersal kernel --------------------------------------------------------
 heights <- quantile(LATR_full$max.ht_t,na.rm=T)

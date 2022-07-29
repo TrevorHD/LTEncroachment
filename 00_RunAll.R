@@ -70,7 +70,7 @@ boot.on <- TRUE
 
 # Evaluate local IPM instead of spatial IPM?
 # Local IPM will not include dispersal
-boot.noDisp <- FALSE
+boot.noDisp <- TRUE
 
 # What proportion of individuals should be resampled each bootstrap interation?
 # Should be in the interval (0, 1), exclusive
@@ -81,7 +81,7 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 1000
+boot.num <- 100
 
 # Create empty vectors to populate with wavespeeds
 # c1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
@@ -101,8 +101,8 @@ elas <- c("growth.mean","growth.sd","survival","flower","fertility",
 boot.elas <- vector("numeric",length = length(elas))
 boot.sens <- vector("numeric",length = length(elas))
 
-seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"1000seeds.csv")
-#seeds<-read.csv("1000seeds.csv")
+#seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"1000seeds.csv")
+seeds<-read.csv("1000seeds.csv")
 
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
