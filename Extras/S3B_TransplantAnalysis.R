@@ -55,7 +55,7 @@ fall_surv_models[[6]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(grass_co
 fall_surv_models[[7]] <- gam(cbind(fall_survivors,4-fall_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 ## Model selection
-AICtab(fall_surv_models)
+AICtab(fall_surv_models,weights=T)
 fall_surv_fitted_terms <- predict(fall_surv_models[[2]], type = "terms") 
 plot(transplant.plots$weighted.dens, fall_surv_fitted_terms[, "s(weighted.dens)"]) 
 
@@ -87,7 +87,7 @@ spring_surv_models[[6]] <- gam(cbind(spring_survivors,fall_survivors-spring_surv
 spring_surv_models[[7]] <- gam(cbind(spring_survivors,fall_survivors-spring_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re") + s(plot, bs = "re"),
                              data = subset(transplant.plots,fall_survivors>0), gamma = gamma, family = "binomial")
 ## Model selection
-AICtab(spring_surv_models)
+AICtab(spring_surv_models,weights=T)
 spring_surv_fitted_terms <- predict(spring_surv_models[[6]], type = "terms") 
 plot(transplant.plots$grass_cover[transplant.plots$fall_survivors>0], spring_surv_fitted_terms[, "s(grass_cover)"]) 
 plot(transplant.plots$shrub_cover[transplant.plots$fall_survivors>0], spring_surv_fitted_terms[, "s(shrub_cover)"]) 
