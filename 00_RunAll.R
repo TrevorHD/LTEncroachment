@@ -81,7 +81,7 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 100
+boot.num <- 5
 
 # Create empty vectors to populate with wavespeeds
 # c1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
@@ -103,7 +103,7 @@ boot.sens <- vector("numeric",length = length(elas))
 
 #seeds <- sample.int(100000,size=boot.num); write.csv(seeds,"1000seeds.csv")
 seeds<-read.csv("1000seeds.csv")
-
+seed.store<-c()
 ##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
 
 # This takes several minutes per bootstrap replicate; be patient
@@ -191,6 +191,9 @@ for(i in 1:boot.num){
   # Append transition matrix to list -- TM: why save these?
   boot.TM[[i]] <- TM
   
+  # store seed
+  seed.store[i]<-seeds[i,2]
+  
   # Calculate elapsed time
   time.elapsed <- as.numeric(difftime(Sys.time(), time.start, units = "hours"))
   
@@ -219,6 +222,7 @@ if(boot.saveOutputs == TRUE){
   
   # Write bootstrapped lambda values to csv
   write.csv(boot.lambda, "BootLambda.csv")
+  write.csv(seed.store, "seed.store.csv")
   
   # Write bootstrapped wavespeed values to csv
   write.csv(boot.c1, "BootC1.csv")
