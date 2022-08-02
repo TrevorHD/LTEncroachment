@@ -1,3 +1,11 @@
+\tom{Encroachment}{I am not editing the abstract for now.} of shrubs into adjacent grasslands has become an increasingly reported phenomenon across the world, and such encroachment is either pulled forward by high population growth at the low-density encroachment front or pushed forward by higher-density areas behind the front.
+However, at sites such as Sevilleta National Wildlife Refuge in central New Mexico, little is known about whether encroachment is pushed or pulled, and the dynamics of encroachment are not well-understood.
+Here, long-term encroachment of creosotebush (Larrea tridentata), a native perennial shrub, stands in stark contrast with the stagnation in encroachment observed in recent decades. 
+In order to better understand creosotebush encroachment at this site, we quantify it using a spatially structured population model where a wave of individuals travels at a speed governed by both dispersal and density-dependence.
+Results indicate that population growth rates generally increase with decreasing density, suggesting that encroachment is pulled by individuals at the low-density wave front, and the spatial population model predicts an encroachment rate of less than 2 cm per year.
+While the predicted rate of encroachment is consistent with observations over recent decades, it does not explain long-term creosotebush encroachment at the study site, suggesting that this process may occur in pulses when recruitment, seedling survival, or dispersal significantly exceed typical rates.
+Overall, our work demonstrates that individuals at low densities are likely the biggest contributors to creosotebush encroachment at this site, and that this encroachment is likely a process that occurs in large but infrequent bursts rather than at a steady pace.
+
 The slow movement of the encroaching creosotebush wave at the Sevilleta LTER site can likely be contributed to a combination of three factors: short dispersal distances with extremely limited long-distance dispersal events, very low probability of recruitment from seed, and high seedling mortality.
 These three barriers, when combined, form a formidable challenge to the establishment of new shrubs at the low-density front of the wave.
 First, a seed must travel far enough to avoid competition with the parent shrub, which is unlikely given the dispersal kernels shown in Figure 2.
