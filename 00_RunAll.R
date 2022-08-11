@@ -66,11 +66,11 @@ boot.saveOutputs <- TRUE
 
 # Should bootstrapping occur?
 # If not, the model will be run once using full data sets
-boot.on <- TRUE
+boot.on <- FALSE
 
 # Evaluate local IPM instead of spatial IPM?
 # Local IPM will not include dispersal
-boot.noDisp <- TRUE
+boot.noDisp <- FALSE
 
 # What proportion of individuals should be resampled each bootstrap interation?
 # Should be in the interval (0, 1), exclusive
@@ -81,7 +81,7 @@ boot.prop <- 0.75
 # Set number of bootstrap iterations
 # Please note: one iteration takes some time (5-15 minutes) depending on computer and settings
 # Ignore this if boot.on = FALSE
-boot.num <- 5
+boot.num <- 500
 
 # Create empty vectors to populate with wavespeeds
 # c1 are the analytic wavespeeds using mean windspeed and terminal velocity and assuming H as point source of seeds
@@ -92,7 +92,7 @@ boot.c2 <- c()
 # Should perturvation analysis be run?
 pert.on <- TRUE
 # magnitue of perturbation
-pert <- 0.001 ## 0.001 increase in vital rate function
+pert <- 0.01 ## 0.001 increase in vital rate function
 # vector of vital rates to be perturbed
 elas <- c("growth.mean","growth.sd","survival","flower","fertility",
           "recruitment","recruitsize.mean","recruitsize.sd",
@@ -178,12 +178,12 @@ for(i in 1:boot.num){
 
   ## UNCOMMENT TO RUN LANMBDA VS DENSITY
   ## Create empty list to store lambda as a function of density; assign density values to top
-  if(i == 1){
-    boot.lambda <- list(density = LambdaD(d.only = TRUE))}
-  
+  #if(i == 1){
+  #  boot.lambda <- list(density = LambdaD(d.only = TRUE))}
+  #
   # Calculate lambda as a function of density, then append to list
-  boot.lambda[[i + 1]] <- LambdaD()
-  
+  #boot.lambda[[i + 1]] <- LambdaD()
+  #
   # Create empty list to store transition matrices
   if(i == 1){
     boot.TM <- list()}

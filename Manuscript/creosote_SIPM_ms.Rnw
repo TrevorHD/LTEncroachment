@@ -38,13 +38,14 @@ library(xtable)
 ##read in demography data to pull some quantities
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 aic_tables <- readRDS("aic_tables.rds")
+speed.dat <- read.csv("BootC2.csv")
 @
 
 %-------------------------------------------------------------------------
 
 \title{Is shrub expansion into grasslands pushed or pulled? A spatial integral projection model for woody plant encroachment}
 
-\author[a,b]{Trevor Drees\thanks{thd5066@psu.edu}}
+\author[a]{Trevor Drees}
 \author[b]{Brad M. Ochocki}
 \author[c]{Scott L. Collins}
 \author[b]{Tom E.X. Miller}
@@ -62,13 +63,22 @@ aic_tables <- readRDS("aic_tables.rds")
 %-------------------------------------------------------------------------
 \newpage
 \section*{Abstract}
-Coming soon.
-
+\tom{The}{first draft -- will need to be tailored to length limit of target journal} encroachment of woody plants into grasslands is a global phenomenon with implications for biodiversity and ecosystem function. 
+Understanding and predicting the pace of expansion and the underlying processes that control it are key challenges in the study and management of woody encroachment.
+Theory from spatial population biology predicts that the occurrence and speed of population expansion should depend sensitively on the nature of conspecific density dependence.
+Positive feedbacks of shrub encroachment should generate positive density dependence (Allee effects) and thus pushed-wave dynamics. 
+We studied the spatial dynamics of creosote bush (\textit{Larrea tridentata}), which has a record of encroachment into Chihuahuan Desert grassland. 
+We used observational data and seedling transplant experiments to test the strength and direction of density dependence in shrub demographic performance along a gradient of shrub density at the grass-shrub ecotone. 
+We also used seed-drop experiments and wind data to construct a mechanistic (WALD) dispersal kernel, which provides insight into how far wind can carry creosote seeds.
+Combining demography and dispersal data, a spatial integral projection model predicting that, contrary to expectations based on potential for positive feedbacks, the shrub encroachment wave is ``pulled'' by maximum fitness at the low-density front.
+However, the predicted pace of expansion was strikingly slow (ca. 8 cm/yr), and this prediction was supported by independent re-surveys of the ecotone showing little to no change in spatial extent of shrub cover over 12 years. 
+Encroachment speed was acutely sensitive to seedling recruitment, suggesting that this population may be primed for pulses of expansion under conditions that are favorable for recruitment.
+Our integration of observations, experiments, and modeling reveals not only that this ecotone is effectively stationary under current conditions, but also \emph{why} that is so and how that may change as the environment changes. 
 
 %-------------------------------------------------------------------------
 \section*{Keywords}
 
-density-dependence, ecotones, woody encroachment, shrubs, integral projection model, grassland
+density-dependence, ecotones, woody encroachment, shrubs, integral projection model, dispersal, Allee effects
 
 %--------------------------------------------------------------------
 \newpage
@@ -88,7 +98,7 @@ Accounting for population structure, including size structure, may therefore be 
 Theory predicts that the nature of conspecific density dependence is another critical feature of expansion dynamics but this is rarely studied in the context of woody plant encroachment.  
 Expansion waves typically correspond to gradients of conspecific density -- high in the back and low at the front -- and demographic rates may be sensitive to density due to intraspecific interactions like competition or facilitation.
 If the demographic effects of density are strictly negative due to competitive effects that increase with density then demographic performance is maximized as density goes to zero, at the leading edge of the wave. 
-Under these conditions, the wave is ``pulled'' forward by individuals at the low-density vanguard \citep{kot1996dispersal}, and targeting these individuals and locations would be the most effective way to slow down or prevent encroachment (cite?). 
+Under these conditions, the wave is ``pulled'' forward by individuals at the low-density vanguard \citep{kot1996dispersal}, and targeting these individuals and locations would be the most effective way to slow down or prevent encroachment. 
 However, woody encroachment systems often involve positive feedbacks whereby shrub establishment modifies the environment in ways that facilitate further shrub recruitment. 
 For example, woody plants can modify their micro-climates in ways that elevate nighttime minimum temperatures, promoting conspecific recruitment and survival for freeze-sensitive species \citep{d2010positive,huang2020critical}. 
 Positive density dependence (or Allee effects) causes demographic rates to be maximized at higher densities behind the leading edge, which ``push'' the expansion forward, leading to qualitatively different expansion dynamics \citep{kot1996dispersal, taylor2005allee, sullivan2017density, lewis1993allee, veit1996dispersal, keitt2001allee}.
@@ -96,7 +106,7 @@ Pushed expansion waves generally have different shapes (steeper density gradient
 The potential for positive feedbacks is well documented in woody encroachment systems as a key feature of bi-stability (the existence of woody and herbaceous habitats as alternative stable states: \cite{wilcox2018emerging}) but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion and influence strategies for management of woody encroachment.
 %Despite decades of work on this topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
 
-In this study, we linked woody plant encroachment to ecological theory for invasion waves, with the goals of understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
+In this study, we linked woody plant encroachment to ecological theory for spreading populations, with the goals of understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
 Throughout the aridlands of the southwestern United States, shrub encroachment into grasslands is well documented \citep{d2012synthetic} but little is known about the dispersal and demographic processes that govern it. 
 Our work focused on encroachment of creosotebush (\textit{Larrea tridentata}) in the northern Chihuahuan Desert. 
 Expansion of this species into grasslands over the past 150 years has been well documented, leading to decreased cover of \textit{Bouteloua eriopoda}, the dominant foundation species of Chihuahuan desert grassland \citep{gardner1951vegetation, buffington1965vegetational, gibbens2005vegetation}.
@@ -105,7 +115,7 @@ As in many woody encroachment systems, creosotebush expansion generates ecotones
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/waves_pics}
-  \caption{Example of an ecotone transect at Sevilleta LTER, spanning gradients of creosotebush and black grama grass. Photo credits: TEX Miller}
+  \caption{Example of an ecotone transect at Sevilleta LTER, spanning gradients of creosotebush and black grama grass.}
   \label{fig:waves}
   \end{center}
 \end{figure}
@@ -131,7 +141,7 @@ We address the following specific questions:
 \begin{enumerate}
 \item What is the nature of conspecific density dependence in demographic vital rates along shrub encroachment ecotones? Is encroachment pulled by the individuals at the front or pushed by individuals behind it?
 \item What is the seed dispersal kernel for this species and how does this vary with maternal plant size?
-\item What is the predicted rate of expansion from the SIPM and which lower-level processes most strongly affect the expansion speed?
+\item What is the predicted rate of expansion and which lower-level processes most strongly affect the expansion speed?
 \item How does the observed rate of encroachment in the recent past compare to model predictions?
 
 \end{enumerate}
@@ -154,8 +164,7 @@ The foliage is dark green, resinous, and unpalatable to most grazing and browsin
 We conducted our work at the Sevilleta National Wildlife Refuge (SNWR), a Long-Term Ecological Research (SEV-LTER) site in central New Mexico.
 The refuge exists at the intersection of several eco-regions, including the northern Chihuahuan Desert, Great Plains grassland, and steppes of the Colorado Plateau.
 Annual precipitation is approximately 250 mm, with the majority falling during the summer monsoon season from June to September.
-The recruitment events that facilitate creosotebush expansion are thought to be highly episodic \citep{peters2012long}, and this may be linked to fluctuations in monsoon precipitation\citep{boyd1983postdispersal, bowers2004temporal}.
-Monsoon precipitation during the study years (2013-2017) was [summarise climate data].
+The recruitment events that facilitate creosotebush expansion are thought to be episodic \citep{peters2012long}, and this may be linked to fluctuations in monsoon precipitation\citep{boyd1983postdispersal, bowers2004temporal}.
 %The site is home to various pinyon pine and juniper species at higher elevations, as well as creosotebush and grasses such as black grama (\textit{Bouteloua eriopoda}) and blue grama (\textit{Bouteloua gracilis}) at lower elevations.
 %At the McKenzie Flats area on the eastern portion of the refuge, there are several locations with a prominent shrub-grass ecotone; high-density areas of creosotebush with little to no transition to areas with a mixture of the two, which then transition to grassland with few shrubs.
 %This gradient of creosotebush density at this site, and how it changes via encroachment, is the primary object of interest in our study.
@@ -173,7 +182,7 @@ Monsoon precipitation during the study years (2013-2017) was [summarise climate 
 \subsubsection*{Ecotone transects}
 
 We collected demographic data during early June of every year from 2013-2017.
-This work was conducted at \tom{four sites in the eastern part of SNWR}{would a map be helpful?} (one site was initiated in 2013 and the other three in 2014), with three transects at each site. 
+This work was conducted at four sites in the eastern part of SNWR (one site was initiated in 2013 and the other three in 2014), with three transects at each site. 
 All transects were situated along a shrubland-grassland ecotone so that a full range of shrub densities was captured: each transect spanned core shrub areas, grassland with no or few shrubs, and the transition between them. 
 Lengths of these transects varied from 200 to 600 m, determined by the strength of vegetation transition since ``steep'' transitions required less length to capture the full range of shrub density. 
 
@@ -312,11 +321,10 @@ We repeated this procedure for 500 bootstrap replicates.
 Dispersal kernels were calculated using the WALD, or Wald analytical long-distance dispersal, model that uses a mechanistic approach to predict dispersal patterns of plant propagules by wind.
 The WALD model, which is based in fluid dynamics, can serve as a good approximation of empirically-determined dispersal kernels \citep{katul2005mechanistic, skarpaas2007dispersal} and may be used when direct observations of dispersal are not available. 
 Under the assumptions that wind turbulence is low, wind flow is vertically homogenous, and terminal velocity is achieved immediately upon seed release, the WALD model simplifies a Lagrangian stochastic model to create a dispersal kernel that estimates the likelihood a propagule will travel a given distance \citep{katul2005mechanistic}.
-Our dispersal kernel takes the form of the inverse Gaussian distribution 
+Our dispersal kernel takes the form of the inverse Gaussian distribution, using $r$ to denote dispersal distance:
 
 \begin{linenomath*} \begin{equation} p(r) = \left(\frac{\lambda'}{2 \pi r^3}\right)^\frac{1}{2} \exp\left[-\frac{\lambda'(r - \mu')^2}{2 \mu'^2 r}\right] \end{equation} \end{linenomath*} 
 
-that is a \tom{slight adaptation}{unclear what this refers to} from equation 5b in \citet{katul2005mechanistic}, using $r$ to denote dispersal distance.
 Here, $\lambda'$ is the location parameter and $\mu'$ is the scale parameter, which depend on environmental and plant-specific properties of the study system. 
 (We use $\lambda'$ for consistency with notation in related papers, but $\lambda'$ the dispersal location parameter should not be confused with $\lambda$ the geometric growth rate.)
 The location and scale parameters are defined as $\lambda' = (H/\sigma)^2$ and $\mu' = HU/F$; these are functions of the height $H$ of seed release, wind speed $U$ at seed release height, seed terminal velocity $F$, and the turbulent flow parameter $\sigma$ that depends on both wind speed and local vegetation roughness. 
@@ -354,7 +362,7 @@ The demography-dispersal kernel $\tilde{K}$ is given by the sum of two parts, on
 \end{equation} 
 \end{linenomath*}
 
-Here, regeneration function $Q$ and growth-survival function $G$ correspond to Eq. \ref{eq:K}, dispersal kernel $K_{disp}$ corresponds to Eq. \ref{eq:Kd}, and the Dirac delta function \d is a probability distribution with all mass at zero, which prevents movement. 
+Here, regeneration function $Q$ and growth-survival function $G$ correspond to Eq. \ref{eq:K}, dispersal kernel $K_{disp}$ corresponds to Eq. \ref{eq:Kd}, and the Dirac delta function \d is a probability distribution with all mass at zero, which prevents movement during survival and size transition. 
 Following standard assumptions for integro-difference equations, we assume that space is one-dimensional and homogeneous, such that demographic transitions do not depend on location (or, more precisely, that they depend on location only through spatial variation in density) and the probability of dispersing from location $z$ to $z\prime$ depends only on the absolute distance between them.
 
 Under many conditions, models of this form generate traveling waves, and we are particularly interested in the velocity ($m/yr$) of this wave.
@@ -406,7 +414,7 @@ For visualization, we show midpoint values of these cover classes at each meter 
 \subsection*{Size and density dependent demography}
 Demographic data from naturally occurring and transplanted individuals revealed strong size- and density-dependence in demographic vital rates. 
 For most sizes and vital rates, shrub density had negative demographic effects; there was no strong evidence for positive density dependence in any demographic process at any size. 
-Statistical support for size- and density-dependence is provided in Tables \ref{tab:surv_aic}--\ref{recruitsize_aic}, which provide AIC rankings for candidate models based on the complete data set. 
+Statistical support for size- and density-dependence is provided in Tables \ref{tab:surv_aic}--\ref{tab:recruitsize_aic}, which provide AIC rankings for candidate models based on the complete data set. 
 
 \begin{figure}[H]
   \begin{center}
@@ -423,7 +431,7 @@ The probability of survival at these small sizes declined with increasing densit
 Survival of transplants was very low, lower even than survival of similarly-sized, naturally occurring recruits (Fig. \ref{fig:vital_rates}B). 
 However, the transplant results support the general pattern of negative density dependence in survival. 
 Among the \Sexpr{nrow(CData.Transplants[CData.Transplants$transplant==T & CData.Transplants$spring_survival_t1==1,])} survivors, \Sexpr{nrow(CData.Transplants[CData.Transplants$transplant==T & CData.Transplants$spring_survival_t1==1 & CData.Transplants$weighted.dens < quantile(CData.Transplants$weighted.dens,0.5),])} of them occurred in transect windows below the median of weighted shrub density. 
-In Appendix XX, we show that transplant mortality was dominated by negative effects of shrub density at the 5-m window scale, even when effects of local grass and shrub cover were included as alternative or additional statistical covariates, which suggests that this is the appropriate spatial scale for modeling density dependence in this system. 
+In Appendix B, we show that transplant mortality was dominated by negative effects of shrub density at the 5-m window scale, even when effects of local grass and shrub cover were included as alternative or additional statistical covariates, which suggests that this is the appropriate spatial scale for modeling density dependence in this system. 
 \paragraph{Growth}
 Current size was strongly predictive of future size, as expected, and there was weak negative density dependence in mean future size conditioned on current size (Fig. \ref{fig:vital_rates}C). 
 However, there was a stronger signal of density dependence in the variance of future size (Fig. \ref{fig:vital_rates}C, inset).
@@ -438,15 +446,15 @@ However, fertility of flowering plants was strongly negative density dependent, 
 We observed \Sexpr{sum(CData$seedling_t1==1,na.rm=T)} natural recruitment events along our transects during the study years and our estimate recruitment rate, given total expected seed production in each window preceding the recruitment year, was very low ($2.47 \times 10^{-6}$, \ref{fig:vital_rates}E). 
 While most recruitment events occurred at low density, this is also where most seed production was concentrated (Fig. \ref{fig:vital_rates}E) and low-density windows were over-represented relative to high density. 
 For these reasons we were more likely to observe recruiment events at low density. 
-Controlling for sampling effort and seed production, the statistical models indicated that our data were most consistent with a constant, density-independent recruitment rate (Table XX). 
+Controlling for sampling effort and seed production, the statistical models indicated that our data were most consistent with a constant, density-independent seed-to-seedling recruitment rate (Table \ref{tab:recruit_aic}). 
 However, the mean size of new recruits declined significantly with local density (Fig. \ref{fig:vital_rates}F).
 
 
 \paragraph{Population growth rate}
 As expected given the vital rate results, the asymptotic population growth rate $\lambda$ declined monotonically with density (Fig. \ref{fig:lambda}). 
-This was true across nearly all bootstrap replicates, indicating high certainty that shrub fitness is maximized at zero density and thus that the expansion wave is ``pulled'' (for this reason our wavespeed results are based on the analytical approach described above). 
+This was true across $>98\%$ of bootstrap replicates, indicating high certainty that shrub fitness is maximized at zero density and thus that the expansion wave is ``pulled'' (for this reason our wavespeed results are based on the analytical approach described above). 
 Mean growth rate at low density was 3\% per year, with bootstrap uncertainty spanning 1--6\%.
-At high density in the core of the expansion wave, population growth rates approached $\lambda=1$, indicating population stasis driven by near-perfect survival and extremely rare recruitment. 
+At high density in the core of the expansion wave, population growth rates approached $\lambda=1$, indicating population stasis driven by near-immortality and extremely rare recruitment. 
 
 \begin{figure}[H]
   \begin{center}
@@ -457,10 +465,11 @@ At high density in the core of the expansion wave, population growth rates appro
 \end{figure}
 
 \subsection*{Seed dispersal}
-WALD dispersal kernels, inferred from the properties of seeds and wind and accounting for observed variation in wind speeds and within-plant seed release height, were predicted to be strongly size dependent, with taller plants having a greater probability of dispersing seeds longer distances (Fig. \ref{fig:dispersal}). 
+WALD dispersal kernels were inferred from the properties of seeds and wind and accounted for observed variation in wind speeds and within-plant seed release height.
+The resulting kernels were predicted to be strongly size dependent, with taller plants having a greater probability of dispersing seeds longer distances (Fig. \ref{fig:dispersal}). 
 However, predicted seed dispersal was highly local, with most seeds expected to fall within one meter of parent plants for most sizes. 
 Even for the very tallest shrub we observed (1.96 m), only 6.2\% of its seeds were predicted to fall more than 3 m away and less than 1\% were predicted to fall more than 6 m away (Fig. \ref{fig:dispersal}). 
-Taller shrubs also exhibited wider variance in their dispersal kernel and this reflects their wider range of seed release heights. 
+Taller shrubs also exhibited wider variance in their dispersal kernel and this reflects their wider range of within-shrub seed release heights. 
 
 \begin{figure}[H]
   \begin{center}
@@ -470,22 +479,21 @@ Taller shrubs also exhibited wider variance in their dispersal kernel and this r
   \end{center}
 \end{figure}
 
-
 \subsection*{Expansion speed and sensitivities}
 The asymptotic speed of creosote encroachment, given the above demography and dispersal patterns, was very slow. 
-The mean asymptotic speed was VALUE m/year and the 5--95 percentiles of the uncertainty distribution was VALUE m/year (Fig. \ref{fig:wavespeed}A). 
-Expansion speed was by far the most sensitive to the probability of seedling recruitment (Fig. \ref{fig:wavespeed}B), indicating that this life cycle transition is imposes the strongest constraint on encroachment. 
+The mean asymptotic speed was \Sexpr{round(mean(speed.dat$x),2)} m/year and the 5--95 percentiles of the uncertainty distribution was \Sexpr{round(quantile(speed.dat$x,0.05),2)}--\Sexpr{round(quantile(speed.dat$x,0.95),2)} m/year (Fig. \ref{fig:wavespeed}A). 
+The sensitivities of wavespeed spanned orders of magnitude, indicating strong inequality in the relative importance of the demography and dispersal processes controlling expansion (Fig. \ref{fig:wavespeed}B).
+Expansion speed was by far the most sensitive to the probability of seedling recruitment (Fig. \ref{fig:wavespeed}B), indicating that this life cycle transition imposes the strongest constraint on encroachment. 
 Sensitivity to survival ranked second, and since nearly all mortality occurred at the smallest sizes this too can be interpreted as an early life cycle constraint on expansion. 
-
+The mean of growth ranked third and this was also likely related to early plant survival, since increases in size allow small plants to reach ``protected'' sizes given the strong size-dependence in survival. 
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Figures/wavespeed}
-  \caption{Estimated encroachment wave speeds (left) and geometric rates of population growth (right) for higher             post-rainfall seedling survival and normal conditions.}
+    \includegraphics[width=\linewidth]{Figures/wavespeed_sens}
+  \caption{A, Asymptotic speed of creosote encroachment. The distribution reflects parameter and model uncertainties quantified via bootstrapping and stochastic sampling from seed dispersal kernels. B, Sensitivities of wavespeed to demography and dispersal processes. For size-dependent functions (growth, survival, flowering, and fertility) sensitivity was calculate by perturbing the entire function across all sizes.}
   \label{fig:wavespeed}
   \end{center}
 \end{figure}
-
 
 \subsection*{Transect re-surveys}
 Re-surveys along two permanent transects revealed virtually no change the in the creosote expansion wave over the 12 years that preceded our study.
@@ -509,7 +517,7 @@ This perspective on the problem brings attention to the combined influence of di
 Through this lens, we asked whether the encroachment process is pushed or pulled, hypothesizing that potential for positive feedbacks may cause declines in fitness at the low-density front and generate pushed-wave dynamics. 
 Instead, observational and experimental evidence indicate that fitness was maximized in low-density plant neighborhoods.
 The creosote encroachment wave is therefore predicted to be pulled by maximum demographic performance at the leading edge.
-However, our field-parameterized spatial integral projection model revealed that this wave is pulled at the very slow rate of 5--10 centimeters per year -- so slow that, under the observed conditions, this grass-shrub ecotone is effectively stationary. 
+However, our field-parameterized spatial integral projection model revealed that this wave is pulled at the very slow rate of 6--12 centimeters per year -- so slow that, under the observed conditions, this grass-shrub ecotone is effectively stationary. 
 In fact, to our knowledge, ours is the slowest wavespeed estimate for a plant population in the demography-dispersal modeling literature (SIPMs and their matrix model progenitor: \citep{neubert2000demography}). 
 Re-surveys of permanent transects independently supported this prediction, showing virtually no change in the position of the shrub boundary in over a decade. 
 Whatever historical conditions allowed for shrub encroachment to its current extent, the encroachment wave is presently stalled. 
@@ -531,13 +539,14 @@ To our knowledge such switches have never been empirically documented in any exp
 
 The very low transplant survival and recruitment rates that we measured also call attention to time scale. 
 Previous studies suggest that creosote recruitment is strongly episodic, likely in response to large, infrequent monsoon precipitation events \citep{moreno2016seed,allen2008allometry,boyd1983postdispersal}.
-Similar patterns of episodic recruitment driven by large precipitation events have been observed in other cases of woody plant encroachment in aridlands \citep{harrington1991effects,weber2022woody}.
+Similar patterns of episodic recruitment driven by large precipitation events have been observed in other cases of woody plant encroachment in aridlands \citep{harrington1991effects,weber2022woody}, and relatively high transplant survival on the one transect that we planted immediately following a large monsoon event anecdotally supports an important role for soil moisture. 
 With only four transition-years of demographic data, we chose to combine information across years and build a deterministic model that averages over inter-annual variability.
-The connection between shrub recruitment and monsoon precipitation, combined with the observed and projected increase in the variability of monsoon precipitation in our study region \citep{petrie2014regional}, suggest that extending our deterministic model to accommodate inter-annual variability in climate and climate-dependent vital rates will be a critical next step. 
+However, the connection between shrub recruitment and monsoon precipitation, combined with the observed and projected increase in the variability of monsoon precipitation in our study region \citep{petrie2014regional}, suggest that extending our deterministic model to accommodate inter-annual variability in climate and climate-dependent vital rates will be a critical next step. 
 Because our wavespeed estimate is acutely sensitive to the seed-to-seedling transition, more so than any other demographic or dispersal process, we expect that a stochastic model incorporating many years of data may yield a faster predicted expansion speed driven by rare pulses of recruitment \citep{ellner2012temporally}. 
 Such pulses have clearly not occurred during our study years (2013--2017) or the preceding decade of transect re-surveys (2001--2012) and therefore we think the deterministic model is an adequate representation of the observed conditions. 
 However, our findings of pulled-wave dynamics and strong wavespeed sensitivity to seedling recruitment indicate that the present shrub ecotone is primed for expansion once the necessary climate conditions align, as they likely will in a more variable climate regime.
-While monsoon precipitation is a leading candidate for factors promoting seedling establishment, it is worth noting that our study years included both the lowest and second-highest amounts of monsoon precipitation in a 20-year record, and yet these events did not correlate with seedling recruitment on our transects (Fig. \ref{monsoon_seedlings}). 
+While monsoon precipitation is a leading candidate for factors promoting seedling establishment, it is worth noting that our study years included both the lowest and second-highest amounts of monsoon precipitation in a 20-year record, and yet these events did not correlate with seedling recruitment on our transects (Fig. \ref{fig:monsoon}). 
+The conditions favoring recruitment and recruit survival may therefore be more complicated than the single driver of monsoon precipitation. 
 
 While not as strong a constraint as recruitment based on our sensitivity analysis, limited dispersal ability also contributed to the very slow predicted speed of encroachment. 
 Our mechanistic dispersal modeling assumes that wind is the sole dispersal vector. 
@@ -551,7 +560,7 @@ Seeds may be blown along the ground following initial deposition, which our mode
 The classic WALD dispersal model employed here assumes uniform grass cover, with seeds trapped below the height of this grass canopy. 
 As in aridlands worldwide, our nothern Chihuahuan Desert study region is characterized by a high percentage of bare ground, especially in areas of high creosote density (Fig. \ref{fig:waves}). 
 New approaches are needed to extend mechanistic dispersal modeling to accommodate this feature of aridlands, as others have recognized \citep{thompson2014secondary}. 
-The potential roles for both biotic and abiotic secondary dispersal vectors makes our dispersal kernel a conservative estimate of seed movement. 
+The potential roles for both biotic and abiotic secondary dispersal vectors makes our dispersal kernel a conservative estimate of seed movement and highlights a need for further study of shrub seed dispersal. 
 
 Our model focused on intra-specific density dependence but inter-specific plant-plant interactions may be an important element of shrub encroachment.
 For example, over-grazing is a hypothesized driver of shrub encroachment due to release from grass competition and reduction of grassland fires \citep{van2000shrub}. 
@@ -559,35 +568,42 @@ Our shrub encroachment model considered only one ``side'' of the grass-shrub eco
 Explicit consideration of grass competition or facilitation may enrich our understanding of shrub expansion or lack thereof in this and other systems. 
 However, our transplant experiment provided no strong evidence for an influence of grass cover on seedling survival (Appendix B).
 Similarly, grass competition had no effect on germination and survival of mesquite (\textit{Prosopis glandulosa}) shrubs in Chihuahuan Desert grassland \citep{weber2022woody}. 
-While our current data do not allow us to quantify whether and how strongly resident grasses may slow down shrub encroachment, we can infer that competitive effects of grasses on shrubs are weaker than competitive effects of shrubs on shrubs (since shrub fitness increased from high to low shrub density). 
+While our current data do not allow us to quantify whether and how strongly resident grasses may slow down shrub encroachment, we can infer that competitive effects of grasses on shrubs are weaker than competitive effects of shrubs on shrubs. 
 Therefore our conclusion that the encroachment wave is pulled implicitly accounts for any effects of grass cover. 
 
 While our data reveal strong negative density dependence, we know little about the underlying mechanisms that give rise to this pattern. 
 What is it about high shrub density environments that suppress survival and reproduction?
 The abundance of bare ground in core shrubland suggests that shrubs do not compete for space. 
-However, \cite{brisson1994effect} found strong competition for space belowground, with crowded neighborhoods constraining root systems. 
+However, \cite{brisson1994effect} found strong competition for space belowground, with crowded neighborhoods constraining creosote root systems. 
 Also, root development of creosote seedlings can respond rapidly to the availability of soil moisture \citep{obrist2003increasing}, suggesting that competition for water may be another element of density dependence. 
 Finally, negative density dependence in plants may also be mediated by consumers or soil microbes. 
 Better understanding the environmental drivers of density dependence will enable better prediction for how the encroachment wave may respond to future environmental change.
 
-\paragraph{Conclusions.}
+\paragraph{Conclusions}
 
 Understanding and predicting the dynamics of woody-herbaceous ecotones requires that we build knowledge of the fates of the rare individuals that disperse from core habitat and cross habitat boundaries. 
 For a creosote bush, there is no better place to be than alone in a grassland, and that key result governs the spatial dynamics of this population. 
-we found that wave of creosote bush expansion into Chihuahuan desert grassland is pulled by peak fitness at the leading edge.
+We found that wave of creosote bush expansion into Chihuahuan desert grassland is pulled by peak fitness at the leading edge.
 However, it is pulled so slowly that it is effectively stalled, a model-derived prediction that is supported by independent data. 
-Acute sensitivity to seedling recruitment and survival leaves this system poised for pulses of expansion under the right conditions; what exactly those conditions is not yet fully resolved.
-
-Theory tells us that the occurrence and pace of population expansion are driven by the combined influence of dispersal and density-dependent demography. 
-We suggest that the concepts and tools of spatial population biology may facilitate advances in the study and management of woody plant encroachment, a globally relevant phenomenon which, like all spreading populations, must be driven by birth, death, and movement. 
+Had we only relied on the re-survey data without insight from the mechanistic model we might have concluded that the creosote ecotone is stable at its current boundary.
+Instead, acute sensitivity of a slow wave to seedling recruitment leaves this system poised for pulses of expansion under the right conditions; what exactly those conditions is not yet fully resolved.
+We suggest that the concepts and tools of spatial population biology may facilitate advances in the study and management of woody plant encroachment, which, like all spreading populations, must be driven by birth, death, and movement. 
 
 
 %--------------------------------------------------------------------
 \section*{Acknowledgements}
+This research was supported by the Sevilleta LTER program (NSF DEB awards 1655499,	1748133).
+We are grateful to Andrew Bibian, Aldo Compagnoni, Kevin Czachura, Marion Donald, Kory Kolis, Johanna Ohm, Rande Patterson, Erendira Quintana Morales, Olivia Ragni, Emily Schultz, and Charlene Thomas for their contributions to field data collection.
+\tom{Kat Shea and Olav Skarpaas provided helpful guidance on dispersal modeling.}{Correct, Trevor?}
+This research was permitted by the US Fish and Wildlife Service with a Special Use Permit.
 
 \section*{Author contributions}
+All authors contributed to study design. 
+THD and TEXM led data analysis, modeling, and writing early drafts of the manuscript. 
+All authors participated in preparing the manuscript for submission.
 
 \section*{Data accessibility}
+All of our data and code are available during peer review at \url{https://github.com/TrevorHD/LTEncroachment}. 
 
 %--------------------------------------------------------------------
 \bibliographystyle{ecology}
@@ -600,7 +616,7 @@ We suggest that the concepts and tools of spatial population biology may facilit
 \renewcommand{\theequation}{A\arabic{equation}}\setcounter{equation}{0}
 
 \paragraph{WALD dispersal kernel}
-In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile \tom{}{We need to describe and cite the wind data used here.}
+In order to create the dispersal kernel, we first take the wind speeds at measurement height $z_{m}$ and correct them to find wind speed $U$ for any height $H$ by using the logarithmic wind profile.
 
 \begin{linenomath*} \begin{equation} U = \frac{1}{H} \int_{d+z_{0}}^{H} \frac{u^*}{K} \log \left(\frac{z-d}{z_{0}}\right) dz \end{equation} 
 \end{linenomath*} 
@@ -623,7 +639,7 @@ Values for the turbulent flow parameter $\sigma$ were then calculated using the 
 
 and $C_{0}$ is the Kolmogorov constant.
 $A_{w}$ is a constant that relates vertical turbulence to friction velocity and is approximately equal to 1.3 under the assumptions of above-canopy flow made by \citet{skarpaas2007dispersal}, based off calculations from \citet{hsieh1997dissipation}.
-\tom{In addition, the assumption that $z = H$ was made in order to make the calculation of $\sigma$ more feasible.}{Can you describe this assumption in biological terms?}
+We used maximum plant height $H$ as a measure of $z$.
 
 The values from the previous three equations give us the necessary information to calculate $\mu'$ and $\lambda'$, thus allowing us to create the WALD distribution $p(r)$.
 However, the base WALD model does not take into account variation in wind speeds or seed terminal velocities, which limits its applicability in systems where such variation is present.
@@ -718,7 +734,7 @@ print(recruitsize_aic,
 \begin{figure}[H]
   \begin{center}
     \includegraphics[width=\linewidth]{Figures/monsoon_seedlings}
-  \caption{.}
+  \caption{A, Time series of annual monsoon precipitation (filled circles are the years in which this study was conducted). B, Relationship between density of creosote recruits observed on our transects in May-June and monsoon precipitation in the preceding July-September.}
   \label{fig:monsoon}
   \end{center}
 \end{figure}

@@ -63,6 +63,9 @@ fall_surv_fitted_terms <- predict(fall_surv_models[[5]], type = "terms")
 plot(transplant.plots$weighted.dens, fall_surv_fitted_terms[, "s(weighted.dens)"]) 
 plot(transplant.plots$shrub_cover, fall_surv_fitted_terms[, "s(shrub_cover)"]) 
 
+plot(transplants.app$weighted.dens,transplants.app$)
+
+
 ## Same but for spring
 spring_surv_models <- list()
 ## transect effects only
