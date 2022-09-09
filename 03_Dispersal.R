@@ -229,7 +229,7 @@ WALD.f.e.h.tom <- function(n, H, elas, sens, h=0.15, seed = NULL){
   if(sens == "dispersal.scale"){lambda <- lambda + pert}
   
   # Calculate location parameter nu
-  nu <- H*U/f#2*(H*U/f)#
+  nu <- H*U/f #2*(H*U/f)#
   if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
   if(sens == "dispersal.location"){nu <- nu + pert}
   
