@@ -90,7 +90,7 @@ boot.c1 <- c()
 boot.c2 <- c()
 
 # Should perturvation analysis be run?
-pert.on <- TRUE
+pert.on <- FALSE
 # magnitue of perturbation
 pert <- 0.01 ## 0.001 increase in vital rate function
 # vector of vital rates to be perturbed
