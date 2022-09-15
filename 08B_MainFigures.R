@@ -278,14 +278,17 @@ ggplot(boot.wave,aes(x=x))+
 
 sens.dat<-data.frame(colMeans(boot.sens[,2:11]))
 names(sens.dat)<-"Wavespeed sensitivity"
-sens.dat$vital_rate <- elas
+sens.dat$vital_rate <- c("Growth mean","Growth SD","Survival",
+                         "Flowering","Fertility","Recruitment",
+                         "Recruit size mean","Recruit size SD",
+                         "Dispersal location","Dispersal scale")
 
 ggplot(data = sens.dat,
        aes(x = vital_rate, y = `Wavespeed sensitivity`))+
   geom_bar(stat = "identity")+ 
-  scale_y_break(c(0.05,0.15))+
-  scale_y_break(c(0.18,1.9))+
-  scale_y_break(c(1.925,445.22))+
+  scale_y_break(c(0.05,0.16))+
+  scale_y_break(c(0.182,1.91))+
+  scale_y_break(c(1.925,446.1))+
   coord_flip()+ 
   theme_classic()+
   theme(legend.position="none")+ 
@@ -293,8 +296,8 @@ ggplot(data = sens.dat,
         axis.title.y = element_blank())+ 
   ggtitle('B')-> sens.plot
 
-pdf("Manuscript/Figures/wavespeed_sens.pdf",useDingbats = F,height=4,width=8)
-wave.plot + sens.plot
+pdf("Manuscript/Figures/wavespeed_sens.pdf",useDingbats = F,height=10,width=6)
+wave.plot / sens.plot
 dev.off()
 
 # transect resurveys ------------------------------------------------------
@@ -341,3 +344,17 @@ mean_cover <- resurv %>%
   group_by(Transect,as.factor(Year)) %>% 
   summarise(mean(LATR_percent,na.rm=T))
 
+resurv %>% 
+  group_by(as.factor(Year)) %>% 
+  summarise(mean(LATR_percent,na.rm=T))
+
+resurv %>% 
+  group_by(as.factor(Year)) %>% 
+  summarise(sum(LATR_percent>0,na.rm=T))
+resurv %>% 
+  group_by(Transect,as.factor(Year)) %>% 
+  summarise(sum(LATR_percent>0,na.rm=T))
+## again filtering only the nonzero quads
+resurv %>% 
+  group_by(Transect,as.factor(Year)) %>% 
+  summarise(n())

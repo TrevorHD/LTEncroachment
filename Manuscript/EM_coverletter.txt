@@ -1,0 +1,11 @@
+To the editorial board,
+
+Thank you for consdering our submission ("Is shrub expansion into grasslands pushed or pulled? A spatial integral projection model for woody plant encroachment") for publication in Ecological Monographs. This manuscript applies the lens of spatial population biology theory to understand the dynamics of woody plant encroachment, a worldwide phenomenon with consequences for biodiversity and ecosystem function. 
+
+Theory predicts that whether and how quickly an invasion wave could advance depends sensitively on the nature of density dependence. Strictly negative density dependence (maximum fitness approaching zero conspecific density) generates "pulled" waves that may rapidly advance, while positive density dependence (e.g., Allee effects) generates "pushed" waves that may proceed more slowly or not at all. Working at shrub-grass ecotones at the Sevilleta LTER site, we used a combination of observational and experimental approaches to ask whether creosotebush encroachment is pushed or pulled, and a novel application of spatial integral projection modeling to quantify the expected speed of encroachment based on density-dependent demography and dispersal processes. Contrary to expectations based on the potential for positive feedbacks of shrub encroachment, we found that the shrub encroachment is pulled by peak fitness at the leading edge of the shrub boundary. However, our model predicts that it is pulled so slowly that it is effectively stalled, and independent surveys support this prediction. 
+
+We believe that our highly integrative approach to a high-visibility research problem makes this manuscript a good fit to the mission and audience of Ecological Monographs. Our study weaves together many elements -- demographic monitoring, transplant experiments, dispersal kernel estimation, ecotone resurveys, and sophisticated spatial models -- to tell a complete "story". The breadth and depth required to effectively communicate this research exceed the page limits of most other ecological journals. Therefore, we see Ecological Monographs as a natural home for this work; we hope you agree. 
+
+On behalf of all co-authors,
+Tom Miller
+
