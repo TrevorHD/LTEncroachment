@@ -61,6 +61,7 @@ speed.dat <- read.csv("BootC2.csv")
 \noindent{} $\ast$ Corresponding author: tom.miller@rice.edu\\
 \noindent{} Submitted to \textit{Ecological Monographs}\\
 \noindent{} Manuscript type: Article\\
+\noindent{} Open Research statement: Data and code are provided for peer review. Please see Data Accessibility section on p. 32.
 %\SweaveOpts{concordance=TRUE}
 
 \linenumbers
@@ -571,6 +572,7 @@ All authors participated in preparing the manuscript for submission.
 
 \section*{Data accessibility}
 All of our data and code are available during peer review at \url{https://github.com/TrevorHD/LTEncroachment}. 
+This manuscript and its contents can be reproduced from this file: \url{https://github.com/TrevorHD/LTEncroachment/blob/master/Manuscript/creosote_SIPM_EcologicalMonographs_submission1.Rnw}.
 In the event of publication, we will publish data and code packages to accompany the paper in accordance with ESA's Open Research Policy.
 
 %--------------------------------------------------------------------
