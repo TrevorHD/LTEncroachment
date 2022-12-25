@@ -25,6 +25,7 @@
 \usepackage{wrapfig}
 \usepackage{rotating}
 \usepackage[usenames,dvipsnames]{xcolor}
+\newcommand{\revise}[1]{{\color{Mahogany}{#1}}}
 
 \newcommand{\tom}[2]{{\color{red}{#1}}\footnote{\textit{\color{red}{#2}}}}
 
@@ -76,7 +77,7 @@ If fitness is maximized at the low-density encroachment edge then shrub expansio
 However, encroaching shrubs have been shown to exhibit positive feedbacks, whereby shrub establishment modifies the environment in ways that facilitate further shrub recruitment and survival. 
 In this case there may be a fitness cost to shrubs at low density causing expansion to be ``pushed'' from behind the leading edge.
 We studied the spatial dynamics of creosotebush (\textit{Larrea tridentata}), which has a history of encroachment into Chihuahuan Desert grasslands over the past century.
-We used observational data and seedling transplant experiments to test the strength and direction of density dependence in shrub demographic performance along a gradient of shrub density at the grass-shrub ecotone. 
+\revise{\linelabel{obsdata}We used demographic data from observational censuses and seedling transplant experiments to test the strength and direction of density dependence in shrub fitness along a gradient of shrub density at the grass-shrub ecotone.} 
 We also used seed-drop experiments and wind data to construct a mechanistic seed dispersal kernel, then connected demography and dispersal data within a spatial integral projection model (SIPM) to predict the dynamics of shrub expansion.
 The SIPM predicted that, contrary to expectations based on potential for positive feedbacks, the shrub encroachment wave is ``pulled'' by maximum fitness at the low-density front.
 However, the predicted pace of expansion was strikingly slow (ca. 8 cm/yr), and this prediction was supported by independent re-surveys of the ecotone showing little to no change in spatial extent of shrub cover over 12 years. 
