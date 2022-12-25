@@ -1,0 +1,155 @@
+% ======================================================= %
+% Document: TEMPLATE FOR RESPONSES TO REVIEWERS
+% Author: Andrea Ballatore
+% Date: Jan 7, 2013
+% Source: https://raw.githubusercontent.com/ucd-spatial/Datasets/master/tex_response_to_reviewers_template/responses_to_reviewers.tex
+% Modified by Eduard Szöcs, 10.03.2015
+% ======================================================= %
+\documentclass[12pt]{article}
+% packages
+\usepackage{xr}
+\externaldocument[ms-]{creosote_SIPM_EcologicalMonographs_submission2}
+
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{color}
+\definecolor{mygray}{gray}{0.6}
+\usepackage[utf8]{inputenc}
+\usepackage[onehalfspacing]{setspace}
+\usepackage[
+	round,	%(defaultage in the main file and \input ) for round parentheses;
+	colon,	% (default) to separate multiple citations with colons;
+	authoryear,% (default) for author-year citations;
+	sort,		% orders multiple citations into the sequence in which they
+]{natbib}
+\usepackage[%disable
+	]{todonotes}
+
+\usepackage{anysize}
+\marginsize{2.5cm}{2.5cm}{1.5cm}{2.5cm}
+
+% macros
+% add a counter
+\newcounter{cN}
+\setcounter{cN}{0}
+
+\newcommand{\comment}[1]{
+	\vspace{2em}
+	\refstepcounter{cN} % incrment counter
+	\noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment \thecN}:~}}\emph{``#1''}
+	}
+
+\newcommand{\response}[1]{
+	\\[0.25em]
+	\hangindent=2.3em \textbf{\textcolor{NavyBlue}{\uline{Response}:~}}#1
+	}
+
+\newcommand{\revise}[1]{{\color{Mahogany}{#1}}}
+
+\usepackage[normalem]{ulem}
+\definecolor{darkred}{rgb}{1,.6,.6}
+\DeclareRobustCommand\problemline{\bgroup\markoverwith{\textcolor{darkred}{\rule[-0.9ex]{4pt}{3pt}}}\ULon}
+\DeclareRobustCommand{\problem}[1]{\problemline{#1}} % soul
+\setcounter{secnumdepth}{-1}
+
+\begin{document}
+% ======================================================= %
+\title{Manuscript ECM22-0164 --- Response to reviewers}
+
+\maketitle
+% ======================================================= %
+\noindent To the editorial board,
+
+Thank you for the opportunity to submit a revision of our manuscript for your consideration. Our major changes include the following:
+\begin{enumerate}
+	\item We have done X.
+	\item We have done Y.
+	\item We have done Z.
+\end{enumerate}
+
+We describe these and other changes in greater detail below, where we reproduce comments from the associate editor and reviewers and provide our point-by-point responses. 
+All of our changes are denoted in the manuscript with \revise{Mahogany font}.
+We think the review process has greatly strengthened our manuscript.
+We hope you agree. 
+
+\vspace{2em}
+\hfill On behalf of myself and all coauthors,
+
+\hfill Tom Miller
+\newpage
+
+% ======================================================= %
+\section{Response to Dr. Oscar Godoy}
+\vspace{-2em}
+
+\comment{The main limitation I see and it is in line with the first reviewer is the mismatch between the research questions and the study site. This work aims to test the population mechanisms by which shrub expansion occurs or it is prevented but you acknowledge at the same time at the beginning of the discussion that there is no current dynamics in the system. That is, it has reached a quasi steady state in which neither expansion nor contraction is observed. In sum, it is difficult to marriage the idea that you are going to understand the dynamics of shrub encroachment in an area there has been pushing dynamics in the past but not right now. Because of this fundamental limitation, I strongly believe the manuscript needs to be reconsidered. One potential suggestion could be the following: Shrub encroachment can be pulled or pushed and this occurs by different population mechanisms. However, these processes do not occur continuously, it goes in pulses. In the Chihuahuan desert, it has occurred an expansion during the last century but now it has stopped, and we want to understand why the expansion process is no longer in action as well as to predict future dynamics according to the mechanisms by which the study species (Larrea tridentada) is governed. 
+\\
+\\
+I think this is a more honest perspective of what it is going on in the system and allow the reader to obtain a better view of the current process and the importance of obtaining a mechanistic knowledge to both understand current stationary conditions and predict future expansions. Should you consider this alternative, I would be very happy to reconsidered a careful revised version of the manuscript.  
+}
+\response{}
+
+\section{Response to Reviewer 1}
+\vspace{-2em}
+
+\comment{This paper attempts to offer a new perspective to shrub encroachment by analysing it from a point of view of population dynamics. Framing the study under this concept, authors bring the  idea that shrub encroachment may be pulled or pushed, formulating clear and relevant hypothesis in a very intriguing conceptualization. The topic is clearly important, the approach is novel and the manuscript is clear and technically sound and correct.}
+\response{}
+
+\comment{That said, this manuscript has one major problem. The whole study is performed in one only site in which the shrub population is actually in an steady state of no expansion (as authors recognised). This is a major conceptual flaw, from my point of view, as it entirely conditions the mechanisms to be tested. Testing which are the mechanisms of expansion of a system that is not expanding yields some results that are not relevant for the study purpose.}
+\response{}
+
+\comment{I strongly suggest the authors to re-frame completely the idea and focus it on which are the population dynamics mechanisms of shrublands in quasy-steady state. This is not going to change a lot the relevance and interest of their results, but I think it prevents almost completely the framing into the field of shrub encroachment (maybe dynamics post equilibria of shrub encroachment may make more sense?). As is, the paper is very misleading and leaves the reader a bit flat.}
+\response{}
+
+\comment{I have to recognise in any case that I sincerely enjoyed the paper, I find the approach clearly novel and interesting and the authors never lied to the reader (they correctly discuss why the mechanisms found may not be entirely applicable). Simply, for me it makes little sense to frame the paper under the umbrella of shrub encroachment expansion with the proposed study site. It is a pity, actually. I think the work has potential to be replicated in sites with ongoing shrub expansion, yielding groundbreaking results.}
+\response{}
+
+\section{Response to Reviewer 2}
+\vspace{-2em}
+
+\comment{This manuscript by Drees et al. combined observational data from field surveys, seedling transplant experiments, and spatial integral projection models to explain the expansion of creosotebush into Chihuahuan Desert grasslands. Overall, the experiment was well-designed and the manuscript is very well-written. Congratulations to the authors for a nice work, showing that the expansion of creosotebush in this ecosystem is pulled by peak fitness at the leading edge at a slow rate.}
+\response{We appreciate this reviewer's positive comments and constructive feedback.}
+	
+\comment{My only major comment for the authors to consider is to have some discussions about whether these findings/mechanisms presented in this study can be applied to other ecosystems encroached by other species, for example, the encroachment of juniper encroachment in sagebrush steppe, the encroachment of honey mesquite into southern US rangelands, or the encroachment of acacia species into African savannas. If not, then what other factors may play, in terms of differences in expansion compared to creosotebush encroachment? Adding this in the Discussion section may, to some extent, broaden the scope of this manuscript.}
+\response{}
+
+\comment{My only major comment for the authors to consider is to have some discussions about whether these findings/mechanisms presented in this study can be applied to other ecosystems encroached by other species, for example, the encroachment of juniper encroachment in sagebrush steppe, the encroachment of honey mesquite into southern US rangelands, or the encroachment of acacia species into African savannas. If not, then what other factors may play, in terms of differences in expansion compared to creosotebush encroachment? Adding this in the Discussion section may, to some extent, broaden the scope of this manuscript.}
+\response{}
+
+\comment{Line 14, What kinds of observational data?}
+\response{}
+
+\comment{Line 23, “showing little to no change in spatial extent”, it would be nice to put a number in cm here to show the expansion of shrub cover over 12 years, supporting the model predicted rate (8 cm/yr).}
+\response{}
+
+\comment{Line 45, A more recent citation here would be, Morford, S. L., Allred, B. W., Twidwell, D., Jones, M. O., Maestas, J. D., Roberts, C. P., & Naugle, D. E. (2022). Herbaceous production lost to tree encroachment in United States rangelands. Journal of Applied Ecology.}
+\response{}
+
+\comment{Line 67, Whether interspecific interactions also play roles in determining the demographic rates? For example, the competition of creosotebush and black grama for resources at the front edge.}
+\response{}
+
+\comment{Lines 159-166, the authors may provide additional information on grazing intensity, fire regimes, drought, and other environmental conditions of this site, at least during the period of this study. As the authors have indicated in Lines 104-106, all these factors have been believed to drive the expansion of creosotebush. If these factors changed quite a lot during this study, then the test of seed dispersal and density-dependent demography as alternative drivers may not be validated.}
+\response{}
+
+\comment{Lines 263, 277, 290, 298, I am wondering whether the authors could provide references or why different parameters were modeled with different distributions (e.g., Bernoulli random, Gaussian random, etc.)}
+\response{}
+
+\comment{Lines 462-466, what are the criteria you used to define the size of shrubs (large vs small)? It seems that you did not have this information in the Methods and Materials, or I missed this point.}
+\response{}
+
+\comment{Line 504, seed dispersal is one thing, but seed germination rate may also play a significant role in recruitment.}
+\response{}
+
+\comment{Line 642, I guess this is quite important in terms of the establishment of woody seedlings, especially considering the interspecific competition between woody and herbaceous species. Sankaran, M., Ratnam, J., & Hanan, N. P. (2004). Tree–grass coexistence in savannas revisited–insights from an examination of assumptions and mechanisms invoked in existing models. Ecology Letters, 7(6), 480-490.}
+\response{}
+
+\comment{Figure 1, Please indicate the unit for grass cover on the right y-axis.}
+\response{}
+
+\comment{Figure 2, I would recommend having a figure legend to show what different colors indicate. In addition, why points in Panel A and C were in different sizes? What does this indicate?}
+\response{}
+
+% ======================================================= %
+\end{document}
+% ======================================================= %
