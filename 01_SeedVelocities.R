@@ -15,7 +15,7 @@ for(i in 13:62){
   # Load each column of positions
   TX <- paste0("T", i, ".y")
   data <- read.csv(file) %>% 
-    select("Time", TX) %>% 
+    dplyr::select("Time", TX) %>% 
     rename(t = "Time", y = TX) %>% 
     na.omit()
   
