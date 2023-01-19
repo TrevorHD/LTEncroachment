@@ -26,7 +26,7 @@
 \usepackage{rotating}
 \usepackage[usenames,dvipsnames]{xcolor}
 \newcommand{\revise}[1]{{\color{Mahogany}{#1}}}
-
+\usepackage[normalem]{ulem}
 \newcommand{\tom}[2]{{\color{red}{#1}}\footnote{\textit{\color{red}{#2}}}}
 
 \doublespacing
@@ -111,9 +111,8 @@ Under these conditions, the wave is ``pulled'' forward by individuals at the low
 However, woody encroachment systems often involve positive feedbacks whereby shrub establishment modifies the environment in ways that facilitate further shrub recruitment. 
 For example, woody plants can modify their micro-climates in ways that elevate nighttime minimum temperatures, promoting conspecific recruitment and survival for freeze-sensitive species \citep{d2013vegetation,huang2020critical}. 
 Positive density dependence (or Allee effects) causes demographic rates to be maximized at higher densities behind the leading edge, which ``push'' the expansion forward, leading to qualitatively different expansion dynamics \citep{kot1996dispersal, taylor2005allee, sullivan2017density, lewis1993allee, veit1996dispersal}.
-Pushed expansion waves generally have different shapes (steeper density gradients) and slower speeds than pulled waves \citep{gandhi2016range}, and may require different strategies for managing or decelerating expansion \citep{taylor2005allee}. 
-Under some conditions, positive density dependence can cause expansion to fail entirely, ``pinning'' populations in place \citep{keitt2001allee}. 
-The potential for positive feedbacks is well documented in woody encroachment systems as a key feature of bi-stability (the existence of woody and herbaceous habitats as alternative stable states: \cite{wilcox2018emerging}) but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion and influence strategies for management of woody encroachment.
+Pushed expansion waves generally have different shapes (steeper density gradients) and slower speeds than pulled waves \citep{gandhi2016range}, and may require different strategies for managing or decelerating expansion \citep{taylor2005allee}. Under some conditions, \sout{positive density dependence can cause expansion to fail entirely}\revise{pushed waves may fail entirely, ``pinning'' population boundaries in place \citep{keitt2001allee}. }
+The potential for positive feedbacks is well documented in woody encroachment systems as a key feature of bi-stability (the existence of woody and herbaceous habitats as alternative stable states: \cite{wilcox2018emerging}) but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion \sout{and influence strategies for management of woody encroachment} \revise{or halt it altogether}.
 %Despite decades of work on this topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
 
 In this study, we linked woody plant encroachment to ecological theory for spreading populations, with the goals of understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
