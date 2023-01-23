@@ -46,7 +46,7 @@ speed.dat <- read.csv("BootC2.csv")
 
 %-------------------------------------------------------------------------
 
-\title{Is shrub expansion into grasslands pushed or pulled? A spatial integral projection model for woody plant encroachment}
+\title{Demography and dispersal at a grass-shrub ecotone: applying spatial population biology theory to woody plant encroachment}
 
 \author[a]{Trevor Drees}
 \author[b]{Brad M. Ochocki}
@@ -97,46 +97,57 @@ The process of encroachment generally involves increases in the number or densit
 Other effects of encroachment include changes in ecosystem services \citep{reed2015reorienting, kelleway2017review}, declines in biodiversity \citep{ratajczak2012woody, sirami2012changes, brandt2013regime}, and economic losses in areas where the proliferation of shrubs adversely affects grazing land and pastoral production \citep{mugasi2000economic, oba2000bush}.
 
 Woody plant encroachment can be studied through the lens of spatial population biology as a wave of individuals that may expand across space and over time \citep{kot1996dispersal, neubert2000demography, wang2002integrodifference, pan2012invasion}.
-Theory predicts that the speed of wave expansion depends on two processes: local demography and dispersal of propagules.
+Theory predicts that \revise{whether the wave can advance and the speed at which is does so} depends on two processes: local demography and dispersal of propagules.
 First, local demographic processes include recruitment, survival, growth, and reproduction, which collectively determine the rate at which newly colonized locations increase in density and produce new propagules. 
 Second, colonization events are driven by the spatial dispersal of propagules, which is commonly summarized as a probability distribution of dispersal distances, or ``dispersal kernel''.
-The speed at which expansion waves move is highly dependent upon the shape of the dispersal kernel and can be strongly influenced by long-distance dispersal events in the tail of the distribution \citep{skarpaas2007dispersal}.
+\revise{Expansion speed is} highly dependent upon the shape of the dispersal kernel and can be strongly influenced by long-distance dispersal events in the tail of the distribution \citep{skarpaas2007dispersal}.
 Both demography and dispersal may depend on plant size, since larger plants often have improved demographic performance and release seeds from greater heights, leading to longer dispersal distances \citep{nathan2011mechanistic}.
-Accounting for population structure, including size structure, may therefore be important for understanding and predicting wave expansion dynamics \citep{neubert2000demography}.
+Accounting for population structure, including size structure, may therefore be important for understanding and predicting \revise{encroachment} dynamics \citep{neubert2000demography}.
 
 Theory predicts that the nature of conspecific density dependence is another critical feature of expansion dynamics but this is rarely studied in the context of woody plant encroachment.  
 Expansion waves typically correspond to gradients of conspecific density -- high in the back and low at the front -- and demographic rates may be sensitive to density due to intraspecific interactions like competition or facilitation.
-If the demographic effects of density are strictly negative due to competitive effects that increase with density, then demographic performance is maximized as density goes to zero at the leading edge of the wave. 
+If the demographic effects of density are strictly negative due to competitive effects that increase with density, then demographic performance is \revise{expected to be} maximized as density goes to zero at the leading edge of the wave. 
 Under these conditions, the wave is ``pulled'' forward by individuals at the low-density vanguard \citep{kot1996dispersal}, and targeting these individuals and locations would be the most effective way to slow down or prevent encroachment. 
-However, woody encroachment systems often involve positive feedbacks whereby shrub establishment modifies the environment in ways that facilitate further shrub recruitment. 
+However, woody encroachment often involves positive feedbacks whereby shrub establishment modifies the environment in ways that facilitate further shrub recruitment. 
 For example, woody plants can modify their micro-climates in ways that elevate nighttime minimum temperatures, promoting conspecific recruitment and survival for freeze-sensitive species \citep{d2013vegetation,huang2020critical}. 
 Positive density dependence (or Allee effects) causes demographic rates to be maximized at higher densities behind the leading edge, which ``push'' the expansion forward, leading to qualitatively different expansion dynamics \citep{kot1996dispersal, taylor2005allee, sullivan2017density, lewis1993allee, veit1996dispersal}.
-Pushed expansion waves generally have different shapes (steeper density gradients) and slower speeds than pulled waves \citep{gandhi2016range}, and may require different strategies for managing or decelerating expansion \citep{taylor2005allee}. Under some conditions, \sout{positive density dependence can cause expansion to fail entirely}\revise{pushed waves may fail entirely, ``pinning'' population boundaries in place \citep{keitt2001allee}. }
-The potential for positive feedbacks is well documented in woody encroachment systems as a key feature of bi-stability (the existence of woody and herbaceous habitats as alternative stable states: \cite{wilcox2018emerging}) but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion \sout{and influence strategies for management of woody encroachment} \revise{or halt it altogether}.
+Pushed expansion waves generally have different shapes (steeper density gradients) and slower speeds than pulled waves \citep{gandhi2016range}, and may require different strategies for managing or decelerating expansion \citep{taylor2005allee}. 
+Under some conditions, \revise{pushed waves may fail entirely, ``pinning'' population boundaries in place \citep{keitt2001allee}. }
+The potential for positive feedbacks is well documented in woody encroachment systems as a key feature of bi-stability (the existence of woody and herbaceous habitats as alternative stable states: \cite{wilcox2018emerging}) but it remains unclear whether and how strongly these feedbacks decelerate shrub expansion \revise{or prevent it altogether}.
 %Despite decades of work on this topic, we still do not know whether expansion waves of woody encroachment are pushed or pulled. 
 
-In this study, we linked woody plant encroachment to ecological theory for spreading populations, with the goals of understanding how seed dispersal and density-dependent demography drive encroachment, and determining whether the encroachment wave is pushed or pulled.
+In this study, we linked \revise{shrub dynamics at grass-shrub ecotones to ecological theory for spreading populations, with the goals of understanding the spatial dynamics that emerge from seed dispersal and density-dependent demography at the edge of the encroachment wave, and determining whether the  wave is pushed or pulled.}
 Throughout the aridlands of the southwestern United States, shrub encroachment into grasslands is well documented \citep{d2012synthetic} but little is known about the dispersal and demographic processes that govern it. 
 Our work focused on creosotebush (\textit{Larrea tridentata}) in the northern Chihuahuan Desert. 
 This native shrub has encroached into grasslands over the past 150 years, leading to decreased cover of black grama grass (\textit{Bouteloua eriopoda}), the dominant foundation species of Chihuahuan desert grassland \citep{gardner1951vegetation, buffington1965vegetational, gibbens2005vegetation}.
 As in many woody encroachment systems, creosotebush expansion generates ecotones marking a transition from dense shrubland to open grassland, with a transition zone in between where shrubs can often be found interspersed among grasses (Fig. \ref{fig:waves}).
 
 Historically, creosotebush encroachment into grasslands is believed to have been driven by a combination of factors including overgrazing, drought, variability in rainfall, and suppression of fire regimes \citep{moreno2016seed}.
-These shrubs are also thought to further facilitate their own encroachment through positive feedbacks \citep{grover1990shrubland, d2012synthetic} by modifying their environment in ways that favor continued growth and recruitment, including changes to the local micro-climate \citep{d2010positive} and rates of soil erosion \citep{turnbull2010changes}.
+These shrubs are also thought to further facilitate their own encroachment through positive feedbacks \citep{grover1990shrubland, d2012synthetic} by modifying their environment in ways that favor survival, growth, and recruitment, including changes to the local micro-climate \citep{d2010positive} and rates of soil erosion \citep{turnbull2010changes}.
 Such positive feedbacks also involve suppression of herbaceous competitors, reducing competition as well as the amount of flammable biomass used to fuel the fires that keep creosotebush growth in check \citep{van2000shrub}.
-We hypothesized that, given potential for positive feedback mechanisms, the rarity of conspecifics at the low-density encroachment front may depress demographic performance and generate pushed-wave dynamics.
+
+\revise{Our work was conducted at the Sevilleta Long-Term Ecological Research (LTER) site in central New Mexico, where the most recent major advance of creosotebush into desert grassland is estimated to have occurred in the 1950s \citep{moreno2016seed}.
+More recently, the shrub encroachment wave has exhibited little apparent advance.  
+For example, between 2003 and 2012, we saw very small changes in the spatial extent of shrub cover measured along two permanent transects (Fig. \ref{fig:resurvey}), small enough to be attributable to measurement error.
+We therefore sought to mechanistically understand whether this shrub encroachment wave is indeed stalled under current conditions, why that is so, and whether it is poised to remain that way.
+One hypothesis is that the positive feedbacks that favor bi-stability -- maintaining shrubland as shrubland and grassland as grassland -- may inhibit advance of the encroachment wave. 
+This hypothesis predicts fitness penalties for shrubs at the low-density vanguard of encroachment (pushed-wave dynamics). 
+Alternatively, positive feedbacks may be insufficient to prevent shrub encroachment of grassland, but the pace of encroachment may be limited by other factors.
+This hypothesis predicts that the encroachment wave is pulled forward (fitness maximized at low density) but pulled very slowly or episodically due to the constraints of seed dispersal and seedling recruitment.
+Our study was designed to differentiate between these competing hypotheses.}
+
 
 %While there is considerable interest in creosotebush encroachment, literature investigating the dispersal mechanisms and demographic processes that govern this process is extremely limited, and no previous studies have evaluated demography and dispersal to understand and predict creosotebush expansion dynamics.
 %We have little understanding of how dispersal, density-dependent demography, and density-dependent population growth facilitate creosotebush encroachment, as well as a dearth of data regarding population dynamics at the vanguard of expanding creosotebush populations.
 %Without better knowledge on all of these, it becomes rather difficult to model creosotebush encroachment, as doing so requires knowledge of the mechanisms occurring at these grass-shrub boundaries.
 %Such gaps in knowledge make it difficult to make estimates of encroachment rates that extend beyond what can be gathered from vegetation surveys.
 
-We used a combination of observational and experimental data from shrub ecotones in central New Mexico to parameterize a spatial integral projection model (SIPM) that predicts the speed of encroachment ($m/yr$) resulting from lower-level demographic and dispersal processes. 
+We used a combination of observational and experimental data from grass-shrub ecotones in central New Mexico to parameterize a spatial integral projection model (SIPM) that predicts the speed of encroachment ($m/yr$) resulting from lower-level demographic and dispersal processes. 
 Our data came from demographic surveys and experimental transplants along replicate ecotone transects spanning a gradient of shrub density, and from seed drop experiments to estimate the properties of the dispersal kernel.
 We focused on wind dispersal of seeds, since little is known about the natural history of dispersal in this system and the seeds lack adaptations to attract frugivorous animals, such as bright coloration or fleshy fruit, though they may be moved by granivores.
 Given the challenges of directly measuring seed dispersal, we instead built mechanistic dispersal kernels that predict seed movement based on properties of maternal plants, seeds, and wind; because it does not account for secondary biotic or abiotic dispersal vectors, this approach provided a conservative first step toward understanding seed movement.
-We also used re-surveys of permanent transects as an independent measure of encroachment that provided a benchmark against which to evaluate model predictions. 
-The SIPM accounts for size-structured demography of creosotebush, allows us to test whether shrub expansion is pulled by the low-density front or pushed from the high-density core, and identifies the local (demographic) and spatial (seed dispersal) life cycle transitions that most strongly contribute to expansion speed. 
+%We also used re-surveys of permanent transects as an independent measure of encroachment that provided a benchmark against which to evaluate model predictions. 
+The SIPM accounts for size-structured demography of creosotebush, allows us to test whether shrub expansion is pulled by the low-density front or pushed from the high-density core, and identifies the local (demographic) and spatial (seed dispersal) life cycle transitions that most strongly \revise{limit encroachment}. 
 %Our investigations are novel in the sense that they will be some of the first to apply a wave model of population expansion to ecotones of Larrea tridentata and its grassy competitors, using density-dependent demographic rates and recruitment to describe the dynamics of ecotone movement in this specific system.
 %This research aims to fill the aforementioned knowledge gaps by not only collecting data on demographic rates and dispersal in Larrea tridentata, but by examining creosotebush encroachment in the framework of a wave model; by examining this system in such a way we can estimate the rate of creosotebush encroachment, and additionally determine whether this encroachment is pulled by the low-density wavefront pushed by high-density areas behind the wavefront.
 We address the following specific questions: 
@@ -144,7 +155,7 @@ We address the following specific questions:
 \item What are the strength and direction of density dependence in demographic vital rates along shrub encroachment ecotones?
 \item What is the seed dispersal kernel and how does it vary with maternal plant size?
 \item What is the predicted rate of expansion and which lower-level processes most strongly affect the expansion speed?
-\item How does the observed rate of encroachment in the recent past compare to model predictions?
+%\item How does the observed rate of encroachment in the recent past compare to model predictions?
 
 \end{enumerate}
 
@@ -520,7 +531,7 @@ While not as strong a constraint as recruitment based on our sensitivity analysi
 Our findings of very limited dispersal are consistent with a previous study that found creosotebush seeds in the seed bank were found only beneath mature shrubs and not in nearby grass patches or inter-plant spaces \citep{moreno2016seed}. 
 Our mechanistic dispersal modeling assumes that wind is the sole dispersal vector. 
 Previous work suggests that this modeling approach can accurately predict dispersal patterns for wind-dispersed plants \citep{skarpaas2007dispersal}, yet in our system it may be important to consider secondary dispersal vectors. 
-Boyd and Brum's \citeyear{boyd1983postdispersal} study of creosotebush reproductive biology described ``contradiction in the literature about mode of dispersal'', citing evidence for a dominant role of wind but the additional possibility of seed movement by granivorous animals. 
+Boyd and Brum`s \citeyear{boyd1983postdispersal} study of creosotebush reproductive biology described ``contradiction in the literature about mode of dispersal'', citing evidence for a dominant role of wind but the additional possibility of seed movement by granivorous animals. 
 Combining wind and animal dispersal vectors into a ``total'' dispersal kernel \citep{rogers2019total} will be a valuable next step. 
 Second, overland flow of runoff may contribute to secondary seed movement following initial deposition by wind \citep{thompson2014secondary}. 
 Interestingly, seed movement from overland flow would be most likely following large monsoon events. 
@@ -579,6 +590,8 @@ All authors participated in preparing the manuscript for submission.
 \section*{Figure legends}
 \noindent{} \textbf{Figure \ref{fig:waves}.} Example of an ecotone transect spanning gradients of creosotebush and black grama grass at Sevilleta National Wildlife Refuge, a Long-Term Ecological Research (LTER) site in central New Mexico, US.
 \\
+\noindent{} \textbf{Figure \ref{fig:resurvey}.} Surveys of creosotebush percent cover along two permanent transects (A,B) in 2001 and 2013.
+\\
 \noindent{} \textbf{Figure \ref{fig:vital_rates}.} Size- and density-dependence in demographic vital rates. \textbf{A} Probability of survival from natural population census and transplant experiment (black line), \textbf{B} Mean and variance (inset) of size conditional on previous size, \textbf{C} Probability of flowering, \textbf{D} Flower and fruit production, \textbf{E} Probability of recruitment per seed, \textbf{F} Recruit size.  In \textbf{A}--\textbf{D}, colored lines indicate four size groups (red is largest, blue is smallest), discretized for data visualization only. In all panels, weighted density is the sum of all plant sizes $log(cm^3)$ within the same 5-m window as the census individual.
 \\
 \noindent{} \textbf{Figure \ref{fig:lambda}.} Density dependence in the asymptotic population growth rate ($\lambda$). Gray lines show bootstrap replicates and the black lines shows predictions from full demographic data set. Weighted deighted density is the sum of all plant sizes $log(cm^3)$ within 5-m windows.
@@ -586,8 +599,7 @@ All authors participated in preparing the manuscript for submission.
 \noindent{} \textbf{Figure \ref{fig:dispersal}.} Predicted WALD dispersal kernels for four shrub heights corresponding to the 25th, 50th, 75th, and 100th (maximum) percentiles of the observed size distribution. We assume that heights below 15 cm have effectively no seed movement due to interference with the grass layer.
 \\
 \noindent{} \textbf{Figure \ref{fig:wavespeed}.} A, Asymptotic speed of creosotebush encroachment. The distribution reflects parameter and model uncertainties quantified via bootstrapping and stochastic sampling from seed dispersal kernels. B, Sensitivities of wavespeed to demography and dispersal processes. For size-dependent functions (growth, survival, flowering, and fertility) sensitivity was calculate by perturbing the entire function across all sizes.
-\\
-\noindent{} \textbf{Figure \ref{fig:resurvey}.} Surveys of creosotebush percent cover along two permanent transects (A,B) in 2001 and 2013.
+
 
 \newpage
 \begin{figure}[H]
@@ -595,6 +607,15 @@ All authors participated in preparing the manuscript for submission.
     \includegraphics[width=\linewidth]{Figures/waves_pics}
     \caption{}
   \label{fig:waves}
+  \end{center}
+\end{figure}
+
+\newpage
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/resurveys}
+  \caption{}
+  \label{fig:resurvey}
   \end{center}
 \end{figure}
 
@@ -634,14 +655,6 @@ All authors participated in preparing the manuscript for submission.
   \end{center}
 \end{figure}
 
-\newpage
-\begin{figure}[H]
-  \begin{center}
-    \includegraphics[width=\linewidth]{Figures/resurveys}
-  \caption{}
-  \label{fig:resurvey}
-  \end{center}
-\end{figure}
 
 \newpage
 \section*{Appendix A: Dispersal kernel modeling}
