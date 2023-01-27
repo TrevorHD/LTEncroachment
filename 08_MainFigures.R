@@ -60,6 +60,8 @@ if(boot.switch == FALSE){
   #points(LATR_surv_dat$weighted.dens[LATR_surv_dat$transplant==T],LATR_surv_dat$survival_t1[LATR_surv_dat$transplant==T],
   #       col=alph)
   text(30,0.1,"Transplants",font=3)
+  legend("right",legend=c("smallest"," "," ","largest"),lwd=2,
+         col=LATR_cols,bg="white")
   
   ## growth
   ## starting with raw data visualization, binning sizes and densities
