@@ -1,0 +1,128 @@
+\documentclass[11pt]{article}
+\usepackage[sc]{mathpazo} %Like Palatino with extensive math support
+\usepackage{fullpage}
+\usepackage[authoryear,sectionbib,sort]{natbib}
+\linespread{1.7}
+\usepackage[utf8]{inputenc}
+\usepackage{lineno}
+\usepackage{titlesec}
+\titleformat{\section}[block]{\Large\bfseries\filcenter}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\Large\itshape\filcenter}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}[block]{\large\itshape}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]{\itshape}{\theparagraph}{1em}{}[. ]\renewcommand{\refname}{Literature Cited}
+% my addnl packages
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage{setspace}
+\usepackage{amsfonts,amssymb,amsmath,hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[usenames,dvipsnames]{xcolor}
+\newcommand{\revise}[1]{{\color{Mahogany}{#1}}}
+\usepackage[normalem]{ulem}
+\newcommand{\tom}[2]{{\color{red}{#1}}\footnote{\textit{\color{red}{#2}}}}
+
+\doublespacing
+%\bibliography{creosote_SIPM}
+
+<<setup,echo=F, message=F, warning=F>>=
+knitr::opts_chunk$set(fig.pos = 'H')
+library(tidyverse)
+library(xtable)
+##read in demography data to pull some quantities
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
+aic_tables <- readRDS("aic_tables.rds")
+appendix_aic_tables <- readRDS("appendix_aic_tables.rds")
+speed.dat <- read.csv("BootC2.csv")
+
+@
+
+\title{Appendix S2: Additional Results}
+\author{ }
+\date{\vspace{-5ex}}
+
+\begin{document}
+\maketitle
+\renewcommand{\thefigure}{S\arabic{figure}}\setcounter{figure}{0}
+\renewcommand{\thetable}{S\arabic{table}}\setcounter{table}{0}
+\renewcommand{\theequation}{S\arabic{equation}}\setcounter{equation}{0}
+
+<<surv_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+surv_aic<-xtable(aic_tables$surv_aic_out[,c("Pr(Survival)","df","dAIC")], caption = "AIC model selection for survival probability.", label = "tab:surv_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(surv_aic)<-"c|p{12cm}|c|c|"
+print(surv_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+<<grow_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+grow_aic<-xtable(aic_tables$grow_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of future size", label = "tab:grow_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(grow_aic)<-"c|p{8cm}|p{4cm}|c|c|"
+print(grow_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+
+<<flower_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+flower_aic<-xtable(aic_tables$flower_aic_out[,c("Pr(Flowering)","df","dAIC")], caption = "AIC model selection for flowering probability.", label = "tab:flow_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(flower_aic)<-"c|p{8cm}|c|c|"
+print(flower_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+
+<<fruits_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+fruits_aic<-xtable(aic_tables$fruits_aic_out[,c("No. fruits","df","dAIC")], caption = "AIC model selection for fruit number.", label = "tab:fruit_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(fruits_aic)<-"c|p{8cm}|c|c|"
+print(fruits_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+<<recruit_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+recruit_aic<-xtable(aic_tables$recruit_aic_out[,c("Pr(Recruitment)","df","dAIC")], caption = "AIC model selection for recruitment probability.", label = "tab:recruit_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(recruit_aic)<-"c|p{8cm}|c|c|"
+print(recruit_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+<<recruitsize_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+recruitsize_aic<-xtable(aic_tables$recruitsize_aic_out[,c("mean(size)","sd(size)","df","dAIC")], caption = "AIC model selection for mean and variance of recruit size.", label = "tab:recruitsize_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(recruitsize_aic)<-"c|p{8cm}|p{4cm}|c|c|"
+print(recruitsize_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+\newpage
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/monsoon_seedlings}
+  \caption{A, Time series of annual monsoon precipitation (filled circles are the years in which this study was conducted). B, Relationship between density of creosotebush recruits observed on our transects in May-June and monsoon precipitation in the preceding July-September.}
+  \label{fig:monsoon}
+  \end{center}
+\end{figure}
+
+\end{document}
