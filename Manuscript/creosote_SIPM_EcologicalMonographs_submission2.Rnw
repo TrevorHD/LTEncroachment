@@ -46,7 +46,7 @@ speed.dat <- read.csv("BootC2.csv")
 
 %-------------------------------------------------------------------------
 
-\title{Demography and dispersal at a grass-shrub ecotone: applying spatial population biology theory to woody plant encroachment}
+\title{Demography and dispersal at a grass-shrub ecotone: a spatial integral projection model for woody plant encroachment}
 
 \author[a]{Trevor Drees}
 \author[b]{Brad M. Ochocki}
