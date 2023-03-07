@@ -296,3 +296,22 @@ contour(TM$meshpts, TM$meshpts, t(dc.dK), add=TRUE)
 # Generate figures for wavespeeds and population growth, dispersal, and demographic data
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_MainFigures.R")
 
+
+# write files for EDI data package --------------------------------------------
+
+## 1. Observational demography census
+#write.csv(CData %>% 
+#            dplyr::select(-c(volume_t,volume_t1,logGR,did.flower,transplant,
+#                             total.fruits_t,total.flowers_t,
+#                             total.fruits_t1,total.flowers_t1,
+#                             total.reproduction_t,total.reproduction_t1)),"EDI/LATR_demography_dat.csv",row.names = F)
+
+## 2. Transplant experiment
+#write.csv(CData.Transplants %>% 
+#            dplyr::select(-c(name,volume_t,transplant)),"EDI/LATR_transplants_dat.csv",row.names = F)
+
+## 3. Seed drop summary data
+#write.csv(read.csv("Data/SD_Summary.csv"),"EDI/SD_Summary.csv")
+
+## 4. Seed drop position data
+#write.csv(read.csv("Data/SD_Trials.csv"),"EDI/SD_Trials.csv")
