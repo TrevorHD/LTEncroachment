@@ -308,7 +308,9 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_Main
 
 ## 2. Transplant experiment
 #write.csv(CData.Transplants %>% 
-#            dplyr::select(-c(name,volume_t,transplant)),"EDI/LATR_transplants_dat.csv",row.names = F)
+#            dplyr::select(-c(name,volume_t,transplant,notes)) %>% 
+#            rename(num_black_grama_t=num_black_gramma_t,
+#                   num_blue_grama_t=num_blue_gramma_t),"EDI/LATR_transplants_dat.csv",row.names = F)
 
 ## 3. Seed drop summary data
 #write.csv(read.csv("Data/SD_Summary.csv"),"EDI/SD_Summary.csv")
