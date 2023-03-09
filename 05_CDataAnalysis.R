@@ -14,8 +14,11 @@ if(boot.switch == FALSE){
     mutate(unique.transect = interaction(transect, site))}
 
 
-## set the gamma argument of gam() -- gamma>1 generates smoother fits, less likely to be overfit
-gamma = 1.8
+## set the gamma argument of gam(): gamma > 1 generates smoother fits, less likely to be overfit
+gamma <- 1.8
+
+
+
 
 
 ##### Growth model ----------------------------------------------------------------------------------------
@@ -32,46 +35,49 @@ LATR_gam_models <- list()
 # Three candidate models for the mean: size only, size + density, or size, density, and size:density
 # Three candidates for variance: size only, size + density, fitted value (all the covariates plus rfx)
 
-# Pilot fits, where sigma depends on initial size only
-# constant sigma
-LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~1),
+# Pilot fits, where sigma depends on initial size only; constant sigma
+LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect, bs = "re"), ~ 1),
                             data = LATR_grow, gamma = gamma, family = gaulss())
-LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~1), 
+LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ 1), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"), ~1), 
+LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"), ~ 1), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
-LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect,bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
-LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t)), 
+LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect,bs = "re"), ~s(log_volume_t)), 
+LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
+
 # Fits where sigma depends on both initial size and density
-LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
-LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"), ~s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
 # Collect model AICs into a single table
 grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
-# Set top model as "best"; find intercept for the sd
-LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
-## I am fixing the growth model to this one, so every bootstrap will use this model
-## this avoids problems of bad initial conditions in the sgt fits
 
+# Set top model as "best"; find intercept for the sd
+# Fixing the growth model to this one, so every bootstrap will use this model
+# This avoids problems of bad initial conditions in the sgt fits
+LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
 LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
 LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
-## extract the linear predictor for the mean and sd
-LATR_Xp <- predict.gam(LATR_grow_best,type="lpmatrix")
-## fitted coefficients
+
+# Extract the linear predictor for the mean and sd
+LATR_Xp <- predict.gam(LATR_grow_best, type = "lpmatrix")
+
+# Fitted coefficients
 LATR_beta <- coef(LATR_grow_best)
 
-## annoying but necessary index wrangling
-grow_sd_index <- which(as.factor(names(coef(LATR_grow_best)))=="(Intercept).1") ## this is where the sd coefficients start
-gam_coef_length <- length(coef(LATR_grow_best)) ## this is where the lambda, p and q coefficients start
+# Annoying but necessary index wrangling
+# First line where sd coefficients start, second line where lambda, p and q coefficients start
+grow_sd_index <- which(as.factor(names(coef(LATR_grow_best))) == "(Intercept).1")
+gam_coef_length <- length(coef(LATR_grow_best))
 
 ## now fit SGT using the LP matrix for mean and sigma that gam fit
 #sgtLogLik=function(pars,response){
@@ -105,6 +111,10 @@ gam_coef_length <- length(coef(LATR_grow_best)) ## this is where the lambda, p a
 ## final parameter estimates for the growth model
 #coef_grow_best <- out$estimate
 
+
+
+
+
 ##### Flowering probability model -------------------------------------------------------------------------
 
 # Populate year t of 2017-2018 transition year
@@ -135,8 +145,8 @@ LATR_dat_201718$reproductive_fraction_t1 <- NA
 LATR_dat_201718$total.reproduction_t1 <- NA
 
 # Bind rows and create log_vol as new variables (easier for GAMs)
-LATR_flow_dat <- bind_rows(LATR_full,LATR_dat_201718) %>% 
-  dplyr::select(unique.transect,volume_t,total.reproduction_t,weighted.dens) %>% drop_na()
+LATR_flow_dat <- bind_rows(LATR_full, LATR_dat_201718) %>% 
+  dplyr::select(unique.transect, volume_t, total.reproduction_t, weighted.dens) %>% drop_na()
 LATR_flow_dat$log_volume_t <- log(LATR_flow_dat$volume_t)
 
 # Create empty list to populate with model results
@@ -147,16 +157,20 @@ LATR_flower[[1]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.tr
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
 LATR_flower[[2]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
-LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"),
+LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
 
 # Collect model AICs into a single table
-flower_aic<-AICtab(LATR_flower, base = TRUE, sort = FALSE)
+flower_aic <- AICtab(LATR_flower, base = TRUE, sort = FALSE)
 
 # Set top model as "best"
 LATR_flower_best <- LATR_flower[[which.min(flower_aic$AIC)]]
 LATR_flower_fitted_terms <- predict(LATR_flower_best, type = "terms") 
 LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exclude = "s(unique.transect)")
+
+
+
+
 
 ##### Fruit production model ------------------------------------------------------------------------------
 
@@ -171,8 +185,9 @@ LATR_fruits[[1]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transe
                         data = LATR_fruits_dat, gamma = gamma, family = "nb")
 LATR_fruits[[2]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_fruits_dat, gamma = gamma, family = "nb")
-LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t,weighted.dens) + s(unique.transect, bs = "re"),
+LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_fruits_dat, gamma = gamma, family = "nb")
+
 # Collect model AICs into a single table
 fruits_aic <- AICtab(LATR_fruits, base = TRUE, sort = FALSE)
 
@@ -186,6 +201,10 @@ LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat,
 
 # Plot effect of density on fruits 
 # plot(LATR_fruits_dat$weighted.dens, LATR_fruits_fitted_terms[, "s(weighted.dens)"]) 
+
+
+
+
 
 ##### Survival model --------------------------------------------------------------------------------------
 
@@ -201,23 +220,25 @@ CData.Transplants %>%
   drop_na() -> LATR_surv_dat
 
 # Investigate size overlap between transplant experiment and observational census
-#hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]), breaks = 25)
-#hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]), breaks = 10, add = TRUE, col = alpha("gray", 0.5))
+# hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]), breaks = 25)
+# hist(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]), breaks = 10,
+#      add = TRUE, col = alpha("gray", 0.5))
 
 # Plot survival against volume, grouped by transplant status
-#plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
-#     LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == FALSE])
-#points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
-#       LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
+# plot(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == FALSE]),
+#      LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == FALSE])
+# points(log(LATR_surv_dat$volume_t[LATR_surv_dat$transplant == TRUE]),
+#        LATR_surv_dat$survival_t1[LATR_surv_dat$transplant == TRUE] - 0.025, pch = 2)
 
 # Create empty list to populate with model results
 LATR_surv <- list()
+
 # Three candidate models for the mean: size only, size + density, or size, density, and size:density
-LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t,by=as.factor(transplant)) + s(unique.transect, bs = "re"),
+LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = gamma, family = "binomial")
-LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t,by=as.factor(transplant)) + s(weighted.dens,by=as.factor(transplant))  + s(unique.transect, bs = "re"),
+LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(weighted.dens,by = as.factor(transplant))  + s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = gamma, family = "binomial")
-LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t,by=as.factor(transplant)) + s(weighted.dens,by=as.factor(transplant)) + ti(log_volume_t,weighted.dens,by=as.factor(transplant)) + s(unique.transect, bs = "re"),
+LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(weighted.dens,by = as.factor(transplant)) + ti(log_volume_t, weighted.dens, by = as.factor(transplant)) + s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = gamma, family = "binomial")
 
 # Collect model AICs into a single table
@@ -234,6 +255,10 @@ LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclu
 # Plot effect of density on pr(survival)
 # plot(LATR_surv_dat$weighted.dens, LATR_surv_fitted_terms[, "s(weighted.dens)"]) 
 
+
+
+
+
 ##### Per-seed recruitment probability model --------------------------------------------------------------
 
 ## number of seeds per fruit
@@ -249,7 +274,7 @@ LATR_recruits <- LATR_full %>%
 
 # Estimate total seeds produced in each window
 # This is computed using the known plant sizes and the fitted flowering and fruiting models
-# Note: we assume 6 seeds per fruit -- updated 18 Apr 2021 to 5
+# Note: we assume 5 seeds per fruit
 LATR_transects <- Cdata.Transects.Windows %>% 
   mutate(unique.transect = interaction(transect, site),
          log_volume_t = log(volume))
@@ -260,8 +285,9 @@ suppressMessages(summarise(LATR_transects, total_seeds = sum(seeds),
                                            weighted.dens = unique(weighted.dens))) -> LATR_transects
 
 # Take three copies of this df, assigning each one to a different year and assigning recruits to zero (for now)
+# Use only FPS for 2013-2014
 LATR_recruitment <- bind_rows(LATR_transects %>% filter(unique.transect == "1.FPS" | unique.transect == "2.FPS" | unique.transect == "3.FPS") %>% 
-                                mutate(year_t1 = 2014, recruits = 0), ## only FPS for 2013-2014
+                                mutate(year_t1 = 2014, recruits = 0),
                               LATR_transects %>% mutate(year_t1 = 2015, recruits = 0),
                               LATR_transects %>% mutate(year_t1 = 2016, recruits = 0),
                               LATR_transects %>% mutate(year_t1 = 2017, recruits = 0)) %>% 
@@ -289,6 +315,10 @@ LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
 # LATR_recruit_fitted_terms <- predict(LATR_recruit[[2]], type = "terms") 
 # plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens)"])
 
+
+
+
+
 ##### Recruit sizes and integration limits (size bounds) --------------------------------------------------
 
 # Filter out seedlings from full data set; only do this once
@@ -301,17 +331,19 @@ if(boot.switch == FALSE){
     arrange(weighted.dens)}
 
 # Plot distribution of recruit sizes using hist(LATR_recruit_size$log_volume)
-#hist(LATR_recruit_size$log_volume)
-# test for density dependence in recruit size
+# hist(LATR_recruit_size$log_volume)
+
+# Test for density dependence in recruit size
 LATR_recruit_size_mod <- list()
-LATR_recruit_size_mod[[1]] <- gam(list(log_volume ~ 1 + s(unique.transect,bs = "re"),~1), 
-                              data = LATR_recruit_size, gamma = gamma, family = gaulss())
-LATR_recruit_size_mod[[2]] <- gam(list(log_volume ~ s(weighted.dens) + s(unique.transect,bs = "re"),~1), 
+LATR_recruit_size_mod[[1]] <- gam(list(log_volume ~ 1 + s(unique.transect, bs = "re"), ~ 1), 
                                   data = LATR_recruit_size, gamma = gamma, family = gaulss())
-LATR_recruit_size_mod[[3]] <- gam(list(log_volume ~ 1 + s(unique.transect,bs = "re"), ~s(weighted.dens)), 
-                            data = LATR_recruit_size, gamma = gamma, family = gaulss())
-LATR_recruit_size_mod[[4]] <- gam(list(log_volume ~ s(weighted.dens) + s(unique.transect,bs = "re"), ~s(weighted.dens)), 
-                              data = LATR_recruit_size, gamma = gamma, family = gaulss())
+LATR_recruit_size_mod[[2]] <- gam(list(log_volume ~ s(weighted.dens) + s(unique.transect, bs = "re"), ~ 1), 
+                                  data = LATR_recruit_size, gamma = gamma, family = gaulss())
+LATR_recruit_size_mod[[3]] <- gam(list(log_volume ~ 1 + s(unique.transect, bs = "re"), ~ s(weighted.dens)), 
+                                  data = LATR_recruit_size, gamma = gamma, family = gaulss())
+LATR_recruit_size_mod[[4]] <- gam(list(log_volume ~ s(weighted.dens) + s(unique.transect, bs = "re"), ~ s(weighted.dens)), 
+                                  data = LATR_recruit_size, gamma = gamma, family = gaulss())
+
 # Collect model AICs into a single table
 recruitsize_aic <- AICtab(LATR_recruit_size_mod, base = TRUE, sort = FALSE)
 
@@ -319,60 +351,65 @@ recruitsize_aic <- AICtab(LATR_recruit_size_mod, base = TRUE, sort = FALSE)
 LATR_recruitsize_best <- LATR_recruit_size_mod[[which.min(recruitsize_aic$AIC)]]
 LATR_recruitsize_fitted_terms <- predict(LATR_recruitsize_best, type = "terms") 
 LATR_recruit_size$pred <- predict.gam(LATR_recruitsize_best, newdata = LATR_recruit_size, exclude = "s(unique.transect)")
-## annoying but necessary index wrangling
-recruit_size_sd_index <- which(as.factor(names(coef(LATR_recruitsize_best)))=="(Intercept).1") ## this is where the sd coefficients start
+
+# Annoying but necessary index wrangling; first line is where sd coefficients start
+recruit_size_sd_index <- which(as.factor(names(coef(LATR_recruitsize_best))) == "(Intercept).1")
 recruit_size_coef_length <- length(coef(LATR_recruitsize_best))
 
 # Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
                                max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
 
-# Collect AIC table info --------------------------------------------------
 
-#surv_aic
+
+
+# Collect AIC table info ----------------------------------------------------------------------------------
+
+# Survival model AIC
 surv_aic_out<-as.data.frame(surv_aic)
-surv_aic_out$`Pr(Survival)`<-c("~size + transplant + size:transplant + (1|transect)",
-                                   "~size + transplant + density + size:transplant + density:transplant + (1|transect)",
-                                   "~size + transplant + density + size:transplant + density:transplant + size:density + size:transplant:density + (1|transect)")
+surv_aic_out$`Pr(Survival)` <- c("~ size + transplant + size:transplant + (1|transect)",
+                                 "~ size + transplant + density + size:transplant + density:transplant + (1|transect)",
+                                 "~ size + transplant + density + size:transplant + density:transplant + size:density + size:transplant:density + (1|transect)")
 
-#grow_aic
+# Growth model AIC
 grow_aic_out<-as.data.frame(grow_aic)
-grow_aic_out$`mean(size)`<-c("~size + (1|transect)","~size + density + (1|transect)","~size + density + size:density + (1|transect)",
-                     "~size + (1|transect)","~size + density + (1|transect)","~size + density + size:density + (1|transect)",
-                     "~size + (1|transect)","~size + density + (1|transect)","~size + density + size:density + (1|transect)")
-grow_aic_out$`sd(size)`<-c("~1","~1","~1",
-                   "~size","~size","~size",
-                   "~size + density","~size + density","~size + density")          
+grow_aic_out$`mean(size)` <- c("~ size + (1|transect)", "~size + density + (1|transect)", "~ size + density + size:density + (1|transect)",
+                               "~ size + (1|transect)", "~size + density + (1|transect)", "~ size + density + size:density + (1|transect)",
+                               "~ size + (1|transect)", "~size + density + (1|transect)", "~ size + density + size:density + (1|transect)")
+grow_aic_out$`sd(size)` <- c("~ 1", "~ 1", "~ 1",
+                             "~ size", "~ size", "~ size",
+                             "~ size + density", "~ size + density", "~ size + density")          
 
-#flower_aic
+# Flowering model AIC
 flower_aic_out <- as.data.frame(flower_aic)
-flower_aic_out$`Pr(Flowering)`<-c("~size + (1|transect)",
-                                      "~size + density + (1|transect)",
-                                      "~size + density + size:density + (1|transect)")
+flower_aic_out$`Pr(Flowering)` <- c("~ size + (1|transect)",
+                                    "~ size + density + (1|transect)",
+                                    "~ size + density + size:density + (1|transect)")
 
-#fruits_aic
+# Reproduction model AIC
 fruits_aic_out <- as.data.frame(fruits_aic)
-fruits_aic_out$`No. fruits` <- c("~size + (1|transect)",
-                                 "~size + density + (1|transect)",
-                                 "~size + density + size:density + (1|transect)")
+fruits_aic_out$`No. fruits` <- c("~ size + (1|transect)",
+                                 "~ size + density + (1|transect)",
+                                 "~ size + density + size:density + (1|transect)")
 
-#recruit_aic
+# Recruit model AIC
 recruit_aic_out <- as.data.frame(recruit_aic)
-recruit_aic_out$`Pr(Recruitment)`<-c("~(1|transect)","~density + (1|transect)")
+recruit_aic_out$`Pr(Recruitment)` <- c("~ (1|transect)", "~ density + (1|transect)")
 
-#recruitsize_aic
+# Recruit size model AIC
 recruitsize_aic_out<-as.data.frame(recruitsize_aic)
-recruitsize_aic_out$`mean(size)`<-c("~(1|transect)","~density+(1|transect)",
-                                    "~(1|transect)","~density+(1|transect)")
-recruitsize_aic_out$`sd(size)`<-c("~1","~1","~density","~density")
+recruitsize_aic_out$`mean(size)` <- c("~ (1|transect)", "~ density+(1|transect)",
+                                      "~ (1|transect)", "~ density+(1|transect)")
+recruitsize_aic_out$`sd(size)` <- c("~1", "~ 1", "~ density", "~ density")
 
-aic_tables <- list(surv_aic_out=surv_aic_out,
-                      grow_aic_out=grow_aic_out,
-                      flower_aic_out=flower_aic_out,
-                      fruits_aic_out=fruits_aic_out,
-                      recruit_aic_out=recruit_aic_out,
-                      recruitsize_aic_out=recruitsize_aic_out)
+# Create list of AIC tables
+aic_tables <- list(surv_aic_out = surv_aic_out,
+                   grow_aic_out = grow_aic_out,
+                   flower_aic_out = flower_aic_out,
+                   fruits_aic_out = fruits_aic_out,
+                   recruit_aic_out = recruit_aic_out,
+                   recruitsize_aic_out = recruitsize_aic_out)
      
-## write out these quantities as an Rds file (do this once)
-#write_rds(x=aic_tables,file="Manuscript/aic_tables.rds")
+# Write out these quantities as an Rds file (do this only once)
+# write_rds(x = aic_tables, file = "Manuscript/aic_tables.rds")
 
