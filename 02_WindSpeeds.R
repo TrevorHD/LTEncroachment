@@ -1,26 +1,29 @@
 ##### Initialise data -------------------------------------------------------------------------------------
 
-## TM update 6July2022: grabbing 2015-19 met data from station 49 only (speeds things up)
+# TM update 6 July 2022: grabbing 2015-19 met data from station 49 only (speeds things up)
 # Get wind data from repo
 
-  # Create URL to read from; replace with local file path for faster performance
-  url <- "https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/Sevilleta_LTER_Hourly_Meteorological_Data_2015_2019_station49.csv"
+# Create URL to read from; replace with local file path for faster performance
+url <- "https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/Sevilleta_LTER_Hourly_Meteorological_Data_2015_2019_station49.csv"
     
-  # Using read.csv is too slow; SQL will be much more efficient
-  # Read comma-separated data from text file, and select relevant columns
-  df <- read.csv.sql(url, sql = "SELECT Mean_WindSpeed, Wind_Dir FROM file", eol = "\n")
+# Using read.csv is too slow; SQL will be much more efficient
+# Read comma-separated data from text file, and select relevant columns
+df <- read.csv.sql(url, sql = "SELECT Mean_WindSpeed, Wind_Dir FROM file", eol = "\n")
     
-  # Close SQL database connection
-  sqldf()
+# Close SQL database connection
+sqldf()
   
-  # Coerce data frame to vector
-  # Must use matrix as intermediate since it won't work directly for some reason
-  ws.raw <- as.vector(as.matrix(df$Mean_WindSpeed))
-  #hist(ws.raw)
+# Coerce data frame to vector
+# Must use matrix as intermediate since it won't work directly for some reason
+ws.raw <- as.vector(as.matrix(df$Mean_WindSpeed))
   
 # Remove (negative) markers for missing values
 # Also remove zero wind speeds, as we will assume no seed release occurs in absence of wind
 ws.raw <- ws.raw[ws.raw > 0]
+
+
+
+
 
 ##### Create wind speed distributions ---------------------------------------------------------------------
 

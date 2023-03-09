@@ -32,8 +32,8 @@ for(i in 13:62){
   # Add terminal velocity to vector
   tv.raw <- append(tv.raw, v)}
   
-# Remove outliers
-tv.raw <- tv.raw[tv.raw < 10] #[tv.raw < 5] TM edit here - this keeps one additional obs
+# Remove outliers; set index to [tv.raw < 5] to further restrict outliers
+tv.raw <- tv.raw[tv.raw < 10]
 
 
 
