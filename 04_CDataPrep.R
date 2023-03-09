@@ -50,7 +50,7 @@ for(i in 1:4){
   
   # Bind window lists for each transect into 3 columns
   exprs <- cbind(rep(site[i], length(c(window.i[[1]], window.i[[2]], window.i[[3]]))),
-                 c(rep(1, length(window.i[[1]])), rep(2,length(window.i[[2]])), rep(3,length(window.i[[3]]))),
+                 c(rep(1, length(window.i[[1]])), rep(2, length(window.i[[2]])), rep(3, length(window.i[[3]]))),
                  c(window.i[[1]], window.i[[2]], window.i[[3]]))
   
   # Assign names to bind-ready window lists
@@ -125,15 +125,15 @@ CData.Demography %>% mutate(height_change = log(max.ht_t1/max.ht_t)) %>%
 problems <- data.frame(site = factor(NA, levels = c("FPS", "MOD", "PDC", "SLP")), 
                        transect = NA, designated.window = NA, plant = NA, year_t = NA)
 
-problems[1,] <- c("FPS", 1, 150, 2, 2013)
+problems[1, ] <- c("FPS", 1, 150, 2, 2013)
 
 # FPS 2-0 plants 4,5,6 were likely in a bunch and mixed up
-problems[2,] <- c("FPS", 2, 0, 4, 2014)
-problems[3,] <- c("FPS", 2, 0, 5, 2014)
-problems[4,] <- c("FPS", 2, 0, 5, 2015)
+problems[2, ] <- c("FPS", 2, 0, 4, 2014)
+problems[3, ] <- c("FPS", 2, 0, 5, 2014)
+problems[4, ] <- c("FPS", 2, 0, 5, 2015)
 
 # FPS 2-150-12 was recorded using data from 12s instead of 12
-problems[5,] <- c("FPS", 2, 150, 12, 2016)
+problems[5, ] <- c("FPS", 2, 150, 12, 2016)
 
 # FPS 3-100-7 has a data entry problem (confirmed after checking data sheets)
 CData.Demography$max.ht_t1[CData.Demography$site == "FPS" & CData.Demography$transect == 3 & CData.Demography$designated.window == 100 & CData.Demography$plant == 7 & CData.Demography$year_t == 2015] <- 38
@@ -141,47 +141,47 @@ CData.Demography$max.ht_t[CData.Demography$site == "FPS" & CData.Demography$tran
 
 # FPS 3-100 plants 4 and 6 seem like they were mixed up or perhaps growing on top of each other
 # Dropping these for all years
-problems[6,] <- c("FPS", 3, 100, 4, 2013)
-problems[7,] <- c("FPS", 3, 100, 4, 2014)
-problems[8,] <- c("FPS", 3, 100, 4, 2015)
-problems[9,] <- c("FPS", 3, 100, 4, 2016)
-problems[10,] <- c("FPS", 3, 100, 6, 2013)
-problems[11,] <- c("FPS", 3, 100, 6, 2014)
-problems[12,] <- c("FPS", 3, 100, 6, 2015)
-problems[13,] <- c("FPS", 3, 100, 6, 2016)
+problems[6, ] <- c("FPS", 3, 100, 4, 2013)
+problems[7, ] <- c("FPS", 3, 100, 4, 2014)
+problems[8, ] <- c("FPS", 3, 100, 4, 2015)
+problems[9, ] <- c("FPS", 3, 100, 4, 2016)
+problems[10, ] <- c("FPS", 3, 100, 6, 2013)
+problems[11, ] <- c("FPS", 3, 100, 6, 2014)
+problems[12, ] <- c("FPS", 3, 100, 6, 2015)
+problems[13, ] <- c("FPS", 3, 100, 6, 2016)
 
 # This one can't be right; 2013 measurement of 126 should be 26 but dropping due to uncertainty
-problems[14,] <- c("FPS", 3, 100, 9, 2013)
+problems[14, ] <- c("FPS", 3, 100, 9, 2013)
 
 # FPS 3-200-8 has some strange size changes, might have gotten mixed up with another plant
 # Dropping these observations
-problems[15,] <- c("FPS", 3, 200, 8, 2013)
-problems[16,] <- c("FPS", 3, 200, 8, 2014)
-problems[17,] <- c("FPS", 3, 200, 8, 2015)
-problems[18,] <- c("FPS", 3, 200, 8, 2016)
+problems[15, ] <- c("FPS", 3, 200, 8, 2013)
+problems[16, ] <- c("FPS", 3, 200, 8, 2014)
+problems[17, ] <- c("FPS", 3, 200, 8, 2015)
+problems[18, ] <- c("FPS", 3, 200, 8, 2016)
 
 # FPS-3-500 1 and 2 likely got mixed up in 2013-2014
-problems[19,] <- c("FPS", 3, 500, 1, 2013)
-problems[20,] <- c("FPS", 3, 500, 1, 2014)
-problems[21,] <- c("FPS", 3, 500, 2, 2013)
-problems[22,] <- c("FPS", 3, 500, 2, 2014)
+problems[19, ] <- c("FPS", 3, 500, 1, 2013)
+problems[20, ] <- c("FPS", 3, 500, 1, 2014)
+problems[21, ] <- c("FPS", 3, 500, 2, 2013)
+problems[22, ] <- c("FPS", 3, 500, 2, 2014)
 
 # This change is not believable
-problems[23,] <- c("MOD", 1, 150, 1, 2016)
+problems[23, ] <- c("MOD", 1, 150, 1, 2016)
 
 # This change is not believable; no apparent problem in raw data
-problems[24,] <- c("MOD", 2, 50, 3, 2014)
+problems[24, ] <- c("MOD", 2, 50, 3, 2014)
 
 # These dimensions are not believale... someone probably said "60" and someone wrote "16"; dropping
-problems[25,] <- c("MOD", 3, 0, 9, 2014)
-problems[26,] <- c("MOD", 3, 0 ,9, 2015)
+problems[25, ] <- c("MOD", 3, 0, 9, 2014)
+problems[26, ] <- c("MOD", 3, 0 ,9, 2015)
 
 # This one is not believable; can't find the 2015 data to verify
-problems[27,] <- c("PDC", 1, 200, 2, 2014)
-problems[28,] <- c("PDC", 1, 200, 2, 2015)
+problems[27, ] <- c("PDC", 1, 200, 2, 2014)
+problems[28, ] <- c("PDC", 1, 200, 2, 2015)
 
 # This one has a note that it was untagged and we thought it was right... it wasn't
-problems[29,] <- c("SLP", 3, 100, 8, 2016)
+problems[29, ] <- c("SLP", 3, 100, 8, 2016)
 
 # Ensure data types are correct before removing problem entries
 problems %>% 
@@ -193,7 +193,7 @@ problems %>%
 # Remove problematic entries and create new CData set
 CData <- anti_join(CData.Demography,problems, by = c("site", "transect", "designated.window", "plant", "year_t"))
 
-# The new set should have 29 fewer rows; compare nrow(problems) to nrow(CData)-nrow(CData.Demography)
+# The new set should have 29 fewer rows; compare nrow(problems) to nrow(CData) - nrow(CData.Demography)
 
 
 
@@ -213,10 +213,10 @@ subset(CData, is.na(actual.window)) %>%
 CData %>% filter(is.na(designated.window))
 
 # Two SLP recruits are missing designated windows, but the notes place them under specified plants
-CData$designated.window[CData$site == "SLP"&CData$transect == 3&CData$plant == "10s"&CData$year_t==2016] <- 
-  CData$designated.window[CData$site == "SLP"&CData$transect == 3 & CData$designated.window == 150 & CData$plant == "7"][1]
-CData$designated.window[CData$site == "SLP"&CData$transect == 3&CData$plant == "11s"&CData$year_t==2016] <- 
-  CData$designated.window[CData$site == "SLP"&CData$transect == 3 & CData$designated.window == 150 & CData$plant == "5"][1]
+CData$designated.window[CData$site == "SLP" & CData$transect == 3 & CData$plant == "10s" & CData$year_t == 2016] <- 
+  CData$designated.window[CData$site == "SLP" & CData$transect == 3 & CData$designated.window == 150 & CData$plant == "7"][1]
+CData$designated.window[CData$site == "SLP" & CData$transect == 3 & CData$plant == "11s" & CData$year_t == 2016] <- 
+  CData$designated.window[CData$site == "SLP" & CData$transect == 3 & CData$designated.window == 150 & CData$plant == "5"][1]
 
 # Use designated window for sites that don't have an actual window
 CData$actual.window[is.na(CData$actual.window)] <- 
@@ -291,24 +291,10 @@ CData %>%
 # We'll need to report this criterion for designating a recruit (log vol < 8)
 CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, log(volume_t1) < 8)
 
-# The code below will likely be deprecated
-# Calculate total number of seedlings (recruits) in a single year for each 5-m window
-# for(i in 1:nrow(CData)){
-#  CData$recruits.1y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-#                                                 CData$transect == CData$transect[i] &
-#                                                 CData$site == CData$site[i] &
-#                                                 CData$year_t1 == CData$year_t1[i]], na.rm = T)}
-
-# Calculate total number of seedlings (recruits) across all years for each 5-m window
-# for(i in 1:nrow(CData)){
-#  CData$recruits.4y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-#                                                 CData$transect == CData$transect[i] &
-#                                                 CData$site == CData$site[i]], na.rm = T)}
-
 # Write transect data to use elsewhere for estimating recruitment per seed; merge Windows and Cdata.Transects
 # Create data frame with plant sizes and window densities for all transects and windows
-left_join(CData.Transects,Windows,by=c("site","transect","window")) %>% 
-  dplyr::select(site,transect,window,volume,weighted.dens) -> Cdata.Transects.Windows
+left_join(CData.Transects, Windows, by = c("site", "transect", "window")) %>% 
+  dplyr::select(site, transect, window, volume, weighted.dens) -> Cdata.Transects.Windows
 
 
 
@@ -316,15 +302,15 @@ left_join(CData.Transects,Windows,by=c("site","transect","window")) %>%
 
 ##### Tidy up transplant data for survival analysis -------------------------------------------------------
 
-# TM: The following code works only for plot locations that are multiples of 2.5
-# There are three plots that do not satisfy this condition.
-# I have gone back to the field data sheet scans and concluded the following:
-# Plot 5 on PDC-3 -- this appears to be a data entry error (55.5 should be 52.5). 
-CData.Transplants$plot_location[CData.Transplants$site=="PDC"&CData.Transplants$transect==3&CData.Transplants$plot==5]<-52.5
-# Plot 6 on SLP-1 -- moved off the 2.5 location due to a cactus, but still within that window
-CData.Transplants$plot_location[CData.Transplants$site=="SLP"&CData.Transplants$transect==1&CData.Transplants$plot==6]<-127.5
-# Plot 10 on SLP-2 -- moved off the 2.5 location due to a yucca, but still within that window
-CData.Transplants$plot_location[CData.Transplants$site=="SLP"&CData.Transplants$transect==2&CData.Transplants$plot==10]<-257.5
+# The following code works only for plot locations that are multiples of 2.5
+# There are three plots that do not satisfy this condition after consulting the field data sheets
+
+# Plot 5 on PDC-3: this appears to be a data entry error (55.5 should be 52.5).
+# Plot 6 on SLP-1: moved off the 2.5 location due to a cactus, but still within that window
+# Plot 10 on SLP-2: moved off the 2.5 location due to a yucca, but still within that window
+CData.Transplants$plot_location[CData.Transplants$site == "PDC" & CData.Transplants$transect == 3 & CData.Transplants$plot == 5] <- 52.5
+CData.Transplants$plot_location[CData.Transplants$site == "SLP" & CData.Transplants$transect == 1 & CData.Transplants$plot == 6] <- 127.5
+CData.Transplants$plot_location[CData.Transplants$site == "SLP" & CData.Transplants$transect == 2 & CData.Transplants$plot == 10] <- 257.5
 
 # Locations are multiples of 2.5 m, but our density data are in 5-m windows
 # Therefore, we will round locations up to nearest 5-m window
@@ -345,6 +331,9 @@ rename("actual.window" = "plot_location") %>%
 merge(Windows, 
       by.x = c("site", "transect", "actual.window"),
       by.y = c("site", "transect", "window")) -> CData.Transplants
+
+
+
 
 
 ##### Clean up global environment -------------------------------------------------------------------------

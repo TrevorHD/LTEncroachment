@@ -1,9 +1,9 @@
 ##### "Base" WALD PDF -------------------------------------------------------------------------------------
 
 # "Base" WALD PDF using empirical means of observed wind speeds and terminal velocities
-# Code adapted from Skarpaas and Shea (2007)
+# Code adapted from Skarpaas and Shea (2007), Zhang et. al (2011)
 # Using this will assume that height H is the release point for all seeds
-WALD.b <- function(H, elas="none",n,seed){
+WALD.b <- function(H, elas = "none", n, seed){
   
   # Add option for height perturbation analysis
   if(elas == "dispersal"){H <- H*(1 + pert)}
@@ -47,12 +47,19 @@ WALD.b <- function(H, elas="none",n,seed){
   # Calculate location parameter nu
   nu <- H*U/f
   
+  # Generate inverse Gaussian distribution
   set.seed(seed)
   return(rinvGauss(n, nu = nu, lambda = lambda))}
 
 
 
-WALD.b.tom <- function(H, elas="none", sens="none"){
+
+
+##### "Base" WALD PDF, but allows for perturbation of location and scale parameters -----------------------
+
+# Similar to above, but with location and scale perturbation
+# Perturbation only, no distance outputs
+WALD.b.tom <- function(H, elas = "none", sens = "none"){
 
   # Initialise physical constants
   K <- 0.4      # von Karman constant
@@ -97,12 +104,16 @@ WALD.b.tom <- function(H, elas="none", sens="none"){
   if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
   if(sens == "dispersal.location"){nu <- nu + pert}
   
-  return(list(lambda=lambda,nu=nu))
-}
+  # Return perturbed quantities
+  return(list(lambda = lambda, nu = nu))}
+
+
+
+
 
 ##### "Full" WALD PDF with empirical distributions --------------------------------------------------------
+
 # "Full" WALD PDF, including distributions of wind speeds and terminal velocities
-# Code adapted from Skarpaas and Shea (2007)
 WALD.f.e <- function(n, H, elas, seed = NULL){
 
   # Initialise physical constants
@@ -150,8 +161,7 @@ WALD.f.e <- function(n, H, elas, seed = NULL){
   
   # Generate inverse Gaussian distribution
   set.seed(seed)
-  return(rinvGauss(n, nu = nu, lambda = lambda))
-  }
+  return(rinvGauss(n, nu = nu, lambda = lambda))}
 
 
 
@@ -159,6 +169,7 @@ WALD.f.e <- function(n, H, elas, seed = NULL){
 
 ##### "Base" WALD PDF release across entire height --------------------------------------------------------
 
+# Similar to base function, but relaxes assumption for single point source
 WALD.b.h <- function(H, elas, seed = NULL, reps, heights){
   
   # Use 10000 replicates for each height #TM: could we do less?
@@ -171,8 +182,12 @@ WALD.b.h <- function(H, elas, seed = NULL, reps, heights){
   return(na.omit(as.vector(sapply(h.range, WALD.b, n = n, elas = elas, seed = seed))))}
 
 
+
+
+
 ##### "Full" empirical WALD PDF release across entire height ----------------------------------------------
 
+# Similar to full function, but relaxes assumption for single point source
 WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){
   
   # Use 10000 replicates for each height #TM: could we do less?
@@ -185,8 +200,11 @@ WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){
   return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas = elas, seed = seed))))}
 
 
+
+
+
 ##### Tom's version of full WALD
-WALD.f.e.h.tom <- function(n, H, elas, sens, h=0.15, seed = NULL){
+WALD.f.e.h.tom <- function(n, H, elas, sens, h = 0.15, seed = NULL){
   
   # Add option for height perturbation analysis
   if(elas == "dispersal"){H <- H*(1 + pert)}
@@ -235,5 +253,5 @@ WALD.f.e.h.tom <- function(n, H, elas, sens, h=0.15, seed = NULL){
   
   # Generate inverse Gaussian distribution
   set.seed(seed)
-  return(rinvGauss(n, nu = nu, lambda = lambda))
-}
+  return(rinvGauss(n, nu = nu, lambda = lambda))}
+
