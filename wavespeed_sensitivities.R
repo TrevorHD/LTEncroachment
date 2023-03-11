@@ -1,5 +1,7 @@
+##### Initialise data -------------------------------------------------------------------------------------
 
-## Goal of this script: quantify how wavespeed responds to parameter perturbations
+# Goal of this script is to quantify how wavespeed responds to parameter perturbations
+
 # Load packages in this order
 library(minpack.lm)
 library(MASS)
@@ -16,60 +18,53 @@ library(mgcv)
 library(popbio)
 library(bbmle)
 
-# "01_SeedVelocities"
-# Calculate terminal velocities of seeds and fit to distributions
+# Run necessary scripts to prep for wavespeed calculations
+# See "RunALL" for descriptions
 source("01_SeedVelocities.R")
-
-# "02_WindSpeeds"
-# Load in wind speeds and fit to distributions
 source("02_WindSpeeds.R")
-
-# "03_Dispersal"
-# Construct dispersal kernel functions for seeds
 source("03_Dispersal.R")
-
-# "04_CDataPrep"
-# Tidy up demography data before creating demography models
 source("04_CDataPrep.R")
-
-# "05_CDataAnalysis_NS.R"
-# Create demography models for use in SIPM
 source("05_CDataAnalysis_NS.R")
 
-# turn off bootstrapping
+# Turn off bootstrapping
 boot.on <- FALSE
 source("06_BootRes.R")
 
 # Spatial integral projection setting up functions to calculate wavespeeds
 source("07_SIPM.R")
 
-## how much variability is there across calculations of wave speed?
-#for(i in 1:10){
-#c.values <- Wavespeed()
-# Calculate minimum wavespeed
-#print(min(c.values))
-#}
+# How much variability is there across calculations of wave speed?
+# for(i in 1:10){
+#   c.values <- Wavespeed()
+#   Calculate minimum wavespeed
+#   print(min(c.values))}
 
-# Recruitment sensitivity -------------------------------------------------
-## loop over variation in recruitment rate (a constant in the SIPM) and recalculate wavespeed
 
+
+
+
+##### Calculate recruitment sensitivity -------------------------------------------------------------------------------------
+
+# Loop over variation in recruitment rate (a constant in the SIPM) and recalculate wavespeed
+
+# Initialise vectors
 recruitment <- 10:0
-lambda.recruitment <- numeric(length=length(recruitment))
-wavespeed.recruitment <- numeric(length=length(recruitment))
+lambda.recruitment <- numeric(length = length(recruitment))
+wavespeed.recruitment <- numeric(length = length(recruitment))
 
+# Start loop
 for(i in 1:length(recruitment)){
   
-  ## redefine recruitment function -- should overwrite the function defined in 07
-  TM.recruitment <- function(d=NULL){
-    return(10^(-recruitment[i]))
-  }
+  # Redefine recruitment function - should overwrite the function defined in 07_SIPM
+  TM.recruitment <- function(d = NULL){
+    return(10^(-recruitment[i]))}
   
   # Combined flowering, fertility, and recruitment
   TM.fertrecruit <- function(x, y, d){
     TM.flower(x, d) * TM.seeds(x, d) * TM.recruitment(d) * TM.recruitsize(y)}
   
   # Put it all together; projection matrix is a function of weighted density (dens)
-  # We need a large lower extension because growth variance (gaussian) is greater for smaller plants
+  # We need a large lower extension because growth variance (Gaussian) is greater for smaller plants
   TransMatrix <- function(dens, ext.lower = TM.lower.extension, ext.upper = TM.upper.extension,
                           min.size = LATR_size_bounds$min_size, max.size = LATR_size_bounds$max_size,
                           mat.size = TM.matdim){
@@ -89,26 +84,23 @@ for(i in 1:length(recruitment)){
     y <- 0.5*(b[1:n] + b[2:(n + 1)])
     
     # Growth/Survival matrix
-    Pmat <- t(outer(y, y, TM.growsurv, d = dens)) * h 
+    Pmat <- t(outer(y, y, TM.growsurv, d = dens))*h 
     
     # Fertility/Recruiment matrix
-    Fmat <- t(outer(y, y, TM.fertrecruit, d = dens)) * h 
+    Fmat <- t(outer(y, y, TM.fertrecruit, d = dens))*h 
     
     # Put it all together
     IPMmat <- Pmat + Fmat
     
-    #and transition matrix
+    # And transition matrix
     return(list(IPMmat = IPMmat, Fmat = Fmat, Pmat = Pmat, meshpts = y))}
   
   # Construct transition matrix for minimum weighted density (zero)
   TM <- TransMatrix(dens = 0)
-  
   lambda.recruitment[i] <- lambda(TM$IPMmat)
   
-  ##### Find minimum wave speed -----------------------------------------------------------------------------
-  
   # Function to calculate the minimum wavespeed across a range of s
-  Wavespeed <- function(n=TM.matdim){
+  Wavespeed <- function(n = TM.matdim){
     
     # Fit equation to convert volume to height for dispersal kernel use
     LATR_full %>%
@@ -121,8 +113,8 @@ for(i in 1:length(recruitment)){
       coef() %>% 
       as.numeric() -> A
     
-    #To see data, store data frame as test and then use plot(test$v, test$h)
-    #To see fit line, store the model as fit and then use lines(sort(test$v), fitted(fit), col = "red")
+    # To see data, store data frame as test and then use plot(test$v, test$h)
+    # To see fit line, store the model as fit and then use lines(sort(test$v), fitted(fit), col = "red")
     
     # Function converting volume to height
     vol.to.height <- function(v){
@@ -176,27 +168,25 @@ for(i in 1:length(recruitment)){
     # Return vector of wavespeeds
     return(vec)}
   
-  ## take the average of wave wavespeeds at this recruitment rate
+  # Take the average of wave wavespeeds at this recruitment rate
+  # Wavespeeds as function of s; growth as function of density
   hold.speed <- c()
   for(j in 1:3){
-    # Wavespeeds as function of s; growth as function of density
-   c.values <- Wavespeed()
-   hold.speed <- c(hold.speed,min(c.values))
-  }
-  wavespeed.recruitment[i] <- mean(hold.speed,na.rm=T)
-  # Wavespeeds as function of s; growth as function of density
-  #c.values <- Wavespeed()
-  # Calculate minimum wavespeed
-  #wavespeed.recruitment[i] <- min(c.values)
+    c.values <- Wavespeed()
+    hold.speed <- c(hold.speed, min(c.values))}
+  wavespeed.recruitment[i] <- mean(hold.speed, na.rm = T)
   
-  print(i); print(recruitment[i]); print(wavespeed.recruitment[i])
-  }
+  # Calculate minimum wavespeed
+  # c.values <- Wavespeed()
+  # wavespeed.recruitment[i] <- min(c.values)
+  
+  # Print wavespeeds
+  print(i); print(recruitment[i]); print(wavespeed.recruitment[i])}
 
+# Plot wavespeeds
 xaxis<- 10^(-recruitment)
-plot(log10(xaxis),wavespeed.recruitment,type="b",pch=16,
-     ylab="Wavespeed (m/yr)",xlab="log(Recruitment probability)",cex.lab=1.4)
+plot(log10(xaxis), wavespeed.recruitment, type = "b", pch = 16,
+     ylab = "Wavespeed (m/yr)", xlab = "log(Recruitment probability)", cex.lab = 1.4)
+plot(log10(10^(-recruitment)), wavespeed.recruitment, type = "b", pch = 16)
+plot(lambda.recruitment, wavespeed.recruitment, type = "b", pch = 16)
 
-
-plot(log10(10^(-recruitment)),wavespeed.recruitment,type="b",pch=16)
-
-plot(lambda.recruitment,wavespeed.recruitment,type="b",pch=16)
