@@ -9,8 +9,8 @@ CData.Recruits <- filter(CData, new.plant_t1 == 1 | seedling_t1 == 1, volume_t1 
 # Note that t is used because seeds at t will become seedlings at t1
 for(i in 1:nrow(CData)){
   CData$seeds.emp[i] <- sum(CData$total.reproduction_t[CData$actual.window == CData$actual.window[i] &
-                                                         CData$transect == CData$transect[i] &
-                                                         CData$site == CData$site[i]], na.rm = T)}
+                                                       CData$transect == CData$transect[i] &
+                                                       CData$site == CData$site[i]], na.rm = T)}
 
 # Create simple linear model for total reproduction in 5-m window as a function of weighted density  
 seed.mod <- lm(seeds.emp ~ weighted.dens, data = CData)
@@ -27,8 +27,8 @@ for(i in 1:nrow(CData)){
 # Calculate recruitment rate per reproductive structure
 for(i in 1:nrow(CData)){
   CData$recruits[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-                                                CData$transect == CData$transect[i] &
-                                                CData$site == CData$site[i]], na.rm = T)
+                                              CData$transect == CData$transect[i] &
+                                              CData$site == CData$site[i]], na.rm = T)
   CData$recruit.prob[i] <- CData$recruits[i]/CData$seeds.PMod[i]}
 
 
@@ -48,40 +48,40 @@ Mod.F.avg.cf <- c()
 
 # Intercept
 Mod.F.avg.cf[1] <- 
-  Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["(Intercept)"] + 
-  Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["(Intercept)"] + 
-  Mod.F.AIC$weight[3] * fixef(Mod.F[[2]])["(Intercept)"] + 
-  Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["(Intercept)"] +
-  Mod.F.AIC$weight[5] * fixef(Mod.F[[4]])["(Intercept)"]
+  Mod.F.AIC$weight[1]*fixef(Mod.F[[8]])["(Intercept)"] + 
+  Mod.F.AIC$weight[2]*fixef(Mod.F[[5]])["(Intercept)"] + 
+  Mod.F.AIC$weight[3]*fixef(Mod.F[[2]])["(Intercept)"] + 
+  Mod.F.AIC$weight[4]*fixef(Mod.F[[7]])["(Intercept)"] +
+  Mod.F.AIC$weight[5]*fixef(Mod.F[[4]])["(Intercept)"]
 
 # Volume coefficient
 Mod.F.avg.cf[2] <- 
-  Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["volume_t"] + 
-  Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["volume_t"] + 
-  Mod.F.AIC$weight[3] * fixef(Mod.F[[2]])["volume_t"] + 
-  Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["volume_t"] +
-  Mod.F.AIC$weight[5] * fixef(Mod.F[[4]])["volume_t"]
+  Mod.F.AIC$weight[1]*fixef(Mod.F[[8]])["volume_t"] + 
+  Mod.F.AIC$weight[2]*fixef(Mod.F[[5]])["volume_t"] + 
+  Mod.F.AIC$weight[3]*fixef(Mod.F[[2]])["volume_t"] + 
+  Mod.F.AIC$weight[4]*fixef(Mod.F[[7]])["volume_t"] +
+  Mod.F.AIC$weight[5]*fixef(Mod.F[[4]])["volume_t"]
 
 # Density coefficient
 Mod.F.avg.cf[3] <- 
-  Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["d.stand"] +
-  Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["d.stand"] + 
-  Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["d.stand"] +
-  Mod.F.AIC$weight[5] * fixef(Mod.F[[4]])["d.stand"]
+  Mod.F.AIC$weight[1]*fixef(Mod.F[[8]])["d.stand"] +
+  Mod.F.AIC$weight[2]*fixef(Mod.F[[5]])["d.stand"] + 
+  Mod.F.AIC$weight[4]*fixef(Mod.F[[7]])["d.stand"] +
+  Mod.F.AIC$weight[5]*fixef(Mod.F[[4]])["d.stand"]
 
 # Volume and density interaction coefficient
 Mod.F.avg.cf[4] <- 
-  Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["volume_t:d.stand"] +
-  Mod.F.AIC$weight[2] * fixef(Mod.F[[5]])["volume_t:d.stand"]
+  Mod.F.AIC$weight[1]*fixef(Mod.F[[8]])["volume_t:d.stand"] +
+  Mod.F.AIC$weight[2]*fixef(Mod.F[[5]])["volume_t:d.stand"]
 
 # Density quadratic coefficient
 Mod.F.avg.cf[5] <- 
-  Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["I(d.stand^2)"] +
-  Mod.F.AIC$weight[4] * fixef(Mod.F[[7]])["I(d.stand^2)"]
+  Mod.F.AIC$weight[1]*fixef(Mod.F[[8]])["I(d.stand^2)"] +
+  Mod.F.AIC$weight[4]*fixef(Mod.F[[7]])["I(d.stand^2)"]
 
 # Volume and quadratic density interaction coefficient
 Mod.F.avg.cf[6] <-
-  Mod.F.AIC$weight[1] * fixef(Mod.F[[8]])["volume_t:I(d.stand^2)"]
+  Mod.F.AIC$weight[1]*fixef(Mod.F[[8]])["volume_t:I(d.stand^2)"]
 
 
 
@@ -100,38 +100,38 @@ Mod.G.avg.cf <- c()
 
 # Intercept
 Mod.G.avg.cf[1] <- 
-  Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["(Intercept)"] +
-  Mod.G.AIC$weight[2] * fixef(Mod.G[[4]])["(Intercept)"] +
-  Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["(Intercept)"] + 
-  Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["(Intercept)"]
+  Mod.G.AIC$weight[1]*fixef(Mod.G[[5]])["(Intercept)"] +
+  Mod.G.AIC$weight[2]*fixef(Mod.G[[4]])["(Intercept)"] +
+  Mod.G.AIC$weight[3]*fixef(Mod.G[[8]])["(Intercept)"] + 
+  Mod.G.AIC$weight[4]*fixef(Mod.G[[7]])["(Intercept)"]
 
 # Volume coefficient
 Mod.G.avg.cf[2] <- 
-  Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["volume_t"] +
-  Mod.G.AIC$weight[2] * fixef(Mod.G[[4]])["volume_t"] +
-  Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["volume_t"] + 
-  Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["volume_t"]
+  Mod.G.AIC$weight[1]*fixef(Mod.G[[5]])["volume_t"] +
+  Mod.G.AIC$weight[2]*fixef(Mod.G[[4]])["volume_t"] +
+  Mod.G.AIC$weight[3]*fixef(Mod.G[[8]])["volume_t"] + 
+  Mod.G.AIC$weight[4]*fixef(Mod.G[[7]])["volume_t"]
 
 # Density coefficient
 Mod.G.avg.cf[3] <- 
-  Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["d.stand"] +
-  Mod.G.AIC$weight[2] * fixef(Mod.G[[4]])["d.stand"] +
-  Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["d.stand"] +
-  Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["d.stand"]
+  Mod.G.AIC$weight[1]*fixef(Mod.G[[5]])["d.stand"] +
+  Mod.G.AIC$weight[2]*fixef(Mod.G[[4]])["d.stand"] +
+  Mod.G.AIC$weight[3]*fixef(Mod.G[[8]])["d.stand"] +
+  Mod.G.AIC$weight[4]*fixef(Mod.G[[7]])["d.stand"]
 
 # Volume and density interaction coefficient
 Mod.G.avg.cf[4] <- 
-  Mod.G.AIC$weight[1] * fixef(Mod.G[[5]])["volume_t:d.stand"] +
-  Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["volume_t:d.stand"]
+  Mod.G.AIC$weight[1]*fixef(Mod.G[[5]])["volume_t:d.stand"] +
+  Mod.G.AIC$weight[3]*fixef(Mod.G[[8]])["volume_t:d.stand"]
 
 # Density quadratic coefficient
 Mod.G.avg.cf[5] <- 
-  Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["I(d.stand^2)"] +
-  Mod.G.AIC$weight[4] * fixef(Mod.G[[7]])["I(d.stand^2)"]
+  Mod.G.AIC$weight[3]*fixef(Mod.G[[8]])["I(d.stand^2)"] +
+  Mod.G.AIC$weight[4]*fixef(Mod.G[[7]])["I(d.stand^2)"]
 
 # Volume and quadratic density interaction coefficient
 Mod.G.avg.cf[6] <- 
-  Mod.G.AIC$weight[3] * fixef(Mod.G[[8]])["volume_t:I(d.stand^2)"]
+  Mod.G.AIC$weight[3]*fixef(Mod.G[[8]])["volume_t:I(d.stand^2)"]
 
 
 
@@ -150,38 +150,38 @@ Mod.R.avg.cf <- c()
 
 # Intercept
 Mod.R.avg.cf[1] <- 
-  Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["(Intercept)"] + 
-  Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["(Intercept)"] +
-  Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["(Intercept)"] +
-  Mod.R.AIC$weight[4] * fixef(Mod.R[[4]])["(Intercept)"]
+  Mod.R.AIC$weight[1]*fixef(Mod.R[[7]])["(Intercept)"] + 
+  Mod.R.AIC$weight[2]*fixef(Mod.R[[8]])["(Intercept)"] +
+  Mod.R.AIC$weight[3]*fixef(Mod.R[[5]])["(Intercept)"] +
+  Mod.R.AIC$weight[4]*fixef(Mod.R[[4]])["(Intercept)"]
 
 # Volume coefficient
 Mod.R.avg.cf[2] <- 
-  Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["volume_t"] + 
-  Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["volume_t"] + 
-  Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["volume_t"] +
-  Mod.R.AIC$weight[4] * fixef(Mod.R[[4]])["volume_t"]
+  Mod.R.AIC$weight[1]*fixef(Mod.R[[7]])["volume_t"] + 
+  Mod.R.AIC$weight[2]*fixef(Mod.R[[8]])["volume_t"] + 
+  Mod.R.AIC$weight[3]*fixef(Mod.R[[5]])["volume_t"] +
+  Mod.R.AIC$weight[4]*fixef(Mod.R[[4]])["volume_t"]
 
 # Density coefficient
 Mod.R.avg.cf[3] <- 
-  Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["d.stand"] + 
-  Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["d.stand"] + 
-  Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["d.stand"] +
-  Mod.R.AIC$weight[4] * fixef(Mod.R[[4]])["d.stand"]
+  Mod.R.AIC$weight[1]*fixef(Mod.R[[7]])["d.stand"] + 
+  Mod.R.AIC$weight[2]*fixef(Mod.R[[8]])["d.stand"] + 
+  Mod.R.AIC$weight[3]*fixef(Mod.R[[5]])["d.stand"] +
+  Mod.R.AIC$weight[4]*fixef(Mod.R[[4]])["d.stand"]
 
 # Volume and density interaction coefficient
 Mod.R.avg.cf[4] <- 
-  Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["volume_t:d.stand"] +
-  Mod.R.AIC$weight[3] * fixef(Mod.R[[5]])["volume_t:d.stand"]
+  Mod.R.AIC$weight[2]*fixef(Mod.R[[8]])["volume_t:d.stand"] +
+  Mod.R.AIC$weight[3]*fixef(Mod.R[[5]])["volume_t:d.stand"]
 
 # Density quadratic coefficient
 Mod.R.avg.cf[5] <- 
-  Mod.R.AIC$weight[1] * fixef(Mod.R[[7]])["I(d.stand^2)"] +
-  Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["I(d.stand^2)"]
+  Mod.R.AIC$weight[1]*fixef(Mod.R[[7]])["I(d.stand^2)"] +
+  Mod.R.AIC$weight[2]*fixef(Mod.R[[8]])["I(d.stand^2)"]
 
 # Volume and quadratic density interaction coefficient
 Mod.R.avg.cf[6] <- 
-  Mod.R.AIC$weight[2] * fixef(Mod.R[[8]])["volume_t:I(d.stand^2)"]
+  Mod.R.AIC$weight[2]*fixef(Mod.R[[8]])["volume_t:I(d.stand^2)"]
 
 
 
@@ -259,11 +259,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 S.pred <- d.and.v %>% 
   mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                             Mod.S.avg.cf[2] * v.mean + 
-                             Mod.S.avg.cf[3] * x.d +
-                             Mod.S.avg.cf[4] * v.mean * x.d +
-                             Mod.S.avg.cf[5] * (x.d^2) +
-                             Mod.S.avg.cf[6] * v.mean * (x.d^2)))
+                             Mod.S.avg.cf[2]*v.mean + 
+                             Mod.S.avg.cf[3]*x.d +
+                             Mod.S.avg.cf[4]*v.mean*x.d +
+                             Mod.S.avg.cf[5]*(x.d^2) +
+                             Mod.S.avg.cf[6]*v.mean*(x.d^2)))
 
 # Get binned means of the data with respect to volume and density
 S.mean.df <- CData.s.surv %>% 
@@ -296,11 +296,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 S.pred <- d.and.v.2 %>% 
   mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                             Mod.S.avg.cf[2] * x.v + 
-                             Mod.S.avg.cf[3] * d.mean +
-                             Mod.S.avg.cf[4] * x.v * d.mean +
-                             Mod.S.avg.cf[5] * (d.mean^2) +
-                             Mod.S.avg.cf[6] * x.v * (d.mean^2)))
+                             Mod.S.avg.cf[2]*x.v + 
+                             Mod.S.avg.cf[3]*d.mean +
+                             Mod.S.avg.cf[4]*x.v*d.mean +
+                             Mod.S.avg.cf[5]*(d.mean^2) +
+                             Mod.S.avg.cf[6]*x.v*(d.mean^2)))
 S.mean.df <- CData.s.surv %>% 
   mutate(d.bin = cut_interval(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -343,11 +343,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 S.pred <- d.and.v %>% 
   mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                           Mod.S.avg.cf[2] * v.mean + 
-                           Mod.S.avg.cf[3] * x.d +
-                           Mod.S.avg.cf[4] * v.mean * x.d +
-                           Mod.S.avg.cf[5] * (x.d^2) +
-                           Mod.S.avg.cf[6] * v.mean * (x.d^2)))
+                           Mod.S.avg.cf[2]*v.mean + 
+                           Mod.S.avg.cf[3]*x.d +
+                           Mod.S.avg.cf[4]*v.mean*x.d +
+                           Mod.S.avg.cf[5]*(x.d^2) +
+                           Mod.S.avg.cf[6]*v.mean*(x.d^2)))
 
 # Get binned means of the data with respect to volume and density
 S.mean.df <- CData.s.surv %>% 
@@ -380,11 +380,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 S.pred <- d.and.v.2 %>% 
   mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                           Mod.S.avg.cf[2] * x.v + 
-                           Mod.S.avg.cf[3] * d.mean +
-                           Mod.S.avg.cf[4] * x.v * d.mean +
-                           Mod.S.avg.cf[5] * (d.mean^2) +
-                           Mod.S.avg.cf[6] * x.v * (d.mean^2)))
+                           Mod.S.avg.cf[2]*x.v + 
+                           Mod.S.avg.cf[3]*d.mean +
+                           Mod.S.avg.cf[4]*x.v*d.mean +
+                           Mod.S.avg.cf[5]*(d.mean^2) +
+                           Mod.S.avg.cf[6]*x.*(d.mean^2)))
 S.mean.df <- CData.s.surv %>% 
   mutate(d.bin = cut_interval(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -430,11 +430,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 S.pred <- d.and.v %>% 
   mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                           Mod.S.avg.cf[2] * v.mean + 
-                           Mod.S.avg.cf[3] * x.d +
-                           Mod.S.avg.cf[4] * v.mean * x.d +
-                           Mod.S.avg.cf[5] * (x.d^2) +
-                           Mod.S.avg.cf[6] * v.mean * (x.d^2)))
+                           Mod.S.avg.cf[2]*v.mean + 
+                           Mod.S.avg.cf[3]*x.d +
+                           Mod.S.avg.cf[4]*v.mean*x.d +
+                           Mod.S.avg.cf[5]*(x.d^2) +
+                           Mod.S.avg.cf[6]*v.mean*(x.d^2)))
 
 # Get binned means of the data with respect to volume and density
 S.mean.df <- CData.s.surv %>% 
@@ -467,11 +467,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 S.pred <- d.and.v.2 %>% 
   mutate(S.mean = invlogit(Mod.S.avg.cf[1] + 
-                           Mod.S.avg.cf[2] * x.v + 
-                           Mod.S.avg.cf[3] * d.mean +
-                           Mod.S.avg.cf[4] * x.v * d.mean +
-                           Mod.S.avg.cf[5] * (d.mean^2) +
-                           Mod.S.avg.cf[6] * x.v * (d.mean^2)))
+                           Mod.S.avg.cf[2]*x.v + 
+                           Mod.S.avg.cf[3]*d.mean +
+                           Mod.S.avg.cf[4]*x.v*d.mean +
+                           Mod.S.avg.cf[5]*(d.mean^2) +
+                           Mod.S.avg.cf[6]*x.v*(d.mean^2)))
 S.mean.df <- CData.s.surv %>% 
   mutate(d.bin = cut_interval(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -505,7 +505,7 @@ invlogit <- function(x){exp(x)/(1 + exp(x))}
 # Then standardise density and introduce unique transect identifier
 boot.CData.s <- boot.CData %>% 
   drop_na(volume_t) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
 
 # Create a list of possible flowering models
@@ -528,7 +528,7 @@ Mod.F[[4]] <- glmer(did.flower ~ volume_t + d.stand + (1 | unique.transect),
                     data = boot.CData.s, family = "binomial")
 
 # Size and density (interactive)
-Mod.F[[5]] <- glmer(did.flower ~ volume_t * d.stand + (1 | unique.transect),
+Mod.F[[5]] <- glmer(did.flower ~ volume_t*d.stand + (1 | unique.transect),
                     data = boot.CData.s, family = "binomial")
 
 # Density-only model (quadratic)
@@ -540,7 +540,7 @@ Mod.F[[7]] <- glmer(did.flower ~ volume_t + d.stand + I(d.stand^2) + (1 | unique
                     data = boot.CData.s, family = "binomial")
 
 # Size and density (interactive, quadratic)
-Mod.F[[8]] <- glmer(did.flower ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
+Mod.F[[8]] <- glmer(did.flower ~ volume_t*d.stand + volume_t*I(d.stand^2) + (1 | unique.transect),
                     data = boot.CData.s, family = "binomial")
 
 # Calculate an AIC table, ranked from best to worst model
@@ -582,7 +582,7 @@ Mod.F.top.cf[6] <- fixef(Mod.F[[8]])["volume_t:I(d.stand^2)"]
 # Then standardise density and introduce unique transect identifier
 boot.CData.s <- boot.CData %>% 
   drop_na(volume_t, logGR) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
 
 # Create a list of possible growth models
@@ -605,7 +605,7 @@ Mod.G[[4]] <- lmer(logGR ~ volume_t + d.stand + (1 | unique.transect),
                    data = boot.CData.s, REML = FALSE)
 
 # Size and density (interactive)
-Mod.G[[5]] <- lmer(logGR ~ volume_t * d.stand + (1 | unique.transect),
+Mod.G[[5]] <- lmer(logGR ~ volume_t*d.stand + (1 | unique.transect),
                    data = boot.CData.s, REML = FALSE)
 
 # Density-only model (quadratic)
@@ -617,7 +617,7 @@ Mod.G[[7]] <- lmer(logGR ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.trans
                    data = boot.CData.s, REML = FALSE)
 
 # Size and density (interactive, quadratic)
-Mod.G[[8]] <- lmer(logGR ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
+Mod.G[[8]] <- lmer(logGR ~ volume_t*d.stand + volume_t*I(d.stand^2) + (1 | unique.transect),
                    data = boot.CData.s, REML = FALSE)
 
 # Calculate an AIC table, ranked from best to worst model
@@ -660,7 +660,7 @@ Mod.G.top.cf[6] <- 0
 boot.CData.s <- boot.CData %>%
   drop_na(volume_t) %>%
   filter(did.flower == 1) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
 
 # Create a list of possible reproduction models
@@ -683,7 +683,7 @@ Mod.R[[4]] <- lmer(logTR1 ~ volume_t + d.stand + (1 | unique.transect),
                    data = boot.CData.s, REML = FALSE)
 
 # Size and density (interactive)
-Mod.R[[5]] <- lmer(logTR1 ~ volume_t * d.stand + (1 | unique.transect),
+Mod.R[[5]] <- lmer(logTR1 ~ volume_t*d.stand + (1 | unique.transect),
                    data = boot.CData.s, REML = FALSE)
 
 # Density-only model (quadratic)
@@ -695,7 +695,7 @@ Mod.R[[7]] <- lmer(logTR1 ~ volume_t + d.stand + I(d.stand^2) + (1 | unique.tran
                    data = boot.CData.s, REML = FALSE)
 
 # Size and density (interactive, quadratic)
-Mod.R[[8]] <- lmer(logTR1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
+Mod.R[[8]] <- lmer(logTR1 ~ volume_t*d.stand + volume_t*I(d.stand^2) + (1 | unique.transect),
                    data = boot.CData.s, REML = FALSE)
 
 # Calculate an AIC table, ranked from best to worst model
@@ -747,7 +747,7 @@ select(boot.CData.Transplants, "site", "transect", "actual.window",
 # Standardise density; introduce unique transect identifier
 boot.CData.AllSurvival.s <- boot.CData.AllSurvival %>% 
   drop_na(volume_t, survival_t1) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site),
          survival_t1 = as.numeric(survival_t1))
 
@@ -776,7 +776,7 @@ Mod.S[[4]] <- glmer(survival_t1 ~ volume_t + d.stand + (1 | unique.transect),
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size and density (interactive)
-Mod.S[[5]] <- glmer(survival_t1 ~ volume_t * d.stand + (1 | unique.transect),
+Mod.S[[5]] <- glmer(survival_t1 ~ volume_t*d.stand + (1 | unique.transect),
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Density-only model (quadratic)
@@ -788,7 +788,7 @@ Mod.S[[7]] <- glmer(survival_t1 ~ volume_t + d.stand + I(d.stand^2) + (1 | uniqu
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size and density (interactive, quadratic)
-Mod.S[[8]] <- glmer(survival_t1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1 | unique.transect),
+Mod.S[[8]] <- glmer(survival_t1 ~ volume_t*d.stand + volume_t*I(d.stand^2) + (1 | unique.transect),
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Calculate an AIC table, ranked from best to worst model
@@ -862,15 +862,15 @@ boot.CData.Recruitment <- merge(CData.Transects, Windows,
 
 # Use the reproduction model to calculate number of reproductive structures in a single year for each plant
 mutate(boot.CData.Recruitment,
-       d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+       d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
        seeds = exp(Mod.R.top.cf[1] + Mod.R.top.cf[2]*log(volume) + Mod.R.top.cf[3]*d.stand + 
                      Mod.R.top.cf[5]*(d.stand^2))) -> boot.CData.Recruitment
 
 # Calculate number of seeds in a single year for each 5-m window
 for(i in 1:nrow(boot.CData.Recruitment)){
   boot.CData.Recruitment$seeds.win[i] <- sum(boot.CData.Recruitment$seeds[boot.CData.Recruitment$window == boot.CData.Recruitment$window[i] &
-                                                                            boot.CData.Recruitment$transect == boot.CData.Recruitment$transect[i] &
-                                                                            boot.CData.Recruitment$site == boot.CData.Recruitment$site[i]], na.rm = T)}
+                                                                          boot.CData.Recruitment$transect == boot.CData.Recruitment$transect[i] &
+                                                                          boot.CData.Recruitment$site == boot.CData.Recruitment$site[i]], na.rm = T)}
 
 # Select only one instance of each unique combination of site, transect, and window, then merge with CData
 # We're doing this because we're interested in total seeds in each window, not seeds per plant in each window
@@ -885,7 +885,7 @@ boot.CData.Recruitment <- mutate(boot.CData.Recruitment, recruit.prob.1y = recru
 # Select only one instance of each unique combination of site, transect, window, and year
 # Duplicate instances of these unique combinations will inflate the data, which we don't want
 boot.CData.Recruitment %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE)) %>% 
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE)) %>% 
   group_by(site, transect, actual.window, year_t1) %>% 
   select(d.stand, seeds.win, recruits.1y, recruits.4y, recruit.prob.1y, recruit.prob.4y) %>% 
   summarise(d.stand = unique(d.stand),
@@ -1012,7 +1012,7 @@ remove(lambda.i, TM, i)
 # Then standardise density and introduce unique transect identifier
 CData.s <- CData %>% 
   drop_na(volume_t) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
 
 # Calculate range of data
@@ -1028,11 +1028,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 F.pred <- d.and.v %>% 
   mutate(F.mean = invlogit(Mod.F.top.cf[1] + 
-                             Mod.F.top.cf[2] * v.mean + 
-                             Mod.F.top.cf[3] * x.d +
-                             Mod.F.top.cf[4] * v.mean * x.d +
-                             Mod.F.top.cf[5] * (x.d^2)+
-                             Mod.F.top.cf[6] * v.mean * (x.d^2)))
+                             Mod.F.top.cf[2]*v.mean + 
+                             Mod.F.top.cf[3]*x.d +
+                             Mod.F.top.cf[4]*v.mean*x.d +
+                             Mod.F.top.cf[5]*(x.d^2)+
+                             Mod.F.top.cf[6]*v.mean*(x.d^2)))
 
 # Get binned means of the data with respect to volume and density
 F.mean.df <- CData.s %>% 
@@ -1079,11 +1079,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 F.pred <- d.and.v.2 %>% 
   mutate(F.mean = invlogit(Mod.F.top.cf[1] + 
-                             Mod.F.top.cf[2] * x.v + 
-                             Mod.F.top.cf[3] * d.mean +
-                             Mod.F.top.cf[4] * x.v * d.mean +
-                             Mod.F.top.cf[5] * (d.mean^2) +
-                             Mod.F.top.cf[6] * x.v * (d.mean^2)))
+                             Mod.F.top.cf[2]*x.v + 
+                             Mod.F.top.cf[3]*d.mean +
+                             Mod.F.top.cf[4]*x.v*d.mean +
+                             Mod.F.top.cf[5]*(d.mean^2) +
+                             Mod.F.top.cf[6]*x.v*(d.mean^2)))
 F.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -1126,7 +1126,7 @@ F.pred %>%
 # Then standardise density and introduce unique transect identifier
 CData.s <- CData %>% 
   drop_na(volume_t, logGR) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
 
 # Calculate range of data
@@ -1142,11 +1142,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 G.pred <- d.and.v %>% 
   mutate(G.mean = Mod.G.top.cf[1] + 
-           Mod.G.top.cf[2] * v.mean + 
-           Mod.G.top.cf[3] * x.d +
-           Mod.G.top.cf[4] * v.mean * x.d +
-           Mod.G.top.cf[5] * (x.d^2)+
-           Mod.G.top.cf[6] * v.mean * (x.d^2))
+           Mod.G.top.cf[2]*v.mean + 
+           Mod.G.top.cf[3]*x.d +
+           Mod.G.top.cf[4]*v.mean*x.d +
+           Mod.G.top.cf[5]*(x.d^2)+
+           Mod.G.top.cf[6]*v.mean*(x.d^2))
 
 # Get binned means of the data with respect to volume and density
 G.mean.df <- CData.s %>% 
@@ -1192,11 +1192,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 G.pred <- d.and.v.2 %>% 
   mutate(G.mean = Mod.G.top.cf[1] + 
-           Mod.G.top.cf[2] * x.v + 
-           Mod.G.top.cf[3] * d.mean +
-           Mod.G.top.cf[4] * x.v * d.mean +
-           Mod.G.top.cf[5] * (d.mean^2) +
-           Mod.G.top.cf[6] * x.v * (d.mean^2))
+           Mod.G.top.cf[2]*x.v + 
+           Mod.G.top.cf[3]*d.mean +
+           Mod.G.top.cf[4]*x.v*d.mean +
+           Mod.G.top.cf[5]*(d.mean^2) +
+           Mod.G.top.cf[6]*x.v*(d.mean^2))
 G.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -1241,7 +1241,7 @@ G.pred %>%
 CData.s <- CData %>%
   drop_na(volume_t) %>%
   filter(did.flower == 1) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site))
 
 # Calculate range of data
@@ -1257,11 +1257,11 @@ d.and.v <- as.tibble(expand.grid(v.cut$v.mean, seq(d.range[1], d.range[2], 0.5))
 names(d.and.v) <- c("v.mean", "x.d") 
 R.pred <- d.and.v %>% 
   mutate(R.mean = Mod.R.top.cf[1] + 
-           Mod.R.top.cf[2] * v.mean + 
-           Mod.R.top.cf[3] * x.d +
-           Mod.R.top.cf[4] * v.mean * x.d +
-           Mod.R.top.cf[5] * (x.d^2) +
-           Mod.R.top.cf[6] * v.mean * (x.d^2))
+           Mod.R.top.cf[2]*v.mean + 
+           Mod.R.top.cf[3]*x.d +
+           Mod.R.top.cf[4]*v.mean*x.d +
+           Mod.R.top.cf[5]*(x.d^2) +
+           Mod.R.top.cf[6]*v.mean*(x.d^2))
 
 # Get binned means of the data with respect to volume and density
 R.mean.df <- CData.s %>% 
@@ -1308,11 +1308,11 @@ d.and.v.2 <- as.tibble(expand.grid(d.cut$d.mean, seq(v.range[1], v.range[2], 0.5
 names(d.and.v.2) <- c("d.mean", "x.v") 
 R.pred <- d.and.v.2 %>% 
   mutate(R.mean = Mod.R.top.cf[1] + 
-           Mod.R.top.cf[2] * x.v + 
-           Mod.R.top.cf[3] * d.mean +
-           Mod.R.top.cf[4] * x.v * d.mean +
-           Mod.R.top.cf[5] * (d.mean^2) +
-           Mod.R.top.cf[6] * x.v * (d.mean^2))
+           Mod.R.top.cf[2]*x.v + 
+           Mod.R.top.cf[3]*d.mean +
+           Mod.R.top.cf[4]*x.v*d.mean +
+           Mod.R.top.cf[5]*(d.mean^2) +
+           Mod.R.top.cf[6]*x.v*(d.mean^2))
 R.mean.df <- CData.s %>% 
   mutate(d.bin = cut_number(d.stand, n = 4),
          v.bin = cut_number(volume_t, n = 6)) %>% 
@@ -1449,17 +1449,17 @@ remove(time.start, time.end)
 ##### Quantify total recruitment  -------------------------------------------------------------------------
 
 # Calculate total number of seedlings (recruits) in a single year for each 5-m window
-# for(i in 1:nrow(CData)){
-#  CData$recruits.1y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-#                                                 CData$transect == CData$transect[i] &
-#                                                 CData$site == CData$site[i] &
-#                                                 CData$year_t1 == CData$year_t1[i]], na.rm = T)}
+ for(i in 1:nrow(CData)){
+  CData$recruits.1y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
+                                                 CData$transect == CData$transect[i] &
+                                                 CData$site == CData$site[i] &
+                                                 CData$year_t1 == CData$year_t1[i]], na.rm = T)}
 
 # Calculate total number of seedlings (recruits) across all years for each 5-m window
-# for(i in 1:nrow(CData)){
-#  CData$recruits.4y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
-#                                                 CData$transect == CData$transect[i] &
-#                                                 CData$site == CData$site[i]], na.rm = T)}
+ for(i in 1:nrow(CData)){
+  CData$recruits.4y[i] <- sum(CData$new.plant_t1[CData$actual.window == CData$actual.window[i] &
+                                                 CData$transect == CData$transect[i] &
+                                                 CData$site == CData$site[i]], na.rm = T)}
 
 
 
@@ -1491,7 +1491,7 @@ select(boot.CData.Transplants, "site", "transect", "actual.window",
 # Standardise density; introduce unique transect identifier
 boot.CData.AllSurvival.s <- boot.CData.AllSurvival %>% 
   drop_na(volume_t, survival_t1) %>% 
-  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE)) / sd(weighted.dens, na.rm = TRUE),
+  mutate(d.stand = (weighted.dens - mean(weighted.dens, na.rm = TRUE))/sd(weighted.dens, na.rm = TRUE),
          unique.transect = interaction(transect, site),
          survival_t1 = as.numeric(survival_t1))
 
@@ -1515,7 +1515,7 @@ Mod.S[[4]] <- glmer(survival_t1 ~ volume_t + d.stand + (1|unique.transect),
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size and density (interactive)
-Mod.S[[5]] <- glmer(survival_t1 ~ volume_t * d.stand + (1|unique.transect),
+Mod.S[[5]] <- glmer(survival_t1 ~ volume_t*d.stand + (1|unique.transect),
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Density-only model (quadratic)
@@ -1527,7 +1527,7 @@ Mod.S[[7]] <- glmer(survival_t1 ~ volume_t + d.stand + I(d.stand^2) + (1|unique.
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Size and density (interactive, quadratic)
-Mod.S[[8]] <- glmer(survival_t1 ~ volume_t * d.stand + volume_t * I(d.stand^2) + (1|unique.transect),
+Mod.S[[8]] <- glmer(survival_t1 ~ volume_t*d.stand + volume_t*I(d.stand^2) + (1|unique.transect),
                     data = subset(boot.CData.AllSurvival.s, transplant == TRUE), family = "binomial")
 
 # Calculate an AIC table, ranked from best to worst model

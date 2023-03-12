@@ -243,7 +243,7 @@ tv.gm.graphs <- function(){
   
   # Check to make sure area under curve is 1
   tv.dist.gamma <- function(u){
-    (tv.fits[4]^tv.fits[3])*(u^(tv.fits[3]-1))*exp(-tv.fits[4] * u)/gamma(tv.fits[3])}
+    (tv.fits[4]^tv.fits[3])*(u^(tv.fits[3]-1))*exp(-tv.fits[4]*u)/gamma(tv.fits[3])}
   print(integrate(tv.dist.gamma, 0, Inf))}
 
 # Call function to display graphs; then clean it up after done
@@ -287,7 +287,7 @@ ws.gm.graphs <- function(){
   
   # Check to make sure area under curve is 1
   ws.dist.gamma <- function(u){
-    (ws.fits[4]^ws.fits[3])*(u^(ws.fits[3]-1))*exp(-ws.fits[4] * u)/gamma(ws.fits[3])}
+    (ws.fits[4]^ws.fits[3])*(u^(ws.fits[3]-1))*exp(-ws.fits[4]*u)/gamma(ws.fits[3])}
   print(integrate(ws.dist.gamma, 0, Inf))}
 
 # Call function to display graphs; then clean it up after done
@@ -338,3 +338,4 @@ mean(probs1); mean(probs2)
 
 # Clean up mess from for loop
 remove(i, dist, probs1, probs2)
+
