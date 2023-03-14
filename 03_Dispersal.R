@@ -1,4 +1,4 @@
-##### "Base" WALD PDF -------------------------------------------------------------------------------------
+##### "Base" WALD PDF -------------------------------------------------------------------------------------------------------------------------------
 
 # "Base" WALD PDF using empirical means of observed wind speeds and terminal velocities
 # Code adapted from Skarpaas and Shea (2007), Zhang et. al (2011)
@@ -55,7 +55,7 @@ WALD.b <- function(H, elas = "none", n, seed){
 
 
 
-##### "Base" WALD PDF, but allows for perturbation of location and scale parameters -----------------------
+##### "Base" WALD PDF, but allows for perturbation of location and scale parameters -----------------------------------------------------------------
 
 # Similar to above, but with location and scale perturbation
 # Perturbation only, no distance outputs
@@ -111,7 +111,7 @@ WALD.b.tom <- function(H, elas = "none", sens = "none"){
 
 
 
-##### "Full" WALD PDF with empirical distributions --------------------------------------------------------
+##### "Full" WALD PDF with empirical distributions --------------------------------------------------------------------------------------------------
 
 # "Full" WALD PDF, including distributions of wind speeds and terminal velocities
 WALD.f.e <- function(n, H, elas, seed = NULL){
@@ -167,7 +167,7 @@ WALD.f.e <- function(n, H, elas, seed = NULL){
 
 
 
-##### "Base" WALD PDF release across entire height --------------------------------------------------------
+##### "Base" WALD PDF release across entire height --------------------------------------------------------------------------------------------------
 
 # Similar to base function, but relaxes assumption for single point source
 WALD.b.h <- function(H, elas, seed = NULL, reps, heights){
@@ -185,7 +185,7 @@ WALD.b.h <- function(H, elas, seed = NULL, reps, heights){
 
 
 
-##### "Full" empirical WALD PDF release across entire height ----------------------------------------------
+##### "Full" empirical WALD PDF release across entire height ----------------------------------------------------------------------------------------
 
 # Similar to full function, but relaxes assumption for single point source
 WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){

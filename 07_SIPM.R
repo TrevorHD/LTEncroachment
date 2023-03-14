@@ -1,4 +1,4 @@
-##### Fix important parameters for SIPM -------------------------------------------------------------------
+##### Fix important parameters for SIPM -------------------------------------------------------------------------------------------------------------
 
 # Give dimension of the size vector (# bins of the approximating matrix)
 TM.matdim <- 200
@@ -11,7 +11,7 @@ TM.upper.extension <- 2
 
 
 
-##### IPM functions ---------------------------------------------------------------------------------------
+##### IPM functions ---------------------------------------------------------------------------------------------------------------------------------
 
 # Growth from size x to y at density d, using best GAM (Gaussian)
 TM.growth <- function(x, y, d, elas, sens){
@@ -225,7 +225,7 @@ Wavespeed <- function(n = TM.matdim, elas = "none", sens = "none", seed = NULL, 
 
 
 
-##### Find minimum wave speed -----------------------------------------------------------------------------
+##### Find minimum wave speed -----------------------------------------------------------------------------------------------------------------------
 
 # Functions from Ellner et al. IPM book, adapted by Tom
 
@@ -320,7 +320,7 @@ s.max <- function(nu, lambda) {
 
 
 
-##### Find lambda as function of density ------------------------------------------------------------------
+##### Find lambda as function of density ------------------------------------------------------------------------------------------------------------
 
 # Function to calculate lambda from density
 LambdaD <- function(d.only = FALSE){

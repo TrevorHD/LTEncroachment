@@ -1,4 +1,4 @@
-##### How are recruits distributed across size classes? ---------------------------------------------------
+##### How are recruits distributed across size classes? ---------------------------------------------------------------------------------------------
 
 # Plot distribution of recruits across volume
 CData.Recruits %>%
@@ -19,7 +19,7 @@ CData.Recruits %>%
 
 
 
-##### How are recruits distributed across densities? ------------------------------------------------------
+##### How are recruits distributed across densities? ------------------------------------------------------------------------------------------------
 
 # Get only densities at which recruits are found
 CData.Recruits %>% 
@@ -59,7 +59,7 @@ remove(RD, TWD, TWD.BS)
 
 
 
-##### Choosing a model for seed recruitment probability ---------------------------------------------------
+##### Choosing a model for seed recruitment probability ---------------------------------------------------------------------------------------------
 
 # We choose to use the partial linear model to calculate seed numbers
 plot(CData.s$d.stand, CData.s$recruit.prob)
@@ -84,7 +84,7 @@ AIC(lm(recruit.prob ~ d.stand + I(d.stand^2), data = CData.s))
 
 
 
-##### Determining the transition between low-survival and high-survival regimes ---------------------------
+##### Determining the transition between low-survival and high-survival regimes ---------------------------------------------------------------------
 
 # After a certain volume "cutoff" point, almost no plants die
 # This creates a quasi-perfect separation that linear models can't really handle
@@ -123,7 +123,7 @@ CData.AllSurvival.s %>%
 
 
 
-##### Graphs for fitting lognormal distribution to terminal velocities ------------------------------------
+##### Graphs for fitting lognormal distribution to terminal velocities ------------------------------------------------------------------------------
 
 # Set up function to create Q-Q plot and PDF
 tv.ln.graphs <- function(){
@@ -166,7 +166,7 @@ tv.ln.graphs(); remove(tv.ln.graphs)
 
 
 
-##### Graphs for fitting lognormal distribution to wind speeds --------------------------------------------
+##### Graphs for fitting lognormal distribution to wind speeds --------------------------------------------------------------------------------------
 
 # Set up function to create Q-Q plot and PDF
 ws.ln.graphs <- function(){
@@ -209,7 +209,7 @@ ws.ln.graphs(); remove(ws.ln.graphs)
 
 
 
-##### Graphs for fitting gamma distribution to terminal velocities ----------------------------------------
+##### Graphs for fitting gamma distribution to terminal velocities ----------------------------------------------------------------------------------
 
 # Set up function to create Q-Q plot and PDF
 tv.gm.graphs <- function(){
@@ -253,7 +253,7 @@ tv.gm.graphs(); remove(tv.gm.graphs)
 
 
 
-##### Graphs for fitting gamma distribution to wind speeds ------------------------------------------------
+##### Graphs for fitting gamma distribution to wind speeds ------------------------------------------------------------------------------------------
 
 # Set up function to create Q-Q plot and PDF
 ws.gm.graphs <- function(){
@@ -297,7 +297,7 @@ ws.gm.graphs(); remove(ws.gm.graphs)
 
 
 
-##### Numerically comparing dispersal between heights -----------------------------------------------------
+##### Numerically comparing dispersal between heights -----------------------------------------------------------------------------------------------
 
 # This may take a few minutes, so please be patient
 # Also, results from the same code may differ slightly since random sampling occurs

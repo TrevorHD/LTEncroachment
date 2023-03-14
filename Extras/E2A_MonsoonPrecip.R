@@ -1,4 +1,4 @@
-##### Load and plot monsoon precipitation -----------------------------------------------------------------
+##### Load and plot monsoon precipitation -----------------------------------------------------------------------------------------------------------
 
 # From Kris Hall: here is annual July-September monsoon precipitation by calendar year (not by water year)
 # for each of the met stations, with units in millimeters. 

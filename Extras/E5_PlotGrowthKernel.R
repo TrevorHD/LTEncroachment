@@ -1,4 +1,4 @@
-##### Plot GAM parameters ---------------------------------------------------------------------------------
+##### Plot GAM parameters ---------------------------------------------------------------------------------------------------------------------------
 
 # Run diagnostic code
 source("C:/Users/tm9/Dropbox/github/IPM_size_transitions/Diagnostics.R")
@@ -20,7 +20,7 @@ abline(0, 1)
 
 
 
-##### Compare simulated and real data for growth ----------------------------------------------------------
+##### Compare simulated and real data for growth ----------------------------------------------------------------------------------------------------
 
 # Generate model predictions
 n_sim <- 500
@@ -136,7 +136,7 @@ add_panel_label("d")
 
 
 
-##### Plot growth kernel ----------------------------------------------------------------------------------
+##### Plot growth kernel ----------------------------------------------------------------------------------------------------------------------------
 
 # Checking that the fitted kernel gives a visually satisfying fit to the data
 size_dim <- 200

@@ -1,4 +1,4 @@
-##### Find minimum wave speed -----------------------------------------------------------------------------
+##### Find minimum wave speed -----------------------------------------------------------------------------------------------------------------------
 
 # Debugging on elasticity and sensitivity for vital rates
 TM.growth(1, 1, 0:220, elas = 1, sens = 2)

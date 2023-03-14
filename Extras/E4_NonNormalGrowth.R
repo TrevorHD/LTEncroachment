@@ -24,7 +24,7 @@ gamma = 1.2
 
 
 
-##### Fit growth models -----------------------------------------------------------------------------------
+##### Fit growth models -----------------------------------------------------------------------------------------------------------------------------
 
 # Prepare a data subset for growth that drops rows missing either t or t1 size data
 # Also create log_volume as a new variable because GAM doesn't like functions of variables as variables
@@ -79,7 +79,7 @@ LATR_beta <- coef(LATR_gam_model)
 
 
 
-##### Extract values of the fitted splines to explore their properties ------------------------------------
+##### Extract values of the fitted splines to explore their properties ------------------------------------------------------------------------------
 
 # Run predict to get fitted terms
 fitted_terms <- predict(LATR_gam_model, type = "terms")  
@@ -100,7 +100,7 @@ plot(LATR_grow$weighted.dens, fitted_terms[, "s.1(weighted.dens)"])
 
 
 
-##### Inspect scaled residuals to evaluate the pilot model (fails!) ---------------------------------------
+##### Inspect scaled residuals to evaluate the pilot model (fails!) ---------------------------------------------------------------------------------
 
 # Run predict to get fitted terms
 fitted_all <- predict(LATR_gam_model, type = "response")  
@@ -123,7 +123,7 @@ z <- rollMomentsNP(px, py, windows = 8, smooth = TRUE, scaled = TRUE)
 
 
 
-##### Try to recover GAM parameters with a hand-cranked Gaussian model ------------------------------------
+##### Try to recover GAM parameters with a hand-cranked Gaussian model ------------------------------------------------------------------------------
 
 # Set function for Gaussian log likelihood
 gausLogLik <- function(pars, response){
@@ -164,7 +164,7 @@ abline(0, 1)
 
 
 
-##### Fit SGT using design matrices from normal GAM -------------------------------------------------------
+##### Fit SGT using design matrices from normal GAM -------------------------------------------------------------------------------------------------
 
 # Set function for log likelihood
 # sgtLogLik = function(pars, response){
@@ -218,7 +218,7 @@ abline(0, 1)
 
 
 
-##### Compare simulated and real data ---------------------------------------------------------------------
+##### Compare simulated and real data ---------------------------------------------------------------------------------------------------------------
 
 # Simulate data from normal and SGT models
 n_sim <- 500

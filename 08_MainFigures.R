@@ -1,4 +1,4 @@
-##### Plot vital rates ------------------------------------------------------------------------------------
+##### Plot vital rates ------------------------------------------------------------------------------------------------------------------------------
 
 # Plot if bootstrapping is turned off
 if(boot.switch == FALSE){
@@ -185,7 +185,7 @@ if(boot.switch == FALSE){
 
 
 
-##### Plot bootstrapped wavespeeds ------------------------------------------------------------------------
+##### Plot bootstrapped wavespeeds ------------------------------------------------------------------------------------------------------------------
 
 # Prepare graphics device
 jpeg(filename = "Figure 1.jpeg", width = 750, height = 500, units = "px")
@@ -222,7 +222,7 @@ dev.off()
 
 
 
-##### Plot growth rate as function of density -------------------------------------------------------------
+##### Plot growth rate as function of density -------------------------------------------------------------------------------------------------------
 
 # Get bootstrapped results
 boot.lambda <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_Lambda.csv")
@@ -334,7 +334,7 @@ remove(gly, boot.lambda.df)
 
 
 
-##### Plot dispersal kernels ------------------------------------------------------------------------------
+##### Plot dispersal kernels ------------------------------------------------------------------------------------------------------------------------
 
 # Prepare graphics device
 jpeg(filename = "Figure 3.jpeg", width = 1600, height = 900, units = "px")
@@ -395,7 +395,7 @@ remove(colours, i, gly)
 
 
 
-##### Plot density effects on flowering and fruit production ----------------------------------------------
+##### Plot density effects on flowering and fruit production ----------------------------------------------------------------------------------------
 
 # Create vector of colours for plotting
 PlotCol <- c("firebrick2", "darkorchid2", "dodgerblue1", "navy")
@@ -518,7 +518,7 @@ dev.off()
 
 
 
-##### Plot density effects on survival --------------------------------------------------------------------
+##### Plot density effects on survival --------------------------------------------------------------------------------------------------------------
 
 # Visualize data and model for the natural census
 n_cuts_dens <- 8
@@ -645,7 +645,7 @@ dev.off()
 
 
 
-##### Plot per-seed recruitment rate ----------------------------------------------------------------------
+##### Plot per-seed recruitment rate ----------------------------------------------------------------------------------------------------------------
 
 # Add points at max and min density to predict recruitment rate
 LATR_recruitment_line <- LATR_recruitment

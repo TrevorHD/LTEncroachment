@@ -1,4 +1,4 @@
-##### Initialise Data -------------------------------------------------------------------------------------
+##### Initialise Data -------------------------------------------------------------------------------------------------------------------------------
 
 # Load existing data frame
 CData.Transplants.s <- CData.Transplants %>%
@@ -25,7 +25,7 @@ CData.Transplants.s <- CData.Transplants %>%
 
 
 
-##### Visualise survival as function of different cover types ---------------------------------------------
+##### Visualise survival as function of different cover types ---------------------------------------------------------------------------------------
 
 # List out things that will be changed between plots
 plots.xvar <- c("num_shrub_t", "num_bare_t", "total.grass", "total.plant")
@@ -67,7 +67,7 @@ corrplot(cor(CData.Transplants.s[, c("spring_survival_t1", "num_bare_t", "num_sh
 
 
 
-##### Model survival as function of different cover types -------------------------------------------------
+##### Model survival as function of different cover types -------------------------------------------------------------------------------------------
 
 # Univariate logistic regression
 # Survival is response variable, shrub cover is predictor variable
@@ -120,7 +120,7 @@ summary(glm(spring_survival_t1 ~ num_bare_t + num_shrub_t, family = "binomial",
 
 
 
-##### Model survival as function of weighted density ------------------------------------------------------
+##### Model survival as function of weighted density ------------------------------------------------------------------------------------------------
 
 # Plot of survival as a function of weighted density
 plot(CData.Transplants.s$weighted.dens, CData.Transplants.s$spring_survival_t1)
@@ -156,7 +156,7 @@ plot(Mod.S.T5)
 
 
 
-##### Model survival as function of shrub volume ----------------------------------------------------------
+##### Model survival as function of shrub volume ----------------------------------------------------------------------------------------------------
 
 # Plot of survival as a function of volume
 plot(CData.Transplants.s$volume_t, CData.Transplants.s$spring_survival_t1)
@@ -179,7 +179,7 @@ anova(Mod.S.T6, test = "Chisq")
 
 
 
-##### Plot transplant growth ------------------------------------------------------------------------------
+##### Plot transplant growth ------------------------------------------------------------------------------------------------------------------------
 
 # Only 20 spring survivors, so not much we can do with growth
 sum(!is.na(CData.Transplants.s$logGR))
@@ -190,7 +190,7 @@ plot(CData.Transplants.s$num_bare_t, CData.Transplants.s$logGR)
 
 
 
-##### Plot transplant growth ------------------------------------------------------------------------------
+##### Plot transplant growth ------------------------------------------------------------------------------------------------------------------------
 
 # Tom's transplant survival analysis
 

@@ -1,4 +1,4 @@
-##### Initialise Data -------------------------------------------------------------------------------------
+##### Initialise Data -------------------------------------------------------------------------------------------------------------------------------
 
 # Read transect densities
 CData.Transects <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectData.csv")
@@ -20,7 +20,7 @@ names(CData.Transplants)[1] <- "site"
 
 
 
-##### Calculate densities for each 5-m window -------------------------------------------------------------
+##### Calculate densities for each 5-m window -------------------------------------------------------------------------------------------------------
 
 # Calculate plant volume (elliptical cone)
 vol <- function(h, w, p){(1/3)*pi*h*(w/2)*(p/2)}
@@ -86,7 +86,7 @@ for(i in 1:nrow(Windows)){
 
 
 
-##### Demography data QA/QC -------------------------------------------------------------------------------
+##### Demography data QA/QC -------------------------------------------------------------------------------------------------------------------------
 
 # Remove extra site level, since it is just a duplicate with a space after it
 CData.Demography$site[CData.Demography$site == "FPS "] <- "FPS"
@@ -199,7 +199,7 @@ CData <- anti_join(CData.Demography,problems, by = c("site", "transect", "design
 
 
 
-##### Fix window-related issues ---------------------------------------------------------------------------
+##### Fix window-related issues ---------------------------------------------------------------------------------------------------------------------
 
 # Identify entries that lack an actual window (5-m resolution)
 subset(CData, is.na(actual.window)) %>% 
@@ -226,7 +226,7 @@ CData$actual.window[is.na(CData$actual.window)] <-
 
 
 
-##### Remove unnecessary columns and merge densities with demography data ---------------------------------
+##### Remove unnecessary columns and merge densities with demography data ---------------------------------------------------------------------------
 
 # Keep only useful columns
 dplyr::select(CData, "site", "transect", "designated.window", "actual.window", "plant", "year_t",
@@ -245,7 +245,7 @@ merge(Windows,
 
 
 
-##### Calculate quantities that will be used in analyses --------------------------------------------------
+##### Calculate quantities that will be used in analyses --------------------------------------------------------------------------------------------
 
 # Add additional columns to data, starting with log initial volume of plant before year has elapsed
 CData %>%
@@ -285,7 +285,7 @@ CData %>%
 
 
 
-##### Quantify total recruitment  -------------------------------------------------------------------------
+##### Quantify total recruitment  -------------------------------------------------------------------------------------------------------------------
 
 # Create data frame of recruits; will be used for later calculations, but not here
 # We'll need to report this criterion for designating a recruit (log vol < 8)
@@ -300,7 +300,7 @@ left_join(CData.Transects, Windows, by = c("site", "transect", "window")) %>%
 
 
 
-##### Tidy up transplant data for survival analysis -------------------------------------------------------
+##### Tidy up transplant data for survival analysis -------------------------------------------------------------------------------------------------
 
 # The following code works only for plot locations that are multiples of 2.5
 # There are three plots that do not satisfy this condition after consulting the field data sheets
@@ -336,7 +336,7 @@ merge(Windows,
 
 
 
-##### Clean up global environment -------------------------------------------------------------------------
+##### Clean up global environment -------------------------------------------------------------------------------------------------------------------
 
 # Remove variables that will no longer be used
 remove(site, plants, i, Windows.FPS, Windows.MOD, Windows.PDC, Windows.SLP,

@@ -1,4 +1,4 @@
-##### Initialise data -------------------------------------------------------------------------------------
+##### Initialise data -------------------------------------------------------------------------------------------------------------------------------
 
 # Goal of this script is to quantify how wavespeed responds to parameter perturbations
 
@@ -43,7 +43,7 @@ source("07_SIPM.R")
 
 
 
-##### Calculate recruitment sensitivity -------------------------------------------------------------------------------------
+##### Calculate recruitment sensitivity -------------------------------------------------------------------------------------------------------------
 
 # Loop over variation in recruitment rate (a constant in the SIPM) and recalculate wavespeed
 

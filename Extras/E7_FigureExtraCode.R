@@ -1,4 +1,4 @@
-##### Plot vital rates ------------------------------------------------------------------------------------
+##### Plot vital rates ------------------------------------------------------------------------------------------------------------------------------
 
 # Set bin splits for size and density
 size_breaks <- 4
@@ -180,7 +180,7 @@ dev.off()
 
 
 
-##### Plot growth rate as function of density -------------------------------------------------------------
+##### Plot growth rate as function of density -------------------------------------------------------------------------------------------------------
 
 # Get bootstrapped results
 boot.lambda <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_Lambda.csv")
@@ -230,7 +230,7 @@ lines(boot.lambda$density, boot.lambda[, 28 + 3], lwd = 4, lty = 2)
 
 
 
-##### Plot dispersal kernels ------------------------------------------------------------------------------
+##### Plot dispersal kernels ------------------------------------------------------------------------------------------------------------------------
 
 # Get hights and set colour palette
 heights <- quantile(LATR_full$max.ht_t, na.rm = T)
@@ -260,7 +260,7 @@ dev.off()
 
 
 
-##### Plot wavespeeds and sensitivity ---------------------------------------------------------------------
+##### Plot wavespeeds and sensitivity ---------------------------------------------------------------------------------------------------------------
 
 # Load in wavespeed and sensitivity data
 boot.wave <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_C2.csv")
@@ -322,10 +322,10 @@ dev.off()
 
 
 
-##### Plot transect resurvey data -------------------------------------------------------------------------
+##### Plot transect resurvey data -------------------------------------------------------------------------------------------------------------------
 
 # Load data
-resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/creosote_transect_resurvey.csv")
+resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectResurvey.csv")
 
 # Output graphics as PDF
 pdf("Manuscript/Figures/resurveys.pdf", useDingbats = F, height = 4, width = 8)

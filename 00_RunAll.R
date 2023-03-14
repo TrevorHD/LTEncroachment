@@ -1,4 +1,4 @@
-##### Load required packages for all scripts --------------------------------------------------------------
+##### Load required packages for all scripts --------------------------------------------------------------------------------------------------------
 
 # Load packages in this order
 library(minpack.lm)
@@ -30,7 +30,7 @@ library(patchwork)
 
 
 
-##### Run scripts that do not change between the two scenarios --------------------------------------------
+##### Run scripts that do not change between the two scenarios --------------------------------------------------------------------------------------
 
 # This will take several minutes; be patient
 
@@ -68,7 +68,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 
 
 
-##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------
+##### Set up bootstrapping for wavespeeds -----------------------------------------------------------------------------------------------------------
 
 # Save bootstrapped wavespeed and lambda outputs to CSV?
 boot.saveOutputs <- TRUE
@@ -123,7 +123,7 @@ seed.store <- c()
 
 
 
-##### Wavespeeds and population growth for normal survival scenario ---------------------------------------
+##### Wavespeeds and population growth for normal survival scenario ---------------------------------------------------------------------------------
 
 # This takes several minutes per bootstrap replicate; be patient
 # A stable internet connection is required
@@ -272,7 +272,7 @@ if(boot.noDisp == TRUE){
 
 
 
-##### Run perturbation analysis with full data ------------------------------------------------------------
+##### Run perturbation analysis with full data ------------------------------------------------------------------------------------------------------
 
 # Run select data prep scripts again
 boot.on <- FALSE
@@ -324,7 +324,7 @@ contour(TM$meshpts, TM$meshpts, t(dc.dK), add = TRUE)
 
 
 
-##### Generate main figures -------------------------------------------------------------------------------
+##### Generate main figures -------------------------------------------------------------------------------------------------------------------------
 
 # "08_MainFigures"
 # Generate figures for wavespeeds and population growth, dispersal, and demographic data
@@ -334,7 +334,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_Main
 
 
 
-##### Write files for EDI data package --------------------------------------------------------------------
+##### Write files for EDI data package --------------------------------------------------------------------------------------------------------------
 
 # 1. Observational demography census
 # write.csv(CData %>% 

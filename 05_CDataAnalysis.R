@@ -1,4 +1,4 @@
-##### Prepare data for analysis ---------------------------------------------------------------------------
+##### Prepare data for analysis ---------------------------------------------------------------------------------------------------------------------
 
 # Script authored by Tom, with some changes and additions from Trevor
 
@@ -21,7 +21,7 @@ gamma <- 1.8
 
 
 
-##### Growth model ----------------------------------------------------------------------------------------
+##### Growth model ----------------------------------------------------------------------------------------------------------------------------------
 
 # Prepare a data subset for growth that drops rows missing either t or t1 size data
 # Also create log_volume as a new variable because GAM doesn't like functions of variables as variables
@@ -115,7 +115,7 @@ gam_coef_length <- length(coef(LATR_grow_best))
 
 
 
-##### Flowering probability model -------------------------------------------------------------------------
+##### Flowering probability model -------------------------------------------------------------------------------------------------------------------
 
 # Populate year t of 2017-2018 transition year
 # There are no 2018 data but this way we get all four years in the reproduction models
@@ -172,7 +172,7 @@ LATR_flow_dat$pred <- predict.gam(LATR_flower_best, newdata = LATR_flow_dat, exc
 
 
 
-##### Fruit production model ------------------------------------------------------------------------------
+##### Fruit production model ------------------------------------------------------------------------------------------------------------------------
 
 # Create new df with plants that have produced at least one reproductive structure
 LATR_fruits_dat <- subset(LATR_flow_dat, total.reproduction_t > 0)
@@ -206,7 +206,7 @@ LATR_fruits_dat$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruits_dat,
 
 
 
-##### Survival model --------------------------------------------------------------------------------------
+##### Survival model --------------------------------------------------------------------------------------------------------------------------------
 
 # Combine transplants with large shrubs; keep only location info, survival, volume, and density
 CData.Transplants %>% 
@@ -259,7 +259,7 @@ LATR_surv_dat$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_dat, exclu
 
 
 
-##### Per-seed recruitment probability model --------------------------------------------------------------
+##### Per-seed recruitment probability model --------------------------------------------------------------------------------------------------------
 
 ## number of seeds per fruit
 seeds_per_fruit <- 5
@@ -319,7 +319,7 @@ LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
 
 
 
-##### Recruit sizes and integration limits (size bounds) --------------------------------------------------
+##### Recruit sizes and integration limits (size bounds) --------------------------------------------------------------------------------------------
 
 # Filter out seedlings from full data set; only do this once
 if(boot.switch == FALSE){
@@ -363,7 +363,7 @@ LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$
 
 
 
-# Collect AIC table info ----------------------------------------------------------------------------------
+# Collect AIC table info ----------------------------------------------------------------------------------------------------------------------------
 
 # Survival model AIC
 surv_aic_out<-as.data.frame(surv_aic)

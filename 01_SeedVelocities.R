@@ -1,4 +1,4 @@
-##### Calculate terminal velocities -----------------------------------------------------------------------
+##### Calculate terminal velocities -----------------------------------------------------------------------------------------------------------------
 
 # Load data file with seed positions and times
 file <- "https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"
@@ -39,7 +39,7 @@ tv.raw <- tv.raw[tv.raw < 10]
 
 
 
-##### Create terminal velocity distributions --------------------------------------------------------------
+##### Create terminal velocity distributions --------------------------------------------------------------------------------------------------------
 
 # Empirical probability distribution
 tv.PDF <- density(tv.raw, from = 0, to = 5, bw = 0.2)
@@ -65,7 +65,7 @@ tv.fits <- c()
 
 
 
-##### Clean up --------------------------------------------------------------------------------------------
+##### Clean up --------------------------------------------------------------------------------------------------------------------------------------
 
 # Clean up variables from global environment
 remove(v, y.0, g, TX, i, data, nlslrc, tv.ln, tv.gm, file)

@@ -1,4 +1,4 @@
-##### Get sample of seed terminal velocities  -------------------------------------------------------------
+##### Get sample of seed terminal velocities  -------------------------------------------------------------------------------------------------------
 
 # Sample percentage of empirical seed terminal velocity distribution and create PDF
 if(boot.on == TRUE){
@@ -15,7 +15,7 @@ if(boot.on == FALSE){
 
 
 
-##### Get sample of wind speeds  --------------------------------------------------------------------------
+##### Get sample of wind speeds  --------------------------------------------------------------------------------------------------------------------
 
 # Sample percentage of empirical wind speed distribution and create PDF
 if(boot.on == TRUE){
@@ -32,7 +32,7 @@ if(boot.on == FALSE){
 
 
 
-##### Get sample from demographic data  -------------------------------------------------------------------
+##### Get sample from demographic data  -------------------------------------------------------------------------------------------------------------
 
 # Sample percentage of demographic data
 if(boot.on == TRUE){
@@ -45,7 +45,7 @@ if(boot.on == TRUE){
 
 
 
-##### Get sample of recruits  -----------------------------------------------------------------------------
+##### Get sample of recruits  -----------------------------------------------------------------------------------------------------------------------
 
 # Sample percentages of recruits to calculate mean and sd recruit size
 if(boot.on == TRUE){
