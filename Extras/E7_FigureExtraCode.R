@@ -183,7 +183,7 @@ dev.off()
 ##### Plot growth rate as function of density -------------------------------------------------------------
 
 # Get bootstrapped results
-boot.lambda <- read.csv("BootLambda.csv")
+boot.lambda <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_Lambda.csv")
 
 # Compute mean result with full data
 boot.prop <- 1
@@ -263,9 +263,9 @@ dev.off()
 ##### Plot wavespeeds and sensitivity ---------------------------------------------------------------------
 
 # Load in wavespeed and sensitivity data
-boot.wave <- read.csv("BootC2.csv")
-boot.sens <- read.csv("Boot.sens.csv")
-#boot.elas <- read.csv("Boot.elas.csv")
+boot.wave <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_C2.csv")
+boot.sens <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_Sens.csv")
+#boot.elas <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_Elas.csv")
 
 # Drop first row (garbage)
 boot.sens <- boot.sens[-1, ]

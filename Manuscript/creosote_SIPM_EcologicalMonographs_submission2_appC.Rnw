@@ -40,7 +40,7 @@ library(xtable)
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 aic_tables <- readRDS("aic_tables.rds")
 appendix_aic_tables <- readRDS("appendix_aic_tables.rds")
-speed.dat <- read.csv("BootC2.csv")
+speed.dat <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_C2.csv")
 
 @
 

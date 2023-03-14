@@ -225,7 +225,7 @@ dev.off()
 ##### Plot growth rate as function of density -------------------------------------------------------------
 
 # Get bootstrapped results
-boot.lambda <- read.csv("BootLambda.csv")
+boot.lambda <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_Lambda.csv")
 
 # Compute mean result
 mean.lambda <- LambdaD()

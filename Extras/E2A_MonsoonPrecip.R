@@ -8,7 +8,7 @@ monsoon <- read.csv("Data/Weather/SEV_monsoon_precipitation.csv")
 str(monsoon)
 
 # Calculate seedlings per area by getting transect lengths
-transect_lengths <- read.csv("Data/LT_TransectLengths.csv") %>% 
+transect_lengths <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectLengths.csv") %>% 
   mutate(area = Length_m*2)
 CData %>% 
   group_by(site, transect,year_t1) %>% 

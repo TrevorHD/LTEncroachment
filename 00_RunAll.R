@@ -113,10 +113,10 @@ boot.elas <- vector("numeric", length = length(elas))
 boot.sens <- vector("numeric", length = length(elas))
 
 # Store seed data
-# seeds <- sample.int(100000, size = boot.num); write.csv(seeds, "1000seeds.csv")
+# seeds <- sample.int(100000, size = boot.num); write.csv(seeds, "Data/Derived/Seed_1000.csv")
 
 # Read seed data
-seeds <- read.csv("1000seeds.csv")
+seeds <- read.csv("Data/Derived/Seed_1000.csv")
 seed.store <- c()
 
 
@@ -244,14 +244,14 @@ suppressWarnings(if(1 == 1){
 if(boot.saveOutputs == TRUE){
   
   # Write bootstrapped lambda values to csv
-  write.csv(boot.lambda, "BootLambda.csv")
-  write.csv(seed.store, "seed.store.csv")
+  write.csv(boot.lambda, "Data/Derived/Boot_Lambda.csv")
+  write.csv(seed.store, "Data/Derived/Seed_Store.csv")
   
   # Write bootstrapped wavespeed values to csv
-  write.csv(boot.c1, "BootC1.csv")
-  write.csv(boot.c2, "BootC2.csv")
-  # write.csv(boot.elas, "Boot.elas.csv")
-  write.csv(boot.sens, "Boot.sens.csv")}
+  write.csv(boot.c1, "Data/Derived/Boot_C1.csv")
+  write.csv(boot.c2, "Data/Derived/Boot_C2.csv")
+  # write.csv(boot.elas, "Boot_Elas.csv")
+  write.csv(boot.sens, "Data/Derived/Boot_Sens.csv")}
 
 # Remove unneeded bootstrap items from the global environment if using spatial IPM
 # If running single replicate, just leave most items in global environment
@@ -272,7 +272,7 @@ if(boot.noDisp == TRUE){
 
 
 
-# Run perturbation analysis with full data ----------------------------------------------------------------
+##### Run perturbation analysis with full data ------------------------------------------------------------
 
 # Run select data prep scripts again
 boot.on <- FALSE
@@ -350,8 +350,8 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_Main
 #            num_blue_grama_t = num_blue_gramma_t), "EDI/LATR_transplants_dat.csv", row.names = F)
 
 # 3. Seed drop summary data
-# write.csv(read.csv("Data/SD_Summary.csv"), "EDI/SD_Summary.csv")
+# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Summary.csv"), "EDI/SD_Summary.csv")
 
 # 4. Seed drop position data
-# write.csv(read.csv("Data/SD_Trials.csv"), "EDI/SD_Trials.csv")
+# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"), "EDI/SD_Trials.csv")
 
