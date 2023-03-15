@@ -1,7 +1,5 @@
 ##### Prepare data for analysis ---------------------------------------------------------------------------------------------------------------------
 
-# Script authored by Tom, with some changes and additions from Trevor
-
 # Define inverse logit and prepare data for model fitting
 if(boot.switch == FALSE){
   
@@ -14,7 +12,7 @@ if(boot.switch == FALSE){
     mutate(unique.transect = interaction(transect, site))}
 
 
-## set the gamma argument of gam(): gamma > 1 generates smoother fits, less likely to be overfit
+# Set the gamma argument of gam(): gamma > 1 generates smoother fits, less likely to be overfit
 gamma <- 1.8
 
 
@@ -40,76 +38,78 @@ LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.tran
                             data = LATR_grow, gamma = gamma, family = gaulss())
 LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ 1), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"), ~ 1), 
+LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) +
+                                   s(unique.transect, bs = "re"), ~ 1), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
-
 LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect,bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
 LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
+LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) +
+                                   s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
 # Fits where sigma depends on both initial size and density
 LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
-LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                                 ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) +
+                                   s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
 # Collect model AICs into a single table
 grow_aic <- AICtab(LATR_gam_models, base = TRUE, sort = FALSE)
 
-# Set top model as "best"; find intercept for the sd
+# Set top model as "best"; find intercept for the SD
 # Fixing the growth model to this one, so every bootstrap will use this model
-# This avoids problems of bad initial conditions in the sgt fits
+# This avoids problems of bad initial conditions in the SGT fits
 LATR_grow_best <- LATR_gam_models[[which.min(grow_aic$AIC)]]
 LATR_grow_fitted_terms <- predict(LATR_grow_best, type = "terms") 
 LATR_grow$pred <- predict.gam(LATR_grow_best, newdata = LATR_grow, exclude = "s(unique.transect)")
 
-# Extract the linear predictor for the mean and sd
+# Extract the linear predictor for the mean and SD
 LATR_Xp <- predict.gam(LATR_grow_best, type = "lpmatrix")
 
 # Fitted coefficients
 LATR_beta <- coef(LATR_grow_best)
 
 # Annoying but necessary index wrangling
-# First line where sd coefficients start, second line where lambda, p and q coefficients start
+# First line where SD coefficients start, second line where lambda, p and q coefficients start
 grow_sd_index <- which(as.factor(names(coef(LATR_grow_best))) == "(Intercept).1")
 gam_coef_length <- length(coef(LATR_grow_best))
 
-## now fit SGT using the LP matrix for mean and sigma that gam fit
-#sgtLogLik=function(pars,response){
-#  val = dsgt(x = response, 
-#             mu=LATR_Xp[,1:(grow_sd_index-1)]%*%pars[1:(grow_sd_index-1)],
-#             sigma=exp(LATR_Xp[,grow_sd_index:gam_coef_length]%*%pars[grow_sd_index:gam_coef_length]),
-#             lambda=-invlogit(pars[(gam_coef_length+1)]+pars[(gam_coef_length+2)]*LATR_grow$log_volume_t), ## I know there is negative skew at small sizes so I am rigging this to pick it up
-#             p=exp(pars[(gam_coef_length+3)]),
-#             q=exp(pars[(gam_coef_length+4)]),
-#             mean.cent=T,
-#             var.adj=T,
-#             log=T) 
-#  return(val); 
-#}
+# Now fit SGT using the LP matrix for mean and sigma that GAM fit
+# For lambda, I know there is negative skew at small sizes so I am rigging this to pick it up
+# sgtLogLik <- function(pars, response){
+#   val <- dsgt(x = response, 
+#               mu = LATR_Xp[, 1:(grow_sd_index - 1)] %*% pars[1:(grow_sd_index - 1)],
+#               sigma = exp(LATR_Xp[, grow_sd_index:gam_coef_length] %*% pars[grow_sd_index:gam_coef_length]),
+#               lambda = -invlogit(pars[(gam_coef_length + 1)] + pars[(gam_coef_length + 2)]*LATR_grow$log_volume_t),
+#               p = exp(pars[(gam_coef_length + 3)]),
+#               q = exp(pars[(gam_coef_length + 4)]),
+#               mean.cent = T,
+#               var.adj = T,
+#               log = T) 
+#  return(val)}
 
-## initial parameter values
-## I cut randomness from initial values to make this more reliable for bootstrapping: start=p0*exp(0.2*rnorm(length(p0)))
-#p0=c(LATR_beta,-10,0,2,2) 
-#out=maxLik(logLik=sgtLogLik,start=p0, response=LATR_grow$log_volume_t1,
-#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
+# Initial parameter values
+# I cut randomness from initial values to make this more reliable for bootstrapping: start = p0*exp(0.2*rnorm(length(p0)))
+# p0 <-  c(LATR_beta, -10, 0, 2, 2) 
+
+# Get maximum likelihood
+# out <- maxLik(logLik = sgtLogLik, start = p0, response = LATR_grow$log_volume_t1,
+#               method = "BHHH", control = list(iterlim = 5000, printLevel = 2), finalHessian = FALSE)
+# out <- maxLik(logLik = sgtLogLik, start = out$estimate, response = LATR_grow$log_volume_t1,
+#               method = "NM", control = list(iterlim = 5000, printLevel = 1), finalHessian = FALSE)
+# out <- maxLik(logLik = sgtLogLik, start = out$estimate, response = LATR_grow$log_volume_t1,
+#               method = "BHHH", control = list(iterlim = 5000, printLevel = 2), finalHessian = FALSE)
+# out <- maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
+#               method = "BHHH", control = list(iterlim = 5000, printLevel = 2), finalHessian = TRUE) 
 #
-#out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
-#           method="NM",control=list(iterlim=5000,printLevel=1),finalHessian=FALSE); #
-#
-#out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
-#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=FALSE); 
-#
-#out=maxLik(logLik=sgtLogLik,start=out$estimate,response=LATR_grow$log_volume_t1,
-#           method="BHHH",control=list(iterlim=5000,printLevel=2),finalHessian=TRUE) 
-#
-## final parameter estimates for the growth model
-#coef_grow_best <- out$estimate
+# Final parameter estimates for the growth model
+# coef_grow_best <- out$estimate
 
 
 
@@ -157,7 +157,8 @@ LATR_flower[[1]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(unique.tr
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
 LATR_flower[[2]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
-LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"),
+LATR_flower[[3]] <- gam(total.reproduction_t > 0 ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) +
+                          s(unique.transect, bs = "re"),
                         data = LATR_flow_dat, gamma = gamma, family = "binomial")
 
 # Collect model AICs into a single table
@@ -185,7 +186,8 @@ LATR_fruits[[1]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(unique.transe
                         data = LATR_fruits_dat, gamma = gamma, family = "nb")
 LATR_fruits[[2]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
                         data = LATR_fruits_dat, gamma = gamma, family = "nb")
-LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) + s(unique.transect, bs = "re"),
+LATR_fruits[[3]] <- gam(total.reproduction_t ~ s(log_volume_t) + s(weighted.dens) + ti(log_volume_t, weighted.dens) +
+                          s(unique.transect, bs = "re"),
                         data = LATR_fruits_dat, gamma = gamma, family = "nb")
 
 # Collect model AICs into a single table
@@ -236,9 +238,11 @@ LATR_surv <- list()
 # Three candidate models for the mean: size only, size + density, or size, density, and size:density
 LATR_surv[[1]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = gamma, family = "binomial")
-LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(weighted.dens,by = as.factor(transplant))  + s(unique.transect, bs = "re"),
+LATR_surv[[2]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(weighted.dens,by = as.factor(transplant)) +
+                        s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = gamma, family = "binomial")
-LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(weighted.dens,by = as.factor(transplant)) + ti(log_volume_t, weighted.dens, by = as.factor(transplant)) + s(unique.transect, bs = "re"),
+LATR_surv[[3]] <- gam(survival_t1 ~ s(log_volume_t,by = as.factor(transplant)) + s(weighted.dens,by = as.factor(transplant)) +
+                        ti(log_volume_t, weighted.dens, by = as.factor(transplant)) + s(unique.transect, bs = "re"),
                       data = LATR_surv_dat, gamma = gamma, family = "binomial")
 
 # Collect model AICs into a single table
@@ -313,7 +317,7 @@ LATR_recruit_best <- LATR_recruit[[which.min(recruit_aic$AIC)]]
 
 # Plot effect of density on pr(seedling recruitment); negative density dependence
 # LATR_recruit_fitted_terms <- predict(LATR_recruit[[2]], type = "terms") 
-# plot(LATR_recruitment$weighted.dens,LATR_recruit_fitted_terms[, "s(weighted.dens)"])
+# plot(LATR_recruitment$weighted.dens, LATR_recruit_fitted_terms[, "s(weighted.dens)"])
 
 
 
@@ -352,13 +356,14 @@ LATR_recruitsize_best <- LATR_recruit_size_mod[[which.min(recruitsize_aic$AIC)]]
 LATR_recruitsize_fitted_terms <- predict(LATR_recruitsize_best, type = "terms") 
 LATR_recruit_size$pred <- predict.gam(LATR_recruitsize_best, newdata = LATR_recruit_size, exclude = "s(unique.transect)")
 
-# Annoying but necessary index wrangling; first line is where sd coefficients start
+# Annoying but necessary index wrangling; first line is where SD coefficients start
 recruit_size_sd_index <- which(as.factor(names(coef(LATR_recruitsize_best))) == "(Intercept).1")
 recruit_size_coef_length <- length(coef(LATR_recruitsize_best))
 
 # Create maximum and minimum size bounds for the IPM
 LATR_size_bounds <- data.frame(min_size = log(min(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)),
                                max_size = log(max(LATR_full$volume_t, LATR_full$volume_t1[LATR_full$transplant == FALSE], na.rm = TRUE)))
+
 
 
 

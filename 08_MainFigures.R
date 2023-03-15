@@ -95,7 +95,7 @@ if(boot.switch == FALSE){
     weighted.dens = seq(min(LATR_grow$weighted.dens), max(LATR_grow$weighted.dens), 1),
     size_bin = mean_size$size_bin,
     unique.transect = LATR_grow$unique.transect[1])
-  grow_predict$log_volume_t < -mean_size$mean_size[grow_predict$size_bin]
+  grow_predict$log_volume_t <- mean_size$mean_size[grow_predict$size_bin]
   grow_predict[, c("pred_mu", "pred_sigma")] <- predict.gam(LATR_grow_best, newdata = grow_predict,
                                                             type = "response", exclude = "s(unique.transect)")
   LATR_grow$size_col <- LATR_cols[as.numeric(cut(LATR_grow$log_volume_t, breaks = size_breaks))]

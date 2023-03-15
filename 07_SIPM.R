@@ -25,7 +25,8 @@ TM.growth <- function(x, y, d, elas, sens){
   grow_mu <- lpmat[, 1:(grow_sd_index - 1)] %*% coef(LATR_grow_best)[1:(grow_sd_index - 1)]
   if(elas == "growth.mean"){grow_mu = grow_mu*(1 + pert)}
   if(sens == "growth.mean"){grow_mu = grow_mu + pert}
-  grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*% coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
+  grow_sigma <- exp(lpmat[, grow_sd_index:length(coef(LATR_grow_best))] %*%
+                      coef(LATR_grow_best)[grow_sd_index:length(coef(LATR_grow_best))])
   if(elas == "growth.sd"){grow_sigma = grow_sigma*(1 + pert)}
   if(sens == "growth.sd"){grow_sigma = grow_sigma + pert}
   return(dnorm(y, mean = grow_mu, sd = grow_sigma))}
@@ -93,6 +94,7 @@ TM.seeds <- function(x, d, elas, sens, seeds.per.fruit = 5){
   return(pred*seeds.per.fruit)}
 
 # Seed-to-Seedling recruitment probability at density d
+# Note the subtraction of pert here since pred is negative
 TM.recruitment <- function(d, elas, sens){
   lpmat <- predict.gam(LATR_recruit_best,
                        newdata = data.frame(weighted.dens = d, unique.transect = "1.FPS"),
@@ -100,7 +102,7 @@ TM.recruitment <- function(d, elas, sens){
                        exclude = "s(unique.transect)")
   pred <- lpmat %*% coef(LATR_recruit_best)
   pred <- invlogit(pred[[1]])
-  if(elas == "recruitment"){pred <- pred*(1 - pert)} # note subtraction here since pred is negative
+  if(elas == "recruitment"){pred <- pred*(1 - pert)}
   if(sens == "recruitment"){pred <- pred + pert} 
   return(pred)}
 
@@ -113,7 +115,8 @@ TM.recruitsize <- function(y, d, elas, sens){
   recruitsize_mu <- lpmat[, 1:(recruit_size_sd_index - 1)] %*% coef(LATR_recruitsize_best)[1:(recruit_size_sd_index - 1)]
   if(elas == "recruitsize.mean"){recruitsize_mu <- recruitsize_mu*(1 + pert)}
   if(sens == "recruitsize.mean"){recruitsize_mu <- recruitsize_mu + pert}
-  recruitsize_sigma <- exp(lpmat[, recruit_size_sd_index:recruit_size_coef_length] %*% coef(LATR_recruitsize_best)[recruit_size_sd_index:recruit_size_coef_length])
+  recruitsize_sigma <- exp(lpmat[, recruit_size_sd_index:recruit_size_coef_length] %*%
+                             coef(LATR_recruitsize_best)[recruit_size_sd_index:recruit_size_coef_length])
   if(elas == "recruitsize.sd"){recruitsize_sigma <- recruitsize_sigma*(1 + pert)}
   if(sens == "recruitsize.sd"){recruitsize_sigma <- recruitsize_sigma + pert}
   return(dnorm(x = y, mean = recruitsize_mu, sd = recruitsize_sigma))}
@@ -229,14 +232,14 @@ Wavespeed <- function(n = TM.matdim, elas = "none", sens = "none", seed = NULL, 
 
 # Functions from Ellner et al. IPM book, adapted by Tom
 
-# Function to compute the WALD mgf
+# Function to compute the WALD MGF
 WALDmgf <- function(s, nu, lambda){
   t1 <- (lambda/nu) 
   t2 <- 2*(nu^2)*s/lambda 
   mgf <- exp(t1*(1 - sqrt(1 - t2)))
   return(mgf)}    
 
-# Function to compute the marginalized WALD mgf
+# Function to compute the marginalized WALD MGF
 margWALDmgf <- function(s, nu, lambda) {
   (1/pi)*integrate(function(q) WALDmgf(s*cos(q), nu, lambda), 0, pi)$value}
 
@@ -277,7 +280,7 @@ WALD_par <- function(h = 0.15, elas = "none", sens = "none"){
   # Return values
   return(list(heights = heights, WALD.par = WALD.par))}
 
-# Reality check: mgf and marginalized mgf should have value 1 at s = 0
+# Reality check: MGF and marginalized MGF should have value 1 at s = 0
 # WALDmgf(0, params$WALD.par[[100]]$nu, params$WALD.par[[100]]$lambda)
 # margWALDmgf(0, params$WALD.par[[100]]$nu, params$WALD.par[[100]]$lambda)
 
@@ -311,7 +314,7 @@ cs <- function(s, h = 0.15, emp = F){
 # cs = Vectorize(cs, "s"); 
 # plot(function(s) cs(s, emp = T), 0.05, 2);
 
-# Maximum value of s for which the WALD mgf is finite 
+# Maximum value of s for which the WALD MGF is finite 
 s.max <- function(nu, lambda) {
   return(lambda/(2*nu*nu))} 
 # s.max(params$WALD.par[[100]]$nu, params$WALD.par[[100]]$lambda)
