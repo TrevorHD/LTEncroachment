@@ -1,5 +1,7 @@
 ##### Plot vital rates ------------------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor, Tom
+
 # Plot if bootstrapping is turned off
 if(boot.switch == FALSE){
   

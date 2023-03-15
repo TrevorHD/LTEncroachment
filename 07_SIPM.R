@@ -1,5 +1,7 @@
 ##### Fix important parameters for SIPM -------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor, Tom
+
 # Give dimension of the size vector (# bins of the approximating matrix)
 TM.matdim <- 200
 

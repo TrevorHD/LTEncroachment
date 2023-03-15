@@ -1,7 +1,9 @@
 ##### Get monsoon precipitation data ----------------------------------------------------------------------------------------------------------------
 
-# KM Hall 2022-06-11
-# SEV monsoon precipitation (July-Sept.)
+# Code author(s): Tom
+
+# Data from Kris Hall: here is annual July-September monsoon precipitation by calendar year (not by water year)
+# for each of the met stations, with units in millimeters.
 
 # Load packages
 library(tidyverse)

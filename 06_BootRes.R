@@ -1,5 +1,7 @@
 ##### Get sample of seed terminal velocities  -------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor
+
 # Sample percentage of empirical seed terminal velocity distribution and create PDF
 if(boot.on == TRUE){
   set.seed(seeds[i, 2])

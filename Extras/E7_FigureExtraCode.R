@@ -1,5 +1,7 @@
 ##### Plot vital rates ------------------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Tom
+
 # Set bin splits for size and density
 size_breaks <- 4
 density_breaks <- 5

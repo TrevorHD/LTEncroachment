@@ -1,5 +1,7 @@
 ##### Plot GAM parameters ---------------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Tom
+
 # Run diagnostic code
 source("C:/Users/tm9/Dropbox/github/IPM_size_transitions/Diagnostics.R")
 

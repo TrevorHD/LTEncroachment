@@ -1,5 +1,7 @@
 ##### "Base" WALD PDF -------------------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor, Tom
+
 # "Base" WALD PDF using empirical means of observed wind speeds and terminal velocities
 # Code adapted from Skarpaas and Shea (2007), Zhang et. al (2011)
 # Using this will assume that height H is the release point for all seeds

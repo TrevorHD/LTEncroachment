@@ -1,5 +1,7 @@
 ##### Load required packages for all scripts --------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor, Tom
+
 # Load packages in this order
 library(minpack.lm)
 library(MASS)

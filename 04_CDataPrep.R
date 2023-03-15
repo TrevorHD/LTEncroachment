@@ -1,5 +1,7 @@
 ##### Initialise Data -------------------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor, Tom
+
 # Read transect densities
 CData.Transects <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectData.csv")
 names(CData.Transects)[1] <- "site"

@@ -1,5 +1,7 @@
 ##### Initialise data -------------------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor
+
 # Grabbing 2015-19 met data from station 49 only (speeds things up)
 # Create URL to read from; if desired, replace with local file path for faster performance
 url <- "https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/SEVHourlyMetStation49_2015_2019.csv"

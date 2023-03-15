@@ -1,5 +1,7 @@
 ##### How are recruits distributed across size classes? ---------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor
+
 # Plot distribution of recruits across volume
 CData.Recruits %>%
   select(volume_t1, seedling_t1) %>% 

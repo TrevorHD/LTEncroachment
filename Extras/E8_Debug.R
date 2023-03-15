@@ -1,5 +1,7 @@
 ##### Find minimum wave speed -----------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Tom
+
 # Debugging on elasticity and sensitivity for vital rates
 TM.growth(1, 1, 0:220, elas = 1, sens = 2)
 TM.survival(-2, 0:220, elas = 1, sens = 2)

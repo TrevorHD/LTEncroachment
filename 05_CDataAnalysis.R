@@ -1,5 +1,7 @@
 ##### Prepare data for analysis ---------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Tom
+
 # Define inverse logit and prepare data for model fitting
 if(boot.switch == FALSE){
   
@@ -403,8 +405,8 @@ recruit_aic_out$`Pr(Recruitment)` <- c("~ (1|transect)", "~ density + (1|transec
 
 # Recruit size model AIC
 recruitsize_aic_out<-as.data.frame(recruitsize_aic)
-recruitsize_aic_out$`mean(size)` <- c("~ (1|transect)", "~ density+(1|transect)",
-                                      "~ (1|transect)", "~ density+(1|transect)")
+recruitsize_aic_out$`mean(size)` <- c("~ (1|transect)", "~ density + (1|transect)",
+                                      "~ (1|transect)", "~ density + (1|transect)")
 recruitsize_aic_out$`sd(size)` <- c("~1", "~ 1", "~ density", "~ density")
 
 # Create list of AIC tables

@@ -1,5 +1,7 @@
 ##### Calculate terminal velocities -----------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor
+
 # Load data file with seed positions and times
 file <- "https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"
 

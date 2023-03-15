@@ -1,5 +1,7 @@
 ##### Initialise data -------------------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Trevor, Tom
+
 # Goal of this script is to quantify how wavespeed responds to parameter perturbations
 
 # Load packages in this order

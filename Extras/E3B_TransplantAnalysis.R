@@ -1,5 +1,7 @@
 ##### Analyse transplant data -----------------------------------------------------------------------------------------------------------------------
 
+# Code author(s): Tom
+
 # Create a new data frame from the existing transplant data for analysis that will appear in an appendix
 transplants.app <- CData.Transplants %>%
   
