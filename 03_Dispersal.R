@@ -172,14 +172,12 @@ WALD.f.e <- function(n, H, elas, seed = NULL){
 # Similar to base function, but relaxes assumption for single point source
 WALD.b.h <- function(H, elas, seed = NULL, reps, heights){
   
-  # Use 10000 replicates for each height #TM: could we do less?
-  n <- reps
-  
   # Create "continuous" sequence of release heights
-  h.range <- seq(0.15, H, length.out = heights) ##TM: could we make this chunkier
+  # Side note: can we make this sequence "chunkier" to improve performance?
+  h.range <- seq(0.15, H, length.out = heights)
   
-  # Simulate seed release events for each height; returns n*length.out dispersal events
-  return(na.omit(as.vector(sapply(h.range, WALD.b, n = n, elas = elas, seed = seed))))}
+  # Simulate seed release events for each height; returns reps*length.out dispersal events
+  return(na.omit(as.vector(sapply(h.range, WALD.b, reps = reps, elas = elas, seed = seed))))}
 
 
 
@@ -190,20 +188,14 @@ WALD.b.h <- function(H, elas, seed = NULL, reps, heights){
 # Similar to full function, but relaxes assumption for single point source
 WALD.f.e.h <- function(H, elas, seed = NULL, reps, heights){
   
-  # Use 10000 replicates for each height #TM: could we do less?
-  n <- reps
-  
   # Create "continuous" sequence of release heights
-  h.range <- seq(0.15, H, length.out = heights) ##TM: could we make this chunkier
+  # Side note: can we make this sequence "chunkier" to improve performance?
+  h.range <- seq(0.15, H, length.out = heights)
   
-  # Simulate seed release events for each height; returns n*length.out dispersal events
-  return(na.omit(as.vector(sapply(h.range, WALD.f.e, n = n, elas = elas, seed = seed))))}
+  # Simulate seed release events for each height; returns reps*length.out dispersal events
+  return(na.omit(as.vector(sapply(h.range, WALD.f.e, reps = reps, elas = elas, seed = seed))))}
 
-
-
-
-
-##### Tom's version of full WALD
+# Similar to above, but with full support for perturbation analysis
 WALD.f.e.h.tom <- function(n, H, elas, sens, h = 0.15, seed = NULL){
   
   # Add option for height perturbation analysis
@@ -247,7 +239,7 @@ WALD.f.e.h.tom <- function(n, H, elas, sens, h = 0.15, seed = NULL){
   if(sens == "dispersal.scale"){lambda <- lambda + pert}
   
   # Calculate location parameter nu
-  nu <- H*U/f #2*(H*U/f)#
+  nu <- H*U/f # 2*(H*U/f)
   if(elas == "dispersal.location"){nu <- nu*(1 + pert)}
   if(sens == "dispersal.location"){nu <- nu + pert}
   

@@ -1,10 +1,8 @@
 ##### Initialise data -------------------------------------------------------------------------------------------------------------------------------
 
-# TM update 6 July 2022: grabbing 2015-19 met data from station 49 only (speeds things up)
-# Get wind data from repo
-
-# Create URL to read from; replace with local file path for faster performance
-url <- "https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/Sevilleta_LTER_Hourly_Meteorological_Data_2015_2019_station49.csv"
+# Grabbing 2015-19 met data from station 49 only (speeds things up)
+# Create URL to read from; if desired, replace with local file path for faster performance
+url <- "https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Weather/SEVHourlyMetStation49_2015_2019.csv"
     
 # Using read.csv is too slow; SQL will be much more efficient
 # Read comma-separated data from text file, and select relevant columns

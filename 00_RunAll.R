@@ -146,7 +146,7 @@ for(i in 1:boot.num){
   # Run resampling subroutine for wind speeds, terminal velocities, and demography
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
   
-  # "05_CDataAnalysis_NS.R"
+  # "05_CDataAnalysis.R"
   # Create demography models for use in SIPM, using best models from initial run of this file
   # This avoids model uncertainty; only model coefficients change, not the overall structure
   source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
@@ -216,7 +216,7 @@ for(i in 1:boot.num){
   boot.TM[[i]] <- TM
   
   # Store seed data
-  seed.store[i]<-seeds[i, 2]
+  seed.store[i] <- seeds[i, 2]
   
   # Calculate elapsed time
   time.elapsed <- as.numeric(difftime(Sys.time(), time.start, units = "hours"))
@@ -243,14 +243,18 @@ suppressWarnings(if(1 == 1){
 # Save outputs to CSV if enabled
 if(boot.saveOutputs == TRUE){
   
-  # Write bootstrapped lambda values to csv
+  # Write bootstrapped seed and lambda values to csv
   write.csv(boot.lambda, "Data/Derived/Boot_Lambda.csv")
   write.csv(seed.store, "Data/Derived/Seed_Store.csv")
   
   # Write bootstrapped wavespeed values to csv
   write.csv(boot.c1, "Data/Derived/Boot_C1.csv")
   write.csv(boot.c2, "Data/Derived/Boot_C2.csv")
+  
+  # Write bootstrapped elasticity to CSV
   # write.csv(boot.elas, "Boot_Elas.csv")
+  
+  # Write bootstrapped sensitivity to CSV
   write.csv(boot.sens, "Data/Derived/Boot_Sens.csv")}
 
 # Remove unneeded bootstrap items from the global environment if using spatial IPM
@@ -341,13 +345,13 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_Main
 #   dplyr::select(-c(volume_t, volume_t1, logGR, did.flower, transplant,
 #                    total.fruits_t, total.flowers_t,
 #                    total.fruits_t1, total.flowers_t1,
-#                    total.reproduction_t, total.reproduction_t1)), "EDI/LATR_demography_dat.csv", row.names = F)
+#                    total.reproduction_t, total.reproduction_t1)), "EDI/LATR_Demography_Dat.csv", row.names = F)
 
 # 2. Transplant experiment
 # write.csv(CData.Transplants %>% 
 #   dplyr::select(-c(name, volume_t, transplant, notes)) %>% 
 #     rename(num_black_grama_t = num_black_gramma_t,
-#            num_blue_grama_t = num_blue_gramma_t), "EDI/LATR_transplants_dat.csv", row.names = F)
+#            num_blue_grama_t = num_blue_gramma_t), "EDI/LATR_Transplants_Dat.csv", row.names = F)
 
 # 3. Seed drop summary data
 # write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Summary.csv"), "EDI/SD_Summary.csv")

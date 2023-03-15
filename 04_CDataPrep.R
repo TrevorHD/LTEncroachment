@@ -136,8 +136,10 @@ problems[4, ] <- c("FPS", 2, 0, 5, 2015)
 problems[5, ] <- c("FPS", 2, 150, 12, 2016)
 
 # FPS 3-100-7 has a data entry problem (confirmed after checking data sheets)
-CData.Demography$max.ht_t1[CData.Demography$site == "FPS" & CData.Demography$transect == 3 & CData.Demography$designated.window == 100 & CData.Demography$plant == 7 & CData.Demography$year_t == 2015] <- 38
-CData.Demography$max.ht_t[CData.Demography$site == "FPS" & CData.Demography$transect == 3 & CData.Demography$designated.window == 100 & CData.Demography$plant == 7 & CData.Demography$year_t == 2016] <- 38
+CData.Demography$max.ht_t1[CData.Demography$site == "FPS" & CData.Demography$transect == 3 & CData.Demography$designated.window == 100 &
+                             CData.Demography$plant == 7 & CData.Demography$year_t == 2015] <- 38
+CData.Demography$max.ht_t[CData.Demography$site == "FPS" & CData.Demography$transect == 3 & CData.Demography$designated.window == 100 &
+                            CData.Demography$plant == 7 & CData.Demography$year_t == 2016] <- 38
 
 # FPS 3-100 plants 4 and 6 seem like they were mixed up or perhaps growing on top of each other
 # Dropping these for all years
@@ -207,7 +209,6 @@ subset(CData, is.na(actual.window)) %>%
   unique() -> CData.MissingWindow
 
 # Check why actual Windows are not present
-# See "Missing Windows" file for more information
 
 # check whether any designated windows are missing
 CData %>% filter(is.na(designated.window))
@@ -235,8 +236,7 @@ dplyr::select(CData, "site", "transect", "designated.window", "actual.window", "
        "perp.w_t1", "flowers_t1", "fruits_t1", "reproductive_fraction_t1") %>% 
 
 # Merge with demography data
-merge(Windows, 
-      by.x = c("site", "transect", "actual.window"),
+merge(Windows, by.x = c("site", "transect", "actual.window"),
       by.y = c("site", "transect", "window")) -> CData
 
 # Final result is each plant and its demography, marked with its 5-m window weighted density
