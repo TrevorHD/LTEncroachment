@@ -347,17 +347,17 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_Main
 #   dplyr::select(-c(volume_t, volume_t1, logGR, did.flower, transplant,
 #                    total.fruits_t, total.flowers_t,
 #                    total.fruits_t1, total.flowers_t1,
-#                    total.reproduction_t, total.reproduction_t1)), "EDI/LATR_Demography_Dat.csv", row.names = F)
+#                    total.reproduction_t, total.reproduction_t1)), "Data/EDI/LATR_Demography_Dat.csv", row.names = F)
 
 # 2. Transplant experiment
 # write.csv(CData.Transplants %>% 
 #   dplyr::select(-c(name, volume_t, transplant, notes)) %>% 
 #     rename(num_black_grama_t = num_black_gramma_t,
-#            num_blue_grama_t = num_blue_gramma_t), "EDI/LATR_Transplants_Dat.csv", row.names = F)
+#            num_blue_grama_t = num_blue_gramma_t), "Data/EDI/LATR_Transplants_Dat.csv", row.names = F)
 
 # 3. Seed drop summary data
-# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Summary.csv"), "EDI/SD_Summary.csv")
+# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Summary.csv"), "Data/EDI/SD_Summary.csv")
 
 # 4. Seed drop position data
-# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"), "EDI/SD_Trials.csv")
+# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"), "Data/EDI/SD_Trials.csv")
 
