@@ -14,7 +14,7 @@ plot(LATR_Xp[, 1:(grow_sd_index - 1)] %*% LATR_beta[1:(grow_sd_index - 1)],
      LATR_Xp[, 1:(grow_sd_index - 1)] %*% out$estimate[1:(grow_sd_index - 1)])
 abline(0, 1)
 
-# The SGT can recover the same expected value as the gaussian GAM
+# The SGT can recover the same expected value as the Gaussian GAM
 
 
 

@@ -1,7 +1,5 @@
 ##### Analyse transplant data -----------------------------------------------------------------------------------------------------------------------
 
-# Tom's analysis of transplant data
-
 # Create a new data frame from the existing transplant data for analysis that will appear in an appendix
 transplants.app <- CData.Transplants %>%
   
@@ -60,7 +58,8 @@ fall_surv_models[[6]] <- gam(cbind(fall_survivors, 4 - fall_survivors) ~ s(grass
                              data = transplant.plots, gamma = gamma, family = "binomial")
 fall_surv_models[[7]] <- gam(cbind(fall_survivors, 4 - fall_survivors) ~ s(weighted.dens) + s(grass_cover) + s(unique.transect, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
-fall_surv_models[[8]] <- gam(cbind(fall_survivors, 4 - fall_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re"),
+fall_surv_models[[8]] <- gam(cbind(fall_survivors, 4 - fall_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) +
+                               s(unique.transect, bs = "re"),
                              data = transplant.plots, gamma = gamma, family = "binomial")
 
 # AIC table
@@ -104,13 +103,17 @@ spring_surv_models[[3]] <- gam(cbind(spring_survivors, fall_survivors - spring_s
                                data = subset(transplant.plots, fall_survivors > 0), gamma = gamma, family = "binomial")
 spring_surv_models[[4]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(grass_cover) + s(unique.transect, bs = "re"),
                                data = subset(transplant.plots, fall_survivors > 0), gamma = gamma, family = "binomial")
-spring_surv_models[[5]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(weighted.dens) + s(shrub_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[5]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(weighted.dens) + s(shrub_cover) +
+                                 s(unique.transect, bs = "re"),
                                data = subset(transplant.plots, fall_survivors > 0), gamma = gamma, family = "binomial")
-spring_surv_models[[6]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[6]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(grass_cover) + s(shrub_cover) +
+                                 s(unique.transect, bs = "re"),
                                data = subset(transplant.plots, all_survivors > 0), gamma = gamma, family = "binomial")
-spring_surv_models[[7]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(weighted.dens) + s(grass_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[7]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(weighted.dens) + s(grass_cover) +
+                                 s(unique.transect, bs = "re"),
                                data = subset(transplant.plots, fall_survivors > 0), gamma = gamma, family = "binomial")
-spring_surv_models[[8]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(weighted.dens) + s(grass_cover) + s(shrub_cover) + s(unique.transect, bs = "re"),
+spring_surv_models[[8]] <- gam(cbind(spring_survivors, fall_survivors - spring_survivors) ~ s(weighted.dens) + s(grass_cover) +
+                                 s(shrub_cover) + s(unique.transect, bs = "re"),
                                data = subset(transplant.plots, fall_survivors > 0), gamma = gamma, family = "binomial")
 
 # AIC table and model selection
@@ -120,7 +123,8 @@ plot(transplant.plots$grass_cover[transplant.plots$fall_survivors > 0], spring_s
 plot(transplant.plots$shrub_cover[transplant.plots$fall_survivors > 0], spring_surv_fitted_terms[, "s(shrub_cover)"]) 
 
 # Show fitted model
-transplant.plots$springpred4 <- predict.gam(spring_surv_models[[4]], newdata = transplant.plots, type = "response", exclude = "s(unique.transect)")
+transplant.plots$springpred4 <- predict.gam(spring_surv_models[[4]], newdata = transplant.plots, type = "response",
+                                            exclude = "s(unique.transect)")
 plot(jitter(transplant.plots$grass_cover), jitter(transplant.plots$spring_survivors/4))
 points(transplant.plots$grass_cover, transplant.plots$springpred4, pch = 16, col = "red")
 

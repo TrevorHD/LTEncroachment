@@ -1,24 +1,23 @@
-## Purpose: trying to model non-normal growth for creosote SIPM
-## Author: Tom Miller
-## Last modified: 7.28.2021
+##### Initialise data -----------------------------------------------------------------------------------------------------------------------------==
 
+# Load packages
 library(mgcv)
 library(sgt)
 library(maxLik)
 library(zoo)
+
+# Source scripts
 source("C:/Users/tm9/Dropbox/github/IPM_size_transitions/Diagnostics.R")
-# "04_CDataPrep"
-# Tidy up demography data before creating demography models
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 
-  # Create unique transect as interaction of transect and site
-  # First-time only; this bit of code in 06_BootRes does it all other times
-  # No transplants in this data set
+# Create unique transect as interaction of transect and site
+# First-time only; this bit of code in 06_BootRes does it all other times
+# No transplants in this data set
 LATR_full <- CData %>% 
   mutate(unique.transect = interaction(transect, site))
 
-## set the gamma argument of gam() -- gamma>1 generates smoother fits, less likely to be overfit
-gamma = 1.2
+# Set the gamma argument of gam(): gamma > 1 generates smoother fits, less likely to be overfit
+gamma <- 1.2
 
 
 
@@ -38,26 +37,30 @@ LATR_gam_models <- list()
 # Three candidate models for the mean: size only, size + density, or size, density, and size:density
 # Three candidates for variance: size only, size + density, fitted value (all the covariates plus rfx)
 
-# constant sigma
+# Constant sigma
 LATR_gam_models[[1]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect, bs = "re"), ~ 1),
                             data = LATR_grow, gamma = gamma, family = gaulss())
 LATR_gam_models[[2]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ 1), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~ 1), 
+LATR_gam_models[[3]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t +
+                                   s(unique.transect, bs = "re"), ~ 1), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
-# sigma as function of initial size
+# Sigma as function of initial size
 LATR_gam_models[[4]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect,bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
 LATR_gam_models[[5]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
+LATR_gam_models[[6]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t +
+                                   s(unique.transect, bs = "re"), ~ s(log_volume_t)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
-# sigma depends on both initial size and density
+# Sigma depends on both initial size and density
 LATR_gam_models[[7]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())
-LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[8]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + s(unique.transect, bs = "re"),
+                                 ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss())                
-LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t + s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
+LATR_gam_models[[9]] <- gam(list(log_volume_t1 ~ s(log_volume_t) + s(weighted.dens) + weighted.dens:log_volume_t +
+                                   s(unique.transect, bs = "re"), ~ s(log_volume_t) + s(weighted.dens)), 
                             data = LATR_grow, gamma = gamma, family = gaulss()) 
 
 # Collect model AICs into a single table
@@ -212,7 +215,7 @@ abline(0, 1)
 plot(LATR_Xp[, 1:31]%*%LATR_beta[1:31], LATR_Xp[, 1:31]%*%out$estimate[1:31])
 abline(0, 1)
 
-## I'm satisfied that the SGT can recover the same expected value as the gaussian gam()
+# I'm satisfied that the SGT can recover the same expected value as the Gaussian GAM()
 
 
 
@@ -251,6 +254,7 @@ LATR_moments <- LATR_grow %>%
             bin_mean = mean(log_volume_t),
             bin_n = n()) 
 
+# Plot growth mean
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1), cex.axis = 1.3, cex.lab = 1.3, mgp = c(2, 1, 0), bty = "l"); 
 sim_bin_means <- sim_moment_means <- sim_moment_means_norm <- matrix(NA, n_bins, n_sim); 
 for(i in 1:n_sim){
@@ -280,6 +284,7 @@ legend("topleft", legend = c("SGT", "Gaussian", "Data"),
        col = c("gray", "cornflowerblue", "red"), pch = 16, bty = "n", cex = 1.4, pt.lwd = 2, pt.cex = 1.6) 
 add_panel_label("a")
 
+# Plot growth SD
 for(i in 1:n_sim){
   sim_moments <- bind_cols(LATR_grow, data.frame(sim = LATR_sim_SGT[, i],
                                                  sim_norm = LATR_sim_NO[, i])) %>% 
@@ -305,6 +310,7 @@ points(LATR_moments$bin_mean + 0.4, apply(sim_moment_means_norm, 1, median), pch
        col = alpha("black", alpha_scale), cex = 1.6)
 add_panel_label("b")
 
+# Plot growth skew
 for(i in 1:n_sim){
   sim_moments <- bind_cols(LATR_grow, data.frame(sim = LATR_sim_SGT[, i],
                                                  sim_norm = LATR_sim_NO[, i])) %>% 
@@ -330,6 +336,7 @@ points(LATR_moments$bin_mean + 0.4, apply(sim_moment_means_norm, 1, median), pch
        col = alpha("black", alpha_scale), cex = 1.6)
 add_panel_label("c")
 
+# Plot growth kurtosis
 for(i in 1:n_sim){
   sim_moments <- bind_cols(LATR_grow, data.frame(sim = LATR_sim_SGT[, i],
                                                  sim_norm = LATR_sim_NO[, i])) %>% 

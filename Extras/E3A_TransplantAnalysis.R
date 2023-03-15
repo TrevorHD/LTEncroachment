@@ -173,7 +173,6 @@ anova(Mod.S.T6, test = "Chisq")
 # We have tried several different models
 # None of them are significant, or residuals are so bad that the model is not valid
 # The most likely case is that survival is always low for transplants and/or small shrubs
-# This is what we found in S1_SupportingMaterial
 
 
 
@@ -225,8 +224,8 @@ plot(CData.Transplants.s$d.stand, CData.Transplants.s$falll_survival_t, pch = "|
      xlab = "Weighted shrub density", ylab = "Survival")
 # points(fallsurv_viz_bin$mean_dens, fallsurv_viz_bin$mean_surv, pch = 16, cex = 2)
 lines(seq(min(CData.Transplants.s$d.stand), max(CData.Transplants.s$d.stand), length.out = 100),
-      invlogit(coef(fall_surv_glm[[2]])[1] + coef(fall_surv_glm[[2]])[2]*seq(min(CData.Transplants.s$d.stand),max(CData.Transplants.s$d.stand), length.out = 100)),
-      lwd = 4)
+      invlogit(coef(fall_surv_glm[[2]])[1] + coef(fall_surv_glm[[2]])[2]*seq(min(CData.Transplants.s$d.stand),
+                                                                             max(CData.Transplants.s$d.stand), length.out = 100)), lwd = 4)
 
 # See if above analysis holds up with spring survival (fewer overall survivors)
 spring_surv_glm <- list()
@@ -250,8 +249,8 @@ plot(CData.Transplants.s$d.stand, CData.Transplants.s$spring_survival_t1 ,pch = 
      xlab = "Weighted shrub density", ylab = "Survival")
 points(springsurv_viz_bin$mean_dens, springsurv_viz_bin$mean_surv, pch = 16, cex = 2)
 lines(seq(min(CData.Transplants.s$d.stand), max(CData.Transplants.s$d.stand), length.out = 100),
-      invlogit(coef(spring_surv_glm[[2]])[1] + coef(spring_surv_glm[[2]])[2]*seq(min(CData.Transplants.s$d.stand), max(CData.Transplants.s$d.stand), length.out = 100)),
-      lwd = 2)
+      invlogit(coef(spring_surv_glm[[2]])[1] + coef(spring_surv_glm[[2]])[2]*seq(min(CData.Transplants.s$d.stand),
+                                                                                 max(CData.Transplants.s$d.stand), length.out = 100)), lwd = 2)
 
 # Fit models with random effects; are results the same?
 fall_surv_rfx <- list()
@@ -274,8 +273,8 @@ plot(CData.Transplants.s$d.stand, CData.Transplants.s$falll_survival_t, pch = "|
      xlab = "Weighted shrub density", ylab = "Survival")
 points(fallsurv_viz_bin$mean_dens, fallsurv_viz_bin$mean_surv, pch = 16, cex = 2)
 lines(seq(min(CData.Transplants.s$d.stand), max(CData.Transplants.s$d.stand), length.out = 100),
-      invlogit(fixef(fall_surv_rfx[[2]])[1] + fixef(fall_surv_rfx[[2]])[2]*seq(min(CData.Transplants.s$d.stand), max(CData.Transplants.s$d.stand), length.out = 100)),
-      lwd = 2)
+      invlogit(fixef(fall_surv_rfx[[2]])[1] + fixef(fall_surv_rfx[[2]])[2]*seq(min(CData.Transplants.s$d.stand),
+                                                                               max(CData.Transplants.s$d.stand), length.out = 100)), lwd = 2)
 
 # Note that mean survival is much lower in the mixed model; this is good
 # It means that the high survival at PDC is being attributed to random effects
