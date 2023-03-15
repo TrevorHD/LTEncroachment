@@ -6,54 +6,58 @@ A combination of statistical and mechanistic models used to quantify creosotebus
 
 # Files
 
+*Note: Due to the large number of files in the repository, not all files are described below.*
+
 ## Data
 
-**LT_XLSX** *(.xlsx)* - Spreadsheet containing all of the demographic data on the shrubs that were a part of the study. Also contains data on transect length and the transplant experiment.
+**LT_DemographyData** *(.csv)* - Spreadsheet containing 2013-2017 census data.
 
-**SD_XLSX** *(.xlsx)* - Spreadsheet containing position and time for each seed drop trial.
+**LT_TransectData** *(.csv)* - Spreadsheet containing shrub size and location data at the time of setup.
+
+**LT_TransectLengths** *(.csv)* - Spreadsheet containing transect lengths.
+
+**LT_TransectResurvey** *(.csv)* - Spreadsheet containing shrub cover data from the 2001 and 2013 resurveys.
+
+**LT_TransplantExp** *(.csv)* - Spreadsheet containing the transplant experiment data.
+
+**LT_XLSX** *(.xlsx)* - Spreadsheet containing all data in the "LT" data files, except for the transect resurvey.
+
+**SD_Summary** *(.csv)* - Spreadsheet containing seed drop summary data.
+
+**SD_Trials** *(.csv)* - Spreadsheet containing position versus time data for the seed drop experiment.
+
+**SD_XLSX** *(.xlsx)* - Spreadsheet containing all data in the "SD" data files.
 
 **Metadata** *(.txt)* - Plain text file describing fields for the various datasheets.
 
-**WeatherX** *(.csv)* - SEV weather data from one of six time periods: 1988-1994, 1995-1999, 2000-2004, 2005-2009, 2010-2014, and 2015-2019. The data files can be found [here](https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sev.1.14), and relevant metadata can be found [here](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-sev.1.14).
+**Derived** *(folder)* - Folder containing data files derived from simulations and model runs, kept here so simulation outputs don't have to be generated again every time the scripts are run.
 
-**Creosote_transect_resurvey** *(.csv)* - Spreadsheet containing percent shrub cover from the transect resurveys; this file name will likely be changed later.
+**EDI** *(folder)* - Folder containing data files prepared as submissions to the Environmental Data Initiative (EDI).
 
-*Note: The data folder also contains CSV files with prefixes LT or SD; these extra files just CSV replicas of individual sheets in the XLSX files, and exist to increase accessibility to those who may not have the software to read XLSX files.*
+**Weather** *(folder)* - Folder containing SEV weather data from one of six time periods: 1988-1994, 1995-1999, 2000-2004, 2005-2009, 2010-2014, and 2015-2019. The data files can be found [here](https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sev.1.14), and relevant metadata can be found [here](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-sev.1.14). Also contains data on monsoon precipitation.
 
 ## Scripts
 
-**00_RunAll** *(.R)* - Runs scripts 01-07. This process takes a few minutes.
+**00_RunAll** *(.R)* - Runs scripts 01-08; this is computationally intensive and may take a while.
 
-**01_SeedVelocities** *(.R)* - Finds the distribution of seed terminal velocities using data from **Seed_Drop**.
+**01_SeedVelocities** *(.R)* - Finds the distribution of seed terminal velocities using seed drop data.
 
 **02_WindSpeeds** *(.R)* - Finds the distribution of wind speeds using wind speed data from the SEV.
 
-**03_Dispersal** *(.R)* - Creates dispersal kernels using the methods from Skarpaas and Shea (2007).
+**03_Dispersal** *(.R)* - Sets up dispersal kernel functions.
 
-**04_CDataPrep** *(.R)* - Cleans up the demographic data from **LT_Data** and calculates variables that will be used in size- and density-dependent demographic analyses.
+**04_CDataPrep** *(.R)* - Cleans up the demographic data and calculates variables that will be used in size- and density-dependent demographic analyses.
 
-**05_CDataAnalysis_NS** *(.R)* - Generates models of demographic rates as a function of size and density.
+**05_CDataAnalysis** *(.R)* - Generates models of demographic rates as a function of size and density.
 
-**06_BootRes.R** *(.R)* - Resamples data for each bootstrap replicate.
+**06_BootRes** *(.R)* - Sets up resampling for bootstraps.
 
 **07_SIPM** *(.R)* - Constructs the transition matrix that projects population growth, and combines this with dispersal data to find the speed at which the encroaching shrub wave travels.
 
 **08_MainFigures** *(.R)* - Generates figures on size- and density-dependence, wave speeds and population growth, and dispersal kernels.
 
+**Extras** *(folder)* - Various extra scripts not launched from the master file, but are still used in other functions such as figure generation.
+
 ## Others
 
-**Manuscript** *(folder)* - A folder with code and various other objects used to generate the manuscript.
-
-**05B_nonnormal_growth** *(.R)* - A script containing models of non-normal growth rates as a function of size and density; not yet fully implemented.
-
-**wavespeed_sensitivities** *(.R)* - A script that estimates wavespeeds for a range of per-seed recruitment rates; not yet fully implemented.
-
-## Extras
-
-**S1_SupportingMaterial** *(.R)* - Code not directly used in the analyses but contributes to our understanding of the data.
-
-**S2_DeprecatedCode.R** *(.R)* - Bits of old code that is no longer in use; they are not organised in any particular order.
-
-**S3_TransplantAnalysis.R** *(.R)* - Code to analyse data from the transplant experiment.
-
-**S3B_TransplantAnalysis.R** *(.R)* - Additional code to analyse data from the transplant experiment.
+**Manuscript** *(folder)* - A folder with code and various other objects used to generate the manuscript, including figures.
