@@ -96,7 +96,7 @@ print(spring_surv_aic,
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Figures/survival_appendix}
+    \includegraphics[width=\linewidth]{Manuscript/Figures/survival_appendix}
   \caption{}
   \label{fig:survapp}
   \end{center}
