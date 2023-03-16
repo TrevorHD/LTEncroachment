@@ -3,6 +3,7 @@
 # Code author(s): Tom
 
 # Run diagnostic code
+# Note: local path on Tom's device, file not in repo
 source("C:/Users/tm9/Dropbox/github/IPM_size_transitions/Diagnostics.R")
 
 # Need to run the growth model in 05_CDataAnalysis.R

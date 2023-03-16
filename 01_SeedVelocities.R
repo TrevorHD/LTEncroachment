@@ -3,7 +3,7 @@
 # Code author(s): Trevor
 
 # Load data file with seed positions and times
-file <- "https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"
+file <- "https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/SD_Trials.csv"
 
 # Create empty vector to populate with terminal velocities
 tv.raw <- c()

@@ -9,6 +9,7 @@ library(maxLik)
 library(zoo)
 
 # Source scripts
+# Note for first file: local path on Tom's device, file not in repo
 source("C:/Users/tm9/Dropbox/github/IPM_size_transitions/Diagnostics.R")
 source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
 

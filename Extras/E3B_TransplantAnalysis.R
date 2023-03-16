@@ -203,5 +203,5 @@ spring$`Pr(Survival)`<- c("(1|transect)",
 
 # Generate tables
 appendix_aic_tables = list(fall_aic = fall, spring_aic = spring)
-write_rds(x = appendix_aic_tables, file = "Manuscript/appendix_aic_tables.rds")
+write_rds(x = appendix_aic_tables, file = "Manuscript/MS_Current/appendix_aic_tables.rds")
 

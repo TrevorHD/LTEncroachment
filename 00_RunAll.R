@@ -118,7 +118,7 @@ boot.sens <- vector("numeric", length = length(elas))
 # seeds <- sample.int(100000, size = boot.num); write.csv(seeds, "Data/Derived/Seed_1000.csv")
 
 # Read seed data
-seeds <- read.csv("Data/Derived/Seed_1000.csv")
+seeds <- read.csv("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/Derived/Seed_1000.csv")
 seed.store <- c()
 
 
@@ -356,8 +356,8 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/08_Main
 #            num_blue_grama_t = num_blue_gramma_t), "Data/EDI/LATR_Transplants_Dat.csv", row.names = F)
 
 # 3. Seed drop summary data
-# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Summary.csv"), "Data/EDI/SD_Summary.csv")
+# write.csv(read.csv("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/SD_Summary.csv"), "Data/EDI/SD_Summary.csv")
 
 # 4. Seed drop position data
-# write.csv(read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/SD_Trials.csv"), "Data/EDI/SD_Trials.csv")
+# write.csv(read.csv("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/Data/SD_Trials.csv"), "Data/EDI/SD_Trials.csv")
 

@@ -22,18 +22,18 @@ library(bbmle)
 
 # Run necessary scripts to prep for wavespeed calculations
 # See "RunALL" for descriptions
-source("01_SeedVelocities.R")
-source("02_WindSpeeds.R")
-source("03_Dispersal.R")
-source("04_CDataPrep.R")
-source("05_CDataAnalysis_NS.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/01_SeedVelocities.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/02_WindSpeeds.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/03_Dispersal.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDataAnalysis.R")
 
 # Turn off bootstrapping
 boot.on <- FALSE
-source("06_BootRes.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/06_BootRes.R")
 
 # Spatial integral projection setting up functions to calculate wavespeeds
-source("07_SIPM.R")
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/07_SIPM.R")
 
 # How much variability is there across calculations of wave speed?
 # for(i in 1:10){
@@ -186,7 +186,7 @@ for(i in 1:length(recruitment)){
   print(i); print(recruitment[i]); print(wavespeed.recruitment[i])}
 
 # Plot wavespeeds
-xaxis<- 10^(-recruitment)
+xaxis <- 10^(-recruitment)
 plot(log10(xaxis), wavespeed.recruitment, type = "b", pch = 16,
      ylab = "Wavespeed (m/yr)", xlab = "log(Recruitment probability)", cex.lab = 1.4)
 plot(log10(10^(-recruitment)), wavespeed.recruitment, type = "b", pch = 16)

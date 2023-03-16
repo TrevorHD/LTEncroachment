@@ -418,5 +418,5 @@ aic_tables <- list(surv_aic_out = surv_aic_out,
                    recruitsize_aic_out = recruitsize_aic_out)
      
 # Write out these quantities as an Rds file (do this only once)
-# write_rds(x = aic_tables, file = "Manuscript/aic_tables.rds")
+# write_rds(x = aic_tables, file = "Manuscript/MS_Current/aic_tables.rds")
 
