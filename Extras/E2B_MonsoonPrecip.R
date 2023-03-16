@@ -6,7 +6,7 @@
 # for each of the met stations, with units in millimeters. 
 
 # Load data
-monsoon <- read.csv("Data/Weather/SEV_monsoon_precipitation.csv")
+monsoon <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Weather/SEVMonsoonPrecip.csv")
 str(monsoon)
 
 # Calculate seedlings per area by getting transect lengths

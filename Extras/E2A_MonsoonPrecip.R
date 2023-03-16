@@ -49,5 +49,5 @@ ggplot(ppt, aes(x = Year, y = Precipitation, color = StationID)) +
   facet_wrap(~ StationID)
 
 # Write to file
-write_csv(ppt, paste0(path_for_data_export, "SEV_monsoon_precipitation.csv"))
+write_csv(ppt, paste0(path_for_data_export, "Data/Weather/SEVMonsoonPrecip.csv"))
 
