@@ -154,7 +154,7 @@ plot(transplant.plots$grass_cover, transplant.plots$fall_surv)
 lines(model7pred_grass$grass_cover, model7pred_grass$pred, col = "red", lwd = 3)
 
 # Initialise graphics devide to plot on PDF
-pdf("Manuscript/Figures/survival_appendix.pdf", useDingbats = F, height = 4, width = 7)
+pdf("Manuscript/Figures/SurvivalAppendix.pdf", useDingbats = F, height = 4, width = 7)
 
 # Plot fall survival
 par(mfrow = c(1, 2))

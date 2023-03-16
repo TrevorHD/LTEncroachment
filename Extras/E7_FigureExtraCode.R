@@ -8,7 +8,7 @@ density_breaks <- 5
 LATR_cols <- wes_palette("Zissou1", size_breaks, type = "continuous")
 
 # Output graphics as PDF
-pdf("Manuscript/Figures/vital_rates.pdf", useDingbats = F, height = 9, width = 7)
+pdf("Manuscript/Figures/VitalRates.pdf", useDingbats = F, height = 9, width = 7)
 par(mfrow = c(3, 2), mar = c(5, 5, 1, 1))
 
 # Plot survival (mature plants)
@@ -194,7 +194,7 @@ source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/05_CDat
 mean.lambda <- LambdaD()
 
 # Output graphics as PDF
-pdf("Manuscript/Figures/LambdaD.pdf", useDingbats = F, height = 5, width = 6)
+pdf("Manuscript/Figures/LambdaDensity.pdf", useDingbats = F, height = 5, width = 6)
 par(mar = c(5, 5, 1, 1))
 
 # Plot bootstrapped lambda
@@ -239,7 +239,7 @@ heights <- quantile(LATR_full$max.ht_t, na.rm = T)
 D_cols <- wes_palette("Zissou1", 4, type = "continuous")
 
 # Output graphics as PDF
-pdf("Manuscript/Figures/Dkernels.pdf", useDingbats = F, height = 5, width = 6)
+pdf("Manuscript/Figures/DispersalKernels.pdf", useDingbats = F, height = 5, width = 6)
 par(mar = c(5, 5, 1, 1))
 
 # Plot kernels
@@ -274,7 +274,7 @@ boot.sens <- boot.sens[-1, ]
 names(boot.sens)[2:11] <- elas
 
 # Output graphics as PDF
-pdf("Manuscript/Figures/wavespeed.pdf", useDingbats = F, height = 5, width = 6)
+pdf("Manuscript/Figures/Wavespeeds.pdf", useDingbats = F, height = 5, width = 6)
 par(mar = c(5, 5, 1, 1))
 
 # Plot wavespeeds
@@ -314,7 +314,7 @@ ggplot(data = sens.dat,
   ggtitle('B') -> sens.plot
 
 # Output graphics as PDF
-pdf("Manuscript/Figures/wavespeed_sens.pdf", useDingbats = F, height = 10, width = 6)
+pdf("Manuscript/Figures/WavespeedSens.pdf", useDingbats = F, height = 10, width = 6)
 wave.plot/sens.plot
 
 # Turn off graphics device
@@ -330,7 +330,7 @@ dev.off()
 resurv <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/LT_TransectResurvey.csv")
 
 # Output graphics as PDF
-pdf("Manuscript/Figures/resurveys.pdf", useDingbats = F, height = 4, width = 8)
+pdf("Manuscript/Figures/TransectResurveys.pdf", useDingbats = F, height = 4, width = 8)
 
 # Plot resurvey data
 par(mfrow = c(1, 2), mar = c(4, 4, 1, 1))

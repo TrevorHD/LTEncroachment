@@ -11,7 +11,7 @@ if(boot.switch == FALSE){
   LATR_cols <- wes_palette("Zissou1", size_breaks, type = "continuous")
   
   # Output graphics as PDF
-  pdf("Manuscript/Figures/vital_rates.pdf", useDingbats = F, height = 9, width = 7)
+  pdf("Manuscript/Figures/VitalRates.pdf", useDingbats = F, height = 9, width = 7)
   par(mfrow = c(3, 2), mar = c(5, 5, 1, 1))
   
   # Plot survival (mature plants)
@@ -190,7 +190,7 @@ if(boot.switch == FALSE){
 ##### Plot bootstrapped wavespeeds ------------------------------------------------------------------------------------------------------------------
 
 # Prepare graphics device
-jpeg(filename = "Figure 1.jpeg", width = 750, height = 500, units = "px")
+jpeg(filename = "Manuscript/Figures/BootWave.jpeg", width = 750, height = 500, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -246,7 +246,7 @@ boot.lambda.stats <- data.frame(boot.lambda.df[, 1],
                                 apply(X = boot.lambda.df[, -1], MARGIN = 1, FUN = quantile, probs = 0.975)) 
 
 # Prepare graphics device
-jpeg(filename = "Figure 2.jpeg", width = 750, height = 500, units = "px")
+jpeg(filename = "Manuscript/Figures/BootLambda.jpeg", width = 750, height = 500, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -339,7 +339,7 @@ remove(gly, boot.lambda.df)
 ##### Plot dispersal kernels ------------------------------------------------------------------------------------------------------------------------
 
 # Prepare graphics device
-jpeg(filename = "Figure 3.jpeg", width = 1600, height = 900, units = "px")
+jpeg(filename = "Manuscript/Figures/Kernels.jpeg", width = 1600, height = 900, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -449,7 +449,7 @@ LATR_fruit_pred <- data.frame(
 LATR_fruit_pred$pred <- predict.gam(LATR_fruits_best, newdata = LATR_fruit_pred, exclude = "s(unique.transect)")
 
 # Prepare graphics device
-jpeg(filename = "Figure 4.jpeg", width = 1000, height = 1200, units = "px")
+jpeg(filename = "Manuscript/Figures/VitalReproduction.jpeg", width = 1000, height = 1200, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -566,7 +566,7 @@ LATR_surv_exp_pred$pred <- predict.gam(LATR_surv_best, newdata = LATR_surv_exp_p
                                        exclude = "s(unique.transect)")
 
 # Prepare graphics device
-jpeg(filename = "Figure 5.jpeg", width = 1000, height = 1200, units = "px")
+jpeg(filename = "Manuscript/Figures/VitalSurvival.jpeg", width = 1000, height = 1200, units = "px")
 
 # Create blank page
 grid.newpage()
@@ -657,7 +657,7 @@ LATR_recruitment_line$pred <- predict.gam(LATR_recruit_best, newdata = LATR_recr
                                           exclude = "s(unique.transect)")
 
 # Prepare graphics device
-jpeg(filename = "Figure 6.jpeg", width = 750, height = 500, units = "px")
+jpeg(filename = "Manuscript/Figures/VitalRecruitment.jpeg", width = 750, height = 500, units = "px")
 
 # Create blank page
 grid.newpage()

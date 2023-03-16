@@ -23,7 +23,7 @@ CData %>%
   mutate(recruits_per_area = tot_recruits/tot_area) -> recruits
 
 # Prepare plotting to PDF
-pdf("Manuscript/Figures/monsoon_seedlings.pdf", useDingbats = F, height = 4, width = 8)
+pdf("Manuscript/Figures/MonsoonSeedlings.pdf", useDingbats = F, height = 4, width = 8)
 par(mfrow = c(1, 2), mar = c(4, 4, 1, 1))
 
 # Generate plots
