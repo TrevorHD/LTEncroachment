@@ -119,7 +119,7 @@ print(recruitsize_aic,
 \newpage
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Manuscript/Figures/MonsoonSeedlings}
+    \includegraphics[width=\linewidth]{Figures/MonsoonSeedlings}
   \caption{A, Time series of annual monsoon precipitation (filled circles are the years in which this study was conducted). B, Relationship between density of creosotebush recruits observed on our transects in May-June and monsoon precipitation in the preceding July-September.}
   \label{fig:monsoon}
   \end{center}

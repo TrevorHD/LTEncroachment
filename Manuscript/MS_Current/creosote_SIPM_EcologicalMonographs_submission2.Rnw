@@ -612,7 +612,7 @@ This figure shows midpoint values of these cover classes at each meter location 
 \newpage
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Manuscript/Figures/WavesPicsRevise}
+    \includegraphics[width=\linewidth]{Figures/WavesPicsRevise}
     \caption{}
   \label{fig:waves}
   \end{center}
@@ -621,7 +621,7 @@ This figure shows midpoint values of these cover classes at each meter location 
 \newpage
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Manuscript/Figures/TransectResurveys}
+    \includegraphics[width=\linewidth]{Figures/TransectResurveys}
   \caption{}
   \label{fig:resurvey}
   \end{center}
@@ -630,7 +630,7 @@ This figure shows midpoint values of these cover classes at each meter location 
 \newpage
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Manuscript/Figures/VitalRates}
+    \includegraphics[width=\linewidth]{Figures/VitalRates}
   \caption{}
   \label{fig:vital_rates}
   \end{center}
@@ -639,7 +639,7 @@ This figure shows midpoint values of these cover classes at each meter location 
 \newpage
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Manuscript/Figures/LambdaDensity}
+    \includegraphics[width=\linewidth]{Figures/LambdaDensity}
   \caption{}
   \label{fig:lambda}
   \end{center}
@@ -648,7 +648,7 @@ This figure shows midpoint values of these cover classes at each meter location 
 \newpage
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Manuscript/Figures/DispersalKernels}
+    \includegraphics[width=\linewidth]{Figures/DispersalKernels}
   \caption{}
   \label{fig:dispersal}
   \end{center}
@@ -657,7 +657,7 @@ This figure shows midpoint values of these cover classes at each meter location 
 \newpage
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=\linewidth]{Manuscript/Figures/WavespeedSens}
+    \includegraphics[width=\linewidth]{Figures/WavespeedSens}
   \caption{}
   \label{fig:wavespeed}
   \end{center}
