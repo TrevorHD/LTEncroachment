@@ -1,0 +1,108 @@
+\documentclass[11pt]{article}
+\usepackage[sc]{mathpazo} %Like Palatino with extensive math support
+\usepackage{fullpage}
+\usepackage[authoryear,sectionbib,sort]{natbib}
+\linespread{1.7}
+\usepackage[utf8]{inputenc}
+\usepackage{lineno}
+\usepackage{titlesec}
+\titleformat{\section}[block]{\Large\bfseries\filcenter}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\Large\itshape\filcenter}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}[block]{\large\itshape}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]{\itshape}{\theparagraph}{1em}{}[. ]\renewcommand{\refname}{Literature Cited}
+% my addnl packages
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage{setspace}
+\usepackage{amsfonts,amssymb,amsmath,hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[usenames,dvipsnames]{xcolor}
+\newcommand{\revise}[1]{{\color{Mahogany}{#1}}}
+\usepackage[normalem]{ulem}
+\newcommand{\tom}[2]{{\color{red}{#1}}\footnote{\textit{\color{red}{#2}}}}
+
+\doublespacing
+%\bibliography{creosote_SIPM}
+
+<<setup,echo=F, message=F, warning=F>>=
+knitr::opts_chunk$set(fig.pos = 'H')
+library(tidyverse)
+library(xtable)
+##read in demography data to pull some quantities
+source("https://raw.githubusercontent.com/TrevorHD/LTEncroachment/master/04_CDataPrep.R")
+aic_tables <- readRDS("aic_tables.rds")
+appendix_aic_tables <- readRDS("appendix_aic_tables.rds")
+speed.dat <- read.csv("https://github.com/TrevorHD/LTEncroachment/raw/master/Data/Derived/Boot_C2.csv")
+
+@
+
+\title{Appendix S3}
+\author{Trevor H., Drees, Brad M. Ochocki, Scott L. Collins, and T.E.X. Miller}
+\date{\vspace{-5ex}}
+
+\begin{document}
+\maketitle
+\noindent{} \textbf{Demography and dispersal at a grass-shrub ecotone: a spatial integral projection model for woody plant encroachment. \textit{Ecological Monographs}}
+
+\renewcommand{\thefigure}{S\arabic{figure}}\setcounter{figure}{0}
+\renewcommand{\thetable}{S\arabic{table}}\setcounter{table}{0}
+\renewcommand{\theequation}{S\arabic{equation}}\setcounter{equation}{0}
+
+We censused transplant survival twice following July 2015 planting, in fall 2015 and spring 2016. 
+Here, we analyze the two survival intervals separately, including grass and shrub cover at the local ($1m$x$1m$) scale as explanatory variables in addition to the weighted density of the 5-m transect window as presented in the main text. 
+
+For both fall and spring survival censuses, we fit eight candidate models that included all combinations of window weighted density, local shrub cover (proportion of plot area covered by creosotebush), and local grass cover (proportion of plot area covered by any grass species) as smooth terms in a generalized additive model.
+We used a binomial response distribution where ``successes'' were the number of survivors per plot and ``trials'' were the number of seedlings planted for fall survival (always four per plot) and the number of fall survivors for spring survival. 
+All models included a random effect of transect. 
+We used AIC-based model selection to quantify support for competing models. 
+
+\paragraph{Results}The majority of mortality occurred within the first census interval (53 fall survivors out of 576 transplants), resulting in a much smaller data set for the second census interval (20 spring survivors out of 53 fall survivors).
+
+For fall survival, the top model (Model 7) included effects of creosotebush weighted density at the 5-m window scale and local grass cover (Table \ref{tab:fall_aic}). 
+Fall survival was low overall but greatest in zero-density windows and there was a weak negative effect of local grass cover (Figure \ref{fig:survapp}).
+Three additional models (2, 5 and 8) were within 2 AIC units of the top model (Table \ref{tab:fall_aic}). 
+Despite the model uncertainty, these top four models included shrub weighted density and comprised \>87\% of AIC weight, providing strong support for negative effects of shrub density at the scale of 5-m windows, consistent with the full analysis (transplant experiment + observational census) presented in the main text.
+
+Spring survival was dominated by high model uncertainty, and the most complex model (8) did not converge due to inadequate data. 
+The top-ranked model was Model 6, which included effects of local shrub and grass cover.
+However, the null model (1) was nearly tied with the top model, and six of seven models were within 2 AIC units. 
+Given the relatively small data set, a conservative interpretation is that there is not sufficient evidence to reject the null hypothesis of a constant fall-to-spring survival rate that was unrelated to shrub or grass density. 
+
+<<fall_surv_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+fall_surv_aic<-xtable(appendix_aic_tables$fall_aic[,c("Pr(Survival)","df","dAIC")], caption = "AIC model selection for July-October transplant survival probability.", label = "tab:fall_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(fall_surv_aic)<-"c|p{12cm}|c|c|"
+print(fall_surv_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+<<spring_surv_aic,echo=F, message=F, warning=F, results = 'asis'>>=
+spring_surv_aic<-xtable(appendix_aic_tables$spring_aic[,c("Pr(Survival)","df","dAIC")], caption = "AIC model selection for October-June transplant survival probability.", label = "tab:spring_aic",
+                 hline.after=c(-1,0,1,2,3))
+align(spring_surv_aic)<-"c|p{12cm}|c|c|"
+print(spring_surv_aic, 
+      include.rownames=F,
+      include.colnames=T, 
+      floating = TRUE, latex.environments = "center")
+@
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=\linewidth]{Figures/SurvivalAppendix}
+  \caption{}
+  \label{fig:survapp}
+  \end{center}
+\end{figure}
+
+
+\end{document}
